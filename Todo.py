@@ -18,8 +18,8 @@ class Todo(object):
     fields = {}
 
     def __init__(self, p_src):
-        self.src = p_src
-        self.fields = TodoParser.parse_line(p_src)
+        self.src = p_src.strip()
+        self.fields = TodoParser.parse_line(self.src)
 
     def tag_value(self, p_key):
         """
