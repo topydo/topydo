@@ -2,7 +2,7 @@
 This module deals with todo.txt files.
 """
 
-import Todo
+import TodoBase
 
 class TodoFile(object):
     """
@@ -21,7 +21,7 @@ class TodoFile(object):
         todofile = open(self.path, 'r')
 
         for line in todofile:
-            todos.append(Todo.Todo(line))
+            todos.append(TodoBase.TodoBase(line))
 
         todofile.close()
         return todos

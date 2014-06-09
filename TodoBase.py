@@ -6,12 +6,16 @@ import re
 
 import TodoParser
 
-class Todo(object):
+class TodoBase(object):
     """
     This class represents a single todo item in a todo.txt file. It maintains
     an internal data dictionary of various attributes, but also keeps the plain
     text format in shape such that it can be printed back to a file with as few
     distortions as possible (no re-shuffling of attributes).
+
+    This is a base class, but supports enough to process any item in a todo.txt
+    file. Derived classes add some interpretation to the tags that may appear
+    in a todo item.
     """
 
     src = None
@@ -30,8 +34,10 @@ class Todo(object):
         return values[0] if len(values) else None
 
     def tag_values(self, p_key):
-        """ Returns a list of all tag values associated with p_key. Returns
-        empty list if p_key does not exist. """
+        """
+        Returns a list of all tag values associated with p_key. Returns
+        empty list if p_key does not exist.
+        """
 
         tags = self.fields['tags']
         matches = [tag[1] for tag in tags if tag[0] == p_key]
