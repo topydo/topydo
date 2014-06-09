@@ -113,7 +113,7 @@ class TodoBase(object):
         """
         Returns the priority of this todo, or None if no priority is set.
         """
-        return self.priority
+        return self.fields['priority']
 
     def text(self):
         """ Returns the todo text with tags stripped off. """
