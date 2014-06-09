@@ -107,7 +107,7 @@ class TodoBase(object):
         """
         if re.match('^[A-Z]$', p_priority):
             self.fields['priority'] = p_priority
-            self.src = re.sub(r'^\([A-Z]\)', '(' + p_priority + ')', self.src)
+            self.src = re.sub(r'^(\([A-Z]\) )?', '(' + p_priority + ') ', self.src)
 
     def priority(self):
         """
