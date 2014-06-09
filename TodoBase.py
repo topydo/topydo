@@ -127,6 +127,10 @@ class TodoBase(object):
         """ Returns a list of contexts associated with this todo item. """
         return self.fields['contexts']
 
+    def is_completed(self):
+        """ Returns True iff this todo has been completed. """
+        return self.fields['completed']
+
     def __print__(self):
         """ A printer for the todo item. """
         print self.src + "\n"
