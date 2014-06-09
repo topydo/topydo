@@ -114,6 +114,14 @@ class TodoBase(object):
         """ Returns the todo text with tags stripped off. """
         return self.text
 
+    def projects(self):
+        """ Returns a list of projects associated with this todo item. """
+        return self.fields['projects']
+
+    def contexts(self):
+        """ Returns a list of contexts associated with this todo item. """
+        return self.fields['contexts']
+
     def __print__(self):
         """ A printer for the todo item. """
         print self.src + "\n"
