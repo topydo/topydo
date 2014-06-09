@@ -1,3 +1,5 @@
+""" Tests for the TodoBase class. """
+
 import re
 import unittest
 
@@ -64,6 +66,7 @@ class TodoBaseTester(unittest.TestCase):
         self.assertFalse(re.search(r'\bfoo:bar\b', todo.src))
 
     def test_set_priority1(self):
+        """ Change priority. """
         todo = TodoBase.TodoBase("(A) Foo")
         todo.set_priority('B')
 
@@ -71,6 +74,7 @@ class TodoBaseTester(unittest.TestCase):
         self.assertTrue(re.match(r'^\(B\) Foo$', todo.src))
 
     def test_set_priority2(self):
+        """ Set priority to task without priority. """
         todo = TodoBase.TodoBase("Foo")
         todo.set_priority('B')
 
@@ -78,6 +82,7 @@ class TodoBaseTester(unittest.TestCase):
         self.assertTrue(re.match(r'^\(B\) Foo$', todo.src))
 
     def test_set_priority3(self):
+        """ Test invalid priority input. """
         todo = TodoBase.TodoBase("(A) Foo")
         todo.set_priority('AB')
 
@@ -85,6 +90,7 @@ class TodoBaseTester(unittest.TestCase):
         self.assertTrue(re.match(r'^\(A\) Foo$', todo.src))
 
     def test_set_priority4(self):
+        """ Add priority, while not be mistaken about todo string. """
         todo = TodoBase.TodoBase("(A)Foo")
 
         self.assertNotEqual(todo.priority(), 'A')
@@ -95,11 +101,48 @@ class TodoBaseTester(unittest.TestCase):
         self.assertTrue(re.match(r'^\(B\) \(A\)Foo$', todo.src))
 
     def test_set_priority5(self):
+        """ Unset priority. """
         todo = TodoBase.TodoBase("(A) Foo")
         todo.set_priority(None)
 
-        self.assertEquals( todo.priority(), None )
+        self.assertEquals(todo.priority(), None)
         self.assertTrue(re.match(r'^Foo$', todo.src))
+
+    def test_project1(self):
+        todo = TodoBase.TodoBase("(C) Foo +Bar +Baz")
+
+        self.assertEquals(len(todo.projects()), 2)
+        self.assertIn('Bar', todo.projects())
+        self.assertIn('Baz', todo.projects())
+
+    def test_project2(self):
+        todo = TodoBase.TodoBase("(C) Foo +Bar+Baz")
+
+        self.assertEquals(len(todo.projects()), 1)
+        self.assertIn('Bar+Baz', todo.projects())
+
+    def test_context1(self):
+        todo = TodoBase.TodoBase("(C) Foo @Bar @Baz")
+
+        self.assertEquals(len(todo.contexts()), 2)
+        self.assertIn('Bar', todo.contexts())
+        self.assertIn('Baz', todo.contexts())
+
+    def test_context2(self):
+        todo = TodoBase.TodoBase("(C) Foo @Bar+Baz")
+
+        self.assertEquals(len(todo.contexts()), 1)
+        self.assertIn('Bar+Baz', todo.contexts())
+
+    def test_completion1(self):
+        todo = TodoBase.TodoBase("x 2014-06-09 Foo")
+
+        self.assertTrue(todo.is_completed())
+
+    def test_completion2(self):
+        todo = TodoBase.TodoBase("xx Important xx")
+
+        self.assertFalse(todo.is_completed())
 
 if __name__ == '__main__':
     unittest.main()
