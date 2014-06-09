@@ -61,7 +61,7 @@ def parse_line(p_string):
         if context:
             result['contexts'].append(context.group(1))
 
-        tag = re.match('(?P<key>.*):(?P<value>.*)', word)
+        tag = re.match('(?P<key>[^:]*):(?P<value>.*)', word)
         if tag:
             result['tags'].append((tag.group('key'), tag.group('value')))
             continue
