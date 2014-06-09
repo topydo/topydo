@@ -20,7 +20,7 @@ class Todo(TodoBase.TodoBase):
     def get_date(self, p_tag):
         """ Given a date tag, return a date object. """
         string = self.tag_value(p_tag)
-        return Utils.date_string_to_date(string)
+        return Utils.date_string_to_date(string) if string else None
 
     def start_date(self):
         """ Returns a date object of the todo's start date. """
