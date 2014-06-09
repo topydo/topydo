@@ -43,11 +43,16 @@ class TodoBase(object):
         matches = [tag[1] for tag in tags if tag[0] == p_key]
         return matches if len(matches) else []
 
-    def has_tag(self, p_key):
+    def has_tag(self, p_key, p_value=""):
         """
-        Returns true iff this todo has at least one tag with the given key.
+        Returns true when there is at least one tag with the given key. If a
+        value is passed, it will only return true when there exists a tag with
+        the given key-value combination.
         """
-        return len(self.tag_values(p_key)) > 0
+
+        result = [t for t in self.tag_values(p_key) \
+                    if p_value == "" or t == p_value]
+        return len(result) > 0
 
     def set_tag(self, p_key, p_value=""):
         """
