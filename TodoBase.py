@@ -105,7 +105,7 @@ class TodoBase(object):
         Sets the priority of the todo. Must be a single capital letter [A-Z].
         Priority remains unchanged when invalid priority is given.
         """
-        if re.match('[A-Z]', p_priority):
+        if re.match('^[A-Z]$', p_priority):
             self.fields['priority'] = p_priority
             self.src = re.sub(r'^\([A-Z]\)', '(' + p_priority + ')', self.src)
 
