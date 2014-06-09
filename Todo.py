@@ -66,7 +66,7 @@ class Todo(TodoBase.TodoBase):
         start = self.start_date()
         due = self.due_date()
 
-        if start and due:
+        if start and due and start < due:
             diff = due - start
             return diff.days
         else:
