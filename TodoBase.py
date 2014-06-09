@@ -102,12 +102,16 @@ class TodoBase(object):
 
     def set_priority(self, p_priority):
         """
-        Sets the priority of the todo. Must be a single capital letter [A-Z].
-        Priority remains unchanged when invalid priority is given.
+        Sets the priority of the todo. Must be a single capital letter [A-Z],
+        or None to unset the priority.
+        Priority remains unchanged when an invalid priority is given.
         """
-        if re.match('^[A-Z]$', p_priority):
+
+        if p_priority == None or re.match('^[A-Z]$', p_priority):
             self.fields['priority'] = p_priority
-            self.src = re.sub(r'^(\([A-Z]\) )?', '(' + p_priority + ') ', self.src)
+
+            priority_str = '' if p_priority == None else '(' + p_priority + ') '
+            self.src = re.sub(r'^(\([A-Z]\) )?', priority_str, self.src)
 
     def priority(self):
         """
