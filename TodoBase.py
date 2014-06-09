@@ -98,7 +98,7 @@ class TodoBase(object):
 
         # when value == "", match any value having key p_key
         value = p_value if p_value != "" else r'\S+'
-        self.src = re.sub(r'\s?' + p_key + ':' + value, '', self.src)
+        self.src = re.sub(r'\s?\b' + p_key + ':' + value + r'\b', '', self.src)
 
     def set_priority(self, p_priority):
         """
