@@ -1,5 +1,6 @@
 """ Tests for the TodoBase class. """
 
+import datetime
 import re
 import unittest
 
@@ -143,6 +144,38 @@ class TodoBaseTester(unittest.TestCase):
         todo = TodoBase.TodoBase("xx Important xx")
 
         self.assertFalse(todo.is_completed())
+
+    def test_set_complete1(self):
+        todo = TodoBase.TodoBase("(A) Foo")
+        todo.set_completed()
+
+        today = datetime.date.today().isoformat()
+
+        self.assertTrue(re.match('^x ' + today + ' Foo', todo.src))
+
+    def test_set_complete2(self):
+        todo = TodoBase.TodoBase("2014-06-12 Foo")
+        todo.set_completed()
+
+        today = datetime.date.today().isoformat()
+
+        self.assertTrue(re.match('^x ' + today + ' 2014-06-12 Foo', todo.src))
+
+    def test_set_complete3(self):
+        todo = TodoBase.TodoBase("Foo")
+        todo.set_completed()
+
+        today = datetime.date.today().isoformat()
+
+        self.assertTrue(re.match('^x ' + today + ' Foo', todo.src))
+
+    def test_set_complete4(self):
+        todo = TodoBase.TodoBase("(A) 2014-06-12 Foo")
+        todo.set_completed()
+
+        today = datetime.date.today().isoformat()
+
+        self.assertTrue(re.match('^x ' + today + ' 2014-06-12 Foo', todo.src))
 
 if __name__ == '__main__':
     unittest.main()

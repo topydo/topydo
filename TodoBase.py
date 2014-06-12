@@ -2,6 +2,7 @@
 This module contains the class that represents a single todo item.
 """
 
+import datetime
 import re
 
 import TodoParser
@@ -134,6 +135,18 @@ class TodoBase(object):
     def is_completed(self):
         """ Returns True iff this todo has been completed. """
         return self.fields['completed']
+
+    def set_completed(self):
+        """
+        Marks the todo as complete.
+        Sets the completed flag and sets the completion date to today.
+        """
+        self.fields['completed'] = True
+        today = datetime.date.today()
+        self.fields['completionDate'] = today
+
+        self.src = re.sub(r'^(\([A-Z]\) )?', \
+            'x ' + today.isoformat() + ' ', self.src)
 
     def __print__(self):
         """ A printer for the todo item. """
