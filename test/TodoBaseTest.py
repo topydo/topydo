@@ -149,33 +149,42 @@ class TodoBaseTester(unittest.TestCase):
         todo = TodoBase.TodoBase("(A) Foo")
         todo.set_completed()
 
-        today = datetime.date.today().isoformat()
+        today = datetime.date.today()
+        today_str = today.isoformat()
 
-        self.assertTrue(re.match('^x ' + today + ' Foo', todo.src))
+        self.assertEquals(todo.fields['completionDate'], today)
+        self.assertTrue(re.match('^x ' + today_str + ' Foo', todo.src))
 
     def test_set_complete2(self):
         todo = TodoBase.TodoBase("2014-06-12 Foo")
         todo.set_completed()
 
-        today = datetime.date.today().isoformat()
+        today = datetime.date.today()
+        today_str = today.isoformat()
 
-        self.assertTrue(re.match('^x ' + today + ' 2014-06-12 Foo', todo.src))
+        self.assertEquals(todo.fields['completionDate'], today)
+        self.assertTrue(re.match('^x ' + today_str + ' 2014-06-12 Foo', \
+            todo.src))
 
     def test_set_complete3(self):
         todo = TodoBase.TodoBase("Foo")
         todo.set_completed()
 
-        today = datetime.date.today().isoformat()
+        today = datetime.date.today()
+        today_str = today.isoformat()
 
-        self.assertTrue(re.match('^x ' + today + ' Foo', todo.src))
+        self.assertEquals(todo.fields['completionDate'], today)
+        self.assertTrue(re.match('^x ' + today_str + ' Foo', todo.src))
 
     def test_set_complete4(self):
         todo = TodoBase.TodoBase("(A) 2014-06-12 Foo")
         todo.set_completed()
 
-        today = datetime.date.today().isoformat()
+        today = datetime.date.today()
+        today_str = today.isoformat()
 
-        self.assertTrue(re.match('^x ' + today + ' 2014-06-12 Foo', todo.src))
+        self.assertEquals(todo.fields['completionDate'], today)
+        self.assertTrue(re.match('^x ' + today_str + ' 2014-06-12 Foo', todo.src))
 
 if __name__ == '__main__':
     unittest.main()
