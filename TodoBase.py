@@ -129,12 +129,12 @@ class TodoBase(object):
         self.fields = TodoParser.parse_line(self.src)
 
     def projects(self):
-        """ Returns a list of projects associated with this todo item. """
-        return self.fields['projects']
+        """ Returns a set of projects associated with this todo item. """
+        return set(self.fields['projects'])
 
     def contexts(self):
-        """ Returns a list of contexts associated with this todo item. """
-        return self.fields['contexts']
+        """ Returns a set of contexts associated with this todo item. """
+        return set(self.fields['contexts'])
 
     def is_completed(self):
         """ Returns True iff this todo has been completed. """
