@@ -23,8 +23,7 @@ class TodoBase(object):
     fields = {}
 
     def __init__(self, p_src):
-        self.src = p_src.strip()
-        self.fields = TodoParser.parse_line(self.src)
+        self.set_text(p_src)
 
     def tag_value(self, p_key):
         """
@@ -123,6 +122,11 @@ class TodoBase(object):
     def text(self):
         """ Returns the todo text with tags stripped off. """
         return self.text
+
+    def set_text(self, p_text):
+        """ Sets the todo source text. The text will be parsed again. """
+        self.src = p_text.strip()
+        self.fields = TodoParser.parse_line(self.src)
 
     def projects(self):
         """ Returns a list of projects associated with this todo item. """
