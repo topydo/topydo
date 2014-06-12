@@ -186,5 +186,14 @@ class TodoBaseTester(unittest.TestCase):
         self.assertEquals(todo.fields['completionDate'], today)
         self.assertTrue(re.match('^x ' + today_str + ' 2014-06-12 Foo', todo.src))
 
+    def test_set_text(self):
+        todo = TodoBase.TodoBase("(B) Foo")
+
+        new_text = "(C) Foo"
+        todo.set_text(new_text)
+
+        self.assertEquals(todo.src, new_text)
+        self.assertEquals(todo.priority(),'C')
+
 if __name__ == '__main__':
     unittest.main()
