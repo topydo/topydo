@@ -5,6 +5,8 @@ todo.txt file.
 
 import re
 
+import Utils
+
 def parse_line(p_string):
     """
     Parses a single line as can be encountered in a todo.txt file.
@@ -44,12 +46,20 @@ def parse_line(p_string):
 
     if completed_head:
         result['completed'] = True
-        result['completionDate'] = completed_head.group('completionDate')
-        result['creationDate'] = completed_head.group('creationDate')
+
+        completion_date = completed_head.group('completionDate')
+        result['completionDate'] = Utils.date_string_to_date(completion_date)
+
+        creation_date = completed_head.group('creationDate')
+        result['creationDate'] = Utils.date_string_to_date(creation_date)
+
         rest = completed_head.group('rest')
     elif normal_head:
         result['priority'] = normal_head.group('priority')
-        result['creationDate'] = normal_head.group('creationDate')
+
+        creation_date = normal_head.group('creationDate')
+        result['creationDate'] = Utils.date_string_to_date(creation_date)
+
         rest = normal_head.group('rest')
 
     for word in rest.split():
