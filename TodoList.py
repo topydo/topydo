@@ -99,12 +99,9 @@ class TodoList(object):
         defined by the end user. Todos is this list should not be modified,
         modifications should occur through this class.
         """
+        # TODO: perhaps change list such that values are immutable?
         return p_filter.filter(p_sorter.sort(self._todos))
 
     def __str__(self):
-        result = ""
-        for todo in self._todos:
-            result = "%s" % todo
-
-        return result
+        return '\n'.join([str(x) for x in self._todos])
 

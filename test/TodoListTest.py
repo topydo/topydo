@@ -9,7 +9,9 @@ import TodoList
 class TodoListTester(unittest.TestCase):
     def setUp(self):
         self.todofile = TodoFile.TodoFile('TodoListTest.txt')
-        self.todolist = TodoList.TodoList(self.todofile.read())
+        lines = self.todofile.read()
+        self.text = ''.join(lines)
+        self.todolist = TodoList.TodoList(lines)
 
     def test_contexts(self):
         self.assertEquals(set(['Context1', 'Context2']), \
@@ -78,3 +80,9 @@ class TodoListTester(unittest.TestCase):
         self.assertTrue(self.todolist.todo(1).is_completed())
         self.assertEquals(self.todolist.todo(1).source(), \
             "x " + today + " Foo @Context1 Not@Context +Project1 Not+Project")
+
+    def test_string(self):
+        # readlines() always ends a string with \n, but join() in str(todolist)
+        # doesn't necessarily.
+        self.assertEquals(str(self.todolist) + '\n', self.text)
+

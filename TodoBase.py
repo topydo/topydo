@@ -161,4 +161,4 @@ class TodoBase(object):
 
     def __str__(self):
         """ A printer for the todo item. """
-        print self.source() + "\n"
+        return self.source()
