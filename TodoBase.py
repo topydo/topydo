@@ -159,6 +159,6 @@ class TodoBase(object):
         self.src = re.sub(r'^(\([A-Z]\) )?', \
             'x ' + today.isoformat() + ' ', self.src)
 
-    def __print__(self):
+    def __str__(self):
         """ A printer for the todo item. """
         print self.source() + "\n"

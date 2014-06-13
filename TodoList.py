@@ -93,7 +93,7 @@ class TodoList(object):
         """
         return p_filter.filter(p_sorter.sort(self._todos))
 
-    def __print__(self):
+    def __str__(self):
         result = ""
         for todo in self._todos:
             result = "%s" % todo
