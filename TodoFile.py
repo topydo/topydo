@@ -27,7 +27,10 @@ class TodoFile(object):
 
         todofile = open(self.path, 'w')
 
-        for todo in p_todos:
-            todofile.write("%s" % todo)
+        if p_todos is list:
+            for todo in p_todos:
+                todofile.write(str(todo))
+        else:
+            todofile.write(p_todos)
 
         todofile.close()
