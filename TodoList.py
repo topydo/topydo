@@ -2,6 +2,8 @@
 A list of todo items.
 """
 
+import re
+
 import Todo
 
 class TodoList(object):
@@ -20,7 +22,7 @@ class TodoList(object):
         """
         self._todos = []
         for string in p_todostrings:
-            self._todos.append(Todo.Todo(string))
+            self.add(string)
 
     def todo(self, p_number):
         """
@@ -40,8 +42,10 @@ class TodoList(object):
         """
         Given a todo string, parse it and put it to the end of the list.
         """
-        todo = Todo.Todo(p_src)
-        self._todos.append(todo)
+
+        if re.search(r'\S', p_src):
+            todo = Todo.Todo(p_src)
+            self._todos.append(todo)
 
     def delete(self, p_number):
         """ Deletes a todo item from the list. """

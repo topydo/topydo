@@ -1,6 +1,7 @@
 """ Tests for the TodoList class. """
 
 import datetime
+import re
 import unittest
 
 import TodoFile
@@ -9,7 +10,8 @@ import TodoList
 class TodoListTester(unittest.TestCase):
     def setUp(self):
         self.todofile = TodoFile.TodoFile('TodoListTest.txt')
-        lines = self.todofile.read()
+        lines = [line for line in self.todofile.read() \
+                       if re.search(r'\S', line)]
         self.text = ''.join(lines)
         self.todolist = TodoList.TodoList(lines)
 
@@ -86,3 +88,7 @@ class TodoListTester(unittest.TestCase):
         # readlines() always ends a string with \n, but join() in str(todolist)
         # doesn't necessarily.
         self.assertEquals(str(self.todolist) + '\n', self.text)
+
+    def test_count(self):
+        """ Test that empty lines are not counted. """
+        self.assertEquals(self.todolist.count(), 5)
