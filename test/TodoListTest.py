@@ -23,7 +23,7 @@ class TodoListTester(unittest.TestCase):
         self.assertEquals(set(['Project1', 'Project2']), \
             self.todolist.projects())
 
-    def test_add(self):
+    def test_add1(self):
         text = "(C) Adding a new task @Context3 +Project3"
         count = self.todolist.count()
         self.todolist.add(text)
@@ -37,6 +37,24 @@ class TodoListTester(unittest.TestCase):
     def test_add2(self):
         text = str(self.todolist)
         self.todolist.add('')
+        self.assertEquals(str(self.todolist), text)
+
+    def test_add3(self):
+        count = self.todolist.count()
+        self.todolist.add('\n(C) New task')
+
+        self.assertEqual(self.todolist.count(), count + 1)
+        self.assertEqual(self.todolist.todo(count + 1).source(), '(C) New task')
+        self.assertEqual(self.todolist.todo(count + 1).priority(), 'C')
+
+    def test_add4(self):
+        text = str(self.todolist)
+        self.todolist.add(' ')
+        self.assertEquals(str(self.todolist), text)
+
+    def test_add5(self):
+        text = str(self.todolist)
+        self.todolist.add("\n")
         self.assertEquals(str(self.todolist), text)
 
     def test_delete1(self):
