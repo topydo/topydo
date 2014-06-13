@@ -63,11 +63,11 @@ def parse_line(p_string):
         rest = normal_head.group('rest')
 
     for word in rest.split():
-        project = re.match(r'\+(.*)', word)
+        project = re.match(r'\+(\S+)', word)
         if project:
             result['projects'].append(project.group(1))
 
-        context = re.match('@(.*)', word)
+        context = re.match(r'@(\S+)', word)
         if context:
             result['contexts'].append(context.group(1))
 
