@@ -28,7 +28,7 @@ class TodoListTester(unittest.TestCase):
         count = self.todolist.count()
         self.todolist.add(text)
 
-        self.assertEquals(self.todolist.todo(count+1).src, text)
+        self.assertEquals(self.todolist.todo(count+1).source(), text)
         self.assertEquals(set(['Project1', 'Project2', 'Project3']), \
             self.todolist.projects())
         self.assertEquals(set(['Context1', 'Context2', 'Context3']), \
@@ -43,7 +43,7 @@ class TodoListTester(unittest.TestCase):
         count = self.todolist.count()
         self.todolist.delete(2)
 
-        self.assertEquals(self.todolist.todo(2).src, \
+        self.assertEquals(self.todolist.todo(2).source(), \
             "(C) Baz @Context1 +Project1 key:value")
         self.assertEquals(self.todolist.count(), count - 1)
 
