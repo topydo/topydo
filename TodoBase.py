@@ -119,9 +119,16 @@ class TodoBase(object):
         """
         return self.fields['priority']
 
-    def text(self):
+    def text(self, p_with_tags=False):
         """ Returns the todo text with tags stripped off. """
-        return self.text
+        return self.src if p_with_tags else self.fields['text']
+
+    def source(self):
+        """
+        Returns the source text of the todo. This is the raw text with all
+        the tags included.
+        """
+        return self.text(True)
 
     def set_text(self, p_text):
         """ Sets the todo source text. The text will be parsed again. """
@@ -154,4 +161,4 @@ class TodoBase(object):
 
     def __print__(self):
         """ A printer for the todo item. """
-        print self.src + "\n"
+        print self.source() + "\n"
