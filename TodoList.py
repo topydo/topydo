@@ -69,10 +69,6 @@ class TodoList(object):
             new_text = todo.source() + ' ' + p_string
             todo.set_text(new_text)
 
-    def set_completed(self, p_number):
-        """ Marks the todo with the given number as complete. """
-        self.todo(p_number).set_completed()
-
     def projects(self):
         """ Returns a set of all projects in this list. """
         result = set()
@@ -90,10 +86,6 @@ class TodoList(object):
             result = result.union(contexts)
 
         return result
-
-    def set_priority(self, p_number, p_priority):
-        """ Sets the priority of the todo with the given number. """
-        self.todo(p_number).set_priority(p_priority)
 
     def view(self, p_sorter, p_filter):
         """

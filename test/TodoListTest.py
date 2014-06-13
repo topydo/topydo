@@ -107,14 +107,6 @@ class TodoListTester(unittest.TestCase):
 
         self.assertEquals(todo, None)
 
-    def test_completed(self):
-        self.todolist.todo(1).set_completed()
-        today = datetime.date.today().isoformat()
-
-        self.assertTrue(self.todolist.todo(1).is_completed())
-        self.assertEquals(self.todolist.todo(1).source(), \
-            "x " + today + " Foo @Context1 Not@Context +Project1 Not+Project")
-
     def test_string(self):
         # readlines() always ends a string with \n, but join() in str(todolist)
         # doesn't necessarily.
