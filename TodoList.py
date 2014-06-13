@@ -36,15 +36,23 @@ class TodoList(object):
 
         return result
 
-    def add(self, p_item):
+    def add(self, p_src):
         """
-        Given a Todo(Base) item, add it to the end of the list.
+        Given a todo string, parse it and put it to the end of the list.
         """
-        self._todos.append(p_item)
+        todo = Todo.Todo(p_src)
+        self._todos.append(todo)
 
     def delete(self, p_number):
         """ Deletes a todo item from the list. """
-        del self._todos[p_number - 1]
+        try:
+            del self._todos[p_number - 1]
+        except IndexError:
+            pass # just ignore it
+
+    def count(self):
+        """ Returns the number of todos on this list. """
+        return len(self._todos)
 
     def append(self, p_number, p_string):
         """
@@ -54,7 +62,7 @@ class TodoList(object):
         """
         if len(p_string) > 0:
             todo = self.todo(p_number)
-            new_text = todo.text() + ' ' + p_string
+            new_text = todo.source() + ' ' + p_string
             todo.set_text(new_text)
 
     def set_completed(self, p_number):
