@@ -109,6 +109,14 @@ class TodoBaseTester(unittest.TestCase):
         self.assertEquals(todo.priority(), None)
         self.assertTrue(re.match(r'^Foo$', todo.src))
 
+    def test_set_priority6(self):
+        """ Do not set priorities on completed tasks. """
+        todo = TodoBase.TodoBase("x 2014-06-13 Foo")
+        todo.set_priority('A')
+
+        self.assertFalse(todo.priority())
+        self.assertEquals(todo.src, "x 2014-06-13 Foo")
+
     def test_project1(self):
         todo = TodoBase.TodoBase("(C) Foo +Bar +Baz")
 
@@ -152,6 +160,7 @@ class TodoBaseTester(unittest.TestCase):
         today = datetime.date.today()
         today_str = today.isoformat()
 
+        self.assertFalse(todo.priority())
         self.assertEquals(todo.fields['completionDate'], today)
         self.assertTrue(re.match('^x ' + today_str + ' Foo', todo.src))
 

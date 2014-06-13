@@ -107,7 +107,9 @@ class TodoBase(object):
         Priority remains unchanged when an invalid priority is given.
         """
 
-        if p_priority == None or re.match('^[A-Z]$', p_priority):
+        if not self.is_completed() and \
+            (p_priority == None or re.match('^[A-Z]$', p_priority)):
+
             self.fields['priority'] = p_priority
 
             priority_str = '' if p_priority == None else '(' + p_priority + ') '
@@ -152,7 +154,9 @@ class TodoBase(object):
         Marks the todo as complete.
         Sets the completed flag and sets the completion date to today.
         """
-        if not self.fields['completed']:
+        if not self.is_completed():
+            self.set_priority(None)
+
             self.fields['completed'] = True
             today = datetime.date.today()
             self.fields['completionDate'] = today
