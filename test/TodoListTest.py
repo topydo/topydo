@@ -34,6 +34,11 @@ class TodoListTester(unittest.TestCase):
         self.assertEquals(set(['Context1', 'Context2', 'Context3']), \
             self.todolist.contexts())
 
+    def test_add2(self):
+        text = str(self.todolist)
+        self.todolist.add('')
+        self.assertEquals(str(self.todolist), text)
+
     def test_delete1(self):
         count = self.todolist.count()
         self.todolist.delete(2)
