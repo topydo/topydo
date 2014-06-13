@@ -69,12 +69,16 @@ class TodoList(object):
             projects = todo.projects()
             result = result.union(projects)
 
+        return result
+
     def contexts(self):
         """ Returns a set of all contexts in this list. """
         result = set()
         for todo in self._todos:
             contexts = todo.contexts()
             result = result.union(contexts)
+
+        return result
 
     def set_priority(self, p_number, p_priority):
         """ Sets the priority of the todo with the given number. """
