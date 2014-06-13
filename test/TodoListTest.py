@@ -39,9 +39,17 @@ class TodoListTester(unittest.TestCase):
         self.todolist.add('')
         self.assertEquals(str(self.todolist), text)
 
-    def test_add3(self):
+    def test_add3a(self):
         count = self.todolist.count()
         self.todolist.add('\n(C) New task')
+
+        self.assertEqual(self.todolist.count(), count + 1)
+        self.assertEqual(self.todolist.todo(count + 1).source(), '(C) New task')
+        self.assertEqual(self.todolist.todo(count + 1).priority(), 'C')
+
+    def test_add3b(self):
+        count = self.todolist.count()
+        self.todolist.add('(C) New task\n')
 
         self.assertEqual(self.todolist.count(), count + 1)
         self.assertEqual(self.todolist.todo(count + 1).source(), '(C) New task')
