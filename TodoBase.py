@@ -152,12 +152,13 @@ class TodoBase(object):
         Marks the todo as complete.
         Sets the completed flag and sets the completion date to today.
         """
-        self.fields['completed'] = True
-        today = datetime.date.today()
-        self.fields['completionDate'] = today
+        if not self.fields['completed']:
+            self.fields['completed'] = True
+            today = datetime.date.today()
+            self.fields['completionDate'] = today
 
-        self.src = re.sub(r'^(\([A-Z]\) )?', \
-            'x ' + today.isoformat() + ' ', self.src)
+            self.src = re.sub(r'^(\([A-Z]\) )?', \
+                'x ' + today.isoformat() + ' ', self.src)
 
     def __str__(self):
         """ A printer for the todo item. """
