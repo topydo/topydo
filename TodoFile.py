@@ -2,8 +2,6 @@
 This module deals with todo.txt files.
 """
 
-import TodoBase
-
 class TodoFile(object):
     """
     This class represents a todo.txt file, which can be read from or written
@@ -16,14 +14,11 @@ class TodoFile(object):
 
     def read(self):
         """ Reads the todo.txt file and returns a list of todo items.  """
-        todos = []
 
         todofile = open(self.path, 'r')
-
-        for line in todofile:
-            todos.append(TodoBase.TodoBase(line))
-
+        todos = todofile.readlines()
         todofile.close()
+
         return todos
 
     def write(self, p_todos):
@@ -34,6 +29,6 @@ class TodoFile(object):
         todofile = open(self.path, 'w')
 
         for todo in p_todos:
-            todofile.write(todo.src + "\n")
+            todofile.write("%s" % todo)
 
         todofile.close()

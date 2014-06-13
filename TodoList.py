@@ -2,6 +2,8 @@
 A list of todo items.
 """
 
+import Todo
+
 class TodoList(object):
     """
     Provides operations for a todo list, such as adding items, removing them,
@@ -12,12 +14,13 @@ class TodoList(object):
     """
     _todos = []
 
-    def __init__(self, todos):
+    def __init__(self, p_todostrings):
         """
-        Should be given a list of Todo objects (already read and parsed from
-        file or standard input.
+        Should be given a list of strings, each element a single todo string.
+        The string will be parsed.
         """
-        self._todos = todos
+        for string in p_todostrings:
+            self._todos.append(Todo.Todo(string))
 
     def todo(self, p_number):
         """
@@ -32,10 +35,6 @@ class TodoList(object):
             result = None
 
         return result
-
-    def todos(self):
-        """ Returns the list of all todos. """
-        return self._todos
 
     def add(self, p_item):
         """
