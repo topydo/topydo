@@ -19,10 +19,10 @@ class TodoBase(object):
     in a todo item.
     """
 
-    src = None
-    fields = {}
-
     def __init__(self, p_src):
+        self.src = ""
+        self.fields = {}
+
         self.set_text(p_src)
 
     def tag_value(self, p_key):

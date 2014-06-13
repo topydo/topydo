@@ -12,13 +12,13 @@ class TodoList(object):
     The list is usually a complete list found in the program's input (e.g. a
     todo.txt file), not an arbitrary set of todo items.
     """
-    _todos = []
 
     def __init__(self, p_todostrings):
         """
         Should be given a list of strings, each element a single todo string.
         The string will be parsed.
         """
+        self._todos = []
         for string in p_todostrings:
             self._todos.append(Todo.Todo(string))
 

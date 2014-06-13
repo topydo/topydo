@@ -8,7 +8,6 @@ class TodoFile(object):
     to.
     """
 
-    path = ""
     def __init__(self, p_path):
         self.path = p_path
 
