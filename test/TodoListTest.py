@@ -23,9 +23,10 @@ class TodoListTester(unittest.TestCase):
 
     def test_add(self):
         text = "(C) Adding a new task @Context3 +Project3"
+        count = self.todolist.count()
         self.todolist.add(text)
 
-        self.assertEquals(self.todolist.todo(6).src, text)
+        self.assertEquals(self.todolist.todo(count+1).src, text)
         self.assertEquals(set(['Project1', 'Project2', 'Project3']), \
             self.todolist.projects())
         self.assertEquals(set(['Context1', 'Context2', 'Context3']), \
@@ -85,4 +86,3 @@ class TodoListTester(unittest.TestCase):
         # readlines() always ends a string with \n, but join() in str(todolist)
         # doesn't necessarily.
         self.assertEquals(str(self.todolist) + '\n', self.text)
-
