@@ -153,6 +153,18 @@ class TodoBaseTester(unittest.TestCase):
 
         self.assertFalse(todo.is_completed())
 
+    def test_completion3(self):
+        """ A completed todo must start with an x followed by a date. """
+        todo = TodoBase.TodoBase("x Not complete")
+
+        self.assertFalse(todo.is_completed())
+
+    def test_completion4(self):
+        """ A completed todo must start with an x followed by a date. """
+        todo = TodoBase.TodoBase("X 2014-06-14 Not complete")
+
+        self.assertFalse(todo.is_completed())
+
     def test_set_complete1(self):
         todo = TodoBase.TodoBase("(A) Foo")
         todo.set_completed()
