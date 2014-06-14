@@ -9,7 +9,7 @@ import TodoList
 
 class TodoListTester(unittest.TestCase):
     def setUp(self):
-        self.todofile = TodoFile.TodoFile('TodoListTest.txt')
+        self.todofile = TodoFile.TodoFile('data/TodoListTest.txt')
         lines = [line for line in self.todofile.read() \
                        if re.search(r'\S', line)]
         self.text = ''.join(lines)
