@@ -14,6 +14,7 @@ IMPORTANCE_VALUE = {'A': 3, 'B': 2, 'C': 1}
 def importance(p_todo):
     """
     Calculates the importance of the given task.
+    Returns an importance of zero when the task has been completed.
     """
     result = 2
 
@@ -37,4 +38,4 @@ def importance(p_todo):
     if p_todo.has_tag(Config.TAG_STAR):
         result += 1
 
-    return result
+    return result if not p_todo.is_completed() else 0
