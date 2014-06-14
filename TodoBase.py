@@ -149,6 +149,13 @@ class TodoBase(object):
         """ Returns True iff this todo has been completed. """
         return self.fields['completed']
 
+    def completion_date(self):
+        """
+        Returns the completion date when the todo has been completed, or None
+        otherwise.
+        """
+        return self.fields['completionDate']
+
     def set_completed(self):
         """
         Marks the todo as complete.
@@ -163,6 +170,10 @@ class TodoBase(object):
 
             self.src = re.sub(r'^(\([A-Z]\) )?', \
                 'x ' + today.isoformat() + ' ', self.src)
+
+    def creation_date(self):
+        """ Returns the creation date of a todo. """
+        return self.fields['creationDate']
 
     def __str__(self):
         """ A printer for the todo item. """
