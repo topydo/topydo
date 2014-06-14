@@ -1,0 +1,4 @@
+(C) Useless
+(B) Minor
+(A) Important
+(A) Another important task star:1

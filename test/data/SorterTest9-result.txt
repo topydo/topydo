@@ -1,0 +1,5 @@
+(C) Pretty much overdue due:2014-01-01
+(B) Equal importance of task below star:1
+(A) High priority
+(C) This one however is not overdue yet due:3000-01-01
+x 2014-01-01 A completed high priority task due:2014-01-01
