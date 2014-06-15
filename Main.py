@@ -51,18 +51,20 @@ class Application(object):
     def append(self):
         """ Appends a text to a todo item. """
 
-        number = sys.argv[2]
-        text = sys.argv[3]
+        try:
+            number = sys.argv[2]
+            text = sys.argv[3]
+        except IndexError:
+            usage()
 
-        if number and text:
-            try:
-                number = int(number)
-                self.todolist.append(number, text)
+        try:
+            number = int(number)
+            self.todolist.append(number, text)
 
-                self.print_todo(number)
-                self.dirty = True
-            except ValueError:
-                error("Invalid todo number given.")
+            self.print_todo(number)
+            self.dirty = True
+        except ValueError:
+            error("Invalid todo number given.")
 
     def do(self):
         try:
