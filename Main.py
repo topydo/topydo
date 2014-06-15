@@ -75,13 +75,12 @@ class Application(object):
             else:
                 error("Invalid priority given.")
 
-    def list(self, p_expression=None):
+    def list(self):
         sorter = Sorter.Sorter(Config.SORT_STRING)
-
         filters = [Filter.RelevanceFilter()]
 
-        if p_expression:
-            filters.append(Filter.GrepFilter(p_expression))
+        if len(sys.argv) > 1:
+            filters.append(Filter.GrepFilter(sys.argv[2]))
 
         print self.todolist.view(sorter, filters)
 
