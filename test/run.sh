@@ -5,9 +5,9 @@ PYTHONPATH=..
 if [ -n "$1" ]; then
   TESTS=$1
 else
-  TESTS="FilterTest SorterTest TodoBaseTest TodoFileTest TodoTest TodoListTest"
+  TESTS="*Test.py"
 fi
 
 for TEST in $TESTS; do
-  python -m unittest "$TEST"
+  python -m unittest "${TEST%\.*}" # strip the .py extension
 done
