@@ -1,0 +1,4 @@
+(C) This is part of some +Project
+(D) Just an arbitrary task
+(C) Another mildly important task for the +Project
+(C) And here's one with a lowercase +project
