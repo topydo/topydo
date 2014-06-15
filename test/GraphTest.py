@@ -6,7 +6,7 @@ class GraphTest(unittest.TestCase):
     def setUp(self):
         self.graph = Graph.DirectedGraph()
 
-        self.graph.add_edge(1, 2)
+        self.graph.add_edge(1, 2, 1)
         self.graph.add_edge(2, 4)
         self.graph.add_edge(4, 3)
         self.graph.add_edge(4, 6)
@@ -58,6 +58,7 @@ class GraphTest(unittest.TestCase):
 
         self.assertFalse(self.graph.has_path(1, 4))
         self.assertTrue(self.graph.has_path(2, 4))
+        self.assertFalse(self.graph.has_edge_id(1))
 
     def test_remove_edge2(self):
         self.graph.remove_edge(3, 5, True)

@@ -7,6 +7,7 @@ class DirectedGraph(object):
     """
     def __init__(self):
         self._edges = {}
+        self._edge_numbers = {}
 
     def add_node(self, p_id):
         """ Adds a node to the graph. """
@@ -17,10 +18,12 @@ class DirectedGraph(object):
         """ Returns true iff the graph has the given node. """
         return p_id in self._edges
 
-    def add_edge(self, p_from, p_to):
+    def add_edge(self, p_from, p_to, p_id=None):
         """
         Adds an edge to the graph. The nodes will be added if they don't
         exist.
+
+        The p_id is the id of the edge, if the client wishes to maintain this.
         """
         if not self.has_node(p_from):
             self.add_node(p_from)
@@ -29,6 +32,8 @@ class DirectedGraph(object):
             self.add_node(p_to)
 
         self._edges[p_from].add(p_to)
+        if p_id:
+            self._edge_numbers[p_id] = (p_from, p_to)
 
     def has_path(self, p_from, p_to):
         """
@@ -116,6 +121,12 @@ class DirectedGraph(object):
         """ Returns True when the graph has the given edge. """
         return p_from in self._edges and p_to in self._edges[p_from]
 
+    def has_edge_id(self, p_id):
+        """
+        Returns True if the client registered an edge with the given id.
+        """
+        return p_id in self._edge_numbers
+
     def remove_edge(self, p_from, p_to, remove_unconnected_nodes=True):
         """
         Removes an edge from the graph.
@@ -125,6 +136,11 @@ class DirectedGraph(object):
         """
         if self.has_edge(p_from, p_to):
             self._edges[p_from].remove(p_to)
+
+        for key, value in self._edge_numbers.iteritems():
+            if value == (p_from, p_to):
+                del self._edge_numbers[key]
+                break
 
         if remove_unconnected_nodes:
             if self.is_isolated(p_from):
