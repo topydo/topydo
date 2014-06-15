@@ -17,11 +17,14 @@ def print_iterable(p_iter):
 
 def usage():
     """ Prints the usage of the todo.txt CLI """
-    pass
+    exit(1)
 
-def error(p_message):
+def error(p_message, p_exit=True):
     """ Prints a message on the standard error. """
     sys.stderr.write(p_message + '\n')
+
+    if p_exit:
+        exit(1)
 
 class Application(object):
     def __init__(self):
@@ -30,9 +33,11 @@ class Application(object):
 
     def add(self):
         """ Adds a todo item to the list. """
-        if sys.argv[2]:
+        try:
             self.todolist.add(sys.argv[2])
             self.dirty = True
+        except IndexError:
+            error("No todo text was given.")
 
     def append(self):
         """ Appends a text to a todo item. """
@@ -49,37 +54,44 @@ class Application(object):
                 error("Invalid todo number given.")
 
     def do(self):
-        number = sys.argv[2]
+        try:
+            number = sys.argv[2]
+        except IndexError:
+            usage()
 
         try:
             number = int(number)
-            self.todolist.set_completed(number)
+            self.todolist.todo(number).set_completed(number)
             self.dirty = True
+        except IndexError:
+            usage()
         except ValueError:
             error("Invalid todo number given.")
 
     def pri(self):
-        number = sys.argv[2]
-        priority = sys.argv[3]
+        try:
+            number = sys.argv[2]
+            priority = sys.argv[3]
+        except IndexError:
+            usage()
 
-        if number and priority:
-            if re.match('^[A-Z]$', priority):
-                try:
-                    number = int(number)
-                    self.todolist.todo(number).set_priority(priority)
-                    self.dirty = True
-                except AttributeError:
-                    error("Invalid todo number given.")
-                except ValueError:
-                    error("Invalid todo number given.")
-            else:
-                error("Invalid priority given.")
+        if re.match('^[A-Z]$', priority):
+            try:
+                number = int(number)
+                self.todolist.todo(number).set_priority(priority)
+                self.dirty = True
+            except AttributeError:
+                error("Invalid todo number given.")
+            except ValueError:
+                error("Invalid todo number given.")
+        else:
+            error("Invalid priority given.")
 
     def list(self):
         sorter = Sorter.Sorter(Config.SORT_STRING)
         filters = [Filter.RelevanceFilter()]
 
-        if len(sys.argv) > 1:
+        if len(sys.argv) > 2:
             filters.append(Filter.GrepFilter(sys.argv[2]))
 
         print self.todolist.view(sorter, filters)
