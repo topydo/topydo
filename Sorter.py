@@ -3,6 +3,7 @@
 import datetime
 import re
 
+import Config
 from Importance import importance
 
 def is_priority_field(p_field):
@@ -28,7 +29,7 @@ def get_field_function(p_field):
         result = (lambda a: a.completion_date() if a.completion_date() \
             else datetime.date.max)
     elif p_field == 'importance':
-        result = importance
+        result = lambda a: importance(a, Config.IGNORE_WEEKENDS)
     elif p_field == 'text':
         result = lambda a: a.text()
     else:

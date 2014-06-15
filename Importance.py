@@ -7,14 +7,29 @@ today may have a higher importance than high priority tasks in the distant
 future.
 """
 
+import datetime
+
 import Config
 
 IMPORTANCE_VALUE = {'A': 3, 'B': 2, 'C': 1}
 
-def importance(p_todo):
+def is_due_next_monday(p_todo):
+    """ Returns True when the given task is due next Monday. """
+    today = datetime.date.today()
+    due = p_todo.due_date()
+
+    return due and due.weekday() == 0 and today.weekday() >= 4 and \
+        p_todo.days_till_due()
+
+def importance(p_todo, p_ignore_weekend=False):
     """
     Calculates the importance of the given task.
     Returns an importance of zero when the task has been completed.
+
+    If p_ignore_weekend is True, the importance value of the due date will be
+    calculated as if Friday is immediately followed by Monday. This in case of
+    a todo list at the office and you don't work during the weekends (you
+    don't, right?)
     """
     result = 2
 
@@ -34,6 +49,9 @@ def importance(p_todo):
             result += 5
         elif days_left < 0:
             result += 6
+
+    if p_ignore_weekend and is_due_next_monday(p_todo):
+        result += 1
 
     if p_todo.has_tag(Config.TAG_STAR):
         result += 1

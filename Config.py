@@ -14,3 +14,4 @@ TAG_DUE = 'due'
 TAG_STAR = 'star'
 
 SORT_STRING = 'desc:importance,due,desc:priority'
+IGNORE_WEEKENDS = True # for calculating the importance value
