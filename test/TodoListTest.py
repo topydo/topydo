@@ -115,3 +115,62 @@ class TodoListTester(unittest.TestCase):
     def test_count(self):
         """ Test that empty lines are not counted. """
         self.assertEquals(self.todolist.count(), 5)
+
+    def test_todo_by_dep_id(self):
+        """ Tests that todos can be retrieved by their id tag. """
+        self.todolist.add("(C) Foo id:1")
+
+        self.assertTrue(self.todolist.todo_by_dep_id('1'))
+        self.assertFalse(self.todolist.todo_by_dep_id('2'))
+
+class TodoListDependencyTester(unittest.TestCase):
+    def setUp(self):
+        self.todolist = TodoList.TodoList([])
+        self.todolist.add("Foo id:1")
+        self.todolist.add("Bar p:1")
+        self.todolist.add("Baz p:1 id:2")
+        self.todolist.add("Buzz p:2")
+
+    def test_check_dep(self):
+        children = self.todolist.children(1)
+        self.assertEqual([todo.source() for todo in children], \
+            ['Bar p:1', 'Baz p:1 id:2', 'Buzz p:2'])
+
+        children = self.todolist.children(1, True)
+        self.assertEqual([todo.source() for todo in children], \
+            ['Bar p:1', 'Baz p:1 id:2'])
+
+        children = self.todolist.children(3)
+        self.assertEqual([todo.source() for todo in children], \
+            ['Buzz p:2'])
+
+        parents = self.todolist.parents(4)
+        self.assertEqual([todo.source() for todo in parents], \
+            ['Foo id:1', 'Baz p:1 id:2'])
+
+        parents = self.todolist.parents(4, True)
+        self.assertEqual([todo.source() for todo in parents], \
+            ['Baz p:1 id:2'])
+
+        self.assertEqual(self.todolist.children(2), [])
+        self.assertEqual(self.todolist.parents(1), [])
+
+    def test_remove_dep1(self):
+        self.todolist.remove_dependency(3, 4)
+
+        self.assertFalse(self.todolist.todo(3).has_tag('id'))
+        self.assertFalse(self.todolist.todo(4).has_tag('p'))
+
+    def test_remove_dep2(self):
+        old = str(self.todolist)
+        self.todolist.remove_dependency(1, 4)
+
+        self.assertEquals(str(self.todolist),old)
+
+    def test_remove_task(self):
+        self.todolist.delete(3)
+        self.assertFalse(self.todolist.todo(3).has_tag('p', '2'))
+
+        children = self.todolist.children(1)
+        self.assertEqual([todo.source() for todo in children], \
+            ['Bar p:1'])

@@ -4,6 +4,7 @@ A list of todo items.
 
 import re
 
+import Graph
 from PrettyPrinter import pretty_print
 import Todo
 import View
@@ -23,6 +24,8 @@ class TodoList(object):
         The string will be parsed.
         """
         self._todos = []
+        self._depgraph = Graph.DirectedGraph()
+
         for string in p_todostrings:
             self.add(string)
 
@@ -40,9 +43,32 @@ class TodoList(object):
 
         return result
 
+    def todo_by_dep_id(self, p_dep_id):
+        """
+        Returns the todo that has the id tag set to the value p_dep_id.
+        There is only one such task, the behavior is undefined when a tag has
+        more than one id tag.
+        """
+        hits = [t for t in self._todos if t.tag_value('id') == p_dep_id]
+
+        return hits[0] if len(hits) else None
+
     def add(self, p_src):
         """
         Given a todo string, parse it and put it to the end of the list.
+
+        Also maintains the dependency graph to track the dependencies between
+        tasks.
+
+        The node ids are the todo numbers.
+        The edge ids are the numbers denoted by id: and p: tags.
+
+        For example:
+
+        (C) Parent task id:4
+        (B) Child task p:4
+
+        Then there will be an edge 1 --> 2 with ID 4.
         """
 
         if re.search(r'\S', p_src):
@@ -50,12 +76,27 @@ class TodoList(object):
             todo = Todo.Todo(p_src, number)
             self._todos.append(todo)
 
+            # maintain dependency graph
+            if todo.has_tag('id'):
+                self._depgraph.add_node(todo.number)
+
+            for child in todo.tag_values('p'):
+                parent = self.todo_by_dep_id(child)
+                if parent:
+                    self._depgraph.add_edge(parent.number, todo.number, child)
+
     def delete(self, p_number):
         """ Deletes a todo item from the list. """
-        try:
+        todo = self.todo(p_number)
+
+        if todo:
+            for child in self.children(p_number):
+                self.remove_dependency(todo.number, child.number)
+
+            for parent in self.parents(p_number):
+                self.remove_dependency(parent.number, todo.number)
+
             del self._todos[p_number - 1]
-        except IndexError:
-            pass # just ignore it
 
     def count(self):
         """ Returns the number of todos on this list. """
@@ -99,6 +140,64 @@ class TodoList(object):
         modifications should occur through this class.
         """
         return View.View(p_sorter, p_filters, self._todos)
+
+    def add_dependency(self, p_number1, p_number2):
+        """ Adds a dependency from task 1 to task 2. """
+        def find_next_id():
+            """
+            Find a new unused ID.
+            Unused means that no task has it as an 'id' value or as a 'p'
+            value.
+            """
+
+            new_id = 1
+            while self._depgraph.has_edge_id(new_id):
+                new_id += 1
+
+            return '%d' % new_id
+
+        from_todo = self.todo(p_number1)
+        to_todo = self.todo(p_number2)
+
+        dep_id = None
+        if from_todo.has_tag('id'):
+            dep_id = from_todo.tag_value('id')
+        else:
+            dep_id = find_next_id()
+
+        to_todo.add_tag('p', dep_id)
+        self._depgraph.add_edge(p_number1, p_number2, int(dep_id))
+
+    def remove_dependency(self, p_number1, p_number2):
+        """ Removes a dependency between two todos. """
+        from_todo = self.todo(p_number1)
+        to_todo = self.todo(p_number2)
+
+        dep_id = from_todo.tag_value('id')
+
+        if dep_id:
+            to_todo.remove_tag('p', dep_id)
+            self._depgraph.remove_edge(p_number1, p_number2)
+
+            if not self.children(p_number1, True):
+                from_todo.remove_tag('id')
+
+    def parents(self, p_number, p_only_direct=False):
+        """
+        Returns a list of parent todos that (in)directly depend on the
+        given todo.
+        """
+        parents = self._depgraph.incoming_neighbors(p_number, not p_only_direct)
+        return [self.todo(parent) for parent in parents]
+
+    def children(self, p_number, p_only_direct=False):
+        """
+        Returns a list of child todos that the given todo (in)directly depends
+        on.
+        """
+        children = \
+            self._depgraph.outgoing_neighbors(p_number, not p_only_direct)
+        return [self.todo(child) for child in children]
 
     def __str__(self):
         return '\n'.join(pretty_print(self._todos))
