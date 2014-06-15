@@ -6,6 +6,7 @@ import sys
 
 import Config
 import Filter
+from PrettyPrinter import pretty_print
 import Sorter
 import TodoFile
 import TodoList
@@ -31,10 +32,18 @@ class Application(object):
         self.todolist = TodoList.TodoList([])
         self.dirty = False
 
+    def print_todo(self, p_number):
+        """ Prints a single todo item to the standard output. """
+        todo = self.todolist.todo(p_number)
+        printed = pretty_print([todo], True, True)
+        print printed[0]
+
     def add(self):
         """ Adds a todo item to the list. """
         try:
             self.todolist.add(sys.argv[2])
+
+            self.print_todo(todo.number) # TODO
             self.dirty = True
         except IndexError:
             error("No todo text was given.")
@@ -49,6 +58,8 @@ class Application(object):
             try:
                 number = int(number)
                 self.todolist.append(number, text)
+
+                self.print_todo(number)
                 self.dirty = True
             except ValueError:
                 error("Invalid todo number given.")
@@ -62,6 +73,8 @@ class Application(object):
         try:
             number = int(number)
             self.todolist.todo(number).set_completed()
+
+            self.print_todo(number)
             self.dirty = True
         except IndexError:
             usage()
@@ -78,7 +91,13 @@ class Application(object):
         if re.match('^[A-Z]$', priority):
             try:
                 number = int(number)
-                self.todolist.todo(number).set_priority(priority)
+                todo = self.todolist.todo(number)
+                old_priority = todo.priority()
+                todo.set_priority(priority)
+
+                print "Priority changed from %s to %s" \
+                    % (old_priority, priority)
+                self.print_todo(number)
                 self.dirty = True
             except AttributeError:
                 error("Invalid todo number given.")
