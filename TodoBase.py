@@ -19,9 +19,10 @@ class TodoBase(object):
     in a todo item.
     """
 
-    def __init__(self, p_src):
+    def __init__(self, p_src, p_number=-1):
         self.src = ""
         self.fields = {}
+        self.number = p_number
 
         self.set_text(p_src)
 

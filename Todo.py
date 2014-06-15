@@ -14,8 +14,8 @@ class Todo(TodoBase.TodoBase):
     base class, mainly by interpreting the start and due dates of task.
     """
 
-    def __init__(self, p_str):
-        TodoBase.TodoBase.__init__(self, p_str)
+    def __init__(self, p_str, p_number=-1):
+        TodoBase.TodoBase.__init__(self, p_str, p_number)
 
     def get_date(self, p_tag):
         """ Given a date tag, return a date object. """

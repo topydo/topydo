@@ -45,7 +45,8 @@ class TodoList(object):
         """
 
         if re.search(r'\S', p_src):
-            todo = Todo.Todo(p_src)
+            number = len(self._todos) + 1
+            todo = Todo.Todo(p_src, number)
             self._todos.append(todo)
 
     def delete(self, p_number):
