@@ -1,3 +1,5 @@
+from PrettyPrinter import pretty_print
+
 class View:
     def __init__(self, p_sorter, p_filters, p_todos):
         self._todos = p_todos
@@ -17,5 +19,8 @@ class View:
         for _filter in self._filters:
             self._viewdata = _filter.filter(self._viewdata)
 
+    def pretty_print(self):
+        return '\n'.join(pretty_print(self._todos, True, True))
+
     def __str__(self):
-        return '\n'.join([str(x) for x in self._viewdata])
+        return '\n'.join(pretty_print(self._todos))

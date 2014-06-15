@@ -94,7 +94,7 @@ class Application(object):
         if len(sys.argv) > 2:
             filters.append(Filter.GrepFilter(sys.argv[2]))
 
-        print self.todolist.view(sorter, filters)
+        print self.todolist.view(sorter, filters).pretty_print()
 
     def run(self):
         """ Main entry function. """

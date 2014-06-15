@@ -4,6 +4,7 @@ A list of todo items.
 
 import re
 
+from PrettyPrinter import pretty_print
 import Todo
 import View
 
@@ -100,5 +101,5 @@ class TodoList(object):
         return View.View(p_sorter, p_filters, self._todos)
 
     def __str__(self):
-        return '\n'.join([str(x) for x in self._todos])
+        return '\n'.join(pretty_print(self._todos))
 
