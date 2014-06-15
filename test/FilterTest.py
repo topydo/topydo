@@ -1,6 +1,5 @@
 """ Tests for the filter functionality. """
 
-import pdb
 import datetime
 import unittest
 

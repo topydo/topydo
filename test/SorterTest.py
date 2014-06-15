@@ -1,4 +1,3 @@
-import pdb # FIXME remove this
 import unittest
 
 import Sorter
