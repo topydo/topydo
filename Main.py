@@ -61,7 +61,7 @@ class Application(object):
 
         try:
             number = int(number)
-            self.todolist.todo(number).set_completed(number)
+            self.todolist.todo(number).set_completed()
             self.dirty = True
         except IndexError:
             usage()
