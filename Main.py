@@ -5,6 +5,8 @@ import re
 import sys
 
 import Config
+import Filter
+import Sorter
 import TodoFile
 import TodoList
 
@@ -73,9 +75,15 @@ class Application(object):
             else:
                 error("Invalid priority given.")
 
-    def list(self):
-        print self.todolist
-        # TODO: sort + filter
+    def list(self, p_expression=None):
+        sorter = Sorter.Sorter(Config.SORT_STRING)
+
+        filters = [Filter.RelevanceFilter()]
+
+        if p_expression:
+            filters.append(Filter.GrepFilter(p_expression))
+
+        print self.todolist.view(sorter, filters)
 
     def run(self):
         """ Main entry function. """

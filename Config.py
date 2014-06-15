@@ -10,3 +10,5 @@ COMPLETED_FILENAME = 'done.txt'
 TAG_START = 't'
 TAG_DUE = 'due'
 TAG_STAR = 'star'
+
+SORT_STRING = 'desc:importance,due,desc:priority'

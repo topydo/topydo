@@ -5,6 +5,7 @@ A list of todo items.
 import re
 
 import Todo
+import View
 
 class TodoList(object):
     """
@@ -87,7 +88,7 @@ class TodoList(object):
 
         return result
 
-    def view(self, p_sorter, p_filter):
+    def view(self, p_sorter, p_filters):
         """
         Constructs a view of the todo list.
 
@@ -95,8 +96,7 @@ class TodoList(object):
         defined by the end user. Todos is this list should not be modified,
         modifications should occur through this class.
         """
-        # TODO: perhaps change list such that values are immutable?
-        return p_filter.filter(p_sorter.sort(self._todos))
+        return View.View(p_sorter, p_filters, self._todos)
 
     def __str__(self):
         return '\n'.join([str(x) for x in self._todos])
