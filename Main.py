@@ -105,9 +105,10 @@ class Application(object):
         except Exception:
             pass # TODO
 
-        subcommand = Config.DEFAULT_ACTION
-        if len(sys.argv):
+        try:
             subcommand = sys.argv[1]
+        except IndexError:
+            subcommand = Config.DEFAULT_ACTION
 
         if subcommand == 'add':
             self.add()
