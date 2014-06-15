@@ -1,6 +1,13 @@
+""" A view is a list of todos, sorted and filtered. """
+
 from PrettyPrinter import pretty_print
 
-class View:
+class View(object):
+    """
+    A view is instantiated by a todo list, usually obtained from a todo.txt
+    file. Also a sorter and a list of filters should be given that is applied
+    to the list.
+    """
     def __init__(self, p_sorter, p_filters, p_todos):
         self._todos = p_todos
         self._viewdata = []
@@ -20,6 +27,7 @@ class View:
             self._viewdata = _filter.filter(self._viewdata)
 
     def pretty_print(self):
+        """ Pretty prints the view. """
         return '\n'.join(pretty_print(self._todos, True, True))
 
     def __str__(self):
