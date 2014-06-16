@@ -156,17 +156,18 @@ class TodoList(object):
 
             return '%d' % new_id
 
-        from_todo = self.todo(p_number1)
-        to_todo = self.todo(p_number2)
+        if not self._depgraph.has_edge(p_number1, p_number2):
+            from_todo = self.todo(p_number1)
+            to_todo = self.todo(p_number2)
 
-        dep_id = None
-        if from_todo.has_tag('id'):
-            dep_id = from_todo.tag_value('id')
-        else:
-            dep_id = find_next_id()
+            dep_id = None
+            if from_todo.has_tag('id'):
+                dep_id = from_todo.tag_value('id')
+            else:
+                dep_id = find_next_id()
 
-        to_todo.add_tag('p', dep_id)
-        self._depgraph.add_edge(p_number1, p_number2, int(dep_id))
+            to_todo.add_tag('p', dep_id)
+            self._depgraph.add_edge(p_number1, p_number2, int(dep_id))
 
     def remove_dependency(self, p_number1, p_number2):
         """ Removes a dependency between two todos. """

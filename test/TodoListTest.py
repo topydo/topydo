@@ -174,3 +174,9 @@ class TodoListDependencyTester(unittest.TestCase):
         children = self.todolist.children(1)
         self.assertEqual([todo.source() for todo in children], \
             ['Bar p:1'])
+
+    def test_add_double_dep(self):
+        self.todolist.add_dependency(1, 2)
+
+        self.assertEqual(self.todolist.todo(1).source(), 'Foo id:1')
+        self.assertEqual(self.todolist.todo(2).source(), 'Bar p:1')
