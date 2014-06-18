@@ -43,7 +43,7 @@ class Application(object):
         try:
             self.todolist.add(sys.argv[2])
 
-            self.print_todo(todo.number) # TODO
+            self.print_todo(self.todolist.count())
             self.dirty = True
         except IndexError:
             error("No todo text was given.")
