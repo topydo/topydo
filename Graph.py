@@ -149,3 +149,21 @@ class DirectedGraph(object):
             if self.is_isolated(p_to):
                 self.remove_node(p_to)
 
+    def transitively_reduce(self):
+        """
+        Performs a transitive reduction on the graph.
+        """
+        removals = set()
+
+        for from_node, neighbors in self._edges.iteritems():
+            childpairs = \
+                [(c1, c2) for c1 in neighbors for c2 in neighbors if c1 != c2]
+
+            for pair in childpairs:
+                if self.has_path(pair[0], pair[1]) \
+                   and not self.has_path(pair[0], from_node):
+                    removals.add((from_node, pair[1]))
+
+        for edge in removals:
+            self.remove_edge(edge[0], edge[1])
+
