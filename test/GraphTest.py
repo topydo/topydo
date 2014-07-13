@@ -113,3 +113,10 @@ class GraphTest(unittest.TestCase):
         self.assertFalse(self.graph.has_edge(1, 3))
         self.assertFalse(self.graph.has_edge(3, 5))
         self.assertFalse(self.graph.has_path(1, 5))
+
+    def test_transitive_reduce1(self):
+        self.graph.transitively_reduce()
+
+        self.assertTrue(self.graph.has_edge(4, 3))
+        self.assertFalse(self.graph.has_edge(1, 3))
+
