@@ -180,3 +180,18 @@ class TodoListDependencyTester(unittest.TestCase):
 
         self.assertEqual(self.todolist.todo(1).source(), 'Foo id:1')
         self.assertEqual(self.todolist.todo(2).source(), 'Bar p:1')
+
+class TodoListCleanDependencyTester(unittest.TestCase):
+    def setUp(self):
+        self.todolist = TodoList.TodoList([])
+        self.todolist.add("Bar p:1")
+        self.todolist.add("Baz p:1 id:2")
+        self.todolist.add("Buzz p:2")
+
+    def test_clean_dependencies(self):
+        self.todolist.clean_dependencies()
+
+        self.assertFalse(self.todolist.todo(1).has_tag('p'))
+        self.assertFalse(self.todolist.todo(2).has_tag('p'))
+        self.assertTrue(self.todolist.todo(2).has_tag('id', '2'))
+        self.assertTrue(self.todolist.todo(3).has_tag('p', '2'))
