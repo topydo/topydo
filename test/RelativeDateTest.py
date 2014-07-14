@@ -7,7 +7,10 @@ class RelativeDateTester(unittest.TestCase):
     def setUp(self):
         self.today = date.today()
         self.tomorrow = self.today + timedelta(1)
-        self.monday = self.today + timedelta(7 - self.today.weekday() % 7)
+
+        self.monday = self.today
+        if self.monday.weekday() != 0:
+            self.monday += timedelta(7 - self.today.weekday() % 7)
 
     def test_zero_days(self):
         result = RelativeDate.relative_date_to_date('0d')
