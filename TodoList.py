@@ -200,6 +200,24 @@ class TodoList(object):
             self._depgraph.outgoing_neighbors(p_number, not p_only_direct)
         return [self.todo(child) for child in children]
 
+    def clean_dependencies(self):
+        """
+        Cleans the dependency graph.
+
+        This is achieved by performing a transitive reduction on the dependency
+        graph and removing unused dependency ids from the graph (in that
+        order).
+        """
+        def clean_by_tag(tag_name):
+            for todo in [todo for todo in self._todos if todo.has_tag(tag_name)]:
+                value = todo.tag_value(tag_name)
+                if not self._depgraph.has_edge_id(value):
+                    todo.remove_tag(tag_name, value)
+
+        self._depgraph.transitively_reduce()
+        clean_by_tag('p')
+        clean_by_tag('id')
+
     def __str__(self):
         return '\n'.join(pretty_print(self._todos))
 
