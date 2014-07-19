@@ -101,6 +101,9 @@ class TodoListTester(unittest.TestCase):
 
         self.assertEquals(self.todolist.todo(3).text(), text)
 
+    def test_append4(self):
+        self.todolist.append(999, 'foo')
+
     def test_todo(self):
         count = self.todolist.count()
         todo = self.todolist.todo(count+100)

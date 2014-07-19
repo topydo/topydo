@@ -110,8 +110,10 @@ class TodoList(object):
         """
         if len(p_string) > 0:
             todo = self.todo(p_number)
-            new_text = todo.source() + ' ' + p_string
-            todo.set_text(new_text)
+
+            if todo:
+                new_text = todo.source() + ' ' + p_string
+                todo.set_text(new_text)
 
     def projects(self):
         """ Returns a set of all projects in this list. """
@@ -160,6 +162,9 @@ class TodoList(object):
             from_todo = self.todo(p_number1)
             to_todo = self.todo(p_number2)
 
+            if not from_todo or not to_todo:
+                return
+
             dep_id = None
             if from_todo.has_tag('id'):
                 dep_id = from_todo.tag_value('id')
@@ -173,6 +178,9 @@ class TodoList(object):
         """ Removes a dependency between two todos. """
         from_todo = self.todo(p_number1)
         to_todo = self.todo(p_number2)
+
+        if not from_todo or not to_todo:
+            return
 
         dep_id = from_todo.tag_value('id')
 
