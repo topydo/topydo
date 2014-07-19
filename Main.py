@@ -27,6 +27,24 @@ def error(p_message, p_exit=True):
     if p_exit:
         exit(1)
 
+def argument(number):
+    """ Retrieves a value from the argument list. """
+    try:
+        value = sys.argv[number]
+    except IndexError:
+        usage()
+
+    return value
+
+def convert_number(number):
+    """ Converts a string number to an integer. """
+    try:
+        number = int(number)
+    except ValueError:
+        error("Invalid todo number given.")
+
+    return number
+
 class Application(object):
     def __init__(self):
         self.todolist = TodoList.TodoList([])
@@ -40,60 +58,38 @@ class Application(object):
 
     def add(self):
         """ Adds a todo item to the list. """
-        try:
-            self.todolist.add(sys.argv[2])
-
-            self.print_todo(self.todolist.count())
-            self.dirty = True
-        except IndexError:
-            error("No todo text was given.")
+        self.todolist.add(argument(2))
+        self.print_todo(self.todolist.count())
+        self.dirty = True
 
     def append(self):
         """ Appends a text to a todo item. """
+        number = convert_number(argument(2))
+        text = argument(3)
 
-        try:
-            number = sys.argv[2]
-            text = sys.argv[3]
-        except IndexError:
-            usage()
+        self.todolist.append(number, text)
 
-        try:
-            number = int(number)
-            self.todolist.append(number, text)
+        self.print_todo(number)
+        self.dirty = True
 
-            self.print_todo(number)
-            self.dirty = True
-        except ValueError:
-            error("Invalid todo number given.")
+        self.dirty = True
 
     def do(self):
-        try:
-            number = sys.argv[2]
-        except IndexError:
-            usage()
+        number = convert_number(argument(2))
+        todo = self.todolist.todo(number)
 
-        try:
-            number = int(number)
-            self.todolist.todo(number).set_completed()
-
+        if todo:
             self.print_todo(number)
             self.dirty = True
-        except IndexError:
-            usage()
-        except ValueError:
-            error("Invalid todo number given.")
 
     def pri(self):
-        try:
-            number = sys.argv[2]
-            priority = sys.argv[3]
-        except IndexError:
-            usage()
+        number = convert_number(argument(2))
+        priority = argument(3)
 
         if re.match('^[A-Z]$', priority):
-            try:
-                number = int(number)
-                todo = self.todolist.todo(number)
+            todo = self.todolist.todo(number)
+
+            if todo:
                 old_priority = todo.priority()
                 todo.set_priority(priority)
 
@@ -101,10 +97,6 @@ class Application(object):
                     % (old_priority, priority)
                 self.print_todo(number)
                 self.dirty = True
-            except AttributeError:
-                error("Invalid todo number given.")
-            except ValueError:
-                error("Invalid todo number given.")
         else:
             error("Invalid priority given.")
 
