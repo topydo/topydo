@@ -181,3 +181,25 @@ class DirectedGraph(object):
         for edge in removals:
             self.remove_edge(edge[0], edge[1])
 
+    def dot(self, p_print_labels=True):
+        """ Prints the graph in Dot format. """
+        out = 'digraph g {\n'
+
+        for from_node, neighbors in self._edges.iteritems():
+            out += "  %s\n" % from_node
+
+            for neighbor in neighbors:
+                out += "  %s -> %s" % (from_node, neighbor)
+
+                edge_id = self.edge_id(from_node, neighbor)
+                if edge_id and p_print_labels:
+                    out += ' [label="%s"]' % edge_id
+
+                out += "\n"
+
+        out += '}\n'
+        return out
+
+    def __str__(self):
+        """ Returns the graph in Dot format. """
+        return self.dot()

@@ -126,3 +126,11 @@ class GraphTest(unittest.TestCase):
 
         # the one and only edge must be removed now
         self.assertFalse(self.graph.has_edge(1, 3))
+
+    def test_str_output(self):
+        out = 'digraph g {\n  1\n  1 -> 2 [label="1"]\n  1 -> 3\n  2\n  2 -> 4\n  3\n  3 -> 5\n  4\n  4 -> 3\n  4 -> 6\n  5\n  6\n  6 -> 2\n}\n'
+        self.assertEquals(str(self.graph), out)
+
+    def test_dot_output_without_labels(self):
+        out = 'digraph g {\n  1\n  1 -> 2\n  1 -> 3\n  2\n  2 -> 4\n  3\n  3 -> 5\n  4\n  4 -> 3\n  4 -> 6\n  5\n  6\n  6 -> 2\n}\n'
+        self.assertEquals(self.graph.dot(False), out)
