@@ -155,7 +155,8 @@ class Application(object):
 
     def list(self):
         sorter = Sorter.Sorter(Config.SORT_STRING)
-        filters = [Filter.RelevanceFilter()]
+        filters = [Filter.RelevanceFilter(),
+                   Filter.DependencyFilter(self.todolist)]
 
         if len(sys.argv) > 2:
             filters.append(Filter.GrepFilter(sys.argv[2]))
