@@ -153,7 +153,7 @@ class TodoList(object):
             """
 
             new_id = 1
-            while self._depgraph.has_edge_id(new_id):
+            while self._depgraph.has_edge_id('%d' % new_id):
                 new_id += 1
 
             return '%d' % new_id
