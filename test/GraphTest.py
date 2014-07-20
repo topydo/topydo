@@ -7,7 +7,7 @@ class GraphTest(unittest.TestCase):
         self.graph = Graph.DirectedGraph()
 
         self.graph.add_edge(1, 2, 1)
-        self.graph.add_edge(2, 4)
+        self.graph.add_edge(2, 4, "Test")
         self.graph.add_edge(4, 3)
         self.graph.add_edge(4, 6)
         self.graph.add_edge(6, 2)
@@ -26,8 +26,16 @@ class GraphTest(unittest.TestCase):
         for i in range(1, 7):
             self.assertTrue(self.graph.has_node(i))
 
+    def test_has_edge_ids(self):
+        self.assertTrue(self.graph.has_edge_id(1))
+        self.assertTrue(self.graph.has_edge_id("Test"))
+        self.assertFalse(self.graph.has_edge_id("1"))
+
     def test_incoming_neighbors1(self):
         self.assertEquals(self.graph.incoming_neighbors(1), set())
+
+    def test_edge_id_of_nonexistent_edge(self):
+        self.assertFalse(self.graph.edge_id(1, 6))
 
     def test_incoming_neighbors2(self):
         self.assertEquals(self.graph.incoming_neighbors(2), set([1, 6]))
@@ -127,8 +135,17 @@ class GraphTest(unittest.TestCase):
         # the one and only edge must be removed now
         self.assertFalse(self.graph.has_edge(1, 3))
 
+    def test_add_double_edge_with_id(self):
+        self.graph.add_edge(1, 3, "Dummy")
+        self.assertFalse(self.graph.has_edge_id("Dummy"))
+
+        self.graph.remove_edge(1, 3)
+
+        # the one and only edge must be removed now
+        self.assertFalse(self.graph.has_edge(1, 3))
+
     def test_str_output(self):
-        out = 'digraph g {\n  1\n  1 -> 2 [label="1"]\n  1 -> 3\n  2\n  2 -> 4\n  3\n  3 -> 5\n  4\n  4 -> 3\n  4 -> 6\n  5\n  6\n  6 -> 2\n}\n'
+        out = 'digraph g {\n  1\n  1 -> 2 [label="1"]\n  1 -> 3\n  2\n  2 -> 4 [label="Test"]\n  3\n  3 -> 5\n  4\n  4 -> 3\n  4 -> 6\n  5\n  6\n  6 -> 2\n}\n'
         self.assertEquals(str(self.graph), out)
 
     def test_dot_output_without_labels(self):

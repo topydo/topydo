@@ -25,15 +25,15 @@ class DirectedGraph(object):
 
         The p_id is the id of the edge, if the client wishes to maintain this.
         """
-        if not self.has_node(p_from):
-            self.add_node(p_from)
+        if not self.has_edge(p_from, p_to):
+            if not self.has_node(p_from):
+                self.add_node(p_from)
 
-        if not self.has_node(p_to):
-            self.add_node(p_to)
+            if not self.has_node(p_to):
+                self.add_node(p_to)
 
-        self._edges[p_from].add(p_to)
-        if p_id:
-            self._edge_numbers[p_id] = (p_from, p_to)
+            self._edges[p_from].add(p_to)
+            self._edge_numbers[(p_from, p_to)] = p_id
 
     def has_path(self, p_from, p_to):
         """
@@ -125,7 +125,14 @@ class DirectedGraph(object):
         """
         Returns True if the client registered an edge with the given id.
         """
-        return p_id in self._edge_numbers
+        result = False
+
+        for edge_id in self._edge_numbers.itervalues():
+            if edge_id == p_id:
+                result = True
+                break
+
+        return result
 
     def edge_id(self, p_from, p_to):
         """
@@ -133,14 +140,10 @@ class DirectedGraph(object):
 
         Returns None if the edge does not exist or has no value assigned.
         """
-        result = None
-
-        for key, value in self._edge_numbers.iteritems():
-            if value == (p_from, p_to):
-                result = key
-                break
-
-        return result
+        try:
+            return self._edge_numbers[(p_from, p_to)]
+        except KeyError:
+            return None
 
     def remove_edge(self, p_from, p_to, remove_unconnected_nodes=True):
         """
@@ -152,9 +155,10 @@ class DirectedGraph(object):
         if self.has_edge(p_from, p_to):
             self._edges[p_from].remove(p_to)
 
-        edge_id = self.edge_id(p_from, p_to)
-        if edge_id:
-            del self._edge_numbers[edge_id]
+        try:
+            del self._edge_numbers[(p_from, p_to)]
+        except KeyError:
+            return None
 
         if remove_unconnected_nodes:
             if self.is_isolated(p_from):
