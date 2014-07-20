@@ -28,23 +28,23 @@ def error(p_message, p_exit=True):
     if p_exit:
         exit(1)
 
-def argument(number):
+def argument(p_number):
     """ Retrieves a value from the argument list. """
     try:
-        value = sys.argv[number]
+        value = sys.argv[p_number]
     except IndexError:
         usage()
 
     return value
 
-def convert_number(number):
+def convert_number(p_number):
     """ Converts a string number to an integer. """
     try:
-        number = int(number)
+        p_number = int(p_number)
     except ValueError:
         error("Invalid todo number given.")
 
-    return number
+    return p_number
 
 class Application(object):
     def __init__(self):
