@@ -133,6 +133,7 @@ class TodoListDependencyTester(unittest.TestCase):
         self.todolist.add("Bar p:1")
         self.todolist.add("Baz p:1 id:2")
         self.todolist.add("Buzz p:2")
+        self.todolist.add("Fnord")
 
     def test_check_dep(self):
         children = self.todolist.children(1)
@@ -158,6 +159,12 @@ class TodoListDependencyTester(unittest.TestCase):
         self.assertEqual(self.todolist.children(2), [])
         self.assertEqual(self.todolist.parents(1), [])
 
+    def test_add_dep(self):
+        self.todolist.add_dependency(5, 4)
+
+        self.assertTrue(self.todolist.todo(5).has_tag('id', '3'))
+        self.assertTrue(self.todolist.todo(4).has_tag('p', '3'))
+
     def test_remove_dep1(self):
         self.todolist.remove_dependency(3, 4)
 
@@ -168,7 +175,7 @@ class TodoListDependencyTester(unittest.TestCase):
         old = str(self.todolist)
         self.todolist.remove_dependency(1, 4)
 
-        self.assertEquals(str(self.todolist),old)
+        self.assertEquals(str(self.todolist), old)
 
     def test_remove_task(self):
         self.todolist.delete(3)

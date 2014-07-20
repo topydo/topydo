@@ -53,6 +53,29 @@ class TodoList(object):
 
         return hits[0] if len(hits) else None
 
+    def _maintain_dep_graph(self, p_todo):
+        """
+        Makes sure that the dependency graph is consistent according to the
+        given todo.
+        """
+
+        dep_id = p_todo.tag_value('id')
+        # maintain dependency graph
+        if dep_id:
+            self._depgraph.add_node(p_todo.number)
+
+            # connect all tasks we have in memory so far that refer to this
+            # task
+            for dep in \
+                [dep for dep in self._todos if dep.has_tag('p', dep_id)]:
+
+                self._depgraph.add_edge(p_todo.number, dep.number, dep_id)
+
+        for child in p_todo.tag_values('p'):
+            parent = self.todo_by_dep_id(child)
+            if parent:
+                self._depgraph.add_edge(parent.number, p_todo.number, child)
+
     def add(self, p_src):
         """
         Given a todo string, parse it and put it to the end of the list.
@@ -76,14 +99,7 @@ class TodoList(object):
             todo = Todo.Todo(p_src, number)
             self._todos.append(todo)
 
-            # maintain dependency graph
-            if todo.has_tag('id'):
-                self._depgraph.add_node(todo.number)
-
-            for child in todo.tag_values('p'):
-                parent = self.todo_by_dep_id(child)
-                if parent:
-                    self._depgraph.add_edge(parent.number, todo.number, child)
+            self._maintain_dep_graph(todo)
 
     def delete(self, p_number):
         """ Deletes a todo item from the list. """
