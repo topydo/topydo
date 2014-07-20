@@ -127,6 +127,21 @@ class DirectedGraph(object):
         """
         return p_id in self._edge_numbers
 
+    def edge_id(self, p_from, p_to):
+        """
+        Returns the edge ID given the from and to nodes.
+
+        Returns None if the edge does not exist or has no value assigned.
+        """
+        result = None
+
+        for key, value in self._edge_numbers.iteritems():
+            if value == (p_from, p_to):
+                result = key
+                break
+
+        return result
+
     def remove_edge(self, p_from, p_to, remove_unconnected_nodes=True):
         """
         Removes an edge from the graph.
@@ -137,10 +152,9 @@ class DirectedGraph(object):
         if self.has_edge(p_from, p_to):
             self._edges[p_from].remove(p_to)
 
-        for key, value in self._edge_numbers.iteritems():
-            if value == (p_from, p_to):
-                del self._edge_numbers[key]
-                break
+        edge_id = self.edge_id(p_from, p_to)
+        if edge_id:
+            del self._edge_numbers[edge_id]
 
         if remove_unconnected_nodes:
             if self.is_isolated(p_from):
