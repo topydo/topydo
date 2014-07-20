@@ -170,6 +170,7 @@ class TodoList(object):
                 dep_id = from_todo.tag_value('id')
             else:
                 dep_id = find_next_id()
+                from_todo.set_tag('id', dep_id)
 
             to_todo.add_tag('p', dep_id)
             self._depgraph.add_edge(p_number1, p_number2, int(dep_id))
