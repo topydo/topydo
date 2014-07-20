@@ -1,7 +1,4 @@
 class Filter(object):
-    # def __init__(self):
-    #     pass
-
     def filter(self, p_todos, p_limit=None):
         """
         Filters a list of todos. Truncates the list after p_limit todo
@@ -56,3 +53,23 @@ class RelevanceFilter(Filter):
         is_due |= p_todo.priority() == 'C' and p_todo.days_till_due() <= 14
 
         return p_todo.is_active() and is_due
+
+class DependencyFilter(Filter):
+    """ Matches when a todo has no unfinished child tasks.  """
+    def __init__(self, p_todolist):
+        """
+        Constructor.
+
+        Pass on a TodoList instance such that the dependencies can be
+        looked up.
+        """
+        self.todolist = p_todolist
+
+    def match(self, p_todo):
+        """
+        Returns True when there are no children that are uncompleted yet.
+        """
+        children = self.todolist.children(p_todo.number)
+        uncompleted = [todo for todo in children if not todo.is_completed()]
+
+        return not uncompleted

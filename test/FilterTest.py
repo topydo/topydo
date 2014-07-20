@@ -4,14 +4,11 @@ import datetime
 import unittest
 
 import Filter
-from TestFacilities import load_file, todolist_to_string
+from TestFacilities import load_file, load_file_to_raw_list, todolist_to_string
 import Todo
+import TodoList
 
 class FilterTest(unittest.TestCase):
-    def setUp(self):
-        # self.today = datetime.date.today()
-        pass
-
     def test_filter1(self):
         todo = Todo.Todo("(C) Relevant")
         relevance = Filter.RelevanceFilter()
@@ -62,6 +59,20 @@ class FilterTest(unittest.TestCase):
 
         filtered_todos = grep.filter(todos)
         reference = load_file('data/FilterTest1c-result.txt')
+
+        self.assertEquals(todolist_to_string(filtered_todos), \
+            todolist_to_string(reference))
+
+    def test_filter7(self):
+        """ Tests the dependency filter. """
+        todos_raw = load_file_to_raw_list('data/FilterTest2.txt')
+        todos = load_file('data/FilterTest2.txt')
+
+        todolist = TodoList.TodoList(todos_raw)
+        depfilter = Filter.DependencyFilter(todolist)
+
+        filtered_todos = depfilter.filter(todos)
+        reference = load_file('data/FilterTest2-result.txt')
 
         self.assertEquals(todolist_to_string(filtered_todos), \
             todolist_to_string(reference))

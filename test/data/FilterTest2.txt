@@ -1,0 +1,8 @@
+Foo id:1
+Bar p:1 id:2
+Baz p:2
+Buzz id:5
+x 2014-07-20 Blob p:5
+Task 1 id:6
+Task 2 p:6
+x 2014-07-20 Task 3 p:6
