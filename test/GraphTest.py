@@ -120,3 +120,9 @@ class GraphTest(unittest.TestCase):
         self.assertTrue(self.graph.has_edge(4, 3))
         self.assertFalse(self.graph.has_edge(1, 3))
 
+    def test_add_double_edge(self):
+        self.graph.add_edge(1, 3)
+        self.graph.remove_edge(1, 3)
+
+        # the one and only edge must be removed now
+        self.assertFalse(self.graph.has_edge(1, 3))
