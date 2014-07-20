@@ -132,6 +132,7 @@ class Application(object):
         todo = self.todolist.todo(number)
 
         if todo:
+            todo.set_completed()
             self.print_todo(number)
             self.dirty = True
 
