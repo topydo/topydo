@@ -94,12 +94,15 @@ class TodoList(object):
         Then there will be an edge 1 --> 2 with ID 4.
         """
 
+        todo = None
         if re.search(r'\S', p_src):
             number = len(self._todos) + 1
             todo = Todo.Todo(p_src, number)
             self._todos.append(todo)
 
             self._maintain_dep_graph(todo)
+
+        return todo
 
     def delete(self, p_number):
         """ Deletes a todo item from the list. """
