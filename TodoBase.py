@@ -179,6 +179,21 @@ class TodoBase(object):
             self.src = re.sub(r'^(\([A-Z]\) )?', \
                 'x ' + today.isoformat() + ' ', self.src)
 
+    def set_creation_date(self, date):
+        """
+        Sets the creation date of a todo. Should be passed a date object.
+        """
+        self.fields['creationDate'] = date
+
+        # not particulary pretty, but inspired by
+        # http://bugs.python.org/issue1519638 non-existent matches trigger
+        # exceptions, hence the lambda
+        self.src = re.sub(
+            r'^(x \d{4}-\d{2}-\d{2} |\([A-Z]\) )?(\d{4}-\d{2}-\d{2} )?(.*)$', \
+            lambda m: \
+            "%s%s %s" % (m.group(1) or '', date.isoformat(), m.group(3)), \
+            self.src)
+
     def creation_date(self):
         """ Returns the creation date of a todo. """
         return self.fields['creationDate']

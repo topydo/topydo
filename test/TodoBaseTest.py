@@ -228,5 +228,50 @@ class TodoBaseTester(unittest.TestCase):
         self.assertEquals(todo.src, new_text)
         self.assertEquals(todo.priority(),'C')
 
+    def test_set_creation_date1(self):
+        todo = TodoBase.TodoBase("Foo")
+        date = datetime.date(2014, 7, 24)
+
+        todo.set_creation_date(date)
+
+        self.assertEquals(todo.creation_date(), date)
+        self.assertEquals(todo.src, "2014-07-24 Foo")
+
+    def test_set_creation_date2(self):
+        todo = TodoBase.TodoBase("(A) Foo")
+        date = datetime.date(2014, 7, 24)
+
+        todo.set_creation_date(date)
+
+        self.assertEquals(todo.creation_date(), date)
+        self.assertEquals(todo.src, "(A) 2014-07-24 Foo")
+
+    def test_set_creation_date3(self):
+        todo = TodoBase.TodoBase("(A) 2014-07-23 Foo")
+        date = datetime.date(2014, 7, 24)
+
+        todo.set_creation_date(date)
+
+        self.assertEquals(todo.creation_date(), date)
+        self.assertEquals(todo.src, "(A) 2014-07-24 Foo")
+
+    def test_set_creation_date4(self):
+        todo = TodoBase.TodoBase("2014-07-23 Foo")
+        date = datetime.date(2014, 7, 24)
+
+        todo.set_creation_date(date)
+
+        self.assertEquals(todo.creation_date(), date)
+        self.assertEquals(todo.src, "2014-07-24 Foo")
+
+    def test_set_creation_date5(self):
+        todo = TodoBase.TodoBase("x 2014-07-25 2014-07-23 Foo")
+        date = datetime.date(2014, 7, 24)
+
+        todo.set_creation_date(date)
+
+        self.assertEquals(todo.creation_date(), date)
+        self.assertEquals(todo.src, "x 2014-07-25 2014-07-24 Foo")
+
 if __name__ == '__main__':
     unittest.main()
