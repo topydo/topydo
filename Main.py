@@ -1,12 +1,14 @@
 #!/usr/bin/env python
 """ Entry file for the Python todo.txt CLI. """
 
+import datetime
 import re
 import sys
 
 import Config
 import Filter
 from PrettyPrinter import pretty_print
+from RelativeDate import relative_date_to_date
 import Sorter
 import TodoFile
 import TodoList
@@ -46,6 +48,35 @@ def convert_number(p_number):
 
     return p_number
 
+def preprocess_input_todo(p_text):
+    """
+    Preprocesses user input when adding a task.
+
+    It does:
+
+    * Detect a priority mid-sentence and puts it at the start.
+    """
+    p_text = re.sub(r'^(.+) (\([A-Z]\))(.*)$', r'\2 \1\3', p_text)
+
+    return p_text
+
+def postprocess_input_todo(p_todo):
+    """
+    Post-processes a parsed todo when adding it to the list.
+
+    * It converts relative dates to absolute ones.
+    * Automatically inserts a creation date if not present.
+    """
+    for tag in [Config.TAG_START, Config.TAG_DUE]:
+        value = p_todo.tag_value(tag)
+
+        if value:
+            date = relative_date_to_date(value)
+            if date:
+                p_todo.set_tag(tag, date.isoformat())
+
+    p_todo.set_creation_date(datetime.date.today())
+
 class Application(object):
     def __init__(self):
         self.todolist = TodoList.TodoList([])
@@ -59,7 +90,9 @@ class Application(object):
 
     def add(self):
         """ Adds a todo item to the list. """
-        self.todolist.add(argument(2))
+        text = preprocess_input_todo(argument(2))
+        todo = self.todolist.add(text)
+        postprocess_input_todo(todo)
         self.print_todo(self.todolist.count())
         self.dirty = True
 
