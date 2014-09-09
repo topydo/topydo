@@ -1,41 +1,53 @@
+""" This module deals with relative dates (2d, 5y, Monday, today, etc.) """
+
 from datetime import date, timedelta
 import re
 
-def _convert_pattern(p_length, p_period):
+def _convert_pattern(p_length, p_periodunit):
+    """
+    Converts a pattern in the form [0-9][dwmy] and returns a date from today
+    with the period of time added to it.
+    """
     result = None
 
     p_length = int(p_length)
 
-    if p_period == 'd':
+    if p_periodunit == 'd':
         result = date.today() + timedelta(p_length)
-    elif p_period == 'w':
+    elif p_periodunit == 'w':
         result = date.today() + timedelta(weeks=p_length)
-    elif p_period == 'm':
+    elif p_periodunit == 'm':
         # we'll consider a month to be 30 days
         result = date.today() + timedelta(30 * p_length)
-    elif p_period == 'y':
+    elif p_periodunit == 'y':
         # we'll consider a year to be 365 days (yeah, I'm aware of leap years)
         result = date.today() + timedelta(365 * p_length)
 
     return result
 
 def _convert_weekday_pattern(p_weekday):
-    day_value = {
-            'mo': 0,
-            'tu': 1,
-            'we': 2,
-            'th': 3,
-            'fr': 4,
-            'sa': 5,
-            'su': 6
-            }
+    """
+    Converts a weekday name to an absolute date.
 
-    targetDayString = p_weekday[:2].lower()
-    targetDay = day_value[targetDayString]
+    When today's day of the week is entered, it will return today and not next
+    week's.
+    """
+    day_value = {
+        'mo': 0,
+        'tu': 1,
+        'we': 2,
+        'th': 3,
+        'fr': 4,
+        'sa': 5,
+        'su': 6
+        }
+
+    target_day_string = p_weekday[:2].lower()
+    target_day = day_value[target_day_string]
 
     day = date.today().weekday()
 
-    shift = (targetDay - day) % 7
+    shift = (target_day - day) % 7
     return date.today() + timedelta(shift)
 
 def relative_date_to_date(p_date):
