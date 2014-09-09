@@ -60,6 +60,11 @@ class RelativeDateTester(unittest.TestCase):
         result = RelativeDate.relative_date_to_date('tod')
         self.assertEquals(result, self.today)
 
+    def test_today3(self):
+        result = RelativeDate.relative_date_to_date('today', \
+            date.today() + timedelta(1))
+        self.assertEquals(result, self.today)
+
     def test_tomorrow1(self):
         result = RelativeDate.relative_date_to_date('Tomorrow')
         self.assertEquals(result, self.tomorrow)
@@ -83,3 +88,7 @@ class RelativeDateTester(unittest.TestCase):
     def test_monday4(self):
         result = RelativeDate.relative_date_to_date('mondayy')
         self.assertFalse(result)
+
+    def test_offset1(self):
+        result = RelativeDate.relative_date_to_date('1d', self.tomorrow)
+        self.assertEquals(result, date.today() + timedelta(2))

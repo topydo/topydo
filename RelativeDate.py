@@ -3,7 +3,7 @@
 from datetime import date, timedelta
 import re
 
-def _convert_pattern(p_length, p_periodunit):
+def _convert_pattern(p_length, p_periodunit, p_offset=date.today()):
     """
     Converts a pattern in the form [0-9][dwmy] and returns a date from today
     with the period of time added to it.
@@ -13,15 +13,15 @@ def _convert_pattern(p_length, p_periodunit):
     p_length = int(p_length)
 
     if p_periodunit == 'd':
-        result = date.today() + timedelta(p_length)
+        result = p_offset + timedelta(p_length)
     elif p_periodunit == 'w':
-        result = date.today() + timedelta(weeks=p_length)
+        result = p_offset + timedelta(weeks=p_length)
     elif p_periodunit == 'm':
         # we'll consider a month to be 30 days
-        result = date.today() + timedelta(30 * p_length)
+        result = p_offset + timedelta(30 * p_length)
     elif p_periodunit == 'y':
         # we'll consider a year to be 365 days (yeah, I'm aware of leap years)
-        result = date.today() + timedelta(365 * p_length)
+        result = p_offset + timedelta(365 * p_length)
 
     return result
 
@@ -50,7 +50,7 @@ def _convert_weekday_pattern(p_weekday):
     shift = (target_day - day) % 7
     return date.today() + timedelta(shift)
 
-def relative_date_to_date(p_date):
+def relative_date_to_date(p_date, p_offset=date.today()):
     """
     Transforms a relative date into a date object.
 
@@ -70,7 +70,7 @@ def relative_date_to_date(p_date):
     if relative:
         length = relative.group('length')
         period = relative.group('period')
-        result = _convert_pattern(length, period)
+        result = _convert_pattern(length, period, p_offset)
 
     elif weekday:
         result = _convert_weekday_pattern(weekday.group(0))
