@@ -1,4 +1,3 @@
-import pdb
 import unittest
 
 import Sorter
@@ -104,7 +103,6 @@ class SorterTest(unittest.TestCase):
     def test_sort13(self):
         sorter = Sorter.Sorter('desc:importance-average')
 
-        pdb.set_trace()
         todolist = load_file_to_todolist('data/SorterTest10.txt')
         view = todolist.view(sorter, [])
         result = load_file('data/SorterTest10-result.txt')
@@ -118,7 +116,6 @@ class SorterTest(unittest.TestCase):
         """
         sorter = Sorter.Sorter('desc:importance-average')
 
-        pdb.set_trace()
         todolist = load_file_to_todolist('data/SorterTest11.txt')
         view = todolist.view(sorter, [])
         result = load_file('data/SorterTest11-result.txt')
