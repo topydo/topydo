@@ -1,7 +1,11 @@
+import pdb
 import unittest
 
 import Sorter
-from TestFacilities import load_file, todolist_to_string
+import TodoList
+import View
+
+from TestFacilities import load_file, todolist_to_string, load_file_to_todolist
 
 class SorterTest(unittest.TestCase):
     def sort_file(self,p_filename, p_filename_ref, p_sorter):
@@ -86,4 +90,38 @@ class SorterTest(unittest.TestCase):
         """ Deal with garbage input. """
         sorter = Sorter.Sorter('fnord')
         self.sort_file('data/SorterTest9.txt', 'data/SorterTest9.txt', sorter)
+
+    def test_sort12(self):
+        """
+        Descendingly sorted by average importance.
+
+        Reusing input and output for normal importance test, since without
+        dependencies the average importance should be equal.
+        """
+        sorter = Sorter.Sorter('desc:importance-avg')
+        self.sort_file('data/SorterTest9.txt', 'data/SorterTest9-result.txt', sorter)
+
+    def test_sort13(self):
+        sorter = Sorter.Sorter('desc:importance-average')
+
+        pdb.set_trace()
+        todolist = load_file_to_todolist('data/SorterTest10.txt')
+        view = todolist.view(sorter, [])
+        result = load_file('data/SorterTest10-result.txt')
+
+        self.assertEquals(str(view), todolist_to_string(result))
+
+    def test_sort14(self):
+        """
+        Test that own importance is used when average turns out to be
+        lower.
+        """
+        sorter = Sorter.Sorter('desc:importance-average')
+
+        pdb.set_trace()
+        todolist = load_file_to_todolist('data/SorterTest11.txt')
+        view = todolist.view(sorter, [])
+        result = load_file('data/SorterTest11-result.txt')
+
+        self.assertEquals(str(view), todolist_to_string(result))
 

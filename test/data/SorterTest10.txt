@@ -1,0 +1,4 @@
+(B) Normal task (4)
+(A) Important parent task id:1 (5)
+(A) Another important task id:2 (5)
+(C) Less important child task p:1 p:2 ((3+5+5)/3=4.3)
