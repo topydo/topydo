@@ -125,14 +125,8 @@ class DirectedGraph(object):
         """
         Returns True if the client registered an edge with the given id.
         """
-        result = False
-
-        for edge_id in self._edge_numbers.itervalues():
-            if edge_id == p_id:
-                result = True
-                break
-
-        return result
+        l = [e for e in self._edge_numbers.itervalues() if e == p_id]
+        return len(l) > 0
 
     def edge_id(self, p_from, p_to):
         """
