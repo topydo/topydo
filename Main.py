@@ -164,7 +164,7 @@ class Application(object):
         number = convert_number(argument(2))
         todo = self.todolist.todo(number)
 
-        if todo:
+        if todo and not todo.is_completed():
             todo.set_completed()
             self.print_todo(number)
             self.dirty = True
