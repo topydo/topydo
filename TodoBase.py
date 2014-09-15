@@ -26,13 +26,13 @@ class TodoBase(object):
 
         self.set_text(p_src)
 
-    def tag_value(self, p_key):
+    def tag_value(self, p_key, p_default=None):
         """
-        Returns a tag value associated with p_key. Returns None if p_key
-        does not exist.
+        Returns a tag value associated with p_key. Returns p_default if p_key
+        does not exist (which defaults to None).
         """
         values = self.tag_values(p_key)
-        return values[0] if len(values) else None
+        return values[0] if len(values) else p_default
 
     def tag_values(self, p_key):
         """
