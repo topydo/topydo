@@ -161,10 +161,25 @@ class Application(object):
             usage()
 
     def do(self):
+        def complete_children(p_number):
+            children = [t.number for t in self.todolist.children(p_number) if not t.is_completed()]
+            if children:
+                for child in children:
+                    self.print_todo(child)
+
+                confirmation = raw_input("Also mark subtasks as done? [n] ");
+
+                if re.match('^y(es)?$', confirmation, re.I):
+                    for child in children:
+                        self.todolist.todo(child).set_completed()
+                        self.print_todo(child)
+
         number = convert_number(argument(2))
         todo = self.todolist.todo(number)
 
-        if todo:
+        if todo and not todo.is_completed():
+            complete_children(number)
+
             todo.set_completed()
             self.print_todo(number)
             self.dirty = True

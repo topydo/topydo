@@ -101,6 +101,7 @@ class TodoList(object):
             self._todos.append(todo)
 
             self._maintain_dep_graph(todo)
+            self._update_parent_cache()
 
         return todo
 
@@ -193,6 +194,7 @@ class TodoList(object):
 
             to_todo.add_tag('p', dep_id)
             self._depgraph.add_edge(p_number1, p_number2, int(dep_id))
+            self._update_parent_cache()
 
     def remove_dependency(self, p_number1, p_number2):
         """ Removes a dependency between two todos. """
@@ -207,6 +209,7 @@ class TodoList(object):
         if dep_id:
             to_todo.remove_tag('p', dep_id)
             self._depgraph.remove_edge(p_number1, p_number2)
+            self._update_parent_cache()
 
             if not self.children(p_number1, True):
                 from_todo.remove_tag('id')
@@ -246,6 +249,17 @@ class TodoList(object):
         self._depgraph.transitively_reduce()
         clean_by_tag('p')
         clean_by_tag('id')
+
+    def _update_parent_cache(self):
+        """
+        Sets the attribute to the list of parents, such that others may access
+        it outside this todo list.
+        This is used for calculating the average importance, that requires
+        access to a todo's parents.
+        """
+
+        for todo in self._todos:
+            todo.attributes['parents'] = self.parents(todo.number)
 
     def __str__(self):
         return '\n'.join(pretty_print(self._todos))

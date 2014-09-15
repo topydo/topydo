@@ -1,5 +1,5 @@
 """
-Provides a function to calculate the importance value of a task.
+Provides functions to calculate the importance value of a task.
 
 For those who are familiar with the Toodledo website, the importance value is a
 combination of the priority and the todo's due date. Low priority tasks due
@@ -57,3 +57,14 @@ def importance(p_todo, p_ignore_weekend=False):
         result += 1
 
     return result if not p_todo.is_completed() else 0
+
+def average_importance(p_todo, p_ignore_weekend=False):
+    sum_importance = importance(p_todo, p_ignore_weekend)
+    parents = []
+    
+    if 'parents' in p_todo.attributes:
+        parents = p_todo.attributes['parents']
+        for parent in parents:
+            sum_importance += importance(parent, p_ignore_weekend)
+
+    return float(sum_importance) / float(1 + len(parents))

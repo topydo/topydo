@@ -1,5 +1,6 @@
 import Todo
 import TodoFile
+import TodoList
 
 def load_file(p_filename):
     """
@@ -15,6 +16,13 @@ def load_file_to_raw_list(p_filename):
     """
     todofile = TodoFile.TodoFile(p_filename)
     return todofile.read()
+
+def load_file_to_todolist(p_filename):
+    """
+    Loads a todo file to a TodoList instance.
+    """
+    todolist = load_file_to_raw_list(p_filename)
+    return TodoList.TodoList(todolist)
 
 def todolist_to_string(p_list):
     """ Converts a todo list to a single string. """
