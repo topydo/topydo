@@ -1,5 +1,6 @@
 import unittest
 
+import Config
 import Sorter
 import TodoList
 import View
@@ -49,7 +50,7 @@ class SorterTest(unittest.TestCase):
 
     def test_sort4(self):
         """ Ascendingly sorted by due date """
-        sorter = Sorter.Sorter('due')
+        sorter = Sorter.Sorter(Config.TAG_DUE)
         self.sort_file('data/SorterTest4.txt', 'data/SorterTest4-result.txt', sorter)
 
     def test_sort5(self):
