@@ -21,10 +21,10 @@ class RelativeDateTester(unittest.TestCase):
 
     def test_duedate2(self):
         """ Where due date is today. """
-        todo = date.today()
+        today = date.today()
         new_due = date.today() + timedelta(7)
 
-        self.todo.set_tag(Config.TAG_DUE, todo.isoformat())
+        self.todo.set_tag(Config.TAG_DUE, today.isoformat())
         new_todo = advance_recurring_todo(self.todo)
 
         self.assertEquals(new_todo.due_date(), new_due)
