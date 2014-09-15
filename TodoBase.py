@@ -79,7 +79,7 @@ class TodoBase(object):
         if not p_force_add and value:
             # remove old value from the tags
             self.fields['tags'] = [t for t in self.fields['tags'] \
-                if t[0] != p_key and t[1] != value]
+                if not (t[0] == p_key and t[1] == value)]
 
             self.src = re.sub(
                 r'\b' + p_key + ':' + value + r'\b',

@@ -44,6 +44,22 @@ class TodoBaseTester(unittest.TestCase):
         self.assertTrue(re.search(r'\bfoo:baz\b', todo.src))
         self.assertFalse(re.search(r'\bfoo:bar\b', todo.src))
 
+    def test_set_tag_double_value(self):
+        todo = TodoBase.TodoBase("(C) Foo foo:bar baz:bar")
+        todo.set_tag('foo', 'blah');
+
+        self.assertTrue(todo.has_tag('foo'))
+        self.assertTrue(todo.tag_value('foo'), 'blah')
+        self.assertTrue(todo.has_tag('baz'))
+        self.assertTrue(todo.tag_value('baz'), 'bar')
+
+    def test_set_tag_double_tag(self):
+        todo = TodoBase.TodoBase("(C) Foo foo:bar foo:baz")
+        todo.set_tag('foo', 'blah')
+
+        self.assertTrue(todo.has_tag('foo', 'blah'))
+        self.assertTrue(todo.has_tag('foo', 'bar') or todo.has_tag('foo', 'baz'))
+
     def test_set_tag_empty_value(self):
         todo = TodoBase.TodoBase("(C) Foo foo:bar foo:baz")
         todo.set_tag('foo')
