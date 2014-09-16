@@ -8,6 +8,7 @@ import sys
 import Config
 import Filter
 from PrettyPrinter import pretty_print
+from Recurrence import advance_recurring_todo
 from RelativeDate import relative_date_to_date
 import Sorter
 import TodoFile
@@ -174,11 +175,18 @@ class Application(object):
                         self.todolist.todo(child).set_completed()
                         self.print_todo(child)
 
+        def handle_recurrence(todo):
+            if todo.has_tag('rec'):
+                new_todo = advance_recurring_todo(todo)
+                self.todolist.add_todo(new_todo)
+                self.print_todo(self.todolist.count())
+
         number = convert_number(argument(2))
         todo = self.todolist.todo(number)
 
         if todo and not todo.is_completed():
             complete_children(number)
+            handle_recurrence(todo)
 
             todo.set_completed()
             self.print_todo(number)
