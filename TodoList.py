@@ -98,12 +98,16 @@ class TodoList(object):
         if re.search(r'\S', p_src):
             number = len(self._todos) + 1
             todo = Todo.Todo(p_src, number)
-            self._todos.append(todo)
-
-            self._maintain_dep_graph(todo)
-            self._update_parent_cache()
+            self.add_todo(todo)
 
         return todo
+
+    def add_todo(self, p_todo):
+        """ Add an Todo object to the list. """
+        self._todos.append(p_todo)
+
+        self._maintain_dep_graph(p_todo)
+        self._update_parent_cache()
 
     def delete(self, p_number):
         """ Deletes a todo item from the list. """
