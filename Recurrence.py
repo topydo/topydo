@@ -46,4 +46,6 @@ def advance_recurring_todo(p_todo):
         new_start = new_due - timedelta(length)
         todo.set_tag(Config.TAG_START, new_start.isoformat())
 
+    todo.set_creation_date(date.today())
+
     return todo
