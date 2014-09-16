@@ -179,7 +179,7 @@ class TodoBase(object):
             self.src = re.sub(r'^(\([A-Z]\) )?', \
                 'x ' + today.isoformat() + ' ', self.src)
 
-    def set_creation_date(self, date):
+    def set_creation_date(self, date=datetime.date.today()):
         """
         Sets the creation date of a todo. Should be passed a date object.
         """
