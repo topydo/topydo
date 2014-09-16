@@ -4,6 +4,7 @@ import datetime
 import re
 import unittest
 
+import Todo
 import TodoFile
 import TodoList
 
@@ -125,6 +126,14 @@ class TodoListTester(unittest.TestCase):
 
         self.assertTrue(self.todolist.todo_by_dep_id('1'))
         self.assertFalse(self.todolist.todo_by_dep_id('2'))
+
+    def test_todo_number(self):
+        todo = Todo.Todo("No number")
+        self.todolist.add_todo(todo)
+
+        todo = self.todolist.todo(6)
+        self.assertIsInstance(todo, Todo.Todo)
+        self.assertEquals(todo.text(), "No number")
 
 class TodoListDependencyTester(unittest.TestCase):
     def setUp(self):
