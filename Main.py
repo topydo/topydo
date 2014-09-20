@@ -163,7 +163,7 @@ class Application(object):
 
     def do(self):
         def complete_children(p_number):
-            children = [t.number for t in self.todolist.children(p_number) if not t.is_completed()]
+            children = [t.attributes['number'] for t in self.todolist.children(p_number) if not t.is_completed()]
             if children:
                 for child in children:
                     self.print_todo(child)

@@ -62,23 +62,32 @@ class TodoList(object):
         dep_id = p_todo.tag_value('id')
         # maintain dependency graph
         if dep_id:
-            self._depgraph.add_node(p_todo.number)
+            self._depgraph.add_node(p_todo.attributes['number'])
 
             # connect all tasks we have in memory so far that refer to this
             # task
             for dep in \
                 [dep for dep in self._todos if dep.has_tag('p', dep_id)]:
 
-                self._depgraph.add_edge(p_todo.number, dep.number, dep_id)
+                self._depgraph.add_edge(p_todo.attributes['number'], dep.attributes['number'], dep_id)
 
         for child in p_todo.tag_values('p'):
             parent = self.todo_by_dep_id(child)
             if parent:
-                self._depgraph.add_edge(parent.number, p_todo.number, child)
+                self._depgraph.add_edge(parent.attributes['number'], p_todo.attributes['number'], child)
 
     def add(self, p_src):
+        """ Given a todo string, parse it and put it to the end of the list. """
+        todo = None
+        if re.search(r'\S', p_src):
+            todo = Todo.Todo(p_src)
+            self.add_todo(todo)
+
+        return todo
+
+    def add_todo(self, p_todo):
         """
-        Given a todo string, parse it and put it to the end of the list.
+        Add an Todo object to the list.
 
         Also maintains the dependency graph to track the dependencies between
         tasks.
@@ -93,17 +102,7 @@ class TodoList(object):
 
         Then there will be an edge 1 --> 2 with ID 4.
         """
-
-        todo = None
-        if re.search(r'\S', p_src):
-            number = len(self._todos) + 1
-            todo = Todo.Todo(p_src, number)
-            self.add_todo(todo)
-
-        return todo
-
-    def add_todo(self, p_todo):
-        """ Add an Todo object to the list. """
+        p_todo.attributes['number'] = len(self._todos) + 1
         self._todos.append(p_todo)
 
         self._maintain_dep_graph(p_todo)
@@ -115,10 +114,10 @@ class TodoList(object):
 
         if todo:
             for child in self.children(p_number):
-                self.remove_dependency(todo.number, child.number)
+                self.remove_dependency(todo.attributes['number'], child.attributes['number'])
 
             for parent in self.parents(p_number):
-                self.remove_dependency(parent.number, todo.number)
+                self.remove_dependency(parent.attributes['number'], todo.attributes['number'])
 
             del self._todos[p_number - 1]
 
@@ -263,7 +262,10 @@ class TodoList(object):
         """
 
         for todo in self._todos:
-            todo.attributes['parents'] = self.parents(todo.number)
+            todo.attributes['parents'] = self.parents(todo.attributes['number'])
+
+    def todos(self):
+        return self._todos
 
     def __str__(self):
         return '\n'.join(pretty_print(self._todos))

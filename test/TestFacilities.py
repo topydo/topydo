@@ -7,7 +7,7 @@ def load_file(p_filename):
     Loads a todo file from the given filename and returns a list of todos.
     """
     todolist = load_file_to_raw_list(p_filename)
-    return [Todo.Todo(src, number + 1) for number, src in enumerate(todolist)]
+    return [Todo.Todo(src) for src in todolist]
 
 def load_file_to_raw_list(p_filename):
     """

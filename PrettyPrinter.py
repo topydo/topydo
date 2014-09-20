@@ -39,7 +39,7 @@ def pretty_print(p_todos, p_show_numbers=False, p_color=False):
         todo_str = str(todo)
 
         if p_show_numbers:
-            todo_str = "%3d %s" % (todo.number, todo_str)
+            todo_str = "%3d %s" % (todo.attributes['number'], todo_str)
 
         if Config.COLORS and p_color:
             todo_str = add_colors(todo_str, todo)

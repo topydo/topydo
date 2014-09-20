@@ -4,7 +4,7 @@ import datetime
 import unittest
 
 import Filter
-from TestFacilities import load_file, load_file_to_raw_list, todolist_to_string
+from TestFacilities import *
 import Todo
 import TodoList
 
@@ -65,13 +65,10 @@ class FilterTest(unittest.TestCase):
 
     def test_filter7(self):
         """ Tests the dependency filter. """
-        todos_raw = load_file_to_raw_list('data/FilterTest2.txt')
-        todos = load_file('data/FilterTest2.txt')
-
-        todolist = TodoList.TodoList(todos_raw)
+        todolist = load_file_to_todolist('data/FilterTest2.txt')
         depfilter = Filter.DependencyFilter(todolist)
 
-        filtered_todos = depfilter.filter(todos)
+        filtered_todos = depfilter.filter(todolist.todos())
         reference = load_file('data/FilterTest2-result.txt')
 
         self.assertEquals(todolist_to_string(filtered_todos), \
