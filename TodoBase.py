@@ -2,7 +2,7 @@
 This module contains the class that represents a single todo item.
 """
 
-import datetime
+from datetime import date
 import re
 
 import TodoParser
@@ -172,17 +172,17 @@ class TodoBase(object):
             self.set_priority(None)
 
             self.fields['completed'] = True
-            today = datetime.date.today()
+            today = date.today()
             self.fields['completionDate'] = today
 
             self.src = re.sub(r'^(\([A-Z]\) )?', \
                 'x ' + today.isoformat() + ' ', self.src)
 
-    def set_creation_date(self, date=datetime.date.today()):
+    def set_creation_date(self, p_date=date.today()):
         """
         Sets the creation date of a todo. Should be passed a date object.
         """
-        self.fields['creationDate'] = date
+        self.fields['creationDate'] = p_date
 
         # not particulary pretty, but inspired by
         # http://bugs.python.org/issue1519638 non-existent matches trigger
@@ -190,7 +190,7 @@ class TodoBase(object):
         self.src = re.sub(
             r'^(x \d{4}-\d{2}-\d{2} |\([A-Z]\) )?(\d{4}-\d{2}-\d{2} )?(.*)$', \
             lambda m: \
-            "%s%s %s" % (m.group(1) or '', date.isoformat(), m.group(3)), \
+            "%s%s %s" % (m.group(1) or '', p_date.isoformat(), m.group(3)), \
             self.src)
 
     def creation_date(self):

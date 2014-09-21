@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """ Entry file for the Python todo.txt CLI. """
 
-import datetime
+from datetime import date
 import re
 import sys
 
@@ -76,7 +76,7 @@ def postprocess_input_todo(p_todo):
             if date:
                 p_todo.set_tag(tag, date.isoformat())
 
-    p_todo.set_creation_date(datetime.date.today())
+    p_todo.set_creation_date(date.today())
 
 class Application(object):
     def __init__(self):

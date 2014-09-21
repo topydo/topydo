@@ -1,6 +1,5 @@
 """ Tests for the TodoList class. """
 
-import datetime
 import re
 import unittest
 

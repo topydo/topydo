@@ -7,7 +7,7 @@ today may have a higher importance than high priority tasks in the distant
 future.
 """
 
-import datetime
+from datetime import date
 
 import Config
 
@@ -15,7 +15,7 @@ IMPORTANCE_VALUE = {'A': 3, 'B': 2, 'C': 1}
 
 def is_due_next_monday(p_todo):
     """ Returns True when the given task is due next Monday. """
-    today = datetime.date.today()
+    today = date.today()
     due = p_todo.due_date()
 
     return due and due.weekday() == 0 and today.weekday() >= 4 and \

@@ -1,6 +1,6 @@
 """ This module provides functionality to sort lists with todo items. """
 
-import datetime
+from datetime import date
 import re
 
 import Config
@@ -24,10 +24,10 @@ def get_field_function(p_field):
         # when a task has no creation date, push it to the end by assigning it
         # the maximum possible date.
         result = (lambda a: a.creation_date() if a.creation_date() \
-            else datetime.date.max)
+            else date.max)
     elif p_field == 'done' or p_field == 'completed' or p_field == 'completion':
         result = (lambda a: a.completion_date() if a.completion_date() \
-            else datetime.date.max)
+            else date.max)
     elif p_field == 'importance':
         result = lambda a: importance(a, Config.IGNORE_WEEKENDS)
     elif p_field == 'importance-avg' or p_field == 'importance-average':

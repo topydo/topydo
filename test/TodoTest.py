@@ -1,22 +1,22 @@
-import datetime
+from datetime import date, timedelta
 import unittest
 
 import Todo
 
 def today_date():
-    date = datetime.date.today()
-    return date.isoformat()
+    today = date.today()
+    return today.isoformat()
 
 def tomorrow_date():
-    date = datetime.date.today() + datetime.timedelta(days=1)
-    return date.isoformat()
+    tomorrow = date.today() + timedelta(days=1)
+    return tomorrow.isoformat()
 
 class TodoTest(unittest.TestCase):
     def test_due_date1(self):
         todo = Todo.Todo("(C) Foo due:2014-06-09")
-        date = datetime.date(2014, 6, 9)
+        due = date(2014, 6, 9)
 
-        self.assertEqual(todo.due_date(), date)
+        self.assertEqual(todo.due_date(), due)
 
     def test_false_date(self):
         todo = Todo.Todo("(C) Foo due:2014-04-31")

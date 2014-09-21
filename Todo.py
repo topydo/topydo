@@ -2,7 +2,7 @@
 This module provides the Todo class.
 """
 
-import datetime
+from datetime import date
 
 import Config
 import Utils
@@ -37,8 +37,7 @@ class Todo(TodoBase.TodoBase):
         task has not yet been completed.
         """
         start = self.start_date()
-        return not self.is_completed() and \
-              (not start or start <= datetime.date.today())
+        return not self.is_completed() and (not start or start <= date.today())
 
     def is_overdue(self):
         """
@@ -55,7 +54,7 @@ class Todo(TodoBase.TodoBase):
         """
         due = self.due_date()
         if due:
-            diff = due - datetime.date.today()
+            diff = due - date.today()
             return diff.days
         return 0
 

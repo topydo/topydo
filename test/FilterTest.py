@@ -1,6 +1,5 @@
 """ Tests for the filter functionality. """
 
-import datetime
 import unittest
 
 import Filter
