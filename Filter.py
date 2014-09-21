@@ -18,7 +18,7 @@ class GrepFilter(Filter):
     def __init__(self, p_expression, p_case_sensitive=None):
         self.expression = p_expression
 
-        if p_case_sensitive:
+        if p_case_sensitive != None:
             self.case_sensitive = p_case_sensitive
         else:
             # only be case sensitive when the expression contains at least one

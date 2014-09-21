@@ -73,3 +73,14 @@ class FilterTest(unittest.TestCase):
 
         self.assertEquals(todolist_to_string(filtered_todos), \
             todolist_to_string(reference))
+
+    def test_filter8(self):
+        """ Test case sensitive match (forced, with lowercase). """
+        todos = load_file('data/FilterTest1.txt')
+        grep = Filter.GrepFilter('+Project', False)
+
+        filtered_todos = grep.filter(todos)
+        reference = load_file('data/FilterTest1a-result.txt')
+
+        self.assertEquals(todolist_to_string(filtered_todos), \
+            todolist_to_string(reference))
