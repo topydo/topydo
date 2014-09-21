@@ -111,7 +111,8 @@ class TodoBase(object):
         """
         Sets the priority of the todo. Must be a single capital letter [A-Z],
         or None to unset the priority.
-        Priority remains unchanged when an invalid priority is given.
+        Priority remains unchanged when an invalid priority is given, or when
+        the task was completed.
         """
 
         if not self.is_completed() and \
