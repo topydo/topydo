@@ -10,19 +10,22 @@ PRIORITY_COLORS = {
     'C': '\033[34m'  # blue
 }
 
+PROJECT_COLOR = '\033[31m' # red
+NEUTRAL_COLOR = '\033[0m'
+
 def add_colors(p_todo_str, p_todo):
     """ Adds colors to the todo string by inserting ANSI codes. """
 
-    color = '\033[0m'
+    color = NEUTRAL_COLOR
     try:
         color = PRIORITY_COLORS[p_todo.priority()]
     except KeyError:
         pass
 
-    p_todo_str = '%s%s%s' % (color, p_todo_str, '\033[0m')
+    p_todo_str = '%s%s%s' % (color, p_todo_str, NEUTRAL_COLOR)
 
     if Config.HIGHLIGHT_PROJECTS_CONTEXTS:
-        p_todo_str = re.sub(r'\B(\+|@)\S+', r'\033[31m\g<0>' + color, \
+        p_todo_str = re.sub(r'\B(\+|@)\S+', PROJECT_COLOR + r'\g<0>' + color, \
             p_todo_str)
 
     return p_todo_str
