@@ -196,7 +196,7 @@ class TodoList(object):
                 from_todo.set_tag('id', dep_id)
 
             to_todo.add_tag('p', dep_id)
-            self._depgraph.add_edge(p_number1, p_number2, int(dep_id))
+            self._depgraph.add_edge(p_number1, p_number2, dep_id)
             self._update_parent_cache()
 
     def remove_dependency(self, p_number1, p_number2):

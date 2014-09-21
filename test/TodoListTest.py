@@ -167,11 +167,23 @@ class TodoListDependencyTester(unittest.TestCase):
         self.assertEqual(self.todolist.children(2), [])
         self.assertEqual(self.todolist.parents(1), [])
 
-    def test_add_dep(self):
+    def test_add_dep1(self):
         self.todolist.add_dependency(5, 4)
 
         self.assertTrue(self.todolist.todo(5).has_tag('id', '3'))
         self.assertTrue(self.todolist.todo(4).has_tag('p', '3'))
+
+    def test_add_dep2(self):
+        """
+        Make sure that previous add_dependency invocation stored the
+        edge_id properly.
+        """
+
+        self.todolist.add_dependency(5, 4)
+        self.todolist.add_dependency(4, 1)
+
+        self.assertTrue(self.todolist.todo(4).has_tag('id', '4'))
+        self.assertTrue(self.todolist.todo(1).has_tag('p', '4'))
 
     def test_remove_dep1(self):
         self.todolist.remove_dependency(3, 4)
