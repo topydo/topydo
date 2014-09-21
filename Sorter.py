@@ -97,7 +97,7 @@ class Sorter(object):
 
         for field in fields:
             parsed_field = re.match( \
-                r'((?P<order>asc(ending)?|desc(ending)?):)?(?P<field>\S+)', \
+                r'(?P<order>(asc|desc)(ending)?:)?(?P<field>\S+)', \
                 field)
 
             if not parsed_field:
