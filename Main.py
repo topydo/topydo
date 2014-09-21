@@ -2,6 +2,7 @@
 """ Entry file for the Python todo.txt CLI. """
 
 from datetime import date
+import pdb
 import re
 import sys
 
@@ -84,20 +85,20 @@ class Application(object):
 
         p_todo.set_creation_date(date.today())
 
+        pdb.set_trace()
         for tag in ['before', 'after']:
-            if p_todo.has_tag(tag):
+            for raw_value in p_todo.tag_values(tag):
                 try:
-                    raw_value = p_todo.tag_value(tag)
                     value = int(raw_value)
-
-                    if tag == 'after':
-                        self.todolist.add_dependency(p_todo.attributes['number'], value )
-                    elif tag == 'before':
-                        self.todolist.add_dependency(value, p_todo.attributes['number'])
-
-                    p_todo.remove_tag(tag, raw_value)
                 except ValueError:
-                    pass
+                    continue
+
+                if tag == 'after':
+                    self.todolist.add_dependency(p_todo.attributes['number'], value)
+                elif tag == 'before':
+                    self.todolist.add_dependency(value, p_todo.attributes['number'])
+
+                p_todo.remove_tag(tag, raw_value)
 
     def print_todo(self, p_number):
         """ Prints a single todo item to the standard output. """
