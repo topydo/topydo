@@ -23,7 +23,7 @@ class TodoBase(object):
         self.src = ""
         self.fields = {}
 
-        self.set_text(p_src)
+        self.set_source_text(p_src)
 
     def tag_value(self, p_key, p_default=None):
         """
@@ -139,7 +139,7 @@ class TodoBase(object):
         """
         return self.text(True)
 
-    def set_text(self, p_text):
+    def set_source_text(self, p_text):
         """ Sets the todo source text. The text will be parsed again. """
         self.src = p_text.strip()
         self.fields = TodoParser.parse_line(self.src)

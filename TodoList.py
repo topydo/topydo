@@ -136,7 +136,7 @@ class TodoList(object):
 
             if todo:
                 new_text = todo.source() + ' ' + p_string
-                todo.set_text(new_text)
+                todo.set_source_text(new_text)
 
     def projects(self):
         """ Returns a set of all projects in this list. """

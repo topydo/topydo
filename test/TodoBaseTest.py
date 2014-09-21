@@ -235,11 +235,11 @@ class TodoBaseTester(unittest.TestCase):
 
         self.assertEquals(todo.src, "x 2014-06-13 Foo")
 
-    def test_set_text(self):
+    def test_set_source_text(self):
         todo = TodoBase.TodoBase("(B) Foo")
 
         new_text = "(C) Foo"
-        todo.set_text(new_text)
+        todo.set_source_text(new_text)
 
         self.assertEquals(todo.src, new_text)
         self.assertEquals(todo.priority(),'C')
