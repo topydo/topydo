@@ -61,7 +61,7 @@ def importance(p_todo, p_ignore_weekend=False):
 def average_importance(p_todo, p_ignore_weekend=False):
     sum_importance = importance(p_todo, p_ignore_weekend)
     parents = []
-    
+
     if 'parents' in p_todo.attributes:
         parents = p_todo.attributes['parents']
         for parent in parents:
