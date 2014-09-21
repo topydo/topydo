@@ -16,11 +16,7 @@ def _get_due_date(p_todo):
     """
 
     due = p_todo.due_date()
-
-    if not due or due < date.today():
-        due = date.today()
-
-    return due
+    return due if (due and due >= date.today()) else date.today()
 
 def advance_recurring_todo(p_todo):
     """
