@@ -139,7 +139,7 @@ class DirectedGraph(object):
         except KeyError:
             return None
 
-    def remove_edge(self, p_from, p_to, remove_unconnected_nodes=True):
+    def remove_edge(self, p_from, p_to, p_remove_unconnected_nodes=True):
         """
         Removes an edge from the graph.
 
@@ -154,7 +154,7 @@ class DirectedGraph(object):
         except KeyError:
             return None
 
-        if remove_unconnected_nodes:
+        if p_remove_unconnected_nodes:
             if self.is_isolated(p_from):
                 self.remove_node(p_from)
 
