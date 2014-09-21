@@ -61,27 +61,43 @@ def preprocess_input_todo(p_text):
 
     return p_text
 
-def postprocess_input_todo(p_todo):
-    """
-    Post-processes a parsed todo when adding it to the list.
-
-    * It converts relative dates to absolute ones.
-    * Automatically inserts a creation date if not present.
-    """
-    for tag in [Config.TAG_START, Config.TAG_DUE]:
-        value = p_todo.tag_value(tag)
-
-        if value:
-            date = relative_date_to_date(value)
-            if date:
-                p_todo.set_tag(tag, date.isoformat())
-
-    p_todo.set_creation_date(date.today())
-
 class Application(object):
     def __init__(self):
         self.todolist = TodoList.TodoList([])
         self.dirty = False
+
+    def _postprocess_input_todo(self, p_todo):
+        """
+        Post-processes a parsed todo when adding it to the list.
+
+        * It converts relative dates to absolute ones.
+        * Automatically inserts a creation date if not present.
+        * Handles more user-friendly dependencies with before: and after: tags
+        """
+        for tag in [Config.TAG_START, Config.TAG_DUE]:
+            value = p_todo.tag_value(tag)
+
+            if value:
+                dateobj = relative_date_to_date(value)
+                if dateobj:
+                    p_todo.set_tag(tag, dateobj.isoformat())
+
+        p_todo.set_creation_date(date.today())
+
+        for tag in ['before', 'after']:
+            if p_todo.has_tag(tag):
+                try:
+                    raw_value = p_todo.tag_value(tag)
+                    value = int(raw_value)
+
+                    if tag == 'after':
+                        self.todolist.add_dependency(p_todo.attributes['number'], value )
+                    elif tag == 'before':
+                        self.todolist.add_dependency(value, p_todo.attributes['number'])
+
+                    p_todo.remove_tag(tag, raw_value)
+                except ValueError:
+                    pass
 
     def print_todo(self, p_number):
         """ Prints a single todo item to the standard output. """
@@ -93,7 +109,7 @@ class Application(object):
         """ Adds a todo item to the list. """
         text = preprocess_input_todo(argument(2))
         todo = self.todolist.add(text)
-        postprocess_input_todo(todo)
+        self._postprocess_input_todo(todo)
         self.print_todo(self.todolist.count())
         self.dirty = True
 
