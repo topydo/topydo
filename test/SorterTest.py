@@ -92,6 +92,11 @@ class SorterTest(unittest.TestCase):
         self.sort_file('data/SorterTest9.txt', 'data/SorterTest9.txt', sorter)
 
     def test_sort12(self):
+        """ Deal with garbage input. """
+        sorter = Sorter.Sorter('desc:importance,,priority')
+        self.sort_file('data/SorterTest9.txt', 'data/SorterTest9-result.txt', sorter)
+
+    def test_sort13(self):
         """
         Descendingly sorted by average importance.
 
@@ -101,7 +106,7 @@ class SorterTest(unittest.TestCase):
         sorter = Sorter.Sorter('desc:importance-avg')
         self.sort_file('data/SorterTest9.txt', 'data/SorterTest9-result.txt', sorter)
 
-    def test_sort13(self):
+    def test_sort14(self):
         sorter = Sorter.Sorter('desc:importance-average')
 
         todolist = load_file_to_todolist('data/SorterTest10.txt')
@@ -110,7 +115,7 @@ class SorterTest(unittest.TestCase):
 
         self.assertEquals(str(view), todolist_to_string(result))
 
-    def test_sort14(self):
+    def test_sort15(self):
         """
         Test that own importance is used when average turns out to be
         lower.
