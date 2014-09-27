@@ -5,6 +5,7 @@ import re
 import sys
 
 from AddCommand import AddCommand
+from DepCommand import DepCommand
 import Config
 import Filter
 from PrettyPrinter import pretty_print
@@ -13,7 +14,6 @@ import Sorter
 import TodoFile
 import TodoList
 from Utils import convert_todo_number
-import View
 
 def print_iterable(p_iter):
     """ Prints an iterable to the standard output, one item per line. """
@@ -77,53 +77,8 @@ class Application(object): # TODO: rename to CLIApplication
         self.print_todo(number)
 
     def dep(self):
-        """ Handles dependencies between todos. """
-        def handle_add_rm(operation):
-            """ Handles the add and rm subsubcommands. """
-            from_todonumber = convert_todo_number(argument(3))
-            to_todonumber = argument(4)
-
-            if to_todonumber == 'to':
-                to_todonumber = convert_todo_number(argument(5))
-            else:
-                to_todonumber = convert_todo_number(to_todonumber)
-
-            if operation == 'add':
-                self.todolist.add_dependency(from_todonumber, to_todonumber)
-            else:
-                self.todolist.remove_dependency(from_todonumber, to_todonumber)
-
-        def handle_ls():
-            """ Handles the ls subsubcommand. """
-            arg1 = argument(3)
-            arg2 = argument(4)
-
-            todos = []
-            if arg2 == 'to':
-                # dep ls 1 to ...
-                todos = self.todolist.children(convert_todo_number(arg1))
-            elif arg1 == 'to':
-                # dep ls ... to 1
-                todos = self.todolist.parents(convert_todo_number(arg2))
-            else:
-                usage()
-
-            if todos:
-                sorter = Sorter.Sorter(Config.SORT_STRING)
-                view = View.View(sorter, [], todos)
-                print view.pretty_print()
-
-        subsubcommand = argument(2)
-        if subsubcommand == 'add' or \
-            subsubcommand == 'rm' or subsubcommand == 'del':
-
-            handle_add_rm(subsubcommand)
-        elif subsubcommand == 'clean' or subsubcommand == 'gc':
-            self.todolist.clean_dependencies()
-        elif subsubcommand == 'ls':
-            handle_ls()
-        else:
-            usage()
+        command = DepCommand(arguments(), self.todolist)
+        command.execute()
 
     def do(self):
         def complete_children(p_number):
