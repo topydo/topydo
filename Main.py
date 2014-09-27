@@ -12,6 +12,7 @@ from Recurrence import advance_recurring_todo
 import Sorter
 import TodoFile
 import TodoList
+from Utils import convert_todo_number
 import View
 
 def print_iterable(p_iter):
@@ -51,15 +52,6 @@ def arguments():
 
     return values
 
-def convert_number(p_number):
-    """ Converts a string number to an integer. """
-    try:
-        p_number = int(p_number)
-    except ValueError:
-        error("Invalid todo number given.")
-
-    return p_number
-
 class Application(object): # TODO: rename to CLIApplication
     def __init__(self):
         self.todolist = TodoList.TodoList([])
@@ -79,7 +71,7 @@ class Application(object): # TODO: rename to CLIApplication
 
     def append(self):
         """ Appends a text to a todo item. """
-        number = convert_number(argument(2))
+        number = convert_todo_number(argument(2))
         text = argument(3)
 
         self.todolist.append(number, text)
@@ -91,13 +83,13 @@ class Application(object): # TODO: rename to CLIApplication
         """ Handles dependencies between todos. """
         def handle_add_rm(operation):
             """ Handles the add and rm subsubcommands. """
-            from_todonumber = convert_number(argument(3))
+            from_todonumber = convert_todo_number(argument(3))
             to_todonumber = argument(4)
 
             if to_todonumber == 'to':
-                to_todonumber = convert_number(argument(5))
+                to_todonumber = convert_todo_number(argument(5))
             else:
-                to_todonumber = convert_number(to_todonumber)
+                to_todonumber = convert_todo_number(to_todonumber)
 
             if operation == 'add':
                 self.todolist.add_dependency(from_todonumber, to_todonumber)
@@ -114,10 +106,10 @@ class Application(object): # TODO: rename to CLIApplication
             todos = []
             if arg2 == 'to':
                 # dep ls 1 to ...
-                todos = self.todolist.children(convert_number(arg1))
+                todos = self.todolist.children(convert_todo_number(arg1))
             elif arg1 == 'to':
                 # dep ls ... to 1
-                todos = self.todolist.parents(convert_number(arg2))
+                todos = self.todolist.parents(convert_todo_number(arg2))
             else:
                 usage()
 
@@ -159,7 +151,7 @@ class Application(object): # TODO: rename to CLIApplication
                 self.todolist.add_todo(new_todo)
                 self.print_todo(self.todolist.count())
 
-        number = convert_number(argument(2))
+        number = convert_todo_number(argument(2))
         todo = self.todolist.todo(number)
 
         if todo and not todo.is_completed():
@@ -171,7 +163,7 @@ class Application(object): # TODO: rename to CLIApplication
             self.dirty = True
 
     def pri(self):
-        number = convert_number(argument(2))
+        number = convert_todo_number(argument(2))
         priority = argument(3)
 
         if re.match('^[A-Z]$', priority):

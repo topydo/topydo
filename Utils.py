@@ -25,3 +25,13 @@ def date_string_to_date(p_date):
                 result = None
 
     return result
+
+def convert_todo_number(p_number):
+    """ Converts a string number to an integer. """
+    try:
+        p_number = int(p_number)
+    except ValueError:
+        error("Invalid todo number given.")
+
+    return p_number
+
