@@ -18,10 +18,12 @@ class TodoListTester(unittest.TestCase):
     def test_contexts(self):
         self.assertEquals(set(['Context1', 'Context2']), \
             self.todolist.contexts())
+        self.assertFalse(self.todolist.is_dirty())
 
     def test_projects(self):
         self.assertEquals(set(['Project1', 'Project2']), \
             self.todolist.projects())
+        self.assertFalse(self.todolist.is_dirty())
 
     def test_add1(self):
         text = "(C) Adding a new task @Context3 +Project3"
@@ -33,6 +35,7 @@ class TodoListTester(unittest.TestCase):
             self.todolist.projects())
         self.assertEquals(set(['Context1', 'Context2', 'Context3']), \
             self.todolist.contexts())
+        self.assertTrue(self.todolist.is_dirty())
 
     def test_add2(self):
         text = str(self.todolist)
@@ -72,12 +75,14 @@ class TodoListTester(unittest.TestCase):
         self.assertEquals(self.todolist.todo(2).source(), \
             "(C) Baz @Context1 +Project1 key:value")
         self.assertEquals(self.todolist.count(), count - 1)
+        self.assertTrue(self.todolist.is_dirty())
 
     def test_delete2(self):
         count = self.todolist.count()
         self.todolist.delete(count + 1)
 
         self.assertEquals(self.todolist.count(), count)
+        self.assertFalse(self.todolist.is_dirty())
 
     def test_append1(self):
         self.todolist.append(3, "@Context3")
@@ -86,6 +91,7 @@ class TodoListTester(unittest.TestCase):
             "(C) Baz @Context1 +Project1 key:value @Context3")
         self.assertEquals(set(['Context1', 'Context2', 'Context3']), \
             self.todolist.contexts())
+        self.assertTrue(self.todolist.is_dirty())
 
     def test_append2(self):
         text = self.todolist.todo(3).text()
@@ -103,12 +109,14 @@ class TodoListTester(unittest.TestCase):
 
     def test_append4(self):
         self.todolist.append(999, 'foo')
+        self.assertFalse(self.todolist.is_dirty())
 
     def test_todo(self):
         count = self.todolist.count()
         todo = self.todolist.todo(count+100)
 
         self.assertEquals(todo, None)
+        self.assertFalse(self.todolist.is_dirty())
 
     def test_string(self):
         # readlines() always ends a string with \n, but join() in str(todolist)

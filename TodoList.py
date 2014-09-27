@@ -29,6 +29,8 @@ class TodoList(object):
         for string in p_todostrings:
             self.add(string)
 
+        self.dirty = False
+
     def todo(self, p_number):
         """
         The _todos list has the same order as in the backend store (usually
@@ -107,6 +109,7 @@ class TodoList(object):
 
         self._maintain_dep_graph(p_todo)
         self._update_parent_cache()
+        self.dirty = True
 
     def delete(self, p_number):
         """ Deletes a todo item from the list. """
@@ -120,6 +123,8 @@ class TodoList(object):
                 self.remove_dependency(parent.attributes['number'], todo.attributes['number'])
 
             del self._todos[p_number - 1]
+
+            self.dirty = True
 
     def count(self):
         """ Returns the number of todos on this list. """
@@ -137,6 +142,7 @@ class TodoList(object):
             if todo:
                 new_text = todo.source() + ' ' + p_string
                 todo.set_source_text(new_text)
+                self.dirty = True
 
     def projects(self):
         """ Returns a set of all projects in this list. """
@@ -198,6 +204,7 @@ class TodoList(object):
             to_todo.add_tag('p', dep_id)
             self._depgraph.add_edge(p_number1, p_number2, dep_id)
             self._update_parent_cache()
+            self.dirty = True
 
     def remove_dependency(self, p_number1, p_number2):
         """ Removes a dependency between two todos. """
@@ -216,6 +223,8 @@ class TodoList(object):
 
             if not self.children(p_number1, True):
                 from_todo.remove_tag('id')
+
+            self.dirty = True
 
     def parents(self, p_number, p_only_direct=False):
         """
@@ -248,6 +257,7 @@ class TodoList(object):
                 value = todo.tag_value(tag_name)
                 if not self._depgraph.has_edge_id(value):
                     todo.remove_tag(tag_name, value)
+                    self.dirty = True
 
         self._depgraph.transitively_reduce()
         clean_by_tag('p')
@@ -263,6 +273,9 @@ class TodoList(object):
 
         for todo in self._todos:
             todo.attributes['parents'] = self.parents(todo.attributes['number'])
+
+    def is_dirty(self):
+        return self.dirty
 
     def todos(self):
         return self._todos

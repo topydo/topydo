@@ -55,7 +55,6 @@ def arguments():
 class Application(object): # TODO: rename to CLIApplication
     def __init__(self):
         self.todolist = TodoList.TodoList([])
-        self.dirty = False
 
     def print_todo(self, p_number):
         """ Prints a single todo item to the standard output. """
@@ -67,7 +66,6 @@ class Application(object): # TODO: rename to CLIApplication
         command = AddCommand(arguments(), self.todolist)
         if command.execute():
             self.print_todo(self.todolist.count())
-            self.dirty = True
 
     def append(self):
         """ Appends a text to a todo item. """
@@ -77,7 +75,6 @@ class Application(object): # TODO: rename to CLIApplication
         self.todolist.append(number, text)
 
         self.print_todo(number)
-        self.dirty = True
 
     def dep(self):
         """ Handles dependencies between todos. """
@@ -95,8 +92,6 @@ class Application(object): # TODO: rename to CLIApplication
                 self.todolist.add_dependency(from_todonumber, to_todonumber)
             else:
                 self.todolist.remove_dependency(from_todonumber, to_todonumber)
-
-            self.dirty = True
 
         def handle_ls():
             """ Handles the ls subsubcommand. """
@@ -125,7 +120,6 @@ class Application(object): # TODO: rename to CLIApplication
             handle_add_rm(subsubcommand)
         elif subsubcommand == 'clean' or subsubcommand == 'gc':
             self.todolist.clean_dependencies()
-            self.dirty = True
         elif subsubcommand == 'ls':
             handle_ls()
         else:
@@ -160,7 +154,6 @@ class Application(object): # TODO: rename to CLIApplication
 
             todo.set_completed()
             self.print_todo(number)
-            self.dirty = True
 
     def pri(self):
         number = convert_todo_number(argument(2))
@@ -176,7 +169,6 @@ class Application(object): # TODO: rename to CLIApplication
                 print "Priority changed from %s to %s" \
                     % (old_priority, priority)
                 self.print_todo(number)
-                self.dirty = True
         else:
             error("Invalid priority given.")
 
@@ -223,7 +215,7 @@ class Application(object): # TODO: rename to CLIApplication
         else:
             usage()
 
-        if self.dirty:
+        if self.todolist.is_dirty():
             todofile.write(str(self.todolist))
 
 if __name__ == '__main__':
