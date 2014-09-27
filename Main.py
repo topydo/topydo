@@ -75,8 +75,6 @@ class Application(object): # TODO: rename to CLIApplication
         self.print_todo(number)
         self.dirty = True
 
-        self.dirty = True
-
     def dep(self):
         """ Handles dependencies between todos. """
         def handle_add_rm(operation):
