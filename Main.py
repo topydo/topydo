@@ -7,10 +7,10 @@ import sys
 from AddCommand import AddCommand
 from AppendCommand import AppendCommand
 from DepCommand import DepCommand
+from DoCommand import DoCommand
 import Config
 import Filter
 from PrettyPrinter import pretty_print
-from Recurrence import advance_recurring_todo
 import Sorter
 import TodoFile
 import TodoList
@@ -78,34 +78,8 @@ class Application(object): # TODO: rename to CLIApplication
         command.execute()
 
     def do(self):
-        def complete_children(p_number):
-            children = [t.attributes['number'] for t in self.todolist.children(p_number) if not t.is_completed()]
-            if children:
-                for child in children:
-                    self.print_todo(child)
-
-                confirmation = raw_input("Also mark subtasks as done? [n] ");
-
-                if re.match('^y(es)?$', confirmation, re.I):
-                    for child in children:
-                        self.todolist.todo(child).set_completed()
-                        self.print_todo(child)
-
-        def handle_recurrence(todo):
-            if todo.has_tag('rec'):
-                new_todo = advance_recurring_todo(todo)
-                self.todolist.add_todo(new_todo)
-                self.print_todo(self.todolist.count())
-
-        number = convert_todo_number(argument(2))
-        todo = self.todolist.todo(number)
-
-        if todo and not todo.is_completed():
-            complete_children(number)
-            handle_recurrence(todo)
-
-            todo.set_completed()
-            self.print_todo(number)
+        command = DoCommand(arguments(), self.todolist)
+        command.execute()
 
     def pri(self):
         number = convert_todo_number(argument(2))
