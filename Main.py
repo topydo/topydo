@@ -5,6 +5,7 @@ import re
 import sys
 
 from AddCommand import AddCommand
+from AppendCommand import AppendCommand
 from DepCommand import DepCommand
 import Config
 import Filter
@@ -69,12 +70,8 @@ class Application(object): # TODO: rename to CLIApplication
 
     def append(self):
         """ Appends a text to a todo item. """
-        number = convert_todo_number(argument(2))
-        text = argument(3)
-
-        self.todolist.append(number, text)
-
-        self.print_todo(number)
+        command = AppendCommand(arguments(), self.todolist)
+        command.execute()
 
     def dep(self):
         command = DepCommand(arguments(), self.todolist)
