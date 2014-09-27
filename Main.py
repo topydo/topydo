@@ -1,16 +1,14 @@
 #!/usr/bin/env python
 """ Entry file for the Python todo.txt CLI. """
 
-from datetime import date
-import pdb
 import re
 import sys
 
+from AddCommand import AddCommand
 import Config
 import Filter
 from PrettyPrinter import pretty_print
 from Recurrence import advance_recurring_todo
-from RelativeDate import relative_date_to_date
 import Sorter
 import TodoFile
 import TodoList
@@ -50,55 +48,10 @@ def convert_number(p_number):
 
     return p_number
 
-def preprocess_input_todo(p_text):
-    """
-    Preprocesses user input when adding a task.
-
-    It does:
-
-    * Detect a priority mid-sentence and puts it at the start.
-    """
-    p_text = re.sub(r'^(.+) (\([A-Z]\))(.*)$', r'\2 \1\3', p_text)
-
-    return p_text
-
-class Application(object):
+class Application(object): # TODO: rename to CLIApplication
     def __init__(self):
         self.todolist = TodoList.TodoList([])
         self.dirty = False
-
-    def _postprocess_input_todo(self, p_todo):
-        """
-        Post-processes a parsed todo when adding it to the list.
-
-        * It converts relative dates to absolute ones.
-        * Automatically inserts a creation date if not present.
-        * Handles more user-friendly dependencies with before: and after: tags
-        """
-        for tag in [Config.TAG_START, Config.TAG_DUE]:
-            value = p_todo.tag_value(tag)
-
-            if value:
-                dateobj = relative_date_to_date(value)
-                if dateobj:
-                    p_todo.set_tag(tag, dateobj.isoformat())
-
-        p_todo.set_creation_date(date.today())
-
-        pdb.set_trace()
-        for tag in ['before', 'after']:
-            for raw_value in p_todo.tag_values(tag):
-                try:
-                    value = int(raw_value)
-                except ValueError:
-                    continue
-
-                if tag == 'after':
-                    self.todolist.add_dependency(p_todo.attributes['number'], value)
-                elif tag == 'before':
-                    self.todolist.add_dependency(value, p_todo.attributes['number'])
-
-                p_todo.remove_tag(tag, raw_value)
 
     def print_todo(self, p_number):
         """ Prints a single todo item to the standard output. """
@@ -107,10 +60,8 @@ class Application(object):
         print printed[0]
 
     def add(self):
-        """ Adds a todo item to the list. """
-        text = preprocess_input_todo(argument(2))
-        todo = self.todolist.add(text)
-        self._postprocess_input_todo(todo)
+        command = AddCommand(argument(2), self.todolist)
+        command.execute()
         self.print_todo(self.todolist.count())
         self.dirty = True
 
