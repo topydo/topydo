@@ -6,9 +6,9 @@ import Command
 from RelativeDate import relative_date_to_date
 
 class AddCommand(Command.Command):
-    def __init__(self, p_text, p_todolist):
-        super(AddCommand, self).__init__(p_todolist)
-        self.text = p_text
+    def __init__(self, p_args, p_todolist):
+        super(AddCommand, self).__init__(p_args, p_todolist)
+        self.text = ' '.join(p_args)
 
     def _preprocess_input_todo(self):
         """
@@ -61,4 +61,6 @@ class AddCommand(Command.Command):
         self._preprocess_input_todo()
         self.todo = self.todolist.add(self.text)
         self._postprocess_input_todo()
+
+        return True
 

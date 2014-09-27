@@ -39,6 +39,18 @@ def argument(p_number):
 
     return value
 
+def arguments():
+    """
+    Retrieves all values from the argument list starting from the given
+    position.
+    """
+    try:
+        values = sys.argv[2:] # strip off subcommand at position 1
+    except IndexError:
+        usage()
+
+    return values
+
 def convert_number(p_number):
     """ Converts a string number to an integer. """
     try:
@@ -60,10 +72,10 @@ class Application(object): # TODO: rename to CLIApplication
         print printed[0]
 
     def add(self):
-        command = AddCommand(argument(2), self.todolist)
-        command.execute()
-        self.print_todo(self.todolist.count())
-        self.dirty = True
+        command = AddCommand(arguments(), self.todolist)
+        if command.execute():
+            self.print_todo(self.todolist.count())
+            self.dirty = True
 
     def append(self):
         """ Appends a text to a todo item. """
