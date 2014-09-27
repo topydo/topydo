@@ -18,7 +18,7 @@ class AddCommand(Command.Command):
         """
         self.text = re.sub(r'^(.+) (\([A-Z]\))(.*)$', r'\2 \1\3', self.text)
 
-    def _postprocess_input_todo(self): # TODO: split function
+    def _postprocess_input_todo(self):
         """
         Post-processes a parsed todo when adding it to the list.
 
@@ -26,29 +26,35 @@ class AddCommand(Command.Command):
         * Automatically inserts a creation date if not present.
         * Handles more user-friendly dependencies with before: and after: tags
         """
-        for tag in [Config.TAG_START, Config.TAG_DUE]:
-            value = self.todo.tag_value(tag)
+        def convert_date(p_tag):
+            value = self.todo.tag_value(p_tag)
 
             if value:
                 dateobj = relative_date_to_date(value)
                 if dateobj:
-                    self.todo.set_tag(tag, dateobj.isoformat())
+                    self.todo.set_tag(p_tag, dateobj.isoformat())
 
-        self.todo.set_creation_date(date.today())
-
-        for tag in ['before', 'after']:
-            for raw_value in self.todo.tag_values(tag):
+        def add_dependencies(p_tag):
+            for raw_value in self.todo.tag_values(p_tag):
                 try:
                     value = int(raw_value)
                 except ValueError:
                     continue
 
-                if tag == 'after':
+                if p_tag == 'after':
                     self.todolist.add_dependency(self.todo.attributes['number'], value)
-                elif tag == 'before':
+                elif p_tag == 'before':
                     self.todolist.add_dependency(value, self.todo.attributes['number'])
 
-                self.todo.remove_tag(tag, raw_value)
+                self.todo.remove_tag(p_tag, raw_value)
+
+        convert_date(Config.TAG_START)
+        convert_date(Config.TAG_DUE)
+
+        add_dependencies('before')
+        add_dependencies('after')
+
+        self.todo.set_creation_date(date.today())
 
     def execute(self):
         """ Adds a todo item to the list. """
