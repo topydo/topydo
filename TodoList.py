@@ -280,6 +280,11 @@ class TodoList(object):
     def todos(self):
         return self._todos
 
+    def set_todo_completed(self, p_number):
+        todo = self.todo(p_number)
+        todo.set_completed()
+        self.dirty = True
+
     def __str__(self):
         return '\n'.join(pretty_print(self._todos))
 

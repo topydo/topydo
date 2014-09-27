@@ -142,6 +142,10 @@ class TodoListTester(unittest.TestCase):
         self.assertIsInstance(todo, Todo.Todo)
         self.assertEquals(todo.text(), "No number")
 
+    def test_todo_complete(self):
+        self.todolist.set_todo_completed(1)
+        self.assertTrue(self.todolist.todo(1).is_completed())
+
 class TodoListDependencyTester(unittest.TestCase):
     def setUp(self):
         self.todolist = TodoList.TodoList([])
