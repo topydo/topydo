@@ -145,6 +145,12 @@ class TodoListTester(unittest.TestCase):
     def test_todo_complete(self):
         self.todolist.set_todo_completed(1)
         self.assertTrue(self.todolist.todo(1).is_completed())
+        self.assertTrue(self.todolist.is_dirty())
+
+    def test_todo_priority(self):
+        self.todolist.set_priority(1, 'F')
+        self.assertEquals(self.todolist.todo(1).priority(), 'F')
+        self.assertTrue(self.todolist.is_dirty())
 
 class TodoListDependencyTester(unittest.TestCase):
     def setUp(self):

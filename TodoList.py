@@ -285,6 +285,11 @@ class TodoList(object):
         todo.set_completed()
         self.dirty = True
 
+    def set_priority(self, p_number, p_priority):
+        todo = self.todo(p_number)
+        todo.set_priority(p_priority)
+        self.dirty = True
+
     def __str__(self):
         return '\n'.join(pretty_print(self._todos))
 
