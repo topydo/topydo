@@ -1,16 +1,16 @@
 #!/usr/bin/env python
 """ Entry file for the Python todo.txt CLI. """
 
-import re
 import sys
 
 from AddCommand import AddCommand
 from AppendCommand import AppendCommand
 from DepCommand import DepCommand
-from DoCommand import DoCommand
 import Config
+from DoCommand import DoCommand
 import Filter
 from PrettyPrinter import pretty_print
+from PriorityCommand import PriorityCommand
 import Sorter
 import TodoFile
 import TodoList
@@ -82,21 +82,8 @@ class Application(object): # TODO: rename to CLIApplication
         command.execute()
 
     def pri(self):
-        number = convert_todo_number(argument(2))
-        priority = argument(3)
-
-        if re.match('^[A-Z]$', priority):
-            todo = self.todolist.todo(number)
-
-            if todo:
-                old_priority = todo.priority()
-                todo.set_priority(priority)
-
-                print "Priority changed from %s to %s" \
-                    % (old_priority, priority)
-                self.print_todo(number)
-        else:
-            error("Invalid priority given.")
+        command = PriorityCommand(arguments(), self.todolist)
+        command.execute()
 
     def list(self):
         sorter = Sorter.Sorter(Config.SORT_STRING)
