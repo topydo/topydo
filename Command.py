@@ -16,5 +16,15 @@ class Command(object):
 
         return value
 
+    def argumentShift(self, p_expr):
+        """
+        Returns true when the first argument equals the given expression.
+        """
+        if len(self.args) and self.argument(0) == p_expr:
+            del self.args[0]
+            return True
+
+        return False
+
     def usage(self):
         return ""
