@@ -8,10 +8,9 @@ from AppendCommand import AppendCommand
 from DepCommand import DepCommand
 import Config
 from DoCommand import DoCommand
-import Filter
+from ListCommand import ListCommand
 from PrettyPrinter import pretty_print
 from PriorityCommand import PriorityCommand
-import Sorter
 import TodoFile
 import TodoList
 from Utils import convert_todo_number
@@ -86,14 +85,8 @@ class Application(object): # TODO: rename to CLIApplication
         command.execute()
 
     def list(self):
-        sorter = Sorter.Sorter(Config.SORT_STRING)
-        filters = [Filter.DependencyFilter(self.todolist),
-                   Filter.RelevanceFilter()]
-
-        if len(sys.argv) > 2:
-            filters.append(Filter.GrepFilter(sys.argv[2]))
-
-        print self.todolist.view(sorter, filters).pretty_print()
+        command = ListCommand(arguments(), self.todolist)
+        command.execute()
 
     def run(self):
         """ Main entry function. """
