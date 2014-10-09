@@ -6,6 +6,7 @@ from datetime import date
 import re
 
 import TodoParser
+from Utils import is_valid_priority
 
 class TodoBase(object):
     """
@@ -116,7 +117,7 @@ class TodoBase(object):
         """
 
         if not self.is_completed() and \
-            (p_priority == None or re.match('^[A-Z]$', p_priority)):
+            (p_priority == None or is_valid_priority(p_priority)):
 
             self.fields['priority'] = p_priority
 

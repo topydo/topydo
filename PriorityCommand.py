@@ -1,7 +1,5 @@
-import re
-
 import Command
-from Utils import convert_todo_number
+from Utils import convert_todo_number, is_valid_priority
 
 class PriorityCommand(Command.Command):
     def __init__(self, p_args, p_todolist):
@@ -11,7 +9,7 @@ class PriorityCommand(Command.Command):
         self.priority = self.argument(1)
 
     def execute(self):
-        if re.match('^[A-Z]$', self.priority):
+        if is_valid_priority(self.priority):
             old_priority = self.todo.priority()
             self.todolist.set_priority(self.number, self.priority)
 
