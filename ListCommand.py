@@ -17,6 +17,4 @@ class ListCommand(Command.Command):
         if len(self.args) > 0:
             filters.append(Filter.GrepFilter(self.argument(0)))
 
-        print self.todolist.view(sorter, filters).pretty_print() # FIXME
-
-        return True
+        self.out(self.todolist.view(sorter, filters).pretty_print())

@@ -5,5 +5,5 @@ class ListContextCommand(Command.Command):
         super(ListContextCommand, self).__init__(p_args, p_todolist)
 
     def execute(self):
-        for p in sorted(self.todolist.contexts()):
-            print p
+        for context in sorted(self.todolist.contexts()):
+            self.out(context)

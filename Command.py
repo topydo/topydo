@@ -3,9 +3,12 @@ class Command(object):
         self.args = p_args
         self.todolist = p_todolist
 
+        self.output = []
+        self.errors = []
+
     def execute(self):
         """ The command to execute. """
-        return False
+        return (False, None, None)
 
     def argument(self, p_number):
         """ Retrieves a value from the argument list. """
@@ -27,4 +30,10 @@ class Command(object):
         return False
 
     def usage(self):
-        return ""
+        return "No usage text defined for this command."
+
+    def out(self, p_text): # TODO: make private
+        self.output.append(p_text)
+
+    def error(self, p_text): # TODO: make private
+        self.errors.append(p_text)

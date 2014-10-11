@@ -41,12 +41,12 @@ class DepCommand(Command.Command):
             # dep ls ... to 1
             todos = self.todolist.parents(convert_todo_number(arg2))
         else:
-            self.usage()
+            self.errors.append(self.usage())
 
         if todos:
             sorter = Sorter.Sorter(Config.SORT_STRING)
             view = View.View(sorter, [], todos)
-            print view.pretty_print() # FIXME
+            self.out(view.pretty_print())
 
     def execute(self):
         dispatch = {
@@ -58,7 +58,6 @@ class DepCommand(Command.Command):
             'gc':    self.todolist.clean_dependencies,
         }
 
-        dispatch[self.subsubcommand]() if self.subsubcommand in dispatch \
-            else self.usage()
+        if self.subsubcommand in dispatch:
+            dispatch[self.subsubcommand]()
 
-        return True

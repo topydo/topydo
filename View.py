@@ -28,7 +28,7 @@ class View(object):
 
     def pretty_print(self):
         """ Pretty prints the view. """
-        return '\n'.join(pretty_print(self._viewdata, [pp_number, pp_color]))
+        return '\n'.join(pretty_print_list(self._viewdata, [pp_number, pp_color]))
 
     def __str__(self):
-        return '\n'.join(pretty_print(self._viewdata))
+        return '\n'.join(pretty_print_list(self._viewdata))

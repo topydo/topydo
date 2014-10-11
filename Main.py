@@ -9,36 +9,17 @@ from DepCommand import DepCommand
 import Config
 from DoCommand import DoCommand
 from ListCommand import ListCommand
+from ListContextCommand import ListContextCommand
+from ListProjectCommand import ListProjectCommand
 from PrettyPrinter import *
 from PriorityCommand import PriorityCommand
 import TodoFile
 import TodoList
 from Utils import convert_todo_number
 
-def print_iterable(p_iter):
-    """ Prints an iterable to the standard output, one item per line. """
-    for item in sorted(p_iter):
-        print item
-
 def usage():
     """ Prints the usage of the todo.txt CLI """
     exit(1)
-
-def error(p_message, p_exit=True):
-    """ Prints a message on the standard error. """
-    sys.stderr.write(p_message + '\n')
-
-    if p_exit:
-        exit(1)
-
-def argument(p_number):
-    """ Retrieves a value from the argument list. """
-    try:
-        value = sys.argv[p_number]
-    except IndexError:
-        usage()
-
-    return value
 
 def arguments():
     """
@@ -56,38 +37,6 @@ class Application(object): # TODO: rename to CLIApplication
     def __init__(self):
         self.todolist = TodoList.TodoList([])
 
-    def print_todo(self, p_number):
-        """ Prints a single todo item to the standard output. """
-        todo = self.todolist.todo(p_number)
-        printed = pretty_print([todo], [pp_number, pp_color])
-        print printed[0]
-
-    def add(self):
-        command = AddCommand(arguments(), self.todolist)
-        if command.execute():
-            self.print_todo(self.todolist.count())
-
-    def append(self):
-        """ Appends a text to a todo item. """
-        command = AppendCommand(arguments(), self.todolist)
-        command.execute()
-
-    def dep(self):
-        command = DepCommand(arguments(), self.todolist)
-        command.execute()
-
-    def do(self):
-        command = DoCommand(arguments(), self.todolist)
-        command.execute()
-
-    def pri(self):
-        command = PriorityCommand(arguments(), self.todolist)
-        command.execute()
-
-    def list(self):
-        command = ListCommand(arguments(), self.todolist)
-        command.execute()
-
     def run(self):
         """ Main entry function. """
         todofile = TodoFile.TodoFile(Config.FILENAME)
@@ -102,22 +51,31 @@ class Application(object): # TODO: rename to CLIApplication
         except IndexError:
             subcommand = Config.DEFAULT_ACTION
 
-        if subcommand == 'add':
-            self.add()
-        elif subcommand == 'app' or subcommand == 'append':
-            self.append()
-        elif subcommand == 'dep':
-            self.dep()
-        elif subcommand == 'do':
-            self.do()
-        elif subcommand == 'ls':
-            self.list()
-        elif subcommand == 'lsprj' or subcommand == 'listproj':
-            print_iterable(self.todolist.projects())
-        elif subcommand == 'lscon' or subcommand == 'listcon':
-            print_iterable(self.todolist.contexts())
-        elif subcommand == 'pri':
-            self.pri()
+        subcommand_map = {
+          'add': AddCommand,
+          'app': AppendCommand,
+          'append': AppendCommand,
+          'dep': DepCommand,
+          'do': DoCommand,
+          'ls': ListCommand,
+          'lscon': ListContextCommand,
+          'listcon': ListContextCommand,
+          'lsprj': ListProjectCommand,
+          'lsproj': ListProjectCommand,
+          'pri': PriorityCommand,
+        }
+
+        if subcommand in subcommand_map:
+            command = subcommand_map[subcommand](arguments(), self.todolist)
+            command.execute()
+
+            if len(command.errors):
+                text = "\n".join(command.errors)
+                sys.stderr.write(text + '\n')
+                exit(1)
+            elif len(command.output):
+                text = "\n".join(command.output)
+                sys.stdout.write(text + '\n')
         else:
             usage()
 

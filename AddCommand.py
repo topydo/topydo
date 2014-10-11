@@ -3,6 +3,7 @@ import re
 
 import Config
 import Command
+from PrettyPrinter import pretty_print, pp_number
 from RelativeDate import relative_date_to_date
 
 class AddCommand(Command.Command):
@@ -62,5 +63,4 @@ class AddCommand(Command.Command):
         self.todo = self.todolist.add(self.text)
         self._postprocess_input_todo()
 
-        return True
-
+        self.out(pretty_print(self.todo, [pp_number]))

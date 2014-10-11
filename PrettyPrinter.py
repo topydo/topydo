@@ -43,10 +43,9 @@ def pp_number(p_todo_str, p_todo):
     """
     return "%3d %s" % (p_todo.attributes['number'], p_todo_str)
 
-def pretty_print(p_todos, p_filters=[]):
+def pretty_print(p_todo, p_filters=[]):
     """
-    Given a list of todo items, pretty print it and return a list of
-    formatted strings.
+    Given a todo item, pretty print it and return a list of formatted strings.
 
     p_filters is a list of functions that transform the output string, each
     function accepting two arguments:
@@ -57,14 +56,16 @@ def pretty_print(p_todos, p_filters=[]):
     Examples are pp_color and pp_number in this file.
     """
 
-    result = []
+    todo_str = str(p_todo)
 
-    for todo in p_todos:
-        todo_str = str(todo)
+    for f in p_filters:
+        todo_str = f(todo_str, p_todo)
 
-        for f in p_filters:
-            todo_str = f(todo_str, todo)
+    return todo_str
 
-        result.append(todo_str)
-
-    return result
+def pretty_print_list(p_todos, p_filters=[]):
+    """
+    Given a list of todo items, pretty print it and return a list of
+    formatted strings.
+    """
+    return [pretty_print(todo, p_filters) for todo in p_todos]

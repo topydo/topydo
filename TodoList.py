@@ -5,7 +5,7 @@ A list of todo items.
 import re
 
 import Graph
-from PrettyPrinter import pretty_print
+from PrettyPrinter import pretty_print_list
 import Todo
 import View
 
@@ -291,5 +291,5 @@ class TodoList(object):
         self.dirty = True
 
     def __str__(self):
-        return '\n'.join(pretty_print(self._todos))
+        return '\n'.join(pretty_print_list(self._todos))
 

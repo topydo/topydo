@@ -1,4 +1,5 @@
 import Command
+from PrettyPrinter import pretty_print
 from Utils import convert_todo_number, is_valid_priority
 
 class PriorityCommand(Command.Command):
@@ -13,9 +14,7 @@ class PriorityCommand(Command.Command):
             old_priority = self.todo.priority()
             self.todolist.set_priority(self.number, self.priority)
 
-            print "Priority changed from %s to %s" \
-                % (old_priority, self.priority) # FIXME
-            # self.print_todo(number) # FIXME
+            self.out("Priority changed from %s to %s" % (old_priority, self.priority))
+            self.out(pretty_print(self.todo))
         else:
-            # error("Invalid priority given.") # TODO
-            pass
+            self.error("Invalid priority given.")
