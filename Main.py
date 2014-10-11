@@ -9,7 +9,7 @@ from DepCommand import DepCommand
 import Config
 from DoCommand import DoCommand
 from ListCommand import ListCommand
-from PrettyPrinter import pretty_print
+from PrettyPrinter import *
 from PriorityCommand import PriorityCommand
 import TodoFile
 import TodoList
@@ -59,7 +59,7 @@ class Application(object): # TODO: rename to CLIApplication
     def print_todo(self, p_number):
         """ Prints a single todo item to the standard output. """
         todo = self.todolist.todo(p_number)
-        printed = pretty_print([todo], True, True)
+        printed = pretty_print([todo], [pp_number, pp_color])
         print printed[0]
 
     def add(self):

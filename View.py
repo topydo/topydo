@@ -1,6 +1,6 @@
 """ A view is a list of todos, sorted and filtered. """
 
-from PrettyPrinter import pretty_print
+from PrettyPrinter import *
 
 class View(object):
     """
@@ -28,7 +28,7 @@ class View(object):
 
     def pretty_print(self):
         """ Pretty prints the view. """
-        return '\n'.join(pretty_print(self._viewdata, True, True))
+        return '\n'.join(pretty_print(self._viewdata, [pp_number, pp_color]))
 
     def __str__(self):
         return '\n'.join(pretty_print(self._viewdata))
