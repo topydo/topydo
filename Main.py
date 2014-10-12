@@ -16,7 +16,6 @@ from PrettyPrinter import *
 from PriorityCommand import PriorityCommand
 import TodoFile
 import TodoList
-from Utils import convert_todo_number
 
 def usage():
     """ Prints the usage of the todo.txt CLI """
