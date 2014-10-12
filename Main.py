@@ -62,6 +62,10 @@ class CLIApplication(object):
           'listcon': ListContextCommand,
           'lsprj': ListProjectCommand,
           'lsproj': ListProjectCommand,
+          'listprj': ListProjectCommand,
+          'listproj': ListProjectCommand,
+          'listproject': ListProjectCommand,
+          'listprojects': ListProjectCommand,
           'pri': PriorityCommand,
         }
 
