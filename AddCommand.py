@@ -7,8 +7,11 @@ from PrettyPrinter import pretty_print, pp_number
 from RelativeDate import relative_date_to_date
 
 class AddCommand(Command.Command):
-    def __init__(self, p_args, p_todolist):
-        super(AddCommand, self).__init__(p_args, p_todolist)
+    def __init__(self, p_args, p_todolist,
+                 p_out=lambda a: None,
+                 p_err=lambda a: None,
+                 p_prompt=lambda a: None):
+        super(AddCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
         self.text = ' '.join(p_args)
 
     def _preprocess_input_todo(self):

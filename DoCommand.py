@@ -6,17 +6,20 @@ from Recurrence import advance_recurring_todo
 from Utils import convert_todo_number
 
 class DoCommand(Command.Command):
-    def __init__(self, p_args, p_todolist):
-        super(DoCommand, self).__init__(p_args, p_todolist)
+    def __init__(self, p_args, p_todolist,
+                 p_out=lambda a: None,
+                 p_err=lambda a: None,
+                 p_prompt=lambda a: None):
+        super(DoCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
         self.number = convert_todo_number(self.argument(0))
         self.todo = self.todolist.todo(self.number)
 
     def _complete_children(self):
-            children = [t.attributes['number'] for t in self.todolist.children(self.number) if not t.is_completed()]
+            children = [t for t in self.todolist.children(self.number) if not t.is_completed()]
             if children:
-                pretty_print_list(children, [pp_number])
+                self.out("\n".join(pretty_print_list(children, [pp_number])))
 
-                confirmation = raw_input("Also mark subtasks as done? [n] "); # FIXME
+                confirmation = self.prompt("Also mark subtasks as done? [n] ")
 
                 if re.match('^y(es)?$', confirmation, re.I):
                     for child in children:
@@ -34,3 +37,4 @@ class DoCommand(Command.Command):
             self._complete_children()
             self._handle_recurrence()
             self.todolist.set_todo_completed(self.number)
+            self.out(pretty_print(self.todo))

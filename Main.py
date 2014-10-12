@@ -66,16 +66,13 @@ class Application(object): # TODO: rename to CLIApplication
         }
 
         if subcommand in subcommand_map:
-            command = subcommand_map[subcommand](arguments(), self.todolist)
-            command.execute()
+          command = subcommand_map[subcommand](arguments(), self.todolist,
+              lambda o: sys.stdout.write(o + "\n"),
+              lambda e: sys.stderr.write(e + "\n"),
+              raw_input)
 
-            if len(command.errors):
-                text = "\n".join(command.errors)
-                sys.stderr.write(text + '\n')
-                exit(1)
-            elif len(command.output):
-                text = "\n".join(command.output)
-                sys.stdout.write(text + '\n')
+          if not command.execute():
+              exit(1)
         else:
             usage()
 
