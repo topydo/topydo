@@ -166,23 +166,23 @@ class TodoListDependencyTester(unittest.TestCase):
 
     def test_check_dep(self):
         children = self.todolist.children(1)
-        self.assertEqual([todo.source() for todo in children], \
-            ['Bar p:1', 'Baz p:1 id:2', 'Buzz p:2'])
+        self.assertEqual(sorted([todo.source() for todo in children]), \
+            sorted(['Bar p:1', 'Baz p:1 id:2', 'Buzz p:2']))
 
         children = self.todolist.children(1, True)
-        self.assertEqual([todo.source() for todo in children], \
-            ['Bar p:1', 'Baz p:1 id:2'])
+        self.assertEqual(sorted([todo.source() for todo in children]), \
+            sorted(['Bar p:1', 'Baz p:1 id:2']))
 
         children = self.todolist.children(3)
-        self.assertEqual([todo.source() for todo in children], \
+        self.assertEqual(sorted([todo.source() for todo in children]), \
             ['Buzz p:2'])
 
         parents = self.todolist.parents(4)
-        self.assertEqual([todo.source() for todo in parents], \
-            ['Foo id:1', 'Baz p:1 id:2'])
+        self.assertEqual(sorted([todo.source() for todo in parents]), \
+            sorted(['Foo id:1', 'Baz p:1 id:2']))
 
         parents = self.todolist.parents(4, True)
-        self.assertEqual([todo.source() for todo in parents], \
+        self.assertEqual(sorted([todo.source() for todo in parents]), \
             ['Baz p:1 id:2'])
 
         self.assertEqual(self.todolist.children(2), [])
