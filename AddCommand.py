@@ -1,3 +1,5 @@
+""" Provides the AddCommand class that implements the 'add' subcommand. """
+
 from datetime import date
 import re
 
@@ -28,7 +30,8 @@ class AddCommand(Command.Command):
 
         * It converts relative dates to absolute ones.
         * Automatically inserts a creation date if not present.
-        * Handles more user-friendly dependencies with before: and after: tags
+        * Handles more user-friendly dependencies with before:, partof: and
+          after: tags
         """
         def convert_date(p_tag):
             value = self.todo.tag_value(p_tag)
@@ -47,7 +50,7 @@ class AddCommand(Command.Command):
 
                 if p_tag == 'after':
                     self.todolist.add_dependency(self.todo.attributes['number'], value)
-                elif p_tag == 'before':
+                elif p_tag == 'before' or p_tag == 'partof':
                     self.todolist.add_dependency(value, self.todo.attributes['number'])
 
                 self.todo.remove_tag(p_tag, raw_value)
@@ -55,6 +58,7 @@ class AddCommand(Command.Command):
         convert_date(Config.TAG_START)
         convert_date(Config.TAG_DUE)
 
+        add_dependencies('partof')
         add_dependencies('before')
         add_dependencies('after')
 
