@@ -33,6 +33,8 @@ def pp_color(p_todo_str, p_todo):
             p_todo_str = re.sub(r'\B(\+|@)\S+', PROJECT_COLOR + r'\g<0>' + color, \
                 p_todo_str)
 
+        p_todo_str += NEUTRAL_COLOR
+
     return p_todo_str
 
 def pp_number(p_todo_str, p_todo):
