@@ -1,5 +1,5 @@
 import Command
-from PrettyPrinter import pretty_print, pp_number
+from PrettyPrinter import pretty_print
 from Utils import convert_todo_number
 
 class AppendCommand(Command.Command):
@@ -15,4 +15,4 @@ class AppendCommand(Command.Command):
 
         self.todolist.append(number, text)
 
-        self.out(pretty_print(self.todo, [pp_number]))
+        self.out(pretty_print(self.todo, [self.todolist.pp_number]))

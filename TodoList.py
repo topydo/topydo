@@ -170,7 +170,7 @@ class TodoList(object):
         defined by the end user. Todos is this list should not be modified,
         modifications should occur through this class.
         """
-        return View.View(p_sorter, p_filters, self._todos)
+        return View.View(p_sorter, p_filters, self)
 
     def add_dependency(self, p_number1, p_number2):
         """ Adds a dependency from task 1 to task 2. """
@@ -292,6 +292,13 @@ class TodoList(object):
 
     def number(self, p_todo):
         return p_todo.attributes['number'] # TODO: do the lookup
+
+    def pp_number(self):
+        """
+        A filter for the pretty printer to append the todo number to the
+        printed todo.
+        """
+        return lambda p_todo_str, p_todo: "%3d %s" % (self.number(p_todo), p_todo_str)
 
     def __str__(self):
         return '\n'.join(pretty_print_list(self._todos))

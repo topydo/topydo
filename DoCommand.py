@@ -17,20 +17,20 @@ class DoCommand(Command.Command):
     def _complete_children(self):
             children = [t for t in self.todolist.children(self.number) if not t.is_completed()]
             if children:
-                self.out("\n".join(pretty_print_list(children, [pp_number])))
+                self.out("\n".join(pretty_print_list(children, [self.todolist.pp_number()])))
 
                 confirmation = self.prompt("Also mark subtasks as done? [n] ")
 
                 if re.match('^y(es)?$', confirmation, re.I):
                     for child in children:
                         self.todolist.set_todo_completed(child)
-                        self.out(pretty_print(child, [pp_number]))
+                        self.out(pretty_print(child, [self.todolist.pp_number()]))
 
     def _handle_recurrence(self):
         if self.todo.has_tag('rec'):
             new_todo = advance_recurring_todo(self.todo)
             self.todolist.add_todo(new_todo)
-            self.out(pretty_print(new_todo, [pp_number]))
+            self.out(pretty_print(new_todo, [self.todolist.pp_number()]))
 
     def execute(self):
         if self.todo and not self.todo.is_completed():

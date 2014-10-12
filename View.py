@@ -1,6 +1,6 @@
 """ A view is a list of todos, sorted and filtered. """
 
-from PrettyPrinter import *
+from PrettyPrinter import pretty_print_list, pp_color
 
 class View(object):
     """
@@ -8,8 +8,8 @@ class View(object):
     file. Also a sorter and a list of filters should be given that is applied
     to the list.
     """
-    def __init__(self, p_sorter, p_filters, p_todos):
-        self._todos = p_todos
+    def __init__(self, p_sorter, p_filters, p_todolist):
+        self._todolist = p_todolist
         self._viewdata = []
         self._sorter = p_sorter
         self._filters = p_filters
@@ -21,14 +21,15 @@ class View(object):
         Updates the view data. Should be called when the backing todo list
         has changed.
         """
-        self._viewdata = self._sorter.sort(self._todos)
+        self._viewdata = self._sorter.sort(self._todolist.todos())
 
         for _filter in self._filters:
             self._viewdata = _filter.filter(self._viewdata)
 
     def pretty_print(self):
         """ Pretty prints the view. """
-        return '\n'.join(pretty_print_list(self._viewdata, [pp_number, pp_color]))
+        pp_filters = [self._todolist.pp_number(), pp_color];
+        return '\n'.join(pretty_print_list(self._viewdata, pp_filters))
 
     def __str__(self):
         return '\n'.join(pretty_print_list(self._viewdata))

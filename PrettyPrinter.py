@@ -37,14 +37,6 @@ def pp_color(p_todo_str, p_todo):
 
     return p_todo_str
 
-def pp_number(p_todo_str, p_todo):
-    """
-    Inserts the todo number at the start of the string.
-
-    Should be passed as a filter in the filter list of pretty_print()
-    """
-    return "%3d %s" % (p_todo.attributes['number'], p_todo_str)
-
 def pretty_print(p_todo, p_filters=[]):
     """
     Given a todo item, pretty print it and return a list of formatted strings.
@@ -55,7 +47,7 @@ def pretty_print(p_todo, p_filters=[]):
     * the todo's text that has to be modified;
     * the todo object itself which allows for obtaining relevant information.
 
-    Examples are pp_color and pp_number in this file.
+    Example is pp_color in this fle.
     """
 
     todo_str = str(p_todo)
