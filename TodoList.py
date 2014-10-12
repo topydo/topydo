@@ -124,6 +124,7 @@ class TodoList(object):
                 self.remove_dependency(self.number(parent), self.number(todo))
 
             del self._todos[p_number - 1]
+            del self._numbers[todo]
 
             self.dirty = True
 

@@ -28,13 +28,14 @@ class TodoListTester(unittest.TestCase):
     def test_add1(self):
         text = "(C) Adding a new task @Context3 +Project3"
         count = self.todolist.count()
-        self.todolist.add(text)
+        todo = self.todolist.add(text)
 
         self.assertEquals(self.todolist.todo(count+1).source(), text)
         self.assertEquals(set(['Project1', 'Project2', 'Project3']), \
             self.todolist.projects())
         self.assertEquals(set(['Context1', 'Context2', 'Context3']), \
             self.todolist.contexts())
+        self.assertEquals(self.todolist.number(todo), 6)
         self.assertTrue(self.todolist.is_dirty())
 
     def test_add2(self):
@@ -70,12 +71,14 @@ class TodoListTester(unittest.TestCase):
 
     def test_delete1(self):
         count = self.todolist.count()
+        todo = self.todolist.todo(2)
         self.todolist.delete(2)
 
         self.assertEquals(self.todolist.todo(2).source(), \
             "(C) Baz @Context1 +Project1 key:value")
         self.assertEquals(self.todolist.count(), count - 1)
         self.assertTrue(self.todolist.is_dirty())
+        self.assertRaises(KeyError, self.todolist.number, todo)
 
     def test_delete2(self):
         count = self.todolist.count()
