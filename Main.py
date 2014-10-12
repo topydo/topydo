@@ -56,7 +56,7 @@ class CLIApplication(object):
             command.execute()
 
             if archive.is_dirty():
-                archive_file.write(archive)
+                archive_file.write(str(archive))
 
 
     def run(self):
@@ -101,7 +101,7 @@ class CLIApplication(object):
             exit(1)
 
         if self.todolist.is_dirty():
-            # self.archive()
+            self.archive()
             todofile.write(str(self.todolist))
 
 if __name__ == '__main__':

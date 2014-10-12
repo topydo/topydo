@@ -1,5 +1,4 @@
 import Command
-import Config
 
 class ArchiveCommand(Command.Command):
     def __init__(self, p_todolist, p_archive_list):
