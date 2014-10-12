@@ -5,6 +5,7 @@ import sys
 
 from AddCommand import AddCommand
 from AppendCommand import AppendCommand
+from ArchiveCommand import ArchiveCommand
 from DepCommand import DepCommand
 import Config
 from DoCommand import DoCommand
@@ -40,14 +41,28 @@ class CLIApplication(object):
     def __init__(self):
         self.todolist = TodoList.TodoList([])
 
+    def archive(self):
+        """
+        Performs an archive action on the todolist.
+
+        This means that all completed tasks are moved to the archive file
+        (defaults to done.txt).
+        """
+        archive_file = TodoFile.TodoFile(Config.ARCHIVE_FILENAME)
+        archive = TodoList.TodoList(archive_file.read())
+
+        if archive:
+            command = ArchiveCommand(self.todolist, archive)
+            command.execute()
+
+            if archive.is_dirty():
+                archive_file.write(archive)
+
+
     def run(self):
         """ Main entry function. """
         todofile = TodoFile.TodoFile(Config.FILENAME)
-
-        try:
-            self.todolist = TodoList.TodoList(todofile.read())
-        except Exception:
-            pass # TODO
+        self.todolist = TodoList.TodoList(todofile.read())
 
         try:
             subcommand = sys.argv[1]
@@ -82,10 +97,11 @@ class CLIApplication(object):
             lambda e: sys.stderr.write(e + "\n"),
             raw_input)
 
-        if not command.execute():
+        if command.execute() == False:
             exit(1)
 
         if self.todolist.is_dirty():
+            # self.archive()
             todofile.write(str(self.todolist))
 
 if __name__ == '__main__':

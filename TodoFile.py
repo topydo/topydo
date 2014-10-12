@@ -13,10 +13,13 @@ class TodoFile(object):
 
     def read(self):
         """ Reads the todo.txt file and returns a list of todo items.  """
-
-        todofile = open(self.path, 'r')
-        todos = todofile.readlines()
-        todofile.close()
+        todos = []
+        try:
+            todofile = open(self.path, 'r')
+            todos = todofile.readlines()
+            todofile.close()
+        except IOError:
+            pass
 
         return todos
 

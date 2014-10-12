@@ -7,7 +7,7 @@ COLORS = True
 HIGHLIGHT_PROJECTS_CONTEXTS = True
 
 FILENAME = 'todo.txt'
-COMPLETED_FILENAME = 'done.txt'
+ARCHIVE_FILENAME = 'done.txt'
 
 TAG_START = 't'
 TAG_DUE = 'due'
