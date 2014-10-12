@@ -1,5 +1,6 @@
 import Command
 from PrettyPrinter import pretty_print
+import TodoList
 from Utils import convert_todo_number
 
 class AppendCommand(Command.Command):
@@ -16,11 +17,11 @@ class AppendCommand(Command.Command):
             text = " ".join(self.args[1:])
 
             if number and text:
-                todo = self.todolist.todo(number)
-                if todo:
+                try:
+                    todo = self.todolist.todo(number)
                     self.todolist.append(todo, text)
                     self.out(pretty_print(todo, [self.todolist.pp_number()]))
-                else:
+                except TodoList.InvalidTodoException:
                     self.error("Invalid todo number given.")
             else:
                 self.error(self.usage())

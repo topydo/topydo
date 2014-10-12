@@ -9,6 +9,9 @@ from PrettyPrinter import pretty_print_list
 import Todo
 import View
 
+class InvalidTodoException(Exception):
+    pass
+
 class TodoList(object):
     """
     Provides operations for a todo list, such as adding items, removing them,
@@ -41,7 +44,7 @@ class TodoList(object):
         try:
             result = self._todos[p_number - 1]
         except IndexError:
-            result = None
+            raise InvalidTodoException
 
         return result
 
@@ -284,7 +287,10 @@ class TodoList(object):
         self.dirty = True
 
     def number(self, p_todo):
-        return self._todos.index(p_todo) + 1
+        try:
+            return self._todos.index(p_todo) + 1
+        except ValueError:
+            raise InvalidTodoException
 
     def pp_number(self):
         """

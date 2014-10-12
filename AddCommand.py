@@ -7,6 +7,7 @@ import Config
 import Command
 from PrettyPrinter import pretty_print
 from RelativeDate import relative_date_to_date
+import TodoList
 
 class AddCommand(Command.Command):
     def __init__(self, p_args, p_todolist,
@@ -46,14 +47,15 @@ class AddCommand(Command.Command):
                 try:
                     value = int(raw_value)
                     dep = self.todolist.todo(value)
-                except ValueError:
-                    continue
 
-                if dep:
                     if p_tag == 'after':
                         self.todolist.add_dependency(self.todo, dep)
                     elif p_tag == 'before' or p_tag == 'partof':
                         self.todolist.add_dependency(dep, self.todo)
+                except ValueError:
+                    continue
+                except TodoList.InvalidTodoException:
+                    pass
 
                 self.todo.remove_tag(p_tag, raw_value)
 

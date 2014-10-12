@@ -78,7 +78,7 @@ class TodoListTester(unittest.TestCase):
             "(C) Baz @Context1 +Project1 key:value")
         self.assertEquals(self.todolist.count(), count - 1)
         self.assertTrue(self.todolist.is_dirty())
-        self.assertRaises(ValueError, self.todolist.number, todo)
+        self.assertRaises(TodoList.InvalidTodoException, self.todolist.number, todo)
 
     def test_append1(self):
         todo = self.todolist.todo(3)
@@ -108,9 +108,8 @@ class TodoListTester(unittest.TestCase):
 
     def test_todo(self):
         count = self.todolist.count()
-        todo = self.todolist.todo(count+100)
 
-        self.assertEquals(todo, None)
+        self.assertRaises(TodoList.InvalidTodoException, self.todolist.todo, count + 100)
         self.assertFalse(self.todolist.is_dirty())
 
     def test_string(self):
@@ -139,7 +138,7 @@ class TodoListTester(unittest.TestCase):
 
     def test_todo_number2(self):
         todo = Todo.Todo("Non-existent")
-        self.assertRaises(ValueError, self.todolist.number, todo)
+        self.assertRaises(TodoList.InvalidTodoException, self.todolist.number, todo)
 
     def test_todo_complete(self):
         todo = self.todolist.todo(1)
