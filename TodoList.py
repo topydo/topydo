@@ -24,7 +24,6 @@ class TodoList(object):
         The string will be parsed.
         """
         self._todos = []
-        self._numbers = {} # maintains todo -> number mapping
         self._depgraph = Graph.DirectedGraph()
 
         for string in p_todostrings:
@@ -46,6 +45,18 @@ class TodoList(object):
 
         return result
 
+    def todo_by_hash(self, p_hash):
+        """
+        Given the hash value of a todo, return the corresponding hash instance.
+        """
+
+        result = None
+        for todo in self._todos:
+            if hash(todo) == p_hash:
+                result = todo
+                break
+        return result
+
     def todo_by_dep_id(self, p_dep_id):
         """
         Returns the todo that has the id tag set to the value p_dep_id.
@@ -65,19 +76,19 @@ class TodoList(object):
         dep_id = p_todo.tag_value('id')
         # maintain dependency graph
         if dep_id:
-            self._depgraph.add_node(self.number(p_todo))
+            self._depgraph.add_node(hash(p_todo))
 
             # connect all tasks we have in memory so far that refer to this
             # task
             for dep in \
                 [dep for dep in self._todos if dep.has_tag('p', dep_id)]:
 
-                self._depgraph.add_edge(self.number(p_todo), self.number(dep), dep_id)
+                self._depgraph.add_edge(hash(p_todo), hash(dep), dep_id)
 
         for child in p_todo.tag_values('p'):
             parent = self.todo_by_dep_id(child)
             if parent:
-                self._depgraph.add_edge(self.number(parent), self.number(p_todo), child)
+                self._depgraph.add_edge(hash(parent), hash(p_todo), child)
 
     def add(self, p_src):
         """ Given a todo string, parse it and put it to the end of the list. """
@@ -105,7 +116,6 @@ class TodoList(object):
 
         Then there will be an edge 1 --> 2 with ID 4.
         """
-        self._numbers[p_todo] = len(self._todos) + 1
         self._todos.append(p_todo)
 
         self._maintain_dep_graph(p_todo)
@@ -124,7 +134,6 @@ class TodoList(object):
                 self.remove_dependency(self.number(parent), self.number(todo))
 
             del self._todos[p_number - 1]
-            del self._numbers[todo]
 
             self.dirty = True
 
@@ -189,9 +198,9 @@ class TodoList(object):
 
             return '%d' % new_id
 
-        if not self._depgraph.has_edge(p_number1, p_number2):
-            from_todo = self.todo(p_number1)
-            to_todo = self.todo(p_number2)
+        from_todo = self.todo(p_number1)
+        to_todo = self.todo(p_number2)
+        if not self._depgraph.has_edge(hash(from_todo), hash(to_todo)):
 
             if not from_todo or not to_todo:
                 return
@@ -204,7 +213,7 @@ class TodoList(object):
                 from_todo.set_tag('id', dep_id)
 
             to_todo.add_tag('p', dep_id)
-            self._depgraph.add_edge(p_number1, p_number2, dep_id)
+            self._depgraph.add_edge(hash(from_todo), hash(to_todo), dep_id)
             self._update_parent_cache()
             self.dirty = True
 
@@ -220,7 +229,7 @@ class TodoList(object):
 
         if dep_id:
             to_todo.remove_tag('p', dep_id)
-            self._depgraph.remove_edge(p_number1, p_number2)
+            self._depgraph.remove_edge(hash(from_todo), hash(to_todo))
             self._update_parent_cache()
 
             if not self.children(p_number1, True):
@@ -233,17 +242,19 @@ class TodoList(object):
         Returns a list of parent todos that (in)directly depend on the
         given todo.
         """
-        parents = self._depgraph.incoming_neighbors(p_number, not p_only_direct)
-        return [self.todo(parent) for parent in parents]
+        todo = self.todo(p_number)
+        parents = self._depgraph.incoming_neighbors(hash(todo), not p_only_direct)
+        return [self.todo_by_hash(parent) for parent in parents]
 
     def children(self, p_number, p_only_direct=False):
         """
         Returns a list of child todos that the given todo (in)directly depends
         on.
         """
+        todo = self.todo(p_number)
         children = \
-            self._depgraph.outgoing_neighbors(p_number, not p_only_direct)
-        return [self.todo(child) for child in children]
+            self._depgraph.outgoing_neighbors(hash(todo), not p_only_direct)
+        return [self.todo_by_hash(child) for child in children]
 
     def clean_dependencies(self):
         """
@@ -293,7 +304,7 @@ class TodoList(object):
         self.dirty = True
 
     def number(self, p_todo):
-        return self._numbers[p_todo]
+        return self._todos.index(p_todo) + 1
 
     def pp_number(self):
         """
