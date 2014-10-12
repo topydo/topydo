@@ -64,19 +64,19 @@ class TodoList(object):
         dep_id = p_todo.tag_value('id')
         # maintain dependency graph
         if dep_id:
-            self._depgraph.add_node(p_todo.attributes['number'])
+            self._depgraph.add_node(self.number(p_todo))
 
             # connect all tasks we have in memory so far that refer to this
             # task
             for dep in \
                 [dep for dep in self._todos if dep.has_tag('p', dep_id)]:
 
-                self._depgraph.add_edge(p_todo.attributes['number'], dep.attributes['number'], dep_id)
+                self._depgraph.add_edge(self.number(p_todo), self.number(dep), dep_id)
 
         for child in p_todo.tag_values('p'):
             parent = self.todo_by_dep_id(child)
             if parent:
-                self._depgraph.add_edge(parent.attributes['number'], p_todo.attributes['number'], child)
+                self._depgraph.add_edge(self.number(parent), self.number(p_todo), child)
 
     def add(self, p_src):
         """ Given a todo string, parse it and put it to the end of the list. """
@@ -117,10 +117,10 @@ class TodoList(object):
 
         if todo:
             for child in self.children(p_number):
-                self.remove_dependency(todo.attributes['number'], child.attributes['number'])
+                self.remove_dependency(self.number(todo), self.number(child))
 
             for parent in self.parents(p_number):
-                self.remove_dependency(parent.attributes['number'], todo.attributes['number'])
+                self.remove_dependency(self.number(parent), self.number(todo))
 
             del self._todos[p_number - 1]
 
@@ -272,7 +272,7 @@ class TodoList(object):
         """
 
         for todo in self._todos:
-            todo.attributes['parents'] = self.parents(todo.attributes['number'])
+            todo.attributes['parents'] = self.parents(self.number(todo))
 
     def is_dirty(self):
         return self.dirty
@@ -289,6 +289,9 @@ class TodoList(object):
         todo = self.todo(p_number)
         todo.set_priority(p_priority)
         self.dirty = True
+
+    def number(self, p_todo):
+        return p_todo.attributes['number'] # TODO: do the lookup
 
     def __str__(self):
         return '\n'.join(pretty_print_list(self._todos))
