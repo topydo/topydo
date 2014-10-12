@@ -39,10 +39,11 @@ class Command(object):
 
     def argument(self, p_number):
         """ Retrieves a value from the argument list at the given position. """
+        value = None
         try:
             value = self.args[p_number]
         except IndexError:
-            self.usage()
+            self.error(self.usage())
 
         return value
 

@@ -31,7 +31,7 @@ def convert_todo_number(p_number):
     try:
         p_number = int(p_number)
     except ValueError:
-        error("Invalid todo number given.")
+        p_number = None
 
     return p_number
 
