@@ -200,8 +200,7 @@ class TodoList(object):
 
         from_todo = self.todo(p_number1)
         to_todo = self.todo(p_number2)
-        if not self._depgraph.has_edge(hash(from_todo), hash(to_todo)):
-
+        if p_number1 != p_number2 and not self._depgraph.has_edge(hash(from_todo), hash(to_todo)):
             if not from_todo or not to_todo:
                 return
 
