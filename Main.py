@@ -33,7 +33,7 @@ def arguments():
 
     return values
 
-class Application(object): # TODO: rename to CLIApplication
+class CLIApplication(object):
     def __init__(self):
         self.todolist = TodoList.TodoList([])
 
@@ -80,4 +80,4 @@ class Application(object): # TODO: rename to CLIApplication
             todofile.write(str(self.todolist))
 
 if __name__ == '__main__':
-    Application().run()
+    CLIApplication().run()
