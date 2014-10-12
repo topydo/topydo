@@ -24,6 +24,7 @@ class TodoList(object):
         The string will be parsed.
         """
         self._todos = []
+        self._numbers = {} # maintains todo -> number mapping
         self._depgraph = Graph.DirectedGraph()
 
         for string in p_todostrings:
@@ -104,7 +105,7 @@ class TodoList(object):
 
         Then there will be an edge 1 --> 2 with ID 4.
         """
-        p_todo.attributes['number'] = len(self._todos) + 1
+        self._numbers[p_todo] = len(self._todos) + 1
         self._todos.append(p_todo)
 
         self._maintain_dep_graph(p_todo)
@@ -291,7 +292,7 @@ class TodoList(object):
         self.dirty = True
 
     def number(self, p_todo):
-        return p_todo.attributes['number'] # TODO: do the lookup
+        return self._numbers[p_todo]
 
     def pp_number(self):
         """

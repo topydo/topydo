@@ -16,7 +16,7 @@ class Todo(TodoBase.TodoBase):
 
     def __init__(self, p_str):
         TodoBase.TodoBase.__init__(self, p_str)
-        self.attributes = { 'number': -1}
+        self.attributes = {}
 
     def get_date(self, p_tag):
         """ Given a date tag, return a date object. """
