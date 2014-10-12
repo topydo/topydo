@@ -49,9 +49,9 @@ class AddCommand(Command.Command):
                     continue
 
                 if p_tag == 'after':
-                    self.todolist.add_dependency(self.todo.attributes['number'], value)
+                    self.todolist.add_dependency(self.todolist.number(self.todo), value)
                 elif p_tag == 'before' or p_tag == 'partof':
-                    self.todolist.add_dependency(value, self.todo.attributes['number'])
+                    self.todolist.add_dependency(value, self.todolist.number(self.todo))
 
                 self.todo.remove_tag(p_tag, raw_value)
 

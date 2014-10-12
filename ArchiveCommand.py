@@ -9,4 +9,4 @@ class ArchiveCommand(Command.Command):
     def execute(self):
         for todo in [t for t in self.todolist.todos() if t.is_completed()]:
             self.archive.add_todo(todo)
-            self.todolist.delete(todo.attributes['number'])
+            self.todolist.delete(self.todolist.number(todo))
