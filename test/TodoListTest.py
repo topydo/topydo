@@ -78,7 +78,7 @@ class TodoListTester(unittest.TestCase):
             "(C) Baz @Context1 +Project1 key:value")
         self.assertEquals(self.todolist.count(), count - 1)
         self.assertTrue(self.todolist.is_dirty())
-        self.assertRaises(KeyError, self.todolist.number, todo)
+        self.assertRaises(ValueError, self.todolist.number, todo)
 
     def test_delete2(self):
         count = self.todolist.count()
@@ -217,6 +217,10 @@ class TodoListDependencyTester(unittest.TestCase):
         self.todolist.remove_dependency(1, 4)
 
         self.assertEquals(str(self.todolist), old)
+
+    def test_remove_todo_check_children(self):
+        self.todolist.delete(2)
+        self.assertTrue(self.todolist.children(2))
 
     def test_remove_task(self):
         self.todolist.delete(3)
