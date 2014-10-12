@@ -66,8 +66,11 @@ class AddCommand(Command.Command):
 
     def execute(self):
         """ Adds a todo item to the list. """
-        self._preprocess_input_todo()
-        self.todo = self.todolist.add(self.text)
-        self._postprocess_input_todo()
+        if self.text:
+            self._preprocess_input_todo()
+            self.todo = self.todolist.add(self.text)
+            self._postprocess_input_todo()
 
-        self.out(pretty_print(self.todo, [self.todolist.pp_number()]))
+            self.out(pretty_print(self.todo, [self.todolist.pp_number()]))
+        else:
+            self.error(self.usage())
