@@ -15,7 +15,7 @@ class DoCommand(Command.Command):
         self.todo = self.todolist.todo(self.number)
 
     def _complete_children(self):
-            children = [t for t in self.todolist.children(self.number) if not t.is_completed()]
+            children = [t for t in self.todolist.children(self.todo) if not t.is_completed()]
             if children:
                 self.out("\n".join(pretty_print_list(children, [self.todolist.pp_number()])))
 

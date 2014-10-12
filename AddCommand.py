@@ -45,13 +45,15 @@ class AddCommand(Command.Command):
             for raw_value in self.todo.tag_values(p_tag):
                 try:
                     value = int(raw_value)
+                    dep = self.todolist.todo(value)
                 except ValueError:
                     continue
 
-                if p_tag == 'after':
-                    self.todolist.add_dependency(self.todolist.number(self.todo), value)
-                elif p_tag == 'before' or p_tag == 'partof':
-                    self.todolist.add_dependency(value, self.todolist.number(self.todo))
+                if dep:
+                    if p_tag == 'after':
+                        self.todolist.add_dependency(self.todo, dep)
+                    elif p_tag == 'before' or p_tag == 'partof':
+                        self.todolist.add_dependency(dep, self.todo)
 
                 self.todo.remove_tag(p_tag, raw_value)
 

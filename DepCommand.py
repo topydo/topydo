@@ -39,7 +39,9 @@ class DepCommand(Command.Command):
         todos = []
         if arg2 == 'to':
             # dep ls 1 to ...
-            todos = self.todolist.children(convert_todo_number(arg1))
+            number = convert_todo_number(arg1)
+            todo = self.todolist.todo(number)
+            todos = self.todolist.children(todo)
         elif arg1 == 'to':
             # dep ls ... to 1
             todos = self.todolist.parents(convert_todo_number(arg2))

@@ -18,7 +18,7 @@ class AppendCommand(Command.Command):
             if number and text:
                 todo = self.todolist.todo(number)
                 if todo:
-                    self.todolist.append(number, text)
+                    self.todolist.append(todo, text)
                     self.out(pretty_print(todo, [self.todolist.pp_number()]))
                 else:
                     self.error("Invalid todo number given.")

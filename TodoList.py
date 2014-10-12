@@ -122,38 +122,34 @@ class TodoList(object):
         self._update_parent_cache()
         self.dirty = True
 
-    def delete(self, p_number):
+    def delete(self, p_todo):
         """ Deletes a todo item from the list. """
-        todo = self.todo(p_number)
+        number = self.number(p_todo)
 
-        if todo:
-            for child in self.children(p_number):
-                self.remove_dependency(self.number(todo), self.number(child))
+        for child in self.children(p_todo):
+            self.remove_dependency(p_todo, child)
 
-            for parent in self.parents(p_number):
-                self.remove_dependency(self.number(parent), self.number(todo))
+        for parent in self.parents(p_todo):
+            self.remove_dependency(parent, p_todo)
 
-            del self._todos[p_number - 1]
+        del self._todos[number - 1]
 
-            self.dirty = True
+        self.dirty = True
 
     def count(self):
         """ Returns the number of todos on this list. """
         return len(self._todos)
 
-    def append(self, p_number, p_string):
+    def append(self, p_todo, p_string):
         """
         Appends a text to the todo, specified by its number.
         The todo will be parsed again, such that tags and projects in de
         appended string are processed.
         """
         if len(p_string) > 0:
-            todo = self.todo(p_number)
-
-            if todo:
-                new_text = todo.source() + ' ' + p_string
-                todo.set_source_text(new_text)
-                self.dirty = True
+            new_text = p_todo.source() + ' ' + p_string
+            p_todo.set_source_text(new_text)
+            self.dirty = True
 
     def projects(self):
         """ Returns a set of all projects in this list. """
@@ -183,7 +179,7 @@ class TodoList(object):
         """
         return View.View(p_sorter, p_filters, self)
 
-    def add_dependency(self, p_number1, p_number2):
+    def add_dependency(self, p_from_todo, p_to_todo):
         """ Adds a dependency from task 1 to task 2. """
         def find_next_id():
             """
@@ -198,61 +194,48 @@ class TodoList(object):
 
             return '%d' % new_id
 
-        from_todo = self.todo(p_number1)
-        to_todo = self.todo(p_number2)
-        if p_number1 != p_number2 and not self._depgraph.has_edge(hash(from_todo), hash(to_todo)):
-            if not from_todo or not to_todo:
-                return
-
+        if p_from_todo != p_to_todo and not self._depgraph.has_edge(hash(p_from_todo), hash(p_to_todo)):
             dep_id = None
-            if from_todo.has_tag('id'):
-                dep_id = from_todo.tag_value('id')
+            if p_from_todo.has_tag('id'):
+                dep_id = p_from_todo.tag_value('id')
             else:
                 dep_id = find_next_id()
-                from_todo.set_tag('id', dep_id)
+                p_from_todo.set_tag('id', dep_id)
 
-            to_todo.add_tag('p', dep_id)
-            self._depgraph.add_edge(hash(from_todo), hash(to_todo), dep_id)
+            p_to_todo.add_tag('p', dep_id)
+            self._depgraph.add_edge(hash(p_from_todo), hash(p_to_todo), dep_id)
             self._update_parent_cache()
             self.dirty = True
 
-    def remove_dependency(self, p_number1, p_number2):
+    def remove_dependency(self, p_from_todo, p_to_todo):
         """ Removes a dependency between two todos. """
-        from_todo = self.todo(p_number1)
-        to_todo = self.todo(p_number2)
-
-        if not from_todo or not to_todo:
-            return
-
-        dep_id = from_todo.tag_value('id')
+        dep_id = p_from_todo.tag_value('id')
 
         if dep_id:
-            to_todo.remove_tag('p', dep_id)
-            self._depgraph.remove_edge(hash(from_todo), hash(to_todo))
+            p_to_todo.remove_tag('p', dep_id)
+            self._depgraph.remove_edge(hash(p_from_todo), hash(p_to_todo))
             self._update_parent_cache()
 
-            if not self.children(p_number1, True):
-                from_todo.remove_tag('id')
+            if not self.children(p_from_todo, True):
+                p_from_todo.remove_tag('id')
 
             self.dirty = True
 
-    def parents(self, p_number, p_only_direct=False):
+    def parents(self, p_todo, p_only_direct=False):
         """
         Returns a list of parent todos that (in)directly depend on the
         given todo.
         """
-        todo = self.todo(p_number)
-        parents = self._depgraph.incoming_neighbors(hash(todo), not p_only_direct)
+        parents = self._depgraph.incoming_neighbors(hash(p_todo), not p_only_direct)
         return [self.todo_by_hash(parent) for parent in parents]
 
-    def children(self, p_number, p_only_direct=False):
+    def children(self, p_todo, p_only_direct=False):
         """
         Returns a list of child todos that the given todo (in)directly depends
         on.
         """
-        todo = self.todo(p_number)
         children = \
-            self._depgraph.outgoing_neighbors(hash(todo), not p_only_direct)
+            self._depgraph.outgoing_neighbors(hash(p_todo), not p_only_direct)
         return [self.todo_by_hash(child) for child in children]
 
     def clean_dependencies(self):
@@ -284,7 +267,7 @@ class TodoList(object):
         """
 
         for todo in self._todos:
-            todo.attributes['parents'] = self.parents(self.number(todo))
+            todo.attributes['parents'] = self.parents(todo)
 
     def is_dirty(self):
         return self.dirty
@@ -292,14 +275,12 @@ class TodoList(object):
     def todos(self):
         return self._todos
 
-    def set_todo_completed(self, p_number):
-        todo = self.todo(p_number)
-        todo.set_completed()
+    def set_todo_completed(self, p_todo):
+        p_todo.set_completed()
         self.dirty = True
 
-    def set_priority(self, p_number, p_priority):
-        todo = self.todo(p_number)
-        todo.set_priority(p_priority)
+    def set_priority(self, p_todo, p_priority):
+        p_todo.set_priority(p_priority)
         self.dirty = True
 
     def number(self, p_todo):

@@ -72,7 +72,7 @@ class TodoListTester(unittest.TestCase):
     def test_delete1(self):
         count = self.todolist.count()
         todo = self.todolist.todo(2)
-        self.todolist.delete(2)
+        self.todolist.delete(todo)
 
         self.assertEquals(self.todolist.todo(2).source(), \
             "(C) Baz @Context1 +Project1 key:value")
@@ -80,39 +80,31 @@ class TodoListTester(unittest.TestCase):
         self.assertTrue(self.todolist.is_dirty())
         self.assertRaises(ValueError, self.todolist.number, todo)
 
-    def test_delete2(self):
-        count = self.todolist.count()
-        self.todolist.delete(count + 1)
-
-        self.assertEquals(self.todolist.count(), count)
-        self.assertFalse(self.todolist.is_dirty())
-
     def test_append1(self):
-        self.todolist.append(3, "@Context3")
+        todo = self.todolist.todo(3)
+        self.todolist.append(todo, "@Context3")
 
-        self.assertEquals(self.todolist.todo(3).source(), \
+        self.assertEquals(todo.source(), \
             "(C) Baz @Context1 +Project1 key:value @Context3")
         self.assertEquals(set(['Context1', 'Context2', 'Context3']), \
             self.todolist.contexts())
         self.assertTrue(self.todolist.is_dirty())
 
     def test_append2(self):
-        text = self.todolist.todo(3).text()
-        self.todolist.append(3, "foo:bar")
+        todo = self.todolist.todo(3)
+        text = todo.text()
+        self.todolist.append(todo, "foo:bar")
 
-        self.assertEquals(self.todolist.todo(3).text(), text)
-        self.assertEquals(self.todolist.todo(3).source(), \
+        self.assertEquals(todo.text(), text)
+        self.assertEquals(todo.source(), \
             "(C) Baz @Context1 +Project1 key:value foo:bar")
 
     def test_append3(self):
-        text = self.todolist.todo(3).text()
-        self.todolist.append(3, '')
+        todo = self.todolist.todo(3)
+        text = todo.text()
+        self.todolist.append(todo, '')
 
-        self.assertEquals(self.todolist.todo(3).text(), text)
-
-    def test_append4(self):
-        self.todolist.append(999, 'foo')
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertEquals(todo.text(), text)
 
     def test_todo(self):
         count = self.todolist.count()
@@ -137,7 +129,7 @@ class TodoListTester(unittest.TestCase):
         self.assertTrue(self.todolist.todo_by_dep_id('1'))
         self.assertFalse(self.todolist.todo_by_dep_id('2'))
 
-    def test_todo_number(self):
+    def test_todo_number1(self):
         todo = Todo.Todo("No number")
         self.todolist.add_todo(todo)
 
@@ -145,13 +137,20 @@ class TodoListTester(unittest.TestCase):
         self.assertIsInstance(todo, Todo.Todo)
         self.assertEquals(todo.text(), "No number")
 
+    def test_todo_number2(self):
+        todo = Todo.Todo("Non-existent")
+        self.assertRaises(ValueError, self.todolist.number, todo)
+
     def test_todo_complete(self):
-        self.todolist.set_todo_completed(1)
+        todo = self.todolist.todo(1)
+        self.todolist.set_todo_completed(todo)
         self.assertTrue(self.todolist.todo(1).is_completed())
         self.assertTrue(self.todolist.is_dirty())
 
     def test_todo_priority(self):
-        self.todolist.set_priority(1, 'F')
+        todo = self.todolist.todo(1)
+        self.todolist.set_priority(todo, 'F')
+
         self.assertEquals(self.todolist.todo(1).priority(), 'F')
         self.assertTrue(self.todolist.is_dirty())
 
@@ -165,34 +164,36 @@ class TodoListDependencyTester(unittest.TestCase):
         self.todolist.add("Fnord")
 
     def test_check_dep(self):
-        children = self.todolist.children(1)
+        children = self.todolist.children(self.todolist.todo(1))
         self.assertEqual(sorted([todo.source() for todo in children]), \
             sorted(['Bar p:1', 'Baz p:1 id:2', 'Buzz p:2']))
 
-        children = self.todolist.children(1, True)
+        children = self.todolist.children(self.todolist.todo(1), True)
         self.assertEqual(sorted([todo.source() for todo in children]), \
             sorted(['Bar p:1', 'Baz p:1 id:2']))
 
-        children = self.todolist.children(3)
+        children = self.todolist.children(self.todolist.todo(3))
         self.assertEqual(sorted([todo.source() for todo in children]), \
             ['Buzz p:2'])
 
-        parents = self.todolist.parents(4)
+        parents = self.todolist.parents(self.todolist.todo(4))
         self.assertEqual(sorted([todo.source() for todo in parents]), \
             sorted(['Foo id:1', 'Baz p:1 id:2']))
 
-        parents = self.todolist.parents(4, True)
+        parents = self.todolist.parents(self.todolist.todo(4), True)
         self.assertEqual(sorted([todo.source() for todo in parents]), \
             ['Baz p:1 id:2'])
 
-        self.assertEqual(self.todolist.children(2), [])
-        self.assertEqual(self.todolist.parents(1), [])
+        self.assertEqual(self.todolist.children(self.todolist.todo(2)), [])
+        self.assertEqual(self.todolist.parents(self.todolist.todo(1)), [])
 
     def test_add_dep1(self):
-        self.todolist.add_dependency(5, 4)
+        todo4 = self.todolist.todo(4)
+        todo5 = self.todolist.todo(5)
+        self.todolist.add_dependency(todo5, todo4)
 
-        self.assertTrue(self.todolist.todo(5).has_tag('id', '3'))
-        self.assertTrue(self.todolist.todo(4).has_tag('p', '3'))
+        self.assertTrue(todo5.has_tag('id', '3'))
+        self.assertTrue(todo4.has_tag('p', '3'))
 
     def test_add_dep2(self):
         """
@@ -200,41 +201,55 @@ class TodoListDependencyTester(unittest.TestCase):
         edge_id properly.
         """
 
-        self.todolist.add_dependency(5, 4)
-        self.todolist.add_dependency(4, 1)
+        todo1 = self.todolist.todo(1)
+        todo4 = self.todolist.todo(4)
+        todo5 = self.todolist.todo(5)
 
-        self.assertTrue(self.todolist.todo(4).has_tag('id', '4'))
-        self.assertTrue(self.todolist.todo(1).has_tag('p', '4'))
+        self.todolist.add_dependency(todo5, todo4)
+        self.todolist.add_dependency(todo4, todo1)
+
+        self.assertTrue(todo4.has_tag('id', '4'))
+        self.assertTrue(todo1.has_tag('p', '4'))
 
     def test_remove_dep1(self):
-        self.todolist.remove_dependency(3, 4)
+        from_todo = self.todolist.todo(3)
+        to_todo = self.todolist.todo(4)
+        self.todolist.remove_dependency(from_todo, to_todo)
 
-        self.assertFalse(self.todolist.todo(3).has_tag('id'))
-        self.assertFalse(self.todolist.todo(4).has_tag('p'))
+        self.assertFalse(from_todo.has_tag('id'))
+        self.assertFalse(to_todo.has_tag('p'))
 
     def test_remove_dep2(self):
         old = str(self.todolist)
-        self.todolist.remove_dependency(1, 4)
+        from_todo = self.todolist.todo(1)
+        to_todo = self.todolist.todo(4)
+        self.todolist.remove_dependency(from_todo, to_todo)
 
         self.assertEquals(str(self.todolist), old)
 
     def test_remove_todo_check_children(self):
-        self.todolist.delete(2)
-        self.assertTrue(self.todolist.children(2))
+        todo = self.todolist.todo(2)
+        self.todolist.delete(todo)
+
+        todo = self.todolist.todo(2)
+        self.assertTrue(self.todolist.children(todo))
 
     def test_remove_task(self):
-        self.todolist.delete(3)
-        self.assertFalse(self.todolist.todo(3).has_tag('p', '2'))
+        todo = self.todolist.todo(3)
+        self.todolist.delete(todo)
+        self.assertFalse(todo.has_tag('p', '2'))
 
-        children = self.todolist.children(1)
-        self.assertEqual([todo.source() for todo in children], \
-            ['Bar p:1'])
+        todo = self.todolist.todo(1)
+        children = self.todolist.children(todo)
+        self.assertEqual([t.source() for t in children], ['Bar p:1'])
 
     def test_add_double_dep(self):
-        self.todolist.add_dependency(1, 2)
+        todo1 = self.todolist.todo(1)
+        todo2 = self.todolist.todo(2)
+        self.todolist.add_dependency(todo1, todo2)
 
-        self.assertEqual(self.todolist.todo(1).source(), 'Foo id:1')
-        self.assertEqual(self.todolist.todo(2).source(), 'Bar p:1')
+        self.assertEqual(todo1.source(), 'Foo id:1')
+        self.assertEqual(todo2.source(), 'Bar p:1')
 
 class TodoListCleanDependencyTester(unittest.TestCase):
     def setUp(self):

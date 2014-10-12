@@ -69,8 +69,7 @@ class DependencyFilter(Filter):
         """
         Returns True when there are no children that are uncompleted yet.
         """
-        number = self.todolist.number(p_todo)
-        children = self.todolist.children(number)
+        children = self.todolist.children(p_todo)
         uncompleted = [todo for todo in children if not todo.is_completed()]
 
         return not uncompleted
