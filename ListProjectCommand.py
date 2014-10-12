@@ -8,5 +8,5 @@ class ListProjectCommand(Command.Command):
         super(ListProjectCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
 
     def execute(self):
-        for project in sorted(self.todolist.projects()):
+        for project in sorted(self.todolist.projects(), key=str.lower):
             self.out(project)
