@@ -21,13 +21,16 @@ def usage():
     """ Prints the usage of the todo.txt CLI """
     exit(1)
 
-def arguments():
+def arguments(p_start=2):
     """
     Retrieves all values from the argument list starting from the given
     position.
+
+    This is a parameter, because argv has a different structure when no
+    subcommand was given and it fallbacks to the default subcommand.
     """
     try:
-        values = sys.argv[2:] # strip off subcommand at position 1
+        values = sys.argv[p_start:]
     except IndexError:
         usage()
 
@@ -69,16 +72,18 @@ class CLIApplication(object):
           'pri': PriorityCommand,
         }
 
-        if subcommand in subcommand_map:
-          command = subcommand_map[subcommand](arguments(), self.todolist,
-              lambda o: sys.stdout.write(o + "\n"),
-              lambda e: sys.stderr.write(e + "\n"),
-              raw_input)
+        args = arguments()
+        if not subcommand in subcommand_map:
+            subcommand = Config.DEFAULT_ACTION
+            args = arguments(1)
 
-          if not command.execute():
-              exit(1)
-        else:
-            usage()
+        command = subcommand_map[subcommand](args, self.todolist,
+            lambda o: sys.stdout.write(o + "\n"),
+            lambda e: sys.stderr.write(e + "\n"),
+            raw_input)
+
+        if not command.execute():
+            exit(1)
 
         if self.todolist.is_dirty():
             todofile.write(str(self.todolist))
