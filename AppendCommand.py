@@ -13,6 +13,7 @@ class AppendCommand(Command.Command):
         number = convert_todo_number(self.argument(0))
         text = self.argument(1)
 
+        todo = self.todolist.todo(number)
         self.todolist.append(number, text)
 
-        self.out(pretty_print(self.todo, [self.todolist.pp_number]))
+        self.out(pretty_print(todo, [self.todolist.pp_number()]))
