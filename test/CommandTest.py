@@ -9,5 +9,5 @@ class CommandTest(unittest.TestCase):
     def out(self, p_output):
         self.output += p_output + "\n";
 
-    def err(self, p_error):
+    def error(self, p_error):
         self.errors += p_error + "\n";

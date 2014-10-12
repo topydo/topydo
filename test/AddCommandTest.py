@@ -11,7 +11,7 @@ class AddCommandTest(CommandTest.CommandTest):
 
     def test_add_task(self):
         args = ["New todo"]
-        command = AddCommand.AddCommand(args, self.todolist, self.out, self.err)
+        command = AddCommand.AddCommand(args, self.todolist, self.out, self.error)
         command.execute()
 
         self.assertEquals(self.todolist.todo(1).source(), self.today + " New todo")
@@ -19,14 +19,14 @@ class AddCommandTest(CommandTest.CommandTest):
 
     def test_add_multiple_args(self):
         args = ["New", "todo"]
-        command = AddCommand.AddCommand(args, self.todolist, self.out, self.err)
+        command = AddCommand.AddCommand(args, self.todolist, self.out, self.error)
         command.execute()
 
         self.assertEquals(self.todolist.todo(1).source(), self.today + " New todo")
         self.assertEquals(self.errors, "")
 
     def test_add_priority1(self):
-        command = AddCommand.AddCommand(["Foo (C)"], self.todolist, self.out, self.err)
+        command = AddCommand.AddCommand(["Foo (C)"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertEquals(self.todolist.todo(1).priority(), 'C')
@@ -34,7 +34,7 @@ class AddCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_add_priority2(self):
-        command = AddCommand.AddCommand(["Foo (CC)"], self.todolist, self.out, self.err)
+        command = AddCommand.AddCommand(["Foo (CC)"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertEquals(self.todolist.todo(1).priority(), None)
@@ -42,7 +42,7 @@ class AddCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_add_priority3(self):
-        command = AddCommand.AddCommand(["Fo(C)o"], self.todolist, self.out, self.err)
+        command = AddCommand.AddCommand(["Fo(C)o"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertEquals(self.todolist.todo(1).priority(), None)
@@ -50,7 +50,7 @@ class AddCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_add_priority4(self):
-        command = AddCommand.AddCommand(["(C) Foo"], self.todolist, self.out, self.err)
+        command = AddCommand.AddCommand(["(C) Foo"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertEquals(self.todolist.todo(1).priority(), 'C')
@@ -58,10 +58,10 @@ class AddCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_add_dep1(self):
-        command = AddCommand.AddCommand(["Foo"], self.todolist, self.out, self.err)
+        command = AddCommand.AddCommand(["Foo"], self.todolist, self.out, self.error)
         command.execute()
 
-        command = AddCommand.AddCommand(["Bar before:1"], self.todolist, self.out, self.err)
+        command = AddCommand.AddCommand(["Bar before:1"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertEquals(self.todolist.todo(1).source(), self.today + " Foo id:1")
@@ -69,7 +69,7 @@ class AddCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_add_dep2(self):
-        command = AddCommand.AddCommand(["Foo"], self.todolist, self.out, self.err)
+        command = AddCommand.AddCommand(["Foo"], self.todolist, self.out, self.error)
         command.execute()
 
         command = AddCommand.AddCommand(["Bar partof:1"], self.todolist)
@@ -83,7 +83,7 @@ class AddCommandTest(CommandTest.CommandTest):
         command = AddCommand.AddCommand(["Foo"], self.todolist)
         command.execute()
 
-        command = AddCommand.AddCommand(["Bar after:1"], self.todolist, self.out, self.err)
+        command = AddCommand.AddCommand(["Bar after:1"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertEquals(self.todolist.todo(1).source(), self.today + " Foo p:1")
@@ -92,7 +92,7 @@ class AddCommandTest(CommandTest.CommandTest):
 
     def test_add_dep4(self):
         """ Test for using an after: tag with non-existing value. """
-        command = AddCommand.AddCommand(["Foo after:1"], self.todolist, self.out, self.err)
+        command = AddCommand.AddCommand(["Foo after:1"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.todo(1).has_tag("after"))
@@ -102,7 +102,7 @@ class AddCommandTest(CommandTest.CommandTest):
 
     def test_add_dep4(self):
         """ Test for using an after: tag with non-existing value. """
-        command = AddCommand.AddCommand(["Foo after:2"], self.todolist, self.out, self.err)
+        command = AddCommand.AddCommand(["Foo after:2"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.todo(1).has_tag("after"))
@@ -111,13 +111,13 @@ class AddCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_add_dep5(self):
-        command = AddCommand.AddCommand(["Foo"], self.todolist, self.out, self.err)
+        command = AddCommand.AddCommand(["Foo"], self.todolist, self.out, self.error)
         command.execute()
 
-        command = AddCommand.AddCommand(["Bar"], self.todolist, self.out, self.err)
+        command = AddCommand.AddCommand(["Bar"], self.todolist, self.out, self.error)
         command.execute()
 
-        command = AddCommand.AddCommand(["Baz before:1 before:2"], self.todolist, self.out, self.err)
+        command = AddCommand.AddCommand(["Baz before:1 before:2"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertEquals(self.todolist.todo(1).source(), self.today + " Foo id:1")
@@ -126,13 +126,13 @@ class AddCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_add_dep6(self):
-        command = AddCommand.AddCommand(["Foo"], self.todolist, self.out, self.err)
+        command = AddCommand.AddCommand(["Foo"], self.todolist, self.out, self.error)
         command.execute()
 
-        command = AddCommand.AddCommand(["Bar"], self.todolist, self.out, self.err)
+        command = AddCommand.AddCommand(["Bar"], self.todolist, self.out, self.error)
         command.execute()
 
-        command = AddCommand.AddCommand(["Baz after:1 after:2"], self.todolist, self.out, self.err)
+        command = AddCommand.AddCommand(["Baz after:1 after:2"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertEquals(self.todolist.todo(1).source(), self.today + " Foo p:1")
@@ -141,14 +141,14 @@ class AddCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_add_reldate1(self):
-        command = AddCommand.AddCommand(["Foo due:today"], self.todolist, self.out, self.err)
+        command = AddCommand.AddCommand(["Foo due:today"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertEquals(self.todolist.todo(1).source(), self.today + " Foo due:" + self.today)
         self.assertEquals(self.errors, "")
 
     def test_add_reldate2(self):
-        command = AddCommand.AddCommand(["Foo t:today due:today"], self.todolist, self.out, self.err)
+        command = AddCommand.AddCommand(["Foo t:today due:today"], self.todolist, self.out, self.error)
         command.execute()
 
         result = "  1 %s Foo t:%s due:%s\n" % (self.today, self.today, self.today)
@@ -156,7 +156,7 @@ class AddCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_add_empty(self):
-        command = AddCommand.AddCommand([], self.todolist, self.out, self.err)
+        command = AddCommand.AddCommand([], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertEquals(self.output, "")
