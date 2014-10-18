@@ -40,7 +40,7 @@ class Command(object):
         """
         return False
 
-    def argument(self, p_number, p_error=None):
+    def argument(self, p_number):
         """ Retrieves a value from the argument list at the given position. """
         value = None
         try:
