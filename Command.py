@@ -1,3 +1,6 @@
+class InvalidCommandArgument(Exception):
+    pass
+
 class Command(object):
     def __init__(self, p_args, p_todolist,
                  p_out=lambda a: None,
@@ -37,13 +40,13 @@ class Command(object):
         """
         return False
 
-    def argument(self, p_number):
+    def argument(self, p_number, p_error=None):
         """ Retrieves a value from the argument list at the given position. """
         value = None
         try:
             value = self.args[p_number]
         except IndexError:
-            self.error(self.usage())
+            raise InvalidCommandArgument
 
         return value
 
