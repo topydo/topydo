@@ -83,3 +83,30 @@ class FilterTest(unittest.TestCase):
 
         self.assertEquals(todolist_to_string(filtered_todos), \
             todolist_to_string(reference))
+
+    def test_filter9(self):
+        """ Test instance filter """
+        todos = load_file('data/FilterTest1.txt')
+        instance_filter = Filter.InstanceFilter(todos[2:])
+
+        filtered_todos = instance_filter.filter(todos)
+
+        self.assertEquals(todos[2:], filtered_todos)
+
+    def test_filter10(self):
+        """ Test instance filter """
+        todos = load_file('data/FilterTest1.txt')
+        instance_filter = Filter.InstanceFilter([])
+
+        filtered_todos = instance_filter.filter(todos)
+
+        self.assertEquals([], filtered_todos)
+
+    def test_filter11(self):
+        """ Test instance filter """
+        todos = load_file('data/FilterTest1.txt')
+        instance_filter = Filter.InstanceFilter(todos[2:])
+
+        filtered_todos = instance_filter.filter([])
+
+        self.assertEquals([], filtered_todos)

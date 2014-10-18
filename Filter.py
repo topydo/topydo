@@ -73,3 +73,25 @@ class DependencyFilter(Filter):
         uncompleted = [todo for todo in children if not todo.is_completed()]
 
         return not uncompleted
+
+class InstanceFilter(Filter):
+    def __init__(self, p_todos):
+        """
+        Constructor.
+
+        A filter which selects a number of Todo instances from a TodoList
+        instance.
+
+        This is handy for constructing a view given a plain list of Todo items.
+        """
+        self.todos = p_todos
+
+    def match(self, p_todo):
+        """
+        Returns True when p_todo appears in the list of given todos.
+        """
+        try:
+            self.todos.index(p_todo)
+            return True
+        except ValueError:
+            return False
