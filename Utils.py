@@ -39,4 +39,4 @@ def convert_todo_number(p_number):
     return p_number
 
 def is_valid_priority(p_priority):
-    return re.match(r'^[A-Z]$', p_priority) != None
+    return p_priority != None and re.match(r'^[A-Z]$', p_priority) != None
