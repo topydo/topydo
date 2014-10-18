@@ -16,6 +16,7 @@ from PrettyPrinter import *
 from PriorityCommand import PriorityCommand
 import TodoFile
 import TodoList
+from Utils import escape_ansi
 
 def usage():
     """ Prints the usage of the todo.txt CLI """
@@ -35,6 +36,17 @@ def arguments(p_start=2):
         usage()
 
     return values
+
+def write(p_file, p_string):
+    """
+    Write p_string to file p_file, trailed by a newline character.
+
+    ANSI codes are removed when the file is not a TTY.
+    """
+    if not p_file.isatty():
+        p_string = escape_ansi(p_string)
+
+    p_file.write(p_string + "\n")
 
 class CLIApplication(object):
     def __init__(self):
@@ -56,7 +68,6 @@ class CLIApplication(object):
 
             if archive.is_dirty():
                 archive_file.write(str(archive))
-
 
     def run(self):
         """ Main entry function. """
@@ -92,8 +103,8 @@ class CLIApplication(object):
             args = arguments(1)
 
         command = subcommand_map[subcommand](args, self.todolist,
-            lambda o: sys.stdout.write(o + "\n"),
-            lambda e: sys.stderr.write(e + "\n"),
+            lambda o: write(sys.stdout, o + "\n"),
+            lambda e: write(sys.stderr, e + "\n"),
             raw_input)
 
         if command.execute() == False:

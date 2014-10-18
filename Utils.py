@@ -40,3 +40,8 @@ def convert_todo_number(p_number):
 
 def is_valid_priority(p_priority):
     return p_priority != None and re.match(r'^[A-Z]$', p_priority) != None
+
+def escape_ansi(p_string):
+    return escape_ansi.pattern.sub('', p_string)
+
+escape_ansi.pattern = re.compile(r'\x1b[^m]*m')
