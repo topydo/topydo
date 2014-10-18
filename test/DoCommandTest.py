@@ -101,6 +101,7 @@ class DoCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
+        self.assertEquals(self.todolist.todo(5).completion_date(), date(2014, 10, 18))
         self.assertFalse(self.output)
         self.assertEquals(self.errors, "Todo has already been completed.\n")
 
