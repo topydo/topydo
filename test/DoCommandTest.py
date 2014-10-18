@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 
 import CommandTest
 import DoCommand
@@ -60,6 +60,9 @@ class DoCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_recurrence(self):
+        today = date.today()
+        tomorrow = today + timedelta(1)
+
         command = DoCommand.DoCommand(["4"], self.todolist, self.out, self.error)
 
         self.assertFalse(self.todolist.todo(4).has_tag('due'))
@@ -67,7 +70,7 @@ class DoCommandTest(CommandTest.CommandTest):
         command.execute()
 
         todo = self.todolist.todo(6)
-        result = "  6 2014-10-18 Recurring! rec:1d due:2014-10-19\nx 2014-10-18 Recurring! rec:1d\n"
+        result = "  6 %s Recurring! rec:1d due:%s\nx %s Recurring! rec:1d\n" % (today.isoformat(), tomorrow.isoformat(), today.isoformat())
 
         self.assertTrue(self.todolist.is_dirty())
         self.assertEquals(self.output, result)
