@@ -102,7 +102,7 @@ class DoCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "Todo has already been completed.\n")
 
     def test_empty(self):
-        command = DoCommand.DoCommand([""], self.todolist, self.out, self.error)
+        command = DoCommand.DoCommand([], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())

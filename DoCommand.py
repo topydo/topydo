@@ -1,12 +1,12 @@
 import re
 
-import Command
+from Command import *
 from PrettyPrinter import *
 from Recurrence import advance_recurring_todo
 from TodoList import InvalidTodoException
 from Utils import convert_todo_number, InvalidTodoNumberException
 
-class DoCommand(Command.Command):
+class DoCommand(Command):
     def __init__(self, p_args, p_todolist,
                  p_out=lambda a: None,
                  p_err=lambda a: None,
@@ -18,7 +18,7 @@ class DoCommand(Command.Command):
         try:
             self.number = convert_todo_number(self.argument(0))
             self.todo = self.todolist.todo(self.number)
-        except (InvalidTodoNumberException, InvalidTodoException):
+        except (InvalidCommandArgument, InvalidTodoNumberException, InvalidTodoException):
             self.todo = None
 
     def _complete_children(self):
