@@ -26,12 +26,15 @@ def date_string_to_date(p_date):
 
     return result
 
+class InvalidTodoNumberException(Exception):
+    pass
+
 def convert_todo_number(p_number):
     """ Converts a string number to an integer. """
     try:
         p_number = int(p_number)
     except ValueError:
-        p_number = None
+        raise InvalidTodoNumberException
 
     return p_number
 

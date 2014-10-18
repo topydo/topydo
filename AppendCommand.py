@@ -1,7 +1,7 @@
 import Command
 from PrettyPrinter import pretty_print
 import TodoList
-from Utils import convert_todo_number
+from Utils import convert_todo_number, InvalidTodoNumberException
 
 class AppendCommand(Command.Command):
     def __init__(self, p_args, p_todolist,
@@ -13,15 +13,18 @@ class AppendCommand(Command.Command):
     def execute(self):
         number = self.argument(0)
         if number:
-            number = convert_todo_number(number)
-            text = " ".join(self.args[1:])
+            try:
+                number = convert_todo_number(number)
+                text = " ".join(self.args[1:])
 
-            if number and text:
-                try:
+                if text:
                     todo = self.todolist.todo(number)
                     self.todolist.append(todo, text)
                     self.out(pretty_print(todo, [self.todolist.pp_number()]))
-                except TodoList.InvalidTodoException:
-                    self.error("Invalid todo number given.")
-            else:
+                else:
+                    self.error(self.usage())
+            except InvalidTodoNumberException:
                 self.error(self.usage())
+            except TodoList.InvalidTodoException:
+                self.error("Invalid todo number given.")
+
