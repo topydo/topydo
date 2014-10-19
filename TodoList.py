@@ -299,8 +299,9 @@ class TodoList(object):
         self.dirty = True
 
     def set_priority(self, p_todo, p_priority):
-        p_todo.set_priority(p_priority)
-        self.dirty = True
+        if p_todo.priority() != p_priority:
+            p_todo.set_priority(p_priority)
+            self.dirty = True
 
     def number(self, p_todo):
         try:

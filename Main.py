@@ -24,6 +24,7 @@ from AddCommand import AddCommand
 from AppendCommand import AppendCommand
 from ArchiveCommand import ArchiveCommand
 from DepCommand import DepCommand
+from DepriCommand import DepriCommand
 import Config
 from DoCommand import DoCommand
 from ListCommand import ListCommand
@@ -102,6 +103,7 @@ class CLIApplication(object):
           'app': AppendCommand,
           'append': AppendCommand,
           'dep': DepCommand,
+          'depri': DepriCommand,
           'do': DoCommand,
           'ls': ListCommand,
           'lscon': ListContextCommand,
