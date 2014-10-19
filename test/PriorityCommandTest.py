@@ -82,3 +82,10 @@ class PriorityCommandTest(CommandTest.CommandTest):
         self.assertFalse(self.todolist.is_dirty())
         self.assertFalse(self.output)
         self.assertEquals(self.errors, command.usage() + "\n")
+
+    def test_help(self):
+        command = PriorityCommand.PriorityCommand(["help"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEquals(self.output, "")
+        self.assertEquals(self.errors, command.usage() + "\n\n" + command.help() + "\n")

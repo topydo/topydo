@@ -34,3 +34,10 @@ class ListProjectCommandTest(CommandTest.CommandTest):
 
         self.assertEquals(self.output,"Project1\nProject2\n")
         self.assertFalse(self.errors)
+
+    def test_help(self):
+        command = ListProjectCommand.ListProjectCommand(["help"], None, self.out, self.error)
+        command.execute()
+
+        self.assertEquals(self.output, "")
+        self.assertEquals(self.errors, command.usage() + "\n\n" + command.help() + "\n")

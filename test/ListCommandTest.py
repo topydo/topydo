@@ -61,3 +61,10 @@ class ListCommandTest(CommandTest.CommandTest):
         self.assertFalse(self.todolist.is_dirty())
         self.assertEquals(self.output, "")
         self.assertEquals(self.errors, "")
+
+    def test_help(self):
+        command = ListCommand.ListCommand(["help"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEquals(self.output, "")
+        self.assertEquals(self.errors, command.usage() + "\n\n" + command.help() + "\n")

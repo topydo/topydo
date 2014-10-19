@@ -27,6 +27,9 @@ class AppendCommand(Command):
         super(AppendCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt=lambda a: None)
 
     def execute(self):
+        if not super(AppendCommand, self).execute():
+            return False
+
         try:
             number = convert_todo_number(self.argument(0))
             text = " ".join(self.args[1:])
@@ -42,3 +45,8 @@ class AppendCommand(Command):
         except TodoList.InvalidTodoException:
             self.error("Invalid todo number given.")
 
+    def usage(self):
+        return """Synopsis: append <number> <text>"""
+
+    def help(self):
+        return """Adds the given <text> to the end of the todo indicated by <number>."""

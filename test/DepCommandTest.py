@@ -202,3 +202,9 @@ class DepCommandTest(CommandTest.CommandTest):
         self.assertEqual(self.errors, command.usage() + "\n")
         self.assertFalse(self.todolist.is_dirty())
 
+    def test_help(self):
+        command = DepCommand.DepCommand(["help"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEquals(self.output, "")
+        self.assertEquals(self.errors, command.usage() + "\n\n" + command.help() + "\n")

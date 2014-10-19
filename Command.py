@@ -50,11 +50,14 @@ class Command(object):
 
     def execute(self):
         """
-        Execute the command.
-
-        Returns True when the command succeeded or False on failure.
+        Execute the command. Intercepts the help subsubcommand to show the help
+        text.
         """
-        return False
+        if self.argumentShift("help"):
+            self.error(self.usage() + "\n\n" + self.help())
+            return False
+
+        return True
 
     def argument(self, p_number):
         """ Retrieves a value from the argument list at the given position. """
@@ -77,5 +80,8 @@ class Command(object):
         return False
 
     def usage(self):
-        return "No usage text defined for this command."
+        return "No usage text available for this command."
+
+    def help(self):
+        return "No help text available for this command."
 

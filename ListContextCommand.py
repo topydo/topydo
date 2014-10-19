@@ -24,5 +24,14 @@ class ListContextCommand(Command.Command):
         super(ListContextCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
 
     def execute(self):
+        if not super(ListContextCommand, self).execute():
+            return False
+
         for context in sorted(self.todolist.contexts(), key=str.lower):
             self.out(context)
+
+    def usage(self):
+      return """Synopsis: lscon"""
+
+    def help(self):
+      return """Lists all contexts in the todo list."""

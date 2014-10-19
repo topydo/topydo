@@ -86,6 +86,9 @@ class AddCommand(Command.Command):
 
     def execute(self):
         """ Adds a todo item to the list. """
+        if not super(AddCommand, self).execute():
+            return False
+
         if self.text:
             self._preprocess_input_todo()
             self.todo = self.todolist.add(self.text)
@@ -94,3 +97,20 @@ class AddCommand(Command.Command):
             self.out(pretty_print(self.todo, [self.todolist.pp_number()]))
         else:
             self.error(self.usage())
+
+    def usage(self):
+        return """Synopsis: add <text>"""
+
+    def help(self):
+        return """This subcommand automatically adds the creation date to the added item.
+
+<text> may contain:
+
+* Priorities mid-sentence. Example: add "Water flowers (C)"
+
+* Dependencies using before, after and partof tags. They are translated to the
+  corresponding 'id' and 'p' tags. The values of these tags correspond to the
+  todo number (not the dependency number).
+
+  Example: add "Subtask partof:1"
+"""

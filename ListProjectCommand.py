@@ -24,5 +24,14 @@ class ListProjectCommand(Command.Command):
         super(ListProjectCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
 
     def execute(self):
+        if not super(ListProjectCommand, self).execute():
+            return False
+
         for project in sorted(self.todolist.projects(), key=str.lower):
             self.out(project)
+
+    def usage(self):
+      return """Synopsis: lscon"""
+
+    def help(self):
+      return """Lists all projects in the todo list."""

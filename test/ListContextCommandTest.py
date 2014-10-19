@@ -34,3 +34,10 @@ class ListContextCommandTest(CommandTest.CommandTest):
 
         self.assertEquals(self.output,"Context1\nContext2\n")
         self.assertFalse(self.errors)
+
+    def test_help(self):
+        command = ListContextCommand.ListContextCommand(["help"], None, self.out, self.error)
+        command.execute()
+
+        self.assertEquals(self.output, "")
+        self.assertEquals(self.errors, command.usage() + "\n\n" + command.help() + "\n")

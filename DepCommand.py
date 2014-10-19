@@ -99,6 +99,9 @@ class DepCommand(Command):
             self.error(self.usage())
 
     def execute(self):
+        if not super(DepCommand, self).execute():
+            return False
+
         dispatch = {
             'add':   self._handle_add,
             'rm':    self._handle_rm,
@@ -113,3 +116,15 @@ class DepCommand(Command):
         else:
             self.error(self.usage())
 
+    def usage(self):
+        return """Synopsis:
+  dep <add|rm> <NUMBER> [to] <NUMBER>
+  dep ls <NUMBER> to
+  dep ls to <NUMBER>
+  dep clean"""
+
+    def help(self):
+        return """* add: Adds a dependency.
+* rm (alias: del): Removes a dependency.
+* ls: Lists all dependencies to or from a certain todo.
+* clean (alias: gc): Removes redundant id or p tags."""

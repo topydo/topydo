@@ -71,3 +71,10 @@ class AppendCommandTest(CommandTest.CommandTest):
 
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors, command.usage() + "\n")
+
+    def test_help(self):
+        command = AppendCommand.AppendCommand(["help"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEquals(self.output, "")
+        self.assertEquals(self.errors, command.usage() + "\n\n" + command.help() + "\n")

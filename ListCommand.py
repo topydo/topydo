@@ -27,6 +27,9 @@ class ListCommand(Command.Command):
         super(ListCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
 
     def execute(self):
+        if not super(ListCommand, self).execute():
+            return False
+
         show_all = self.argumentShift("-x")
 
         sorter = Sorter.Sorter(Config.SORT_STRING)
@@ -36,3 +39,19 @@ class ListCommand(Command.Command):
             filters.append(Filter.GrepFilter(self.argument(0)))
 
         self.out(self.todolist.view(sorter, filters).pretty_print())
+
+    def usage(self):
+        return """Synopsis: ls [-x] [expression]
+
+Use "ls help" for more info."""
+
+    def help(self):
+        return """Lists all relevant todos. A todo is relevant when:
+
+* has not been completed yet;
+* the start date (if present) has passed;
+* there are no subitems that need to be completed.
+
+When an expression is given, only the todos matching that expression are shown.
+
+-x : Show all todos (i.e. do not filter on dependencies or relevance)."""

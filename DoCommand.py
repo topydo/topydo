@@ -56,6 +56,9 @@ class DoCommand(Command):
             self.out(pretty_print(new_todo, [self.todolist.pp_number()]))
 
     def execute(self):
+        if not super(DoCommand, self).execute():
+            return False
+
         if not self.number:
             self.error(self.usage())
         elif self.todo and not self.todo.is_completed():
@@ -67,3 +70,13 @@ class DoCommand(Command):
             self.error("Invalid todo number given.")
         else:
             self.error("Todo has already been completed.")
+
+    def usage(self):
+        return """Synopsis: do <NUMBER>"""
+
+    def help(self):
+        return """ Marks the todo with given number as complete. In case the todo has subitems,
+they may optionally be completed too.
+
+In case the completed todo is recurring, a new todo will be added to the list,
+while the given todo item is marked as complete."""
