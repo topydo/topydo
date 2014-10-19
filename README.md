@@ -33,9 +33,12 @@ Subcommands implemented:
 * lscon
 * lsprj
 * pri
+* sort [xx]
 
 Subcommands marked as [x] don't exist in the todo.txt CLI, but were added by
 todo.txt-tools.
+
+Subcommands marked as [xx] are new in Topydo.
 
 Motivation
 ----------

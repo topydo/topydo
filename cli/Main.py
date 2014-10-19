@@ -34,6 +34,7 @@ from ListContextCommand import ListContextCommand
 from ListProjectCommand import ListProjectCommand
 from PrettyPrinter import *
 from PriorityCommand import PriorityCommand
+from SortCommand import SortCommand
 import TodoFile
 import TodoList
 from Utils import escape_ansi
@@ -119,6 +120,7 @@ class CLIApplication(object):
           'listprojects': ListProjectCommand,
           'pri': PriorityCommand,
           'rm': DeleteCommand,
+          'sort': SortCommand,
         }
 
         args = arguments()
