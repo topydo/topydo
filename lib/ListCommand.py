@@ -41,9 +41,7 @@ class ListCommand(Command.Command):
         self.out(self.todolist.view(sorter, filters).pretty_print())
 
     def usage(self):
-        return """Synopsis: ls [-x] [expression]
-
-Use "ls help" for more info."""
+        return """Synopsis: ls [-x] [expression]"""
 
     def help(self):
         return """Lists all relevant todos. A todo is relevant when:
