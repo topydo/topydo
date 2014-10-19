@@ -30,7 +30,7 @@ class DoCommand(Command):
         super(DoCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
 
         self.number = None
-        self.force = self.argumentShift("--force") or self.argumentShift("-f")
+        self.force = self.argument_shift("--force") or self.argument_shift("-f")
 
         try:
             self.number = convert_todo_number(self.argument(0))

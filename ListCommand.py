@@ -30,7 +30,7 @@ class ListCommand(Command.Command):
         if not super(ListCommand, self).execute():
             return False
 
-        show_all = self.argumentShift("-x")
+        show_all = self.argument_shift("-x")
 
         sorter = Sorter.Sorter(Config.SORT_STRING)
         filters = [] if show_all else [Filter.DependencyFilter(self.todolist), Filter.RelevanceFilter()]
