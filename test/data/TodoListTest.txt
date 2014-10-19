@@ -1,5 +1,5 @@
-(C) Foo @Context1 Not@Context +Project1 Not+Project
-(D) Bar @Context2 +Project2
+(C) Foo @Context2 Not@Context +Project1 Not+Project
+(D) Bar @Context1 +Project2
 (C) Baz @Context1 +Project1 key:value
 (C) Drink beer @ home
 
