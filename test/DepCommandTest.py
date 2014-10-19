@@ -194,3 +194,11 @@ class DepCommandTest(CommandTest.CommandTest):
         self.assertEqual(self.errors, command.usage() + "\n")
         self.assertFalse(self.todolist.is_dirty())
 
+    def test_no_subsubcommand(self):
+        command = DepCommand.DepCommand([], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(self.output)
+        self.assertEqual(self.errors, command.usage() + "\n")
+        self.assertFalse(self.todolist.is_dirty())
+

@@ -28,7 +28,11 @@ class DepCommand(Command):
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
         super(DepCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
-        self.subsubcommand = self.argument(0)
+
+        try:
+            self.subsubcommand = self.argument(0)
+        except InvalidCommandArgument:
+            self.subsubcommand = None
 
     def _handle_add(self):
         (from_todo, to_todo) = self._get_todos()
