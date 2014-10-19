@@ -46,7 +46,8 @@ def write(p_file, p_string):
     if not p_file.isatty():
         p_string = escape_ansi(p_string)
 
-    p_file.write(p_string + "\n")
+    if p_string:
+        p_file.write(p_string + "\n")
 
 class CLIApplication(object):
     def __init__(self):

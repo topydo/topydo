@@ -9,7 +9,9 @@ class CommandTest(unittest.TestCase):
         self.errors = ""
 
     def out(self, p_output):
-        self.output += escape_ansi(p_output + "\n")
+        if p_output:
+            self.output += escape_ansi(p_output + "\n")
 
     def error(self, p_error):
-        self.errors += escape_ansi(p_error + "\n")
+        if p_error:
+            self.errors += escape_ansi(p_error + "\n")
