@@ -1,7 +1,7 @@
-Topydo
+topydo
 ======
 
-Topydo is a todo list application using the [todo.txt format][1]. It is heavily
+topydo is a todo list application using the [todo.txt format][1]. It is heavily
 inspired by the [todo.txt CLI][1] by Gina Trapani. This tool is actually a
 merge between the todo.txt CLI and a [number of extensions][3] that I wrote
 on top of the CLI, hereafter refered to as todo.txt-tools. These extensions
@@ -65,6 +65,6 @@ unit tests.
 References
 ----------
 
-[1] https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format
-[2] https://github.com/ginatrapani/todo.txt-cli
-[3] https://github.com/bram85/todo.txt-tools
+[1]: https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format
+[2]: https://github.com/ginatrapani/todo.txt-cli
+[3]: https://github.com/bram85/todo.txt-tools
