@@ -70,6 +70,14 @@ class ListCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.output, "  3 (C) Baz @Context1 +Project1 key:value id:1\n  1 (C) Foo @Context2 Not@Context +Project1 Not+Project\n")
         self.assertEquals(self.errors, "")
 
+    def test_list8(self):
+        command = ListCommand.ListCommand(["-y"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+        self.assertEquals(self.output, "")
+        self.assertEquals(self.errors, "")
+
     def test_help(self):
         command = ListCommand.ListCommand(["help"], self.todolist, self.out, self.error)
         command.execute()
