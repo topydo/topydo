@@ -19,6 +19,7 @@
 """ Entry file for the Python todo.txt CLI. """
 
 import sys
+sys.path.append('../lib')
 
 from AddCommand import AddCommand
 from AppendCommand import AppendCommand

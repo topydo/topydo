@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export PYTHONPATH=..
+export PYTHONPATH=../lib
 
 if [ -n "$1" ]; then
   TESTS=$1
