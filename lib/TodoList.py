@@ -155,6 +155,16 @@ class TodoList(object):
 
         self.dirty = True
 
+    def erase(self):
+        """
+        Erases all todos from the list.
+        Not done with self.delete to prevent dependencies disappearing from the
+        todo items.
+        """
+
+        self._todos = []
+        self.dirty = True
+
     def count(self):
         """ Returns the number of todos on this list. """
         return len(self._todos)

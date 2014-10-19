@@ -175,6 +175,12 @@ class TodoListTester(unittest.TestCase):
 
         self.assertFalse(self.todolist.is_dirty())
 
+    def todo_erase(self):
+        self.todolist.erase()
+
+        self.assertEquals(self.todolist.count(), 0)
+        self.assertTrue(self.todolist.is_dirty())
+
 class TodoListDependencyTester(unittest.TestCase):
     def setUp(self):
         self.todolist = TodoList.TodoList([])
