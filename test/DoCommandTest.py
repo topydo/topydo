@@ -75,6 +75,32 @@ class DoCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.output, result)
         self.assertEquals(self.errors, "")
 
+    def test_do_children_force1(self):
+        prompt_shown = False
+
+        def prompt(p_prompt):
+            prompt_shown = True
+
+        command = DoCommand.DoCommand(["-f", "1"], self.todolist, self.out, self.error, prompt)
+        command.execute()
+
+        self.assertFalse(prompt_shown)
+        self.assertEquals(self.errors, "")
+        self.assertFalse(self.todolist.todo(2).is_completed())
+
+    def test_do_children_force2(self):
+        prompt_shown = False
+
+        def prompt(p_prompt):
+            prompt_shown = True
+
+        command = DoCommand.DoCommand(["--force", "1"], self.todolist, self.out, self.error, prompt)
+        command.execute()
+
+        self.assertFalse(prompt_shown)
+        self.assertEquals(self.errors, "")
+        self.assertFalse(self.todolist.todo(2).is_completed())
+
     def test_recurrence(self):
         today = date.today()
         tomorrow = today + timedelta(1)

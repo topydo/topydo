@@ -30,6 +30,7 @@ class DoCommand(Command):
         super(DoCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
 
         self.number = None
+        self.force = self.argumentShift("--force") or self.argumentShift("-f")
 
         try:
             self.number = convert_todo_number(self.argument(0))
@@ -42,9 +43,10 @@ class DoCommand(Command):
             if children:
                 self.out("\n".join(pretty_print_list(children, [self.todolist.pp_number()])))
 
-                confirmation = self.prompt("Also mark subtasks as done? [n] ")
+                if not self.force:
+                    confirmation = self.prompt("Also mark subtasks as done? [n] ")
 
-                if re.match('^y(es)?$', confirmation, re.I):
+                if not self.force and re.match('^y(es)?$', confirmation, re.I):
                     for child in children:
                         self.todolist.set_todo_completed(child)
                         self.out(pretty_print(child))
@@ -72,11 +74,14 @@ class DoCommand(Command):
             self.error("Todo has already been completed.")
 
     def usage(self):
-        return """Synopsis: do <NUMBER>"""
+        return """Synopsis: do [--force] <NUMBER>"""
 
     def help(self):
-        return """ Marks the todo with given number as complete. In case the todo has subitems,
-they may optionally be completed too.
+        return """Marks the todo with given number as complete.
+
+In case the todo has subitems, a question is asked whether the subitems should
+be marked as completed as well. When --force is given, no interaction is
+required and the subitems are not marked completed.
 
 In case the completed todo is recurring, a new todo will be added to the list,
 while the given todo item is marked as complete."""
