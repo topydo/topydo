@@ -38,10 +38,16 @@ class DoCommand(Command):
         except (InvalidCommandArgument, InvalidTodoNumberException, InvalidTodoException):
             self.todo = None
 
+    def _uncompleted_children(self, p_todo):
+        return sorted([t for t in self.todolist.children(p_todo) if not t.is_completed()])
+
+    def _print_list(self, p_todos):
+        self.out("\n".join(pretty_print_list(p_todos, [self.todolist.pp_number()])))
+
     def _complete_children(self):
-            children = sorted([t for t in self.todolist.children(self.todo) if not t.is_completed()])
+            children = self._uncompleted_children(self.todo)
             if children:
-                self.out("\n".join(pretty_print_list(children, [self.todolist.pp_number()])))
+                self._print_list(children)
 
                 if not self.force:
                     confirmation = self.prompt("Also mark subtasks as done? [n] ")
@@ -57,6 +63,17 @@ class DoCommand(Command):
             self.todolist.add_todo(new_todo)
             self.out(pretty_print(new_todo, [self.todolist.pp_number()]))
 
+    def _print_unlocked_todos(self):
+        """
+        Print the items that became unlocked by marking this subitem
+        (self.todo) as complete.
+        """
+        parents = [parent for parent in self.todolist.parents(self.todo) if not self._uncompleted_children(parent) and parent.is_active()]
+
+        if parents:
+            self.out("The following todo item(s) became active:")
+            self._print_list(parents)
+
     def execute(self):
         if not super(DoCommand, self).execute():
             return False
@@ -68,6 +85,7 @@ class DoCommand(Command):
             self._handle_recurrence()
             self.todolist.set_todo_completed(self.todo)
             self.out(pretty_print(self.todo))
+            self._print_unlocked_todos()
         elif not self.todo:
             self.error("Invalid todo number given.")
         else:
