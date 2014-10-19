@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import getopt
+
 import Command
 import Config
 import Filter
@@ -26,22 +28,39 @@ class ListCommand(Command.Command):
                  p_prompt=lambda a: None):
         super(ListCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
 
+        self.sort_expression = Config.SORT_STRING
+        self.show_all = False
+
+    def _process_flags(self):
+        try:
+            opts, args = getopt.getopt(self.args, 's:x')
+        except getopt.GetoptError:
+            return self.args
+
+        for o, a in opts:
+            if o == '-x':
+                self.show_all = True
+            elif o == '-s':
+                self.sort_expression = a
+
+        return args
+
     def execute(self):
         if not super(ListCommand, self).execute():
             return False
 
-        show_all = self.argument_shift("-x")
+        args = self._process_flags()
 
-        sorter = Sorter.Sorter(Config.SORT_STRING)
-        filters = [] if show_all else [Filter.DependencyFilter(self.todolist), Filter.RelevanceFilter()]
+        sorter = Sorter.Sorter(self.sort_expression)
+        filters = [] if self.show_all else [Filter.DependencyFilter(self.todolist), Filter.RelevanceFilter()]
 
-        if len(self.args) > 0:
-            filters.append(Filter.GrepFilter(self.argument(0)))
+        if len(args) > 0:
+            filters.append(Filter.GrepFilter(args[0]))
 
         self.out(self.todolist.view(sorter, filters).pretty_print())
 
     def usage(self):
-        return """Synopsis: ls [-x] [expression]"""
+        return """Synopsis: ls [-x] [-s <sort_expression>] [expression]"""
 
     def help(self):
         return """Lists all relevant todos. A todo is relevant when:
@@ -52,4 +71,6 @@ class ListCommand(Command.Command):
 
 When an expression is given, only the todos matching that expression are shown.
 
+-s : Sort the list according to a sort expression. Defaults to the expression
+     in the configuration.
 -x : Show all todos (i.e. do not filter on dependencies or relevance)."""
