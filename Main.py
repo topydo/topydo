@@ -23,6 +23,7 @@ import sys
 from AddCommand import AddCommand
 from AppendCommand import AppendCommand
 from ArchiveCommand import ArchiveCommand
+from DeleteCommand import DeleteCommand
 from DepCommand import DepCommand
 from DepriCommand import DepriCommand
 import Config
@@ -102,6 +103,7 @@ class CLIApplication(object):
           'add': AddCommand,
           'app': AppendCommand,
           'append': AppendCommand,
+          'del': DeleteCommand,
           'dep': DepCommand,
           'depri': DepriCommand,
           'do': DoCommand,
@@ -115,6 +117,7 @@ class CLIApplication(object):
           'listproject': ListProjectCommand,
           'listprojects': ListProjectCommand,
           'pri': PriorityCommand,
+          'rm': DeleteCommand,
         }
 
         args = arguments()
