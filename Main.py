@@ -123,8 +123,8 @@ class CLIApplication(object):
             args = arguments(1)
 
         command = subcommand_map[subcommand](args, self.todolist,
-            lambda o: write(sys.stdout, o + "\n"),
-            lambda e: write(sys.stderr, e + "\n"),
+            lambda o: write(sys.stdout, o),
+            lambda e: write(sys.stderr, e),
             raw_input)
 
         if command.execute() == False:
