@@ -62,8 +62,7 @@ In order to achieve the long term vision of a perfect todo list, I need a solid
 foundation in a solid language. Hence the rewrite in Python, sprinkeled with
 unit tests.
 
-References
-----------
+
 
 [1]: https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format
 [2]: https://github.com/ginatrapani/todo.txt-cli
