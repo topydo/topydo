@@ -21,6 +21,7 @@ This module contains some definitions to configure the application.
 DEFAULT_ACTION = 'ls'
 COLORS = True
 HIGHLIGHT_PROJECTS_CONTEXTS = True
+LIST_LIMIT=25
 
 FILENAME = 'todo.txt'
 ARCHIVE_FILENAME = 'done.txt'

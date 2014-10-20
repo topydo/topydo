@@ -15,14 +15,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class Filter(object):
-    def filter(self, p_todos, p_limit=None):
+    def filter(self, p_todos):
         """
         Filters a list of todos. Truncates the list after p_limit todo
         items (or no maximum limit if omitted).
         """
 
-        result = [t for t in p_todos if self.match(t)]
-        return result[:p_limit]
+        return [t for t in p_todos if self.match(t)]
 
     def match(self, p_todo):
         """ Default match value. """
@@ -111,3 +110,10 @@ class InstanceFilter(Filter):
             return True
         except ValueError:
             return False
+
+class LimitFilter(Filter):
+    def __init__(self, p_limit):
+        self.limit = max(0, p_limit)
+
+    def filter(self, p_todos):
+        return p_todos[:self.limit]

@@ -57,6 +57,8 @@ class ListCommand(Command.Command):
         if len(args) > 0:
             filters.append(Filter.GrepFilter(args[0]))
 
+        filters.append(Filter.LimitFilter(Config.LIST_LIMIT))
+
         self.out(self.todolist.view(sorter, filters).pretty_print())
 
     def usage(self):

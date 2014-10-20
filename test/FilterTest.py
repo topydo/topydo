@@ -24,20 +24,6 @@ import Todo
 import TodoList
 
 class FilterTest(unittest.TestCase):
-    def test_filter1(self):
-        todo = Todo.Todo("(C) Relevant")
-        relevance = Filter.RelevanceFilter()
-        result = relevance.filter([todo], 0)
-
-        self.assertEquals(result, [])
-
-    def test_filter2(self):
-        todo = Todo.Todo("(C) Relevant")
-        relevance = Filter.RelevanceFilter()
-        result = relevance.filter([todo], 100)
-
-        self.assertEquals(result, [todo])
-
     def test_filter3(self):
         todo = Todo.Todo("(C) Relevant")
         relevance = Filter.RelevanceFilter()
@@ -126,3 +112,40 @@ class FilterTest(unittest.TestCase):
         filtered_todos = instance_filter.filter([])
 
         self.assertEquals([], filtered_todos)
+
+    def test_filter12(self):
+        """ Test limit filter. """
+        todos = load_file('data/FilterTest1.txt')
+        limit_filter = Filter.LimitFilter(0)
+
+        filtered_todos = limit_filter.filter(todos)
+
+        self.assertEquals([], filtered_todos)
+
+    def test_filter13(self):
+        """ Test limit filter. """
+        todos = load_file('data/FilterTest1.txt')
+        limit_filter = Filter.LimitFilter(1)
+
+        filtered_todos = limit_filter.filter(todos)
+
+        self.assertEquals(len(filtered_todos), 1)
+        self.assertEquals(filtered_todos[0].source(), '(C) This is part of some +Project')
+
+    def test_filter14(self):
+        """ Test limit filter. """
+        todos = load_file('data/FilterTest1.txt')
+        limit_filter = Filter.LimitFilter(-1)
+
+        filtered_todos = limit_filter.filter(todos)
+
+        self.assertEquals([], filtered_todos)
+
+    def test_filter15(self):
+        """ Test limit filter. """
+        todos = load_file('data/FilterTest1.txt')
+        limit_filter = Filter.LimitFilter(100)
+
+        filtered_todos = limit_filter.filter(todos)
+
+        self.assertEquals(len(filtered_todos), 4)
