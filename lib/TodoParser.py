@@ -83,7 +83,7 @@ def parse_line(p_string):
         if project:
             result['projects'].append(project.group(1))
 
-        context = re.match(r'@(\S*\w+)', word)
+        context = re.match(r'@(\S*\w)', word)
         if context:
             result['contexts'].append(context.group(1))
 
