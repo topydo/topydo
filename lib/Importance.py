@@ -75,12 +75,17 @@ def importance(p_todo, p_ignore_weekend=False):
     return result if not p_todo.is_completed() else 0
 
 def average_importance(p_todo, p_ignore_weekend=False):
-    sum_importance = importance(p_todo, p_ignore_weekend)
+    own_importance = importance(p_todo, p_ignore_weekend)
+
+    average = 0
     parents = []
 
     if 'parents' in p_todo.attributes:
+        sum_importance = own_importance
         parents = p_todo.attributes['parents']
         for parent in parents:
             sum_importance += importance(parent, p_ignore_weekend)
 
-    return float(sum_importance) / float(1 + len(parents))
+        average = float(sum_importance) / float(1 + len(parents))
+
+    return max(own_importance, average)
