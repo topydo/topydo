@@ -156,7 +156,7 @@ class TodoBaseTester(unittest.TestCase):
         self.assertEquals(todo.src, "x 2014-06-13 Foo")
 
     def test_project1(self):
-        todo = TodoBase.TodoBase("(C) Foo +Bar +Baz")
+        todo = TodoBase.TodoBase("(C) Foo +Bar +Baz +Bar:")
 
         self.assertEquals(len(todo.projects()), 2)
         self.assertIn('Bar', todo.projects())
@@ -169,7 +169,7 @@ class TodoBaseTester(unittest.TestCase):
         self.assertIn('Bar+Baz', todo.projects())
 
     def test_context1(self):
-        todo = TodoBase.TodoBase("(C) Foo @Bar @Baz")
+        todo = TodoBase.TodoBase("(C) Foo @Bar @Baz @Bar:")
 
         self.assertEquals(len(todo.contexts()), 2)
         self.assertIn('Bar', todo.contexts())
