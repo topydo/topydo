@@ -46,7 +46,7 @@ def pp_color(p_todo_str, p_todo):
         p_todo_str = '%s%s%s' % (color, p_todo_str, NEUTRAL_COLOR)
 
         if Config.HIGHLIGHT_PROJECTS_CONTEXTS:
-            p_todo_str = re.sub(r'\B(\+|@)\S+', PROJECT_COLOR + r'\g<0>' + color, \
+            p_todo_str = re.sub(r'\B(\+|@)(\S*\w)', PROJECT_COLOR + r'\g<0>' + color, \
                 p_todo_str)
 
         p_todo_str += NEUTRAL_COLOR
