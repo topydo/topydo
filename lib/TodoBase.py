@@ -75,7 +75,7 @@ class TodoBase(object):
         """ Adds a tag to the todo. """
         self.set_tag(p_key, p_value, True)
 
-    def set_tag(self, p_key, p_value="", p_force_add=False, p_old_value=None):
+    def set_tag(self, p_key, p_value="", p_force_add=False, p_old_value=""):
         """
         Sets a occurrence of the tag identified by p_key. Sets an arbitrary
         instance of the tag when the todo contains multiple tags with this key.
@@ -91,7 +91,7 @@ class TodoBase(object):
         """
 
         if p_value == "":
-            self.remove_tag(p_key)
+            self.remove_tag(p_key, p_old_value)
             return
 
         value = p_old_value if p_old_value else self.tag_value(p_key)
