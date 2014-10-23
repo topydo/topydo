@@ -49,7 +49,7 @@ class TodoBaseTester(unittest.TestCase):
 
         self.assertEquals(todo.source(), '(C) Foo id:1 id:2')
 
-    def test_set_tag(self):
+    def test_set_tag1(self):
         todo = TodoBase.TodoBase("(C) Foo foo:bar")
         todo.set_tag('foo', 'baz')
 
@@ -59,6 +59,28 @@ class TodoBaseTester(unittest.TestCase):
 
         self.assertTrue(re.search(r'\bfoo:baz\b', todo.src))
         self.assertFalse(re.search(r'\bfoo:bar\b', todo.src))
+
+    def test_set_tag2(self):
+        todo = TodoBase.TodoBase("(C) Foo foo:bar foo:baz")
+        todo.set_tag('foo', 'bang', False, 'baz')
+
+        self.assertTrue(todo.has_tag('foo'))
+        self.assertTrue(todo.has_tag('foo', 'bar'))
+        self.assertTrue(todo.has_tag('foo', 'bang'))
+        self.assertFalse(todo.has_tag('foo', 'baz'))
+
+        self.assertTrue(re.search(r'\bfoo:bar\b', todo.src))
+        self.assertFalse(re.search(r'\bfoo:baz\b', todo.src))
+
+    def test_set_tag3(self):
+        todo = TodoBase.TodoBase("(C) Foo foo:bar foo:bar")
+        todo.set_tag('foo', 'bang', False, 'bar')
+
+        self.assertTrue(todo.has_tag('foo'))
+        self.assertTrue(todo.has_tag('foo', 'bang'))
+        self.assertFalse(todo.has_tag('foo', 'bar'))
+
+        self.assertTrue(re.search(r'\bfoo:bang foo:bang\b', todo.src))
 
     def test_set_tag_double_value(self):
         todo = TodoBase.TodoBase("(C) Foo foo:bar baz:bar")
