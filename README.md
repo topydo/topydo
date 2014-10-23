@@ -34,6 +34,7 @@ Subcommands implemented:
 * lsprj
 * pri
 * sort [xx]
+* tag [x]
 
 Subcommands marked as [x] don't exist in the todo.txt CLI, but were added by
 todo.txt-tools.
