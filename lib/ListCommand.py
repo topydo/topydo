@@ -54,8 +54,8 @@ class ListCommand(Command.Command):
         sorter = Sorter.Sorter(self.sort_expression)
         filters = [] if self.show_all else [Filter.DependencyFilter(self.todolist), Filter.RelevanceFilter()]
 
-        if len(args) > 0:
-            filters.append(Filter.GrepFilter(args[0]))
+        for arg in args:
+            filters.append(Filter.GrepFilter(arg))
 
         filters.append(Filter.LimitFilter(Config.LIST_LIMIT))
 
