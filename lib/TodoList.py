@@ -301,6 +301,9 @@ class TodoList(object):
     def is_dirty(self):
         return self.dirty
 
+    def set_dirty(self):
+        self.dirty = True
+
     def todos(self):
         return self._todos
 
