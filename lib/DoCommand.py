@@ -41,8 +41,13 @@ class DoCommand(Command):
     def _uncompleted_children(self, p_todo):
         return sorted([t for t in self.todolist.children(p_todo) if not t.is_completed()])
 
-    def _print_list(self, p_todos):
-        self.out("\n".join(pretty_print_list(p_todos, [self.todolist.pp_number()])))
+    def _print_list(self, p_todos, p_print_numbers=True):
+        filters = []
+
+        if p_print_numbers:
+            filters = [self.todolist.pp_number()]
+
+        self.out("\n".join(pretty_print_list(p_todos, filters)))
 
     def _complete_children(self):
             children = self._uncompleted_children(self.todo)
@@ -72,7 +77,7 @@ class DoCommand(Command):
 
         if parents:
             self.out("The following todo item(s) became active:")
-            self._print_list(parents)
+            self._print_list(parents, False)
 
     def execute(self):
         if not super(DoCommand, self).execute():
