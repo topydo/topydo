@@ -14,8 +14,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import getopt
-
 import Command
 import Config
 import Filter
@@ -32,10 +30,7 @@ class ListCommand(Command.Command):
         self.show_all = False
 
     def _process_flags(self):
-        try:
-            opts, args = getopt.getopt(self.args, 's:x')
-        except getopt.GetoptError:
-            return self.args
+        opts, args = self.getopt('s:x')
 
         for o, a in opts:
             if o == '-x':

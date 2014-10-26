@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import getopt
+
 class InvalidCommandArgument(Exception):
     pass
 
@@ -78,6 +80,14 @@ class Command(object):
             return True
 
         return False
+
+    def getopt(self, p_flags):
+        try:
+            result = getopt.getopt(self.args, p_flags)
+        except getopt.GetoptError:
+            result = ([],self.args)
+
+        return result
 
     def usage(self):
         return "No usage text available for this command."
