@@ -15,11 +15,18 @@ are:
 * Some conveniences when adding new items (e.g. adding creation date and use
   **relative dates**);
 
+How to use
+----------
+
+Currently, only the CLI is implemented. It's not a proper Python package yet
+that can be installed. To use Topydo, put your todo.txt file in the cli
+directory and run Main.py from there. You may want to create an alias with
+'ln -s Main.py t'.
+
 Current status
 --------------
 
 The feature set is not yet on-par with todo.txt CLI + todo.txt-tools combined.
-Missing features are easy sorting, tag management and postponing todos.
 
 Subcommands implemented:
 
