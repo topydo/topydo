@@ -149,3 +149,37 @@ class FilterTest(unittest.TestCase):
         filtered_todos = limit_filter.filter(todos)
 
         self.assertEquals(len(filtered_todos), 4)
+
+    def test_filter16(self):
+        todos = load_file('data/FilterTest1.txt')
+        grep = Filter.NegationFilter(Filter.GrepFilter('+project'))
+
+        filtered_todos = grep.filter(todos)
+        reference = load_file('data/FilterTest3-result.txt')
+
+        self.assertEquals(todolist_to_string(filtered_todos), \
+            todolist_to_string(reference))
+
+    def test_filter17(self):
+        todos = load_file('data/FilterTest1.txt')
+        grep1 = Filter.GrepFilter('task')
+        grep2 = Filter.GrepFilter('project')
+        andfilter = Filter.AndFilter(grep1, grep2)
+
+        filtered_todos = andfilter.filter(todos)
+        reference = load_file('data/FilterTest4-result.txt')
+
+        self.assertEquals(todolist_to_string(filtered_todos), \
+            todolist_to_string(reference))
+
+    def test_filter18(self):
+        todos = load_file('data/FilterTest1.txt')
+        grep1 = Filter.GrepFilter('part')
+        grep2 = Filter.GrepFilter('important')
+        grep = Filter.OrFilter(grep1, grep2)
+
+        filtered_todos = grep.filter(todos)
+        reference = load_file('data/FilterTest5-result.txt')
+
+        self.assertEquals(todolist_to_string(filtered_todos), \
+            todolist_to_string(reference))

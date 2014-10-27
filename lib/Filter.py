@@ -27,6 +27,29 @@ class Filter(object):
         """ Default match value. """
         return True
 
+class NegationFilter(Filter):
+    def __init__(self, p_filter):
+        self._filter = p_filter
+
+    def match(self, p_todo):
+        return not self._filter.match(p_todo)
+
+class AndFilter(Filter):
+    def __init__(self, p_filter1, p_filter2):
+        self._filter1 = p_filter1
+        self._filter2 = p_filter2
+
+    def match(self, p_todo):
+        return self._filter1.match(p_todo) and self._filter2.match(p_todo)
+
+class OrFilter(Filter):
+    def __init__(self, p_filter1, p_filter2):
+        self._filter1 = p_filter1
+        self._filter2 = p_filter2
+
+    def match(self, p_todo):
+        return self._filter1.match(p_todo) or self._filter2.match(p_todo)
+
 class GrepFilter(Filter):
     """ Matches when the todo text contains a text. """
 
