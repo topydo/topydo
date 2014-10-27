@@ -39,6 +39,7 @@ Subcommands implemented:
 * ls
 * lscon
 * lsprj
+* postpone [x]
 * pri
 * sort [xx]
 * tag [x]

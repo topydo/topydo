@@ -32,6 +32,7 @@ from DoCommand import DoCommand
 from ListCommand import ListCommand
 from ListContextCommand import ListContextCommand
 from ListProjectCommand import ListProjectCommand
+from PostponeCommand import PostponeCommand
 from PrettyPrinter import *
 from PriorityCommand import PriorityCommand
 from SortCommand import SortCommand
@@ -119,6 +120,7 @@ class CLIApplication(object):
           'listproj': ListProjectCommand,
           'listproject': ListProjectCommand,
           'listprojects': ListProjectCommand,
+          'postpone': PostponeCommand,
           'pri': PriorityCommand,
           'rm': DeleteCommand,
           'sort': SortCommand,
