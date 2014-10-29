@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export PYTHONPATH=../lib
+export PYTHONPATH=../topydo/lib
 
 if [ -n "$1" ]; then
   TESTS=$1

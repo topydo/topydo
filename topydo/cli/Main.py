@@ -2,44 +2,43 @@
 
 # Topydo - A todo.txt client written in Python.
 # Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """ Entry file for the Python todo.txt CLI. """
 
 import sys
-sys.path.append('../lib')
 
-from AddCommand import AddCommand
-from AppendCommand import AppendCommand
-from ArchiveCommand import ArchiveCommand
-from DeleteCommand import DeleteCommand
-from DepCommand import DepCommand
-from DepriCommand import DepriCommand
-import Config
-from DoCommand import DoCommand
-from ListCommand import ListCommand
-from ListContextCommand import ListContextCommand
-from ListProjectCommand import ListProjectCommand
-from PostponeCommand import PostponeCommand
-from PrettyPrinter import *
-from PriorityCommand import PriorityCommand
-from SortCommand import SortCommand
-from TagCommand import TagCommand
-import TodoFile
-import TodoList
-from Utils import escape_ansi
+from topydo.lib.AddCommand import AddCommand
+from topydo.lib.AppendCommand import AppendCommand
+from topydo.lib.ArchiveCommand import ArchiveCommand
+from topydo.lib.DeleteCommand import DeleteCommand
+from topydo.lib.DepCommand import DepCommand
+from topydo.lib.DepriCommand import DepriCommand
+from topydo.lib import Config
+from topydo.lib.DoCommand import DoCommand
+from topydo.lib.ListCommand import ListCommand
+from topydo.lib.ListContextCommand import ListContextCommand
+from topydo.lib.ListProjectCommand import ListProjectCommand
+from topydo.lib.PostponeCommand import PostponeCommand
+from topydo.lib.PrettyPrinter import *
+from topydo.lib.PriorityCommand import PriorityCommand
+from topydo.lib.SortCommand import SortCommand
+from topydo.lib.TagCommand import TagCommand
+from topydo.lib import TodoFile
+from topydo.lib import TodoList
+from topydo.lib.Utils import escape_ansi
 
 def usage():
     """ Prints the usage of the todo.txt CLI """
