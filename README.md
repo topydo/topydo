@@ -20,8 +20,11 @@ How to use
 
 Currently, only the CLI is implemented. It's not a proper Python package yet
 that can be installed. To use Topydo, put your todo.txt file in the cli
-directory and run Main.py from there. You may want to create an alias with
-'ln -s Main.py t'.
+directory and run `Main.py` from there. You may want to create an alias with
+`ln -s Main.py t`.
+
+You can make set some preferences in lib/Config.py, as long as configuration
+files are not supported.
 
 Current status
 --------------
