@@ -18,13 +18,15 @@ are:
 How to use
 ----------
 
-Currently, only the CLI is implemented. It's not a proper Python package yet
-that can be installed. To use Topydo, put your todo.txt file in the cli
-directory and run `Main.py` from there. You may want to create an alias with
-`ln -s Main.py t`.
+Install with
 
-You can make set some preferences in lib/Config.py, as long as configuration
-files are not supported.
+  python setup.py build
+  python setup.py install
+
+Before you do so, you can make set some preferences in lib/Config.py, as long as configuration files are not supported. This will be addressed
+soon.
+
+Once installed, you can run 'topydo'.
 
 Current status
 --------------
