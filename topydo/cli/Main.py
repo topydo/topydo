@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Topydo - A todo.txt client written in Python.
 # Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
 #

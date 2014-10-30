@@ -9,4 +9,5 @@ setup(
     author_email = "me@bramschoenmakers.nl",
     url = "https://github.com/bram85/topydo",
     download_url = "https://github.com/bram85/topydo/archive/master.zip",
+    scripts = ["bin/topydo"],
 )
