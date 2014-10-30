@@ -38,21 +38,39 @@ class ListCommand(Command.Command):
             elif o == '-s':
                 self.sort_expression = a
 
-        return args
+        self.args = args
+
+
+    def _filters(self):
+        filters = []
+
+        def grep_filters():
+            for arg in self.args:
+                if len(arg) > 1 and arg[0] == '-':
+                    # when a word starts with -, exclude it
+                    grep = Filter.NegationFilter(Filter.GrepFilter(arg[1:]))
+                else:
+                    grep = Filter.GrepFilter(arg)
+
+                filters.append(grep)
+
+        if not self.show_all:
+            filters.append(Filter.DependencyFilter(self.todolist))
+            filters.append(Filter.RelevanceFilter())
+
+        grep_filters()
+        filters.append(Filter.LimitFilter(Config.LIST_LIMIT))
+
+        return filters
 
     def execute(self):
         if not super(ListCommand, self).execute():
             return False
 
-        args = self._process_flags()
+        self._process_flags()
 
         sorter = Sorter.Sorter(self.sort_expression)
-        filters = [] if self.show_all else [Filter.DependencyFilter(self.todolist), Filter.RelevanceFilter()]
-
-        for arg in args:
-            filters.append(Filter.GrepFilter(arg))
-
-        filters.append(Filter.LimitFilter(Config.LIST_LIMIT))
+        filters = self._filters()
 
         self.out(self.todolist.view(sorter, filters).pretty_print())
 
