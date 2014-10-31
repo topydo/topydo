@@ -59,7 +59,9 @@ class ListCommand(Command.Command):
             filters.append(Filter.RelevanceFilter())
 
         grep_filters()
-        filters.append(Filter.LimitFilter(Config.LIST_LIMIT))
+
+        if not self.show_all:
+            filters.append(Filter.LimitFilter(Config.LIST_LIMIT))
 
         return filters
 
