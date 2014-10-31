@@ -19,7 +19,7 @@
 from datetime import date
 import re
 
-import Config
+from Config import config
 import Command
 from PrettyPrinter import pretty_print
 from RelativeDate import relative_date_to_date
@@ -75,8 +75,8 @@ class AddCommand(Command.Command):
 
                 self.todo.remove_tag(p_tag, raw_value)
 
-        convert_date(Config.TAG_START)
-        convert_date(Config.TAG_DUE)
+        convert_date(config().tag_start())
+        convert_date(config().tag_due())
 
         add_dependencies('partof')
         add_dependencies('before')

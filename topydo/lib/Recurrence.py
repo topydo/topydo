@@ -18,7 +18,7 @@
 
 from datetime import date, timedelta
 
-import Config
+from Config import config
 from RelativeDate import relative_date_to_date
 import Todo
 
@@ -52,11 +52,11 @@ def advance_recurring_todo(p_todo):
     length = todo.length()
 
     new_due = relative_date_to_date(pattern, due)
-    todo.set_tag(Config.TAG_DUE, new_due.isoformat())
+    todo.set_tag(config().tag_due(), new_due.isoformat())
 
     if todo.start_date():
         new_start = new_due - timedelta(length)
-        todo.set_tag(Config.TAG_START, new_start.isoformat())
+        todo.set_tag(config().tag_start(), new_start.isoformat())
 
     todo.set_creation_date(date.today())
 

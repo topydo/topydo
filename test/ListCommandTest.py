@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import Config
+from Config import config, _Config
 import CommandTest
 import ListCommand
 import TestFacilities
@@ -96,8 +96,7 @@ class ListCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_list11(self):
-        old_limit = Config.LIST_LIMIT
-        Config.LIST_LIMIT = 1
+        config("data/listcommand.conf")
 
         command = ListCommand.ListCommand(["project"], self.todolist, self.out, self.errors)
         command.execute()
@@ -106,11 +105,11 @@ class ListCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.output, "  1 (C) Foo @Context2 Not@Context +Project1 Not+Project\n")
         self.assertEquals(self.errors, "")
 
-        Config.LIST_LIMIT = old_limit
+        # restore
+        config("")
 
     def test_list12(self):
-        old_limit = Config.LIST_LIMIT
-        Config.LIST_LIMIT = 1
+        config("data/listcommand.conf")
 
         command = ListCommand.ListCommand(["-x", "project"], self.todolist, self.out, self.errors)
         command.execute()
@@ -119,7 +118,7 @@ class ListCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.output, "  1 (C) Foo @Context2 Not@Context +Project1 Not+Project\n  3 (C) Baz @Context1 +Project1 key:value id:1\n  2 (D) Bar @Context1 +Project2 p:1\n")
         self.assertEquals(self.errors, "")
 
-        Config.LIST_LIMIT = old_limit
+        config("")
 
     def test_help(self):
         command = ListCommand.ListCommand(["help"], self.todolist, self.out, self.error)

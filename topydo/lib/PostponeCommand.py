@@ -17,6 +17,7 @@
 from datetime import date, timedelta
 
 from Command import *
+from Config import config
 from PrettyPrinter import *
 from RelativeDate import relative_date_to_date
 from TodoList import InvalidTodoException
@@ -41,7 +42,7 @@ class PostponeCommand(Command):
         self.args = args
 
     def _get_offset(self, p_todo):
-        offset = p_todo.tag_value(Config.TAG_DUE, date.today().isoformat())
+        offset = p_todo.tag_value(config().tag_due(), date.today().isoformat())
         offset_date = date_string_to_date(offset)
 
         if offset_date < date.today():
@@ -65,12 +66,12 @@ class PostponeCommand(Command):
             new_due = relative_date_to_date(pattern, offset)
 
             if new_due:
-                if self.move_start_date and todo.has_tag(Config.TAG_START):
+                if self.move_start_date and todo.has_tag(config().tag_start()):
                     length = todo.length()
                     new_start = new_due - timedelta(length)
-                    todo.set_tag(Config.TAG_START, new_start.isoformat())
+                    todo.set_tag(config().tag_start(), new_start.isoformat())
 
-                todo.set_tag(Config.TAG_DUE, new_due.isoformat())
+                todo.set_tag(config().tag_due(), new_due.isoformat())
 
                 self.todolist.set_dirty()
                 self.out(pretty_print(todo, [self.todolist.pp_number()]))

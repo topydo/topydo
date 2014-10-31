@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from Command import *
-import Config
+from Config import config
 import Filter
 import Sorter
 
@@ -33,7 +33,7 @@ class SortCommand(Command):
         try:
             expression = self.argument(0)
         except InvalidCommandArgument:
-            expression = Config.SORT_STRING
+            expression = config().sort_string()
 
         sorter = Sorter.Sorter(expression) # TODO: validate
         sorted_todos = sorter.sort(self.todolist.todos())

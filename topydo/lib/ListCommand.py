@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import Command
-import Config
+from Config import config
 import Filter
 import Sorter
 
@@ -26,7 +26,7 @@ class ListCommand(Command.Command):
                  p_prompt=lambda a: None):
         super(ListCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
 
-        self.sort_expression = Config.SORT_STRING
+        self.sort_expression = config().sort_string()
         self.show_all = False
 
     def _process_flags(self):
@@ -61,7 +61,7 @@ class ListCommand(Command.Command):
         grep_filters()
 
         if not self.show_all:
-            filters.append(Filter.LimitFilter(Config.LIST_LIMIT))
+            filters.append(Filter.LimitFilter(config().list_limit()))
 
         return filters
 

@@ -25,7 +25,7 @@ future.
 
 from datetime import date
 
-import Config
+from Config import config
 
 IMPORTANCE_VALUE = {'A': 3, 'B': 2, 'C': 1}
 
@@ -37,7 +37,7 @@ def is_due_next_monday(p_todo):
     return due and due.weekday() == 0 and today.weekday() >= 4 and \
         p_todo.days_till_due()
 
-def importance(p_todo, p_ignore_weekend=Config.IGNORE_WEEKENDS):
+def importance(p_todo, p_ignore_weekend=config().ignore_weekends()):
     """
     Calculates the importance of the given task.
     Returns an importance of zero when the task has been completed.
@@ -52,7 +52,7 @@ def importance(p_todo, p_ignore_weekend=Config.IGNORE_WEEKENDS):
     priority = p_todo.priority()
     result += IMPORTANCE_VALUE[priority] if priority in IMPORTANCE_VALUE else 0
 
-    if p_todo.has_tag(Config.TAG_DUE):
+    if p_todo.has_tag(config().tag_due()):
         days_left = p_todo.days_till_due()
 
         if days_left >= 7 and days_left < 14:
@@ -69,12 +69,12 @@ def importance(p_todo, p_ignore_weekend=Config.IGNORE_WEEKENDS):
     if p_ignore_weekend and is_due_next_monday(p_todo):
         result += 1
 
-    if p_todo.has_tag(Config.TAG_STAR):
+    if p_todo.has_tag(config().tag_star()):
         result += 1
 
     return result if not p_todo.is_completed() else 0
 
-def average_importance(p_todo, p_ignore_weekend=Config.IGNORE_WEEKENDS):
+def average_importance(p_todo, p_ignore_weekend=config().ignore_weekends()):
     own_importance = importance(p_todo, p_ignore_weekend)
 
     average = 0

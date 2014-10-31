@@ -17,7 +17,7 @@
 from datetime import date
 import unittest
 
-import Config
+from Config import config
 from Importance import importance
 import Todo
 
@@ -31,10 +31,10 @@ class ImportanceTest(unittest.TestCase):
         self.assertEqual(importance(todo), 5)
 
     def test_importance3(self):
-        todo = Todo.Todo("(A) Foo " + Config.TAG_STAR + ":1")
+        todo = Todo.Todo("(A) Foo " + config().tag_star() + ":1")
         self.assertEqual(importance(todo), 6)
 
     def test_importance4(self):
         today_str = date.today().isoformat()
-        todo = Todo.Todo("(C) Foo " + Config.TAG_DUE + ":" + today_str)
+        todo = Todo.Todo("(C) Foo " + config().tag_due() + ":" + today_str)
         self.assertEqual(importance(todo), 8)

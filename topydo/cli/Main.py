@@ -18,26 +18,6 @@
 
 import sys
 
-from topydo.lib.AddCommand import AddCommand
-from topydo.lib.AppendCommand import AppendCommand
-from topydo.lib.ArchiveCommand import ArchiveCommand
-from topydo.lib.DeleteCommand import DeleteCommand
-from topydo.lib.DepCommand import DepCommand
-from topydo.lib.DepriCommand import DepriCommand
-from topydo.lib import Config
-from topydo.lib.DoCommand import DoCommand
-from topydo.lib.ListCommand import ListCommand
-from topydo.lib.ListContextCommand import ListContextCommand
-from topydo.lib.ListProjectCommand import ListProjectCommand
-from topydo.lib.PostponeCommand import PostponeCommand
-from topydo.lib.PrettyPrinter import *
-from topydo.lib.PriorityCommand import PriorityCommand
-from topydo.lib.SortCommand import SortCommand
-from topydo.lib.TagCommand import TagCommand
-from topydo.lib import TodoFile
-from topydo.lib import TodoList
-from topydo.lib.Utils import escape_ansi
-
 def usage():
     """ Prints the usage of the todo.txt CLI """
     exit(1)
@@ -69,6 +49,41 @@ def write(p_file, p_string):
     if p_string:
         p_file.write(p_string + "\n")
 
+def error(p_string):
+    """ Writes an error on the standard error. """
+
+    write(sys.stderr, p_string)
+
+from topydo.lib.Config import config, ConfigError
+
+# First thing is to poke the configuration and check whether it's sane
+# The modules below may already read in configuration upon import, so
+# make sure to bail out if the configuration is invalid.
+try:
+    config()
+except ConfigError as e:
+    error(str(e))
+    exit(1)
+
+from topydo.lib.AddCommand import AddCommand
+from topydo.lib.AppendCommand import AppendCommand
+from topydo.lib.ArchiveCommand import ArchiveCommand
+from topydo.lib.DeleteCommand import DeleteCommand
+from topydo.lib.DepCommand import DepCommand
+from topydo.lib.DepriCommand import DepriCommand
+from topydo.lib.DoCommand import DoCommand
+from topydo.lib.ListCommand import ListCommand
+from topydo.lib.ListContextCommand import ListContextCommand
+from topydo.lib.ListProjectCommand import ListProjectCommand
+from topydo.lib.PostponeCommand import PostponeCommand
+from topydo.lib.PrettyPrinter import *
+from topydo.lib.PriorityCommand import PriorityCommand
+from topydo.lib.SortCommand import SortCommand
+from topydo.lib.TagCommand import TagCommand
+from topydo.lib import TodoFile
+from topydo.lib import TodoList
+from topydo.lib.Utils import escape_ansi
+
 class CLIApplication(object):
     def __init__(self):
         self.todolist = TodoList.TodoList([])
@@ -80,7 +95,7 @@ class CLIApplication(object):
         This means that all completed tasks are moved to the archive file
         (defaults to done.txt).
         """
-        archive_file = TodoFile.TodoFile(Config.ARCHIVE_FILENAME)
+        archive_file = TodoFile.TodoFile(config().archive())
         archive = TodoList.TodoList(archive_file.read())
 
         if archive:
@@ -92,13 +107,13 @@ class CLIApplication(object):
 
     def run(self):
         """ Main entry function. """
-        todofile = TodoFile.TodoFile(Config.FILENAME)
+        todofile = TodoFile.TodoFile(config().todotxt())
         self.todolist = TodoList.TodoList(todofile.read())
 
         try:
             subcommand = sys.argv[1]
         except IndexError:
-            subcommand = Config.DEFAULT_ACTION
+            subcommand = config().default_action()
 
         subcommand_map = {
           'add': AddCommand,
@@ -126,12 +141,12 @@ class CLIApplication(object):
 
         args = arguments()
         if not subcommand in subcommand_map:
-            subcommand = Config.DEFAULT_ACTION
+            subcommand = config().default_action()
             args = arguments(1)
 
         command = subcommand_map[subcommand](args, self.todolist,
             lambda o: write(sys.stdout, o),
-            lambda e: write(sys.stderr, e),
+            error,
             raw_input)
 
         if command.execute() == False:

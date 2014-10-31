@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from Command import *
-import Config
+from Config import config
 import Filter
 import Sorter
 import TodoList
@@ -95,7 +95,7 @@ class DepCommand(Command):
                 self.error(self.usage())
 
             if todos:
-                sorter = Sorter.Sorter(Config.SORT_STRING)
+                sorter = Sorter.Sorter(config().sort_string())
                 instance_filter = Filter.InstanceFilter(todos)
                 view = View.View(sorter, [instance_filter], self.todolist)
                 self.out(view.pretty_print())

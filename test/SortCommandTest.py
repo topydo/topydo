@@ -15,7 +15,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import CommandTest
-import Config
 import SortCommand
 import TestFacilities
 

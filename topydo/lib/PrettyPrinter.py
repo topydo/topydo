@@ -18,7 +18,7 @@
 
 import re
 
-import Config
+from Config import config
 
 PRIORITY_COLORS = {
     'A': '\033[36m', # cyan
@@ -36,7 +36,7 @@ def pp_color(p_todo_str, p_todo):
     Should be passed as a filter in the filter list of pretty_print()
     """
 
-    if Config.COLORS:
+    if config().colors():
         color = NEUTRAL_COLOR
         try:
             color = PRIORITY_COLORS[p_todo.priority()]
@@ -45,7 +45,7 @@ def pp_color(p_todo_str, p_todo):
 
         p_todo_str = '%s%s%s' % (color, p_todo_str, NEUTRAL_COLOR)
 
-        if Config.HIGHLIGHT_PROJECTS_CONTEXTS:
+        if config().highlight_projects_contexts():
             p_todo_str = re.sub(r'\B(\+|@)(\S*\w)', PROJECT_COLOR + r'\g<0>' + color, \
                 p_todo_str)
 

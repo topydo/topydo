@@ -17,7 +17,7 @@
 from datetime import date, timedelta
 import unittest
 
-import Config
+from Config import config
 from Recurrence import advance_recurring_todo, NoRecurrenceException
 import Todo
 
@@ -30,7 +30,7 @@ class RelativeDateTester(unittest.TestCase):
         future = date.today() + timedelta(1)
         new_due = date.today() + timedelta(8)
 
-        self.todo.set_tag(Config.TAG_DUE, future.isoformat())
+        self.todo.set_tag(config().tag_due(), future.isoformat())
         new_todo = advance_recurring_todo(self.todo)
 
         self.assertEquals(new_todo.due_date(), new_due)
@@ -40,7 +40,7 @@ class RelativeDateTester(unittest.TestCase):
         today = date.today()
         new_due = date.today() + timedelta(7)
 
-        self.todo.set_tag(Config.TAG_DUE, today.isoformat())
+        self.todo.set_tag(config().tag_due(), today.isoformat())
         new_todo = advance_recurring_todo(self.todo)
 
         self.assertEquals(new_todo.due_date(), new_due)
@@ -50,7 +50,7 @@ class RelativeDateTester(unittest.TestCase):
         past = date.today() - timedelta(8)
         new_due = date.today() + timedelta(7)
 
-        self.todo.set_tag(Config.TAG_DUE, past.isoformat())
+        self.todo.set_tag(config().tag_due(), past.isoformat())
         new_todo = advance_recurring_todo(self.todo)
 
         self.assertEquals(new_todo.due_date(), new_due)
@@ -59,14 +59,14 @@ class RelativeDateTester(unittest.TestCase):
         new_due = date.today() + timedelta(7)
         new_todo = advance_recurring_todo(self.todo)
 
-        self.assertTrue(new_todo.has_tag(Config.TAG_DUE))
+        self.assertTrue(new_todo.has_tag(config().tag_due()))
         self.assertEquals(new_todo.due_date(), new_due)
 
     def test_startdate(self):
         """ Start date is before due date. """
-        self.todo.set_tag(Config.TAG_DUE, date.today().isoformat())
+        self.todo.set_tag(config().tag_due(), date.today().isoformat())
         yesterday = date.today() - timedelta(1)
-        self.todo.set_tag(Config.TAG_START, yesterday.isoformat())
+        self.todo.set_tag(config().tag_start(), yesterday.isoformat())
 
         new_start = date.today() + timedelta(6)
         new_todo = advance_recurring_todo(self.todo)
@@ -75,8 +75,8 @@ class RelativeDateTester(unittest.TestCase):
 
     def test_startdate2(self):
         """ Start date equals due date. """
-        self.todo.set_tag(Config.TAG_DUE, date.today().isoformat())
-        self.todo.set_tag(Config.TAG_START, date.today().isoformat())
+        self.todo.set_tag(config().tag_due(), date.today().isoformat())
+        self.todo.set_tag(config().tag_start(), date.today().isoformat())
 
         new_start = date.today() + timedelta(7)
         new_todo = advance_recurring_todo(self.todo)

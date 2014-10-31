@@ -20,7 +20,7 @@ This module provides the Todo class.
 
 from datetime import date
 
-import Config
+from Config import config
 import Utils
 import TodoBase
 
@@ -41,11 +41,11 @@ class Todo(TodoBase.TodoBase):
 
     def start_date(self):
         """ Returns a date object of the todo's start date. """
-        return self.get_date(Config.TAG_START)
+        return self.get_date(config().tag_start())
 
     def due_date(self):
         """ Returns a date object of the todo's due date. """
-        return self.get_date(Config.TAG_DUE)
+        return self.get_date(config().tag_due())
 
     def is_active(self):
         """
