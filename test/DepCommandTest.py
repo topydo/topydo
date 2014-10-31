@@ -1,16 +1,16 @@
 # Topydo - A todo.txt client written in Python.
 # Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -72,6 +72,34 @@ class DepCommandTest(CommandTest.CommandTest):
         self.assertFalse(self.todolist.is_dirty())
         self.assertEquals(self.output, "")
         self.assertEquals(self.errors, command.usage() + "\n")
+
+    def test_add6(self):
+        command = DepCommand.DepCommand(["add", "1", "after", "4"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.todo(4).has_tag('p', '1'))
+        self.assertEquals(self.output, "")
+        self.assertEquals(self.errors, "")
+
+    def test_add7(self):
+        command = DepCommand.DepCommand(["add", "1", "before", "4"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.todo(1).has_tag('p', '2'))
+        self.assertEquals(self.output, "")
+        self.assertEquals(self.errors, "")
+
+    def test_add8(self):
+        command = DepCommand.DepCommand(["add", "1", "partof", "4"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.todo(1).has_tag('p', '2'))
+        self.assertEquals(self.output, "")
+        self.assertEquals(self.errors, "")
+
     def rm_helper(self, p_args):
         """
         Helper function that checks the removal of the dependency from todo 1

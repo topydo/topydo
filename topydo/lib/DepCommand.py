@@ -51,13 +51,19 @@ class DepCommand(Command):
         to_todo = None
 
         try:
-            from_todo_nr = convert_todo_number(self.argument(1))
-            to_todo_nr = self.argument(2)
+            operator = self.argument(2)
 
-            if to_todo_nr == 'to':
+            if operator == 'before' or operator == 'partof':
+                from_todo_nr = convert_todo_number(self.argument(3))
+                to_todo_nr = convert_todo_number(self.argument(1))
+            elif operator == 'to' or operator == 'after':
+                from_todo_nr = convert_todo_number(self.argument(1))
                 to_todo_nr = convert_todo_number(self.argument(3))
             else:
-                to_todo_nr = convert_todo_number(to_todo_nr)
+                # the operator was omitted, assume 2nd argument is target task
+                # default to 'to' behavior
+                from_todo_nr = convert_todo_number(self.argument(1))
+                to_todo_nr = convert_todo_number(self.argument(2))
 
             from_todo = self.todolist.todo(from_todo_nr)
             to_todo = self.todolist.todo(to_todo_nr)
@@ -119,12 +125,13 @@ class DepCommand(Command):
     def usage(self):
         return """Synopsis:
   dep <add|rm> <NUMBER> [to] <NUMBER>
+  dep add <NUMBER> <before|partof|after> <NUMBER>
   dep ls <NUMBER> to
   dep ls to <NUMBER>
   dep clean"""
 
     def help(self):
-        return """* add: Adds a dependency.
+        return """* add: Adds a dependency. Using 1 before 2 creates a dependency from todo item 2 to 1.
 * rm (alias: del): Removes a dependency.
 * ls: Lists all dependencies to or from a certain todo.
 * clean (alias: gc): Removes redundant id or p tags."""
