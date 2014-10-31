@@ -37,7 +37,7 @@ def is_due_next_monday(p_todo):
     return due and due.weekday() == 0 and today.weekday() >= 4 and \
         p_todo.days_till_due()
 
-def importance(p_todo, p_ignore_weekend=False):
+def importance(p_todo, p_ignore_weekend=Config.IGNORE_WEEKENDS):
     """
     Calculates the importance of the given task.
     Returns an importance of zero when the task has been completed.
@@ -74,7 +74,7 @@ def importance(p_todo, p_ignore_weekend=False):
 
     return result if not p_todo.is_completed() else 0
 
-def average_importance(p_todo, p_ignore_weekend=False):
+def average_importance(p_todo, p_ignore_weekend=Config.IGNORE_WEEKENDS):
     own_importance = importance(p_todo, p_ignore_weekend)
 
     average = 0

@@ -19,7 +19,6 @@
 from datetime import date
 import re
 
-import Config
 from Importance import importance, average_importance
 
 def is_priority_field(p_field):
@@ -45,9 +44,9 @@ def get_field_function(p_field):
         result = (lambda a: a.completion_date() if a.completion_date() \
             else date.max)
     elif p_field == 'importance':
-        result = lambda a: importance(a, Config.IGNORE_WEEKENDS)
+        result = lambda a: importance(a)
     elif p_field == 'importance-avg' or p_field == 'importance-average':
-        result = lambda a: average_importance(a, Config.IGNORE_WEEKENDS)
+        result = lambda a: average_importance(a)
     elif p_field == 'text':
         result = lambda a: a.text()
     else:
