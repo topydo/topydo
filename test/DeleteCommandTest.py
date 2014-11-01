@@ -60,7 +60,7 @@ class DeleteCommandTest(CommandTest.CommandTest):
 
         self.assertTrue(self.todolist.is_dirty())
         self.assertEquals(self.todolist.todo(1).source(), "Foo")
-        self.assertEquals(self.output, "Removed: Bar p:1\n")
+        self.assertEquals(self.output, "Removed: Bar p:1\nThe following todo item(s) became active:\nFoo\n")
         self.assertEquals(self.errors, "")
 
     def test_del5(self):

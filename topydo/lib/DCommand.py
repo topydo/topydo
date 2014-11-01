@@ -32,6 +32,7 @@ class DCommand(Command):
         super(DCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
 
         self.number = None
+        self.length = len(self.todolist.todos()) # to determine newly activated todos
         self.force = self.argument_shift("--force") or self.argument_shift("-f")
 
         try:
@@ -71,16 +72,23 @@ class DCommand(Command):
                         self.execute_specific_core(child)
                         self.out(self.prefix() + pretty_print(child))
 
-    def _print_unlocked_todos(self):
-        """
-        Print the items that became unlocked by marking this subitem
-        (self.todo) as complete.
-        """
-        parents = [parent for parent in self.todolist.parents(self.todo) if not self._uncompleted_children(parent) and parent.is_active()]
-
-        if parents:
+    def _print_unlocked_todos(self, p_old, p_new):
+        delta = [todo for todo in p_new if todo not in p_old]
+        if delta:
             self.out("The following todo item(s) became active:")
-            self._print_list(parents, False)
+            self._print_list(delta, False)
+
+    def _active_todos(self):
+        """
+        Returns a list of active todos, taking uncompleted subtodos into
+        account.
+
+        The stored length of the todolist is taken into account, to prevent new
+        todos created by recurrence to pop up as newly activated tasks.
+        Since these todos pop up at the end of the list, we cut off the list
+        just before that point.
+        """
+        return [todo for todo in self.todolist.todos()[:self.length] if not self._uncompleted_children(todo) and todo.is_active()]
 
     def condition(self):
         """ An additional condition whether execute_specific should be executed. """
@@ -106,9 +114,11 @@ class DCommand(Command):
         if not self.number:
             self.error(self.usage())
         elif self.todo and self.condition():
+            old_active = self._active_todos()
             self._process_subtasks()
             self.execute_specific()
-            self._print_unlocked_todos()
+            current_active = self._active_todos()
+            self._print_unlocked_todos(old_active, current_active)
         elif not self.todo:
             self.error("Invalid todo number given.")
         else:
