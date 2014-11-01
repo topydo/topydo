@@ -84,7 +84,7 @@ class _Config:
             return self.defaults['highlight_projects_contexts'] == '1'
 
     def todotxt(self):
-        return self.cp.get('paths', 'todotxt')
+        return self.cp.get('paths', 'filename')
 
     def archive(self):
         return self.cp.get('paths', 'archive')
