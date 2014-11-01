@@ -43,7 +43,7 @@ class DoCommand(DCommand):
         """ An additional condition whether execute_specific should be executed. """
         return not self.todo.is_completed()
 
-    def conditionFailedText(self):
+    def condition_failed_text(self):
         return "Todo has already been completed."
 
     def execute_specific(self):

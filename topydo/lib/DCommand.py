@@ -86,7 +86,7 @@ class DCommand(Command):
         """ An additional condition whether execute_specific should be executed. """
         return True
 
-    def conditionFailedText(self):
+    def condition_failed_text(self):
         return ""
 
     def execute_specific(self):
@@ -112,5 +112,5 @@ class DCommand(Command):
         elif not self.todo:
             self.error("Invalid todo number given.")
         else:
-            self.error(self.conditionFailedText())
+            self.error(self.condition_failed_text())
 
