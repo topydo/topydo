@@ -1,16 +1,16 @@
 # Topydo - A todo.txt client written in Python.
 # Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -50,14 +50,14 @@ class DoCommandTest(CommandTest.CommandTest):
 
         self.assertTrue(self.todolist.is_dirty())
         self.assertTrue(self.todolist.todo(3).is_completed())
-        self.assertEquals(self.output, "x %s Baz p:1\n" % self.today)
+        self.assertEquals(self.output, "Completed: x %s Baz p:1\n" % self.today)
         self.assertEquals(self.errors, "")
 
-    def test_do_children1(self):
+    def test_do_subtasks1(self):
         command = DoCommand.DoCommand(["1"], self.todolist, self.out, self.error, _yes_prompt)
         command.execute()
 
-        result = "  2 Bar p:1\n  3 Baz p:1\nx %s Bar p:1\nx %s Baz p:1\nx %s Foo id:1\n" % (self.today, self.today, self.today)
+        result = "  2 Bar p:1\n  3 Baz p:1\nCompleted: x %s Bar p:1\nCompleted: x %s Baz p:1\nCompleted: x %s Foo id:1\n" % (self.today, self.today, self.today)
 
         for number in [1, 2, 3]:
             self.assertTrue(self.todolist.todo(number).is_completed())
@@ -67,11 +67,11 @@ class DoCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.output, result)
         self.assertEquals(self.errors, "")
 
-    def test_do_children2(self):
+    def test_do_subtasks2(self):
         command = DoCommand.DoCommand(["1"], self.todolist, self.out, self.error, _no_prompt)
         command.execute()
 
-        result = "  2 Bar p:1\n  3 Baz p:1\nx %s Foo id:1\n" % self.today
+        result = "  2 Bar p:1\n  3 Baz p:1\nCompleted: x %s Foo id:1\n" % self.today
 
         self.assertTrue(self.todolist.is_dirty())
         self.assertTrue(self.todolist.todo(1).is_completed())
@@ -80,7 +80,7 @@ class DoCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.output, result)
         self.assertEquals(self.errors, "")
 
-    def test_do_children_force1(self):
+    def test_do_subtasks_force1(self):
         prompt_shown = False
 
         def prompt(p_prompt):
@@ -93,7 +93,7 @@ class DoCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
         self.assertFalse(self.todolist.todo(2).is_completed())
 
-    def test_do_children_force2(self):
+    def test_do_subtasks_force2(self):
         prompt_shown = False
 
         def prompt(p_prompt):
@@ -114,7 +114,7 @@ class DoCommandTest(CommandTest.CommandTest):
         command.execute()
 
         todo = self.todolist.todo(8)
-        result = "  8 %s Recurring! rec:1d due:%s\nx %s Recurring! rec:1d\n" % (self.today, self.tomorrow, self.today)
+        result = "  8 %s Recurring! rec:1d due:%s\nCompleted: x %s Recurring! rec:1d\n" % (self.today, self.tomorrow, self.today)
 
         self.assertTrue(self.todolist.is_dirty())
         self.assertEquals(self.output, result)
@@ -144,7 +144,7 @@ class DoCommandTest(CommandTest.CommandTest):
         command = DoCommand.DoCommand(["2"], self.todolist, self.out, self.error)
         command.execute()
 
-        first_output = "x %s Bar p:1\n" % self.today
+        first_output = "Completed: x %s Bar p:1\n" % self.today
 
         self.assertEquals(self.output, first_output)
         self.assertEquals(self.errors, "")
@@ -152,14 +152,14 @@ class DoCommandTest(CommandTest.CommandTest):
         command = DoCommand.DoCommand(["3"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEquals(self.output, first_output + "x %s Baz p:1\nThe following todo item(s) became active:\nFoo id:1\n" % self.today)
+        self.assertEquals(self.output, first_output + "Completed: x %s Baz p:1\nThe following todo item(s) became active:\nFoo id:1\n" % self.today)
         self.assertEquals(self.errors, "")
 
     def test_activated_todos2(self):
         command = DoCommand.DoCommand(["7"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEquals(self.output, "x %s Subtodo of inactive p:2\n" % self.today)
+        self.assertEquals(self.output, "Completed: x %s Subtodo of inactive p:2\n" % self.today)
         self.assertEquals(self.errors, "")
 
     def test_already_complete(self):

@@ -14,41 +14,31 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from Command import *
+from DCommand import DCommand
 from PrettyPrinter import pretty_print
-from TodoList import InvalidTodoException
-from Utils import convert_todo_number, InvalidTodoNumberException
 
-class DeleteCommand(Command):
+class DeleteCommand(DCommand):
     def __init__(self, p_args, p_todolist,
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
         super(DeleteCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
 
-        self.number = None
+    def prompt_text(self):
+        return "Also remove subtasks? [n] "
 
-        try:
-            self.number = convert_todo_number(self.argument(0))
-            self.todo = self.todolist.todo(self.number)
-        except (InvalidCommandArgument, InvalidTodoNumberException, InvalidTodoException):
-            self.todo = None
+    def prefix(self):
+        return "Removed: "
 
-    def execute(self):
-        if not super(DeleteCommand, self).execute():
-            return False
+    def execute_specific_core(self, p_todo):
+        self.todolist.delete(p_todo)
 
-        if not self.number:
-            self.error(self.usage())
-        elif self.todo:
-            self.out(pretty_print(self.todo, [self.todolist.pp_number()]))
-            self.todolist.delete(self.todo)
-            self.out("Removed.")
-        else:
-            self.error("Invalid todo number given.")
+    def execute_specific(self):
+        self.out(self.prefix() + pretty_print(self.todo))
+        self.execute_specific_core(self.todo)
 
     def usage(self):
-        return """Synopsis: del <NUMBER>"""
+        return """Synopsis: del [-f] <NUMBER>"""
 
     def help(self):
         return """Deletes the todo item with the given number from the list."""

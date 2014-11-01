@@ -28,21 +28,39 @@ class DeleteCommandTest(CommandTest.CommandTest):
         self.todolist = TodoList.TodoList(todos)
 
     def test_del1(self):
-        command = DeleteCommand.DeleteCommand(["1"], self.todolist, self.out, self.error)
+        command = DeleteCommand.DeleteCommand(["1"], self.todolist, self.out, self.error, lambda p: "n")
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
         self.assertEquals(self.todolist.todo(1).source(), "Bar")
-        self.assertEquals(self.output, "  1 Foo id:1\nRemoved.\n")
+        self.assertEquals(self.output, "  2 Bar p:1\nRemoved: Foo id:1\n")
         self.assertEquals(self.errors, "")
 
     def test_del2(self):
+        command = DeleteCommand.DeleteCommand(["1"], self.todolist, self.out, self.error, lambda p: "y")
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEquals(self.todolist.count(), 0)
+        self.assertEquals(self.output, "  2 Bar p:1\nRemoved: Bar\nRemoved: Foo\n")
+        self.assertEquals(self.errors, "")
+
+    def test_del3(self):
+        command = DeleteCommand.DeleteCommand(["-f", "1"], self.todolist, self.out, self.error, lambda p: "n")
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEquals(self.todolist.count(), 0)
+        self.assertEquals(self.output, "  2 Bar p:1\nRemoved: Foo\n")
+        self.assertEquals(self.errors, "")
+
+    def test_del4(self):
         command = DeleteCommand.DeleteCommand(["2"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
         self.assertEquals(self.todolist.todo(1).source(), "Foo")
-        self.assertEquals(self.output, "  2 Bar p:1\nRemoved.\n")
+        self.assertEquals(self.output, "Removed: Bar p:1")
         self.assertEquals(self.errors, "")
 
     def test_del3(self):
