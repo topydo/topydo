@@ -1,16 +1,16 @@
 # Topydo - A todo.txt client written in Python.
 # Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -33,7 +33,7 @@ class DeleteCommandTest(CommandTest.CommandTest):
 
         self.assertTrue(self.todolist.is_dirty())
         self.assertEquals(self.todolist.todo(1).source(), "Bar")
-        self.assertEquals(self.output, "Todo 1 removed.\n")
+        self.assertEquals(self.output, "  1 Foo id:1\nRemoved.\n")
         self.assertEquals(self.errors, "")
 
     def test_del2(self):
@@ -42,7 +42,7 @@ class DeleteCommandTest(CommandTest.CommandTest):
 
         self.assertTrue(self.todolist.is_dirty())
         self.assertEquals(self.todolist.todo(1).source(), "Foo")
-        self.assertEquals(self.output, "Todo 2 removed.\n")
+        self.assertEquals(self.output, "  2 Bar p:1\nRemoved.\n")
         self.assertEquals(self.errors, "")
 
     def test_del3(self):
