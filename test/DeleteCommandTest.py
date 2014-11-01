@@ -46,12 +46,12 @@ class DeleteCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_del3(self):
-        command = DeleteCommand.DeleteCommand(["-f", "1"], self.todolist, self.out, self.error, lambda p: "n")
+        command = DeleteCommand.DeleteCommand(["-f", "1"], self.todolist, self.out, self.error, lambda p: "y")
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEquals(self.todolist.count(), 0)
-        self.assertEquals(self.output, "  2 Bar p:1\nRemoved: Foo\n")
+        self.assertEquals(self.todolist.count(), 1) # force won't delete subtasks
+        self.assertEquals(self.output, "  2 Bar p:1\nRemoved: Foo id:1\n")
         self.assertEquals(self.errors, "")
 
     def test_del4(self):
@@ -60,10 +60,10 @@ class DeleteCommandTest(CommandTest.CommandTest):
 
         self.assertTrue(self.todolist.is_dirty())
         self.assertEquals(self.todolist.todo(1).source(), "Foo")
-        self.assertEquals(self.output, "Removed: Bar p:1")
+        self.assertEquals(self.output, "Removed: Bar p:1\n")
         self.assertEquals(self.errors, "")
 
-    def test_del3(self):
+    def test_del5(self):
         command = DeleteCommand.DeleteCommand(["99"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -71,7 +71,7 @@ class DeleteCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.output, "")
         self.assertEquals(self.errors, "Invalid todo number given.\n")
 
-    def test_del4(self):
+    def test_del6(self):
         command = DeleteCommand.DeleteCommand(["A"], self.todolist, self.out, self.error)
         command.execute()
 
