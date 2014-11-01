@@ -34,7 +34,7 @@ class DoCommand(DCommand):
             self.out(pretty_print(new_todo, [self.todolist.pp_number()]))
 
     def prompt_text(self):
-        return "Also mark subtasks as done? [n] "
+        return "Also mark subtasks as done? [y/N] "
 
     def prefix(self):
         return "Completed: "

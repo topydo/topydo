@@ -25,7 +25,7 @@ class DeleteCommand(DCommand):
         super(DeleteCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
 
     def prompt_text(self):
-        return "Also remove subtasks? [n] "
+        return "Also remove subtasks? [y/N] "
 
     def prefix(self):
         return "Removed: "

@@ -52,7 +52,7 @@ class DCommand(Command):
         self.out("\n".join(pretty_print_list(p_todos, filters)))
 
     def prompt_text(self):
-        return "Yes or no? [n] "
+        return "Yes or no? [y/N] "
 
     def prefix(self):
         """ Prefix to use when printing a todo. """
