@@ -87,7 +87,7 @@ class _Config:
         return self.cp.get('paths', 'filename')
 
     def archive(self):
-        return self.cp.get('paths', 'archive')
+        return self.cp.get('paths', 'archive_filename')
 
     def list_limit(self):
         try:
