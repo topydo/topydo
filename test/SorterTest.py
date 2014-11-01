@@ -1,16 +1,16 @@
 # Topydo - A todo.txt client written in Python.
 # Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -144,3 +144,14 @@ class SorterTest(unittest.TestCase):
 
         self.assertEquals(str(view), todolist_to_string(result))
 
+    def test_sort16(self):
+        """
+        Check sort of low priority tasks (D or lower) with non-priority tasks.
+        """
+        sorter = Sorter.Sorter('desc:importance,desc:prio')
+
+        todolist = load_file_to_todolist('data/SorterTest12.txt')
+        view = todolist.view(sorter, [])
+        result = load_file('data/SorterTest12-result.txt')
+
+        self.assertEquals(str(view), todolist_to_string(result))

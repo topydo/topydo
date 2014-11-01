@@ -34,7 +34,8 @@ def get_field_function(p_field):
     result = lambda a: a
 
     if is_priority_field(p_field):
-        result = lambda a: a.priority()
+        # assign dummy priority when a todo has no priority
+        result = lambda a: a.priority() or 'ZZ'
     elif p_field == 'creationdate' or p_field == 'creation':
         # when a task has no creation date, push it to the end by assigning it
         # the maximum possible date.
