@@ -18,13 +18,13 @@ are:
 How to use
 ----------
 
-Install with
+Install with:
 
-  python setup.py build
-  python setup.py install
+    python setup.py build
+    python setup.py install
 
-Before you do so, you can make set some preferences in lib/Config.py, as long as configuration files are not supported. This will be addressed
-soon.
+You can configure Topydo by adding a .topydo file in your home directory. An
+example configuration file can be found in the bin directory.
 
 Once installed, you can run 'topydo'.
 
@@ -57,7 +57,7 @@ Subcommands marked as [xx] are new in Topydo.
 Motivation
 ----------
 
-The motivation to rewrite the CLI from scratch was for multiple reasons.
+I rewrote the CLI from scratch for multiple reasons.
 
 First, in the long term I'd like to write the perfect todo client. The perfect
 todo client is free, open source, flexible and available wherever I am.
