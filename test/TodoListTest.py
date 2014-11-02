@@ -181,6 +181,18 @@ class TodoListTester(unittest.TestCase):
         self.assertEquals(self.todolist.count(), 0)
         self.assertTrue(self.todolist.is_dirty())
 
+    def test_regex1(self):
+        self.assertFalse(self.todolist.todo("1"))
+
+    def test_regex2(self):
+        """ Multiple hits should result in None. """
+        self.assertFalse(self.todolist.todo("Project1"))
+
+    def test_regex3(self):
+        todo = self.todolist.todo("project2")
+        self.assertTrue(todo)
+        self.assertEquals(todo.source(), "(D) Bar @Context1 +Project2")
+
 class TodoListDependencyTester(unittest.TestCase):
     def setUp(self):
         self.todolist = TodoList.TodoList([])

@@ -133,7 +133,7 @@ class DoCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "Invalid todo number given.\n")
 
     def test_invalid2(self):
-        command = DoCommand.DoCommand(["A"], self.todolist, self.out, self.error)
+        command = DoCommand.DoCommand(["AAA"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -170,6 +170,15 @@ class DoCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.todolist.todo(5).completion_date(), date(2014, 10, 18))
         self.assertFalse(self.output)
         self.assertEquals(self.errors, "Todo has already been completed.\n")
+
+    def test_do_regex1(self):
+        command = DoCommand.DoCommand(["baz"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.todo(3).is_completed())
+        self.assertEquals(self.output, "Completed: x %s Baz p:1\n" % self.today)
+        self.assertEquals(self.errors, "")
 
     def test_empty(self):
         command = DoCommand.DoCommand([], self.todolist, self.out, self.error)

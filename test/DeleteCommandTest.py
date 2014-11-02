@@ -36,6 +36,15 @@ class DeleteCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.output, "  2 Bar p:1\nRemoved: Foo id:1\n")
         self.assertEquals(self.errors, "")
 
+    def test_del1_regex(self):
+        command = DeleteCommand.DeleteCommand(["Foo"], self.todolist, self.out, self.error, lambda p: "n")
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEquals(self.todolist.todo(1).source(), "Bar")
+        self.assertEquals(self.output, "  2 Bar p:1\nRemoved: Foo id:1\n")
+        self.assertEquals(self.errors, "")
+
     def test_del2(self):
         command = DeleteCommand.DeleteCommand(["1"], self.todolist, self.out, self.error, lambda p: "y")
         command.execute()

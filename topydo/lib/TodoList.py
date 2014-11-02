@@ -1,16 +1,16 @@
 # Topydo - A todo.txt client written in Python.
 # Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -20,6 +20,7 @@ A list of todo items.
 
 import re
 
+import Filter
 import Graph
 from PrettyPrinter import pretty_print_list
 import Todo
@@ -50,7 +51,7 @@ class TodoList(object):
 
         self.dirty = False
 
-    def todo(self, p_number):
+    def todo(self, p_identifier):
         """
         The _todos list has the same order as in the backend store (usually
         a todo.txt file. The user refers to the first task as number 1, so use
@@ -58,15 +59,31 @@ class TodoList(object):
         """
         result = None
         try:
-            result = self._todos[p_number - 1]
+            result = self._todos[p_identifier - 1]
         except IndexError:
             raise InvalidTodoException
+        except TypeError:
+            result = self.todo_by_regexp(p_identifier)
+
+        return result
+
+    def todo_by_regexp(self, p_identifier):
+        """
+        Returns the todo that is (uniquely) identified by the given regexp.
+        If the regexp matches more than one item, no result is returned.
+        """
+        result = None
+
+        candidates = Filter.GrepFilter(p_identifier).filter(self._todos)
+
+        if len(candidates) == 1:
+            result = candidates[0]
 
         return result
 
     def todo_by_hash(self, p_hash):
         """
-        Given the hash value of a todo, return the corresponding hash instance.
+        Given the hash value of a todo, return the corresponding instance.
         """
 
         result = None

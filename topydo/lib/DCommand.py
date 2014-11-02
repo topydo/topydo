@@ -38,8 +38,12 @@ class DCommand(Command):
         try:
             self.number = convert_todo_number(self.argument(0))
             self.todo = self.todolist.todo(self.number)
-        except (InvalidCommandArgument, InvalidTodoNumberException, InvalidTodoException):
+        except (InvalidCommandArgument, InvalidTodoException):
             self.todo = None
+        except InvalidTodoNumberException:
+            self.todo = self.todolist.todo(self.argument(0))
+            if self.todo:
+                self.number = self.todolist.number(self.todo)
 
     def _uncompleted_children(self, p_todo):
         return sorted([t for t in self.todolist.children(p_todo) if not t.is_completed()])
