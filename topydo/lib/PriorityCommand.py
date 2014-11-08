@@ -17,7 +17,7 @@
 from Command import *
 from PrettyPrinter import pretty_print
 from TodoList import InvalidTodoException
-from Utils import *
+from Utils import is_valid_priority
 
 class PriorityCommand(Command):
     def __init__(self, p_args, p_todolist,
@@ -33,7 +33,7 @@ class PriorityCommand(Command):
         number = None
         priority = None
         try:
-            number = convert_todo_number(self.argument(0))
+            number = self.argument(0)
             priority = self.argument(1)
             todo = self.todolist.todo(number)
 
@@ -51,7 +51,7 @@ class PriorityCommand(Command):
                 self.error("Invalid priority given.")
         except InvalidCommandArgument:
             self.error(self.usage())
-        except (InvalidTodoNumberException, InvalidTodoException):
+        except (InvalidTodoException):
             if number and priority:
                 self.error( "Invalid todo number given.")
             else:

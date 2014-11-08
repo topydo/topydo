@@ -17,7 +17,6 @@
 from Command import *
 from PrettyPrinter import pretty_print
 from TodoList import InvalidTodoException
-from Utils import *
 
 class DepriCommand(Command):
     def __init__(self, p_args, p_todolist,
@@ -30,11 +29,9 @@ class DepriCommand(Command):
         if not super(DepriCommand, self).execute():
             return False
 
-        number = None
         todo = None
         try:
-            number = convert_todo_number(self.argument(0))
-            todo = self.todolist.todo(number)
+            todo = self.todolist.todo(self.argument(0))
 
             if todo.priority() != None:
                 self.todolist.set_priority(todo, None)
@@ -42,7 +39,7 @@ class DepriCommand(Command):
                 self.out(pretty_print(todo))
         except InvalidCommandArgument:
             self.error(self.usage())
-        except (InvalidTodoNumberException, InvalidTodoException):
+        except (InvalidTodoException):
             if not todo:
                 self.error( "Invalid todo number given.")
             else:

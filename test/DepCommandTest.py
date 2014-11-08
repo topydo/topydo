@@ -100,6 +100,15 @@ class DepCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.output, "")
         self.assertEquals(self.errors, "")
 
+    def test_add9(self):
+        command = DepCommand.DepCommand(["add", "Foo", "to", "4"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.todo(4).has_tag('p', '1'))
+        self.assertEquals(self.output, "")
+        self.assertEquals(self.errors, "")
+
     def rm_helper(self, p_args):
         """
         Helper function that checks the removal of the dependency from todo 1

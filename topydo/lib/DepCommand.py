@@ -19,7 +19,6 @@ from Config import config
 import Filter
 import Sorter
 import TodoList
-from Utils import convert_todo_number, InvalidTodoNumberException
 import View
 
 class DepCommand(Command):
@@ -54,20 +53,20 @@ class DepCommand(Command):
             operator = self.argument(2)
 
             if operator == 'before' or operator == 'partof':
-                from_todo_nr = convert_todo_number(self.argument(3))
-                to_todo_nr = convert_todo_number(self.argument(1))
+                from_todo_nr = self.argument(3)
+                to_todo_nr = self.argument(1)
             elif operator == 'to' or operator == 'after':
-                from_todo_nr = convert_todo_number(self.argument(1))
-                to_todo_nr = convert_todo_number(self.argument(3))
+                from_todo_nr = self.argument(1)
+                to_todo_nr = self.argument(3)
             else:
                 # the operator was omitted, assume 2nd argument is target task
                 # default to 'to' behavior
-                from_todo_nr = convert_todo_number(self.argument(1))
-                to_todo_nr = convert_todo_number(self.argument(2))
+                from_todo_nr = self.argument(1)
+                to_todo_nr = self.argument(2)
 
             from_todo = self.todolist.todo(from_todo_nr)
             to_todo = self.todolist.todo(to_todo_nr)
-        except (InvalidTodoNumberException, TodoList.InvalidTodoException):
+        except (TodoList.InvalidTodoException):
             self.error("Invalid todo number given.")
         except InvalidCommandArgument:
             self.error(self.usage())
@@ -83,12 +82,12 @@ class DepCommand(Command):
             todos = []
             if arg2 == 'to':
                 # dep ls 1 to ...
-                number = convert_todo_number(arg1)
+                number = arg1
                 todo = self.todolist.todo(number)
                 todos = self.todolist.children(todo)
             elif arg1 == 'to':
                 # dep ls ... to 1
-                number = convert_todo_number(arg2)
+                number = arg2
                 todo = self.todolist.todo(number)
                 todos = self.todolist.parents(todo)
             else:
@@ -99,7 +98,7 @@ class DepCommand(Command):
                 instance_filter = Filter.InstanceFilter(todos)
                 view = View.View(sorter, [instance_filter], self.todolist)
                 self.out(view.pretty_print())
-        except (TodoList.InvalidTodoException, InvalidTodoNumberException):
+        except TodoList.InvalidTodoException:
             self.error("Invalid todo number given.")
         except InvalidCommandArgument:
             self.error(self.usage())

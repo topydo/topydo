@@ -17,7 +17,6 @@
 from Command import *
 import TodoList
 from PrettyPrinter import pretty_print
-from Utils import convert_todo_number, InvalidTodoNumberException
 
 class TagCommand(Command):
     def __init__(self, p_args, p_todolist,
@@ -44,17 +43,9 @@ class TagCommand(Command):
         self._process_flags()
 
         try:
-            number = convert_todo_number(self.argument(0))
-            self.todo = self.todolist.todo(number)
+            self.todo = self.todolist.todo(self.argument(0))
             self.tag = self.argument(1)
             self.current_values = self.todo.tag_values(self.tag)
-        except InvalidTodoNumberException:
-            try:
-                self.todo = self.todolist.todo(self.argument(0))
-                self.tag = self.argument(1)
-                self.current_values = self.todo.tag_values(self.tag)
-            except TodoList.InvalidTodoException:
-                self.error("Invalid todo number.")
         except (InvalidCommandArgument, TodoList.InvalidTodoException):
             self.error("Invalid todo number.")
 

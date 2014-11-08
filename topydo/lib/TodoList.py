@@ -59,10 +59,10 @@ class TodoList(object):
         """
         result = None
         try:
-            result = self._todos[p_identifier - 1]
+            result = self._todos[int(p_identifier) - 1]
         except IndexError:
             raise InvalidTodoException
-        except TypeError:
+        except (TypeError, ValueError):
             result = self.todo_by_regexp(p_identifier)
 
         return result

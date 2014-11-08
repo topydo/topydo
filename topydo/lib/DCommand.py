@@ -17,7 +17,6 @@
 from Command import *
 from PrettyPrinter import *
 from TodoList import InvalidTodoException
-from Utils import convert_todo_number, InvalidTodoNumberException
 
 class DCommand(Command):
     """
@@ -31,21 +30,13 @@ class DCommand(Command):
                  p_prompt=lambda a: None):
         super(DCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
 
-        self.number = None
         self.length = len(self.todolist.todos()) # to determine newly activated todos
         self.force = self.argument_shift("--force") or self.argument_shift("-f")
 
         try:
-            self.number = convert_todo_number(self.argument(0))
-            self.todo = self.todolist.todo(self.number)
+            self.todo = self.todolist.todo(self.argument(0))
         except (InvalidCommandArgument, InvalidTodoException):
             self.todo = None
-        except InvalidTodoNumberException:
-            try:
-                self.todo = self.todolist.todo(self.argument(0))
-                self.number = self.todolist.number(self.todo)
-            except InvalidTodoException:
-                self.todo = None
 
     def _uncompleted_children(self, p_todo):
         return sorted([t for t in self.todolist.children(p_todo) if not t.is_completed()])

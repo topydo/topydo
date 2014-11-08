@@ -42,18 +42,6 @@ def date_string_to_date(p_date):
 
     return result
 
-class InvalidTodoNumberException(Exception):
-    pass
-
-def convert_todo_number(p_number):
-    """ Converts a string number to an integer. """
-    try:
-        p_number = int(p_number)
-    except ValueError:
-        raise InvalidTodoNumberException
-
-    return p_number
-
 def is_valid_priority(p_priority):
     return p_priority != None and re.match(r'^[A-Z]$', p_priority) != None
 

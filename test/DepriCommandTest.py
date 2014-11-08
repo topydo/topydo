@@ -45,6 +45,15 @@ class DepriCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.output, "")
         self.assertEquals(self.errors, "")
 
+    def test_set_prio3(self):
+        command = DepriCommand.DepriCommand(["Foo"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEquals(self.todolist.todo(1).priority(), None)
+        self.assertEquals(self.output, "Priority removed.\nFoo\n")
+        self.assertEquals(self.errors, "")
+
     def test_invalid1(self):
         command = DepriCommand.DepriCommand(["99"], self.todolist, self.out, self.error)
         command.execute()

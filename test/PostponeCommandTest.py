@@ -152,6 +152,16 @@ class PostponeCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.output, "")
         self.assertEquals(self.errors, command.usage() + "\n")
 
+    def test_postpone13(self):
+        command = PostponeCommand.PostponeCommand(["Foo", "1w"], self.todolist, self.out, self.error)
+        command.execute()
+
+        due = self.today + timedelta(7)
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEquals(self.output, "  1 Foo due:%s\n" % due.isoformat())
+        self.assertEquals(self.errors, "")
+
     def test_help(self):
         command = PostponeCommand.PostponeCommand(["help"], self.todolist, self.out, self.error)
         command.execute()

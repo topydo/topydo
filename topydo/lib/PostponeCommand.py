@@ -21,7 +21,7 @@ from Config import config
 from PrettyPrinter import *
 from RelativeDate import relative_date_to_date
 from TodoList import InvalidTodoException
-from Utils import convert_todo_number, InvalidTodoNumberException, date_string_to_date
+from Utils import date_string_to_date
 
 class PostponeCommand(Command):
     def __init__(self, p_args, p_todolist,
@@ -57,8 +57,7 @@ class PostponeCommand(Command):
         self._process_flags()
 
         try:
-            number = convert_todo_number(self.argument(0))
-            todo = self.todolist.todo(number)
+            todo = self.todolist.todo(self.argument(0))
             pattern = self.argument(1)
 
             # pdb.set_trace()
@@ -80,7 +79,7 @@ class PostponeCommand(Command):
 
         except InvalidCommandArgument:
             self.error(self.usage())
-        except (InvalidTodoNumberException, InvalidTodoException):
+        except (InvalidTodoException):
             self.error("Invalid todo number given.")
 
     def usage(self):
