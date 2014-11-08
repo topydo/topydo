@@ -48,7 +48,7 @@ class TagCommandTest(CommandTest.CommandTest):
         self.assertTrue(self.todolist.is_dirty())
 
     def test_add_tag3(self):
-        command = TagCommand.TagCommand(["-f", "2", "due", "2014-10-19"], self.todolist, self.out, self.error)
+        command = TagCommand.TagCommand(["-a", "2", "due", "2014-10-19"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertEquals(self.todolist.todo(2).source(), "Bar due:2014-10-22 due:2014-10-19")
@@ -110,6 +110,14 @@ class TagCommandTest(CommandTest.CommandTest):
 
         self.assertFalse(self.todolist.is_dirty())
         self.assertEquals(self.output, " 1. 2014-10-20\n 2. 2014-10-22\n  4 Fnord due:2014-10-20 due:2014-10-22\n")
+        self.assertEquals(self.errors, "")
+
+    def test_set_tag10(self):
+        command = TagCommand.TagCommand(["-f", "4", "due", "2014-10-20"], self.todolist, self.out, self.error, lambda t: "99")
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEquals(self.output, "  4 Fnord due:2014-10-20 due:2014-10-20\n")
         self.assertEquals(self.errors, "")
 
     def test_rm_tag1(self):
@@ -175,6 +183,14 @@ class TagCommandTest(CommandTest.CommandTest):
         self.assertFalse(self.todolist.is_dirty())
         self.assertEquals(self.output, "")
         self.assertEquals(self.errors, "Invalid todo number.\n")
+
+    def test_rm_tag10(self):
+        command = TagCommand.TagCommand(["-f", "4", "due"], self.todolist, self.out, self.error, lambda t: "A")
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEquals(self.output, "  4 Fnord\n")
+        self.assertEquals(self.errors, "")
 
     def test_help(self):
         command = TagCommand.TagCommand(["help"], self.todolist, self.out, self.error)

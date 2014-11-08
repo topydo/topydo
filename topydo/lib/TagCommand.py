@@ -26,15 +26,18 @@ class TagCommand(Command):
         super(TagCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
 
         self.force = False
+        self.force_add = False
         self.todo = None
         self.tag = None
         self.value = None
         self.values = []
 
     def _process_flags(self):
-        flags, args = self.getopt("f")
+        flags, args = self.getopt("af")
         for flag, value in flags:
-            if flag == "-f":
+            if flag == "-a":
+                self.force_add = True
+            elif flag == "-f":
                 self.force = True
 
         self.args = args
@@ -61,15 +64,18 @@ class TagCommand(Command):
         """
         Returns the chosen number of the tag value to process (or "all")
         """
-        for i, value in enumerate(self.current_values):
-            self.out("%2d. %s" % (i + 1, value))
+        answer = "all"
 
-        answer = self.prompt('Which value to remove? Enter number or "all": ')
+        if not self.force:
+            for i, value in enumerate(self.current_values):
+                self.out("%2d. %s" % (i + 1, value))
+
+            answer = self.prompt('Which value to remove? Enter number or "all": ')
 
         if answer != "all":
             try:
                 answer = int(answer) - 1
-                
+
                 if answer < 0 or answer >= len(self.current_values):
                     answer = None
             except ValueError:
@@ -79,7 +85,7 @@ class TagCommand(Command):
 
     def _set_helper(self, p_old_value=""):
         old_src = self.todo.source()
-        self.todo.set_tag(self.tag, self.value, self.force, p_old_value)
+        self.todo.set_tag(self.tag, self.value, self.force_add, p_old_value)
 
         if old_src != self.todo.source():
             self.todolist.set_dirty()
@@ -109,9 +115,12 @@ class TagCommand(Command):
             self._set()
 
     def usage(self):
-        return """Synopsis: tag <NUMBER> <tag> [<value>]"""
+        return """Synopsis: tag [-a] [-f] <NUMBER> <tag> [<value>]"""
 
     def help(self):
         return """Sets the given tag to the given todo number with the given value. If
 the value is omitted, the tag is removed from the todo item.
+
+-a : Do not change the current value of the tag if it exists, but add a new value.
+-f : Force setting/removing all values of the tag. Prevents interaction with the user.
         """
