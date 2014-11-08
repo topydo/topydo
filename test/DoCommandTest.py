@@ -106,8 +106,8 @@ class DoCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
         self.assertFalse(self.todolist.todo(2).is_completed())
 
-    def test_recurrence(self):
-        command = DoCommand.DoCommand(["4"], self.todolist, self.out, self.error)
+    def _recurrence_helper(self, p_flags):
+        command = DoCommand.DoCommand(p_flags, self.todolist, self.out, self.error)
 
         self.assertFalse(self.todolist.todo(4).has_tag('due'))
 
@@ -123,6 +123,15 @@ class DoCommandTest(CommandTest.CommandTest):
         self.assertTrue(self.todolist.todo(4).is_completed())
         self.assertFalse(todo.is_completed())
         self.assertTrue(todo.has_tag('due'))
+
+    def test_recurrence(self):
+        self._recurrence_helper(["4"])
+
+    def test_strict_recurrence1(self):
+        self._recurrence_helper(["-s", "4"])
+
+    def test_strict_recurrence2(self):
+        self._recurrence_helper(["--strict", "4"])
 
     def test_invalid1(self):
         command = DoCommand.DoCommand(["99"], self.todolist, self.out, self.error)

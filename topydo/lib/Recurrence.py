@@ -34,7 +34,7 @@ def _get_due_date(p_todo):
     due = p_todo.due_date()
     return due if (due and due >= date.today()) else date.today()
 
-def advance_recurring_todo(p_todo):
+def _advance_recurring_todo_helper(p_todo, p_offset):
     """
     Given a Todo item, return a new instance of a Todo item with the dates
     shifted according to the recurrence rule.
@@ -48,10 +48,9 @@ def advance_recurring_todo(p_todo):
     if not pattern:
         raise NoRecurrenceException()
 
-    due = _get_due_date(todo)
     length = todo.length()
 
-    new_due = relative_date_to_date(pattern, due)
+    new_due = relative_date_to_date(pattern, p_offset)
     todo.set_tag(config().tag_due(), new_due.isoformat())
 
     if todo.start_date():
@@ -61,3 +60,19 @@ def advance_recurring_todo(p_todo):
     todo.set_creation_date(date.today())
 
     return todo
+
+def advance_recurring_todo(p_todo):
+    return _advance_recurring_todo_helper(p_todo, _get_due_date(p_todo))
+
+def strict_advance_recurring_todo(p_todo):
+    """
+    Given a Todo item, return a new instance of a Todo item with the dates
+    shifted according to the recurrence rule.
+
+    Strict means that the real due date is taken as a offset, not today or a
+    future date to determine the offset.
+
+    When no recurrence tag is present, an exception is raised.
+    """
+    offset = p_todo.due_date() or date.today()
+    return _advance_recurring_todo_helper(p_todo, offset)

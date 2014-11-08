@@ -27,9 +27,23 @@ class DoCommand(DCommand):
                  p_prompt=lambda a: None):
         super(DoCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
 
+        self.strict_recurrence = False
+
+    def get_flags(self):
+        """ Additional flags. """
+        return ("s", ["strict"])
+
+    def process_flag(self, p_opt, p_value):
+        if p_opt == "s" or p_opt == "--strict":
+            self.strict_recurrence = True
+
     def _handle_recurrence(self):
         if self.todo.has_tag('rec'):
-            new_todo = advance_recurring_todo(self.todo)
+            if self.strict_recurrence:
+                new_todo = strict_advance_recurring_todo(self.todo)
+            else:
+                new_todo = advance_recurring_todo(self.todo)
+
             self.todolist.add_todo(new_todo)
             self.out(pretty_print(new_todo, [self.todolist.pp_number()]))
 
@@ -60,7 +74,7 @@ class DoCommand(DCommand):
         self.todolist.set_todo_completed(p_todo)
 
     def usage(self):
-        return """Synopsis: do [--force] <NUMBER>"""
+        return """Synopsis: do [--force] [--strict] <NUMBER>"""
 
     def help(self):
         return """Marks the todo with given number as complete.
@@ -70,4 +84,10 @@ be marked as completed as well. When --force is given, no interaction is
 required and the subitems are not marked completed.
 
 In case the completed todo is recurring, a new todo will be added to the list,
-while the given todo item is marked as complete."""
+while the given todo item is marked as complete. The new date is calculated
+based on the todo item's due date. If the due date is in the past, today's date
+is used to calculate the new recurrence date. Using --strict prevents this,
+then the actual due date of the todo item is used to calculate the new
+recurrence date. Note that a future due date is always used as such to
+calculate the new due date.
+"""
