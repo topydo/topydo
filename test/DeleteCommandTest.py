@@ -64,6 +64,15 @@ class DeleteCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_del4(self):
+        command = DeleteCommand.DeleteCommand(["--force", "1"], self.todolist, self.out, self.error, lambda p: "y")
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEquals(self.todolist.count(), 1) # force won't delete subtasks
+        self.assertEquals(self.output, "  2 Bar p:1\nRemoved: Foo id:1\n")
+        self.assertEquals(self.errors, "")
+
+    def test_del5(self):
         command = DeleteCommand.DeleteCommand(["2"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -72,7 +81,7 @@ class DeleteCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.output, "Removed: Bar p:1\nThe following todo item(s) became active:\nFoo\n")
         self.assertEquals(self.errors, "")
 
-    def test_del5(self):
+    def test_del7(self):
         command = DeleteCommand.DeleteCommand(["99"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -80,7 +89,7 @@ class DeleteCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.output, "")
         self.assertEquals(self.errors, "Invalid todo number given.\n")
 
-    def test_del6(self):
+    def test_del8(self):
         command = DeleteCommand.DeleteCommand(["A"], self.todolist, self.out, self.error)
         command.execute()
 

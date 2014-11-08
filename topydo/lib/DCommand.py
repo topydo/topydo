@@ -30,13 +30,24 @@ class DCommand(Command):
                  p_prompt=lambda a: None):
         super(DCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
 
+        self.force = False
+
+        self.process_flags()
         self.length = len(self.todolist.todos()) # to determine newly activated todos
-        self.force = self.argument_shift("--force") or self.argument_shift("-f")
 
         try:
             self.todo = self.todolist.todo(self.argument(0))
         except (InvalidCommandArgument, InvalidTodoException):
             self.todo = None
+
+    def process_flags(self):
+        opts, args = self.getopt("f", ["force"])
+
+        for opt, value in opts:
+            if opt == "-f" or opt == "--force":
+                self.force = True
+
+        self.args = args
 
     def _uncompleted_children(self, p_todo):
         return sorted([t for t in self.todolist.children(p_todo) if not t.is_completed()])
