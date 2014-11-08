@@ -40,12 +40,23 @@ class DCommand(Command):
         except (InvalidCommandArgument, InvalidTodoException):
             self.todo = None
 
+    def get_flags(self):
+        """ Default implementation of getting specific flags. """
+        return ("", [])
+
+    def process_flag(self):
+        """ Default implementation of processing specific flags. """
+        pass
+
     def process_flags(self):
-        opts, args = self.getopt("f", ["force"])
+        opts, args = self.get_flags()
+        opts, args = self.getopt("f" + opts, ["force"] + args)
 
         for opt, value in opts:
             if opt == "-f" or opt == "--force":
                 self.force = True
+            else:
+                self.process_flag(opt, value)
 
         self.args = args
 
