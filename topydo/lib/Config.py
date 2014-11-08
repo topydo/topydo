@@ -38,7 +38,7 @@ class _Config:
             'archive_filename' : 'done.txt',
 
             # ls
-            'list_limit': '25',
+            'list_limit': '-1',
 
             # tags
             'tag_start': 't',

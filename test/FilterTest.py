@@ -139,7 +139,7 @@ class FilterTest(unittest.TestCase):
 
         filtered_todos = limit_filter.filter(todos)
 
-        self.assertEquals([], filtered_todos)
+        self.assertEquals(todos, filtered_todos)
 
     def test_filter15(self):
         """ Test limit filter. """

@@ -136,7 +136,7 @@ class InstanceFilter(Filter):
 
 class LimitFilter(Filter):
     def __init__(self, p_limit):
-        self.limit = max(0, p_limit)
+        self.limit = p_limit
 
     def filter(self, p_todos):
-        return p_todos[:self.limit]
+        return p_todos[:self.limit] if self.limit >= 0 else p_todos
