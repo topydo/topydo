@@ -28,8 +28,7 @@ class Command(object):
         Sets up the basic properties for executing a subcommand.
 
         p_args is a list of arguments that can be passed to this subcommand.
-        These can be retrieved with argument(), or the existence of an argument
-        using argument_shift().
+        These can be retrieved with argument().
 
         p_todolist is a reference to the todolist instance to operate on.
 
@@ -55,7 +54,7 @@ class Command(object):
         Execute the command. Intercepts the help subsubcommand to show the help
         text.
         """
-        if self.argument_shift("help"):
+        if self.args and self.argument(0) == "help":
             self.error(self.usage() + "\n\n" + self.help())
             return False
 
@@ -70,16 +69,6 @@ class Command(object):
             raise InvalidCommandArgument
 
         return value
-
-    def argument_shift(self, p_expr):
-        """
-        Returns true when the first argument equals the given expression.
-        """
-        if len(self.args) and self.argument(0) == p_expr:
-            del self.args[0]
-            return True
-
-        return False
 
     def getopt(self, p_flags, p_long=[]):
         try:
