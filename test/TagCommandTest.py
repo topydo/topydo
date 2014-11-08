@@ -38,6 +38,15 @@ class TagCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
         self.assertTrue(self.todolist.is_dirty())
 
+    def test_add_tag2(self):
+        command = TagCommand.TagCommand(["Foo", "due", "2014-10-22"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEquals(self.todolist.todo(1).source(), "Foo due:2014-10-22")
+        self.assertEquals(self.output, "  1 Foo due:2014-10-22\n")
+        self.assertEquals(self.errors, "")
+        self.assertTrue(self.todolist.is_dirty())
+
     def test_add_tag3(self):
         command = TagCommand.TagCommand(["-f", "2", "due", "2014-10-19"], self.todolist, self.out, self.error)
         command.execute()

@@ -48,7 +48,14 @@ class TagCommand(Command):
             self.todo = self.todolist.todo(number)
             self.tag = self.argument(1)
             self.current_values = self.todo.tag_values(self.tag)
-        except (InvalidCommandArgument, InvalidTodoNumberException, TodoList.InvalidTodoException):
+        except InvalidTodoNumberException:
+            try:
+                self.todo = self.todolist.todo(self.argument(0))
+                self.tag = self.argument(1)
+                self.current_values = self.todo.tag_values(self.tag)
+            except TodoList.InvalidTodoException:
+                self.error("Invalid todo number.")
+        except (InvalidCommandArgument, TodoList.InvalidTodoException):
             self.error("Invalid todo number.")
 
         try:
