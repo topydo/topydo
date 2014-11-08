@@ -15,44 +15,8 @@ are:
 * Some conveniences when adding new items (e.g. adding creation date and use
   **relative dates**);
 
-How to use
-----------
-
-Install with:
-
-    python setup.py build
-    python setup.py install
-
-You can configure Topydo by adding a .topydo file in your home directory. An
-example configuration file can be found in the bin directory.
-
-Once installed, you can run 'topydo'.
-
-Current status
---------------
-
-The feature set is not yet on-par with todo.txt CLI + todo.txt-tools combined.
-
-Subcommands implemented:
-
-* add
-* append
-* del
-* dep [x]
-* depri
-* do
-* ls
-* lscon
-* lsprj
-* postpone [x]
-* pri
-* sort [xx]
-* tag [x]
-
-Subcommands marked as [x] don't exist in the todo.txt CLI, but were added by
-todo.txt-tools.
-
-Subcommands marked as [xx] are new in Topydo.
+Consult the [wiki][4] for more information about the features and on how to
+use Topydo.
 
 Motivation
 ----------
@@ -84,3 +48,4 @@ unit tests.
 [1]: https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format
 [2]: https://github.com/ginatrapani/todo.txt-cli
 [3]: https://github.com/bram85/todo.txt-tools
+[4]: https://github.com/bram85/topydo/wiki
