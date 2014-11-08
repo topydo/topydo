@@ -26,21 +26,35 @@ class TagCommand(Command):
                  p_prompt=lambda a: None):
         super(TagCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
 
-        self.subsubcommand = None
+        self.force = False
         self.todo = None
         self.tag = None
         self.value = None
         self.values = []
 
+    def _process_flags(self):
+        flags, args = self.getopt("f")
+        for flag, value in flags:
+            if flag == "-f":
+                self.force = True
+
+        self.args = args
+
+    def _process_args(self):
+        self._process_flags()
+
         try:
-            self.subsubcommand = self.argument(0)
-            number = convert_todo_number(self.argument(1))
+            number = convert_todo_number(self.argument(0))
             self.todo = self.todolist.todo(number)
-            self.tag = self.argument(2)
+            self.tag = self.argument(1)
             self.current_values = self.todo.tag_values(self.tag)
-            self.value = self.argument(3)
         except (InvalidCommandArgument, InvalidTodoNumberException, TodoList.InvalidTodoException):
-            pass
+            self.error("Invalid todo number.")
+
+        try:
+            self.value = self.argument(2)
+        except InvalidCommandArgument:
+            self.value = ""
 
     def _print(self):
         self.out(pretty_print(self.todo, [self.todolist.pp_number()]))
@@ -65,63 +79,41 @@ class TagCommand(Command):
 
         return answer
 
-    def _add(self):
-        self._set(True)
-
-    def _set_helper(self, p_force, p_old_value=""):
+    def _set_helper(self, p_old_value=""):
         old_src = self.todo.source()
-        self.todo.set_tag(self.tag, self.value, p_force, p_old_value)
+        self.todo.set_tag(self.tag, self.value, self.force, p_old_value)
 
         if old_src != self.todo.source():
             self.todolist.set_dirty()
 
-    def _set(self, p_force_add=False):
-        if self.value == None:
-            self.error("Missing value for tag.")
-            self.error(self.usage())
+    def _set(self):
+        if len(self.current_values) > 1:
+            answer = self._choose()
+
+            if answer == "all":
+                for value in self.current_values:
+                    self._set_helper(value)
+            elif answer != None and self.value != self.current_values[answer]:
+                self._set_helper(self.current_values[answer])
+
         else:
-            if len(self.current_values) > 1:
-                answer = self._choose()
+            self._set_helper()
 
-                if answer == "all":
-                    for value in self.current_values:
-                        self._set_helper(False, value)
-                elif answer != None and self.value != self.current_values[answer]:
-                    self._set_helper(False, self.current_values[answer])
-
-            else: # if not self.todo.has_tag(self.tag, self.value):
-                self._set_helper(p_force_add)
-
-            self._print()
-
-    def _rm(self):
-        self.value = ""
-        self._set()
+        self._print()
 
     def execute(self):
         if not super(TagCommand, self).execute():
             return False
 
-        dispatch = {
-            "add": self._add,
-            "set": self._set,
-            "del": self._rm,
-            "rm":  self._rm,
-        }
+        self._process_args()
 
-        if self.subsubcommand in dispatch and self.todo and self.tag:
-            dispatch[self.subsubcommand]()
-        elif self.subsubcommand not in dispatch:
-            self.error(self.usage())
-        elif not self.todo:
-            self.error("Invalid todo number.")
+        if self.todo and self.tag:
+            self._set()
 
     def usage(self):
-        return """Synopsis: 
-  tag (add|set) <NUMBER> <tag> <value>
-  tag rm <NUMBER> <tag> [value]"""
+        return """Synopsis: tag <NUMBER> <tag> [<value>]"""
 
     def help(self):
-        return """* add: Add a tag to the given todo.
-* set: Changes a tag of the given todo.
-* rm: Removes a tag from the given todo."""
+        return """Sets the given tag to the given todo number with the given value. If
+the value is omitted, the tag is removed from the todo item.
+        """
