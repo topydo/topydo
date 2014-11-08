@@ -182,11 +182,11 @@ class TodoListTester(unittest.TestCase):
         self.assertTrue(self.todolist.is_dirty())
 
     def test_regex1(self):
-        self.assertFalse(self.todolist.todo("1"))
+        self.assertRaises(TodoList.InvalidTodoException, self.todolist.todo, "1")
 
     def test_regex2(self):
         """ Multiple hits should result in None. """
-        self.assertFalse(self.todolist.todo("Project1"))
+        self.assertRaises(TodoList.InvalidTodoException, self.todolist.todo, "Project1")
 
     def test_regex3(self):
         todo = self.todolist.todo("project2")

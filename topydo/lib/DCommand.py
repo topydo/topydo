@@ -41,9 +41,11 @@ class DCommand(Command):
         except (InvalidCommandArgument, InvalidTodoException):
             self.todo = None
         except InvalidTodoNumberException:
-            self.todo = self.todolist.todo(self.argument(0))
-            if self.todo:
+            try:
+                self.todo = self.todolist.todo(self.argument(0))
                 self.number = self.todolist.number(self.todo)
+            except InvalidTodoException:
+                self.todo = None
 
     def _uncompleted_children(self, p_todo):
         return sorted([t for t in self.todolist.children(p_todo) if not t.is_completed()])
@@ -115,16 +117,16 @@ class DCommand(Command):
         if not super(DCommand, self).execute():
             return False
 
-        if not self.number:
+        if len(self.args) == 0:
             self.error(self.usage())
+        elif not self.todo:
+            self.error("Invalid todo number given.")
         elif self.todo and self.condition():
             old_active = self._active_todos()
             self._process_subtasks()
             self.execute_specific()
             current_active = self._active_todos()
             self._print_unlocked_todos(old_active, current_active)
-        elif not self.todo:
-            self.error("Invalid todo number given.")
         else:
             self.error(self.condition_failed_text())
 

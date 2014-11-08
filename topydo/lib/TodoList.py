@@ -78,6 +78,8 @@ class TodoList(object):
 
         if len(candidates) == 1:
             result = candidates[0]
+        else:
+            raise InvalidTodoException
 
         return result
 

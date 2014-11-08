@@ -86,7 +86,7 @@ class DeleteCommandTest(CommandTest.CommandTest):
 
         self.assertFalse(self.todolist.is_dirty())
         self.assertEquals(self.output, "")
-        self.assertEquals(self.errors, command.usage() + "\n")
+        self.assertEquals(self.errors, "Invalid todo number given.\n")
 
     def test_empty(self):
         command = DeleteCommand.DeleteCommand([], self.todolist, self.out, self.error)
