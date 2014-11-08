@@ -72,7 +72,7 @@ class ListCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_list8(self):
-        command = ListCommand.ListCommand(["-project1"], self.todolist, self.out, self.error)
+        command = ListCommand.ListCommand(["--", "-project1"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -80,7 +80,7 @@ class ListCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_list9(self):
-        command = ListCommand.ListCommand(["-project1", "-Drink"], self.todolist, self.out, self.error)
+        command = ListCommand.ListCommand(["--", "-project1", "-Drink"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -119,6 +119,14 @@ class ListCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
         config("")
+
+    def test_list13(self):
+        command = ListCommand.ListCommand(["-x", "--", "-@Context1 +Project2"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+        self.assertEquals(self.output, "  1 (C) Foo @Context2 Not@Context +Project1 Not+Project\n  3 (C) Baz @Context1 +Project1 key:value id:1\n  4 (C) Drink beer @ home\n  5 (C) 13 + 29 = 42\n")
+        self.assertEquals(self.errors, "")
 
     def test_help(self):
         command = ListCommand.ListCommand(["help"], self.todolist, self.out, self.error)
