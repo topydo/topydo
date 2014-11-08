@@ -113,7 +113,7 @@ class CLIApplication(object):
         try:
             subcommand = sys.argv[1]
         except IndexError:
-            subcommand = config().default_action()
+            subcommand = config().default_command()
 
         subcommand_map = {
           'add': AddCommand,
@@ -141,7 +141,7 @@ class CLIApplication(object):
 
         args = arguments()
         if not subcommand in subcommand_map:
-            subcommand = config().default_action()
+            subcommand = config().default_command()
             args = arguments(1)
 
         command = subcommand_map[subcommand](args, self.todolist,

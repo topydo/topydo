@@ -20,10 +20,10 @@ from Config import config
 
 class ConfigTest(unittest.TestCase):
     def test_config1(self):
-        self.assertEquals(config("data/config1").default_action(), 'do')
+        self.assertEquals(config("data/config1").default_command(), 'do')
 
     def test_config2(self):
-        self.assertNotEquals(config("").default_action(), 'do')
+        self.assertNotEquals(config("").default_command(), 'do')
 
     def test_config3(self):
         self.assertTrue(config("data/config2").ignore_weekends())

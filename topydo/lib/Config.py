@@ -27,18 +27,18 @@ class ConfigError(Exception):
 
 class _Config:
     def __init__(self, p_path=None):
-        self.sections = ['topydo', 'tags', 'sort', 'paths']
+        self.sections = ['topydo', 'tags', 'sort', 'ls']
 
         self.defaults = {
             # topydo
-            'default_action': 'ls',
+            'default_command': 'ls',
             'colors': '1',
             'highlight_projects_contexts': '1',
-            'list_limit': '25',
-
-            # paths
             'filename' : 'todo.txt',
             'archive_filename' : 'done.txt',
+
+            # ls
+            'list_limit': '25',
 
             # tags
             'tag_start': 't',
@@ -68,8 +68,8 @@ class _Config:
     def _home_config_path(self):
         return os.path.join(os.getenv('HOME'), '.topydo')
 
-    def default_action(self):
-        return self.cp.get('topydo', 'default_action')
+    def default_command(self):
+        return self.cp.get('topydo', 'default_command')
 
     def colors(self):
         try:
@@ -84,14 +84,14 @@ class _Config:
             return self.defaults['highlight_projects_contexts'] == '1'
 
     def todotxt(self):
-        return self.cp.get('paths', 'filename')
+        return self.cp.get('topydo', 'filename')
 
     def archive(self):
-        return self.cp.get('paths', 'archive_filename')
+        return self.cp.get('topydo', 'archive_filename')
 
     def list_limit(self):
         try:
-            return self.cp.getint('topydo', 'list_limit')
+            return self.cp.getint('ls', 'list_limit')
         except ValueError:
             return int(self.defaults['list_limit'])
 
