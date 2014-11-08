@@ -73,7 +73,8 @@ class Command(object):
     def getopt(self, p_flags, p_long=[]):
         try:
             result = getopt.getopt(self.args, p_flags, p_long)
-        except getopt.GetoptError:
+        except getopt.GetoptError as e:
+            self.error(str(e))
             result = ([],self.args)
 
         return result
