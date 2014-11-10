@@ -23,16 +23,7 @@ from RelativeDate import relative_date_to_date
 import Todo
 
 class NoRecurrenceException(Exception):
-  pass
-
-def _get_due_date(p_todo):
-    """
-    Gets the due date of a todo as a date object. Defaults to today when the
-    todo has no due date, or when the due date was in the past.
-    """
-
-    due = p_todo.due_date()
-    return due if (due and due >= date.today()) else date.today()
+    pass
 
 def _advance_recurring_todo_helper(p_todo, p_offset):
     """
@@ -62,7 +53,7 @@ def _advance_recurring_todo_helper(p_todo, p_offset):
     return todo
 
 def advance_recurring_todo(p_todo):
-    return _advance_recurring_todo_helper(p_todo, _get_due_date(p_todo))
+    return _advance_recurring_todo_helper(p_todo, date.today())
 
 def strict_advance_recurring_todo(p_todo):
     """

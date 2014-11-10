@@ -21,14 +21,14 @@ from Config import config
 from Recurrence import advance_recurring_todo, strict_advance_recurring_todo, NoRecurrenceException
 import Todo
 
-class RelativeDateTester(unittest.TestCase):
+class RecurrenceTest(unittest.TestCase):
     def setUp(self):
         self.todo = Todo.Todo("Test rec:1w")
 
     def test_duedate1(self):
         """ Where due date is in the future. """
         future = date.today() + timedelta(1)
-        new_due = date.today() + timedelta(8)
+        new_due = date.today() + timedelta(7)
 
         self.todo.set_tag(config().tag_due(), future.isoformat())
         new_todo = advance_recurring_todo(self.todo)
