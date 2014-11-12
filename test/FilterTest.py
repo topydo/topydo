@@ -16,6 +16,7 @@
 
 """ Tests for the filter functionality. """
 
+from datetime import date, timedelta
 import unittest
 
 import Filter
@@ -284,3 +285,51 @@ class FilterTest(unittest.TestCase):
 
         self.assertEquals(todolist_to_string(filtered_todos),
             todolist_to_string(reference))
+
+class OrdinalTagFilterTest(unittest.TestCase):
+    def setUp(self):
+        today = date.today()
+        tomorrow = today + timedelta(1)
+
+        self.today = today.isoformat()
+        self.tomorrow = tomorrow.isoformat()
+
+        self.todos = [
+            Todo.Todo("Foo due:%s" % self.today),
+            Todo.Todo("Bar due:%s" % self.tomorrow),
+            Todo.Todo("Baz due:nonsense"),
+            Todo.Todo("Fnord due:2014-10-32")
+        ]
+
+    def test_filter1(self):
+        otf = Filter.OrdinalTagFilter('due:today')
+
+        result = otf.filter(self.todos)
+
+        self.assertEquals(len(result), 1)
+        self.assertEquals(str(result[0]), "Foo due:%s" % self.today)
+
+    def test_filter2(self):
+        otf = Filter.OrdinalTagFilter('due:=today')
+
+        result = otf.filter(self.todos)
+
+        self.assertEquals(len(result), 1)
+        self.assertEquals(str(result[0]), "Foo due:%s" % self.today)
+
+    def test_filter3(self):
+        otf = Filter.OrdinalTagFilter('due:>today')
+
+        result = otf.filter(self.todos)
+
+        self.assertEquals(len(result), 1)
+        self.assertEquals(str(result[0]), "Bar due:%s" % self.tomorrow)
+
+    def test_filter4(self):
+        otf = Filter.OrdinalTagFilter('due:<1w')
+
+        result = otf.filter(self.todos)
+
+        self.assertEquals(len(result), 2)
+        self.assertEquals(str(result[0]), "Foo due:%s" % self.today)
+        self.assertEquals(str(result[1]), "Bar due:%s" % self.tomorrow)
