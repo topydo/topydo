@@ -88,7 +88,7 @@ class ListCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_list10(self):
-        command = ListCommand.ListCommand(["text1", "2"], self.todolist, self.out, self.errors)
+        command = ListCommand.ListCommand(["text1", "2"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -98,7 +98,7 @@ class ListCommandTest(CommandTest.CommandTest):
     def test_list11(self):
         config("data/listcommand.conf")
 
-        command = ListCommand.ListCommand(["project"], self.todolist, self.out, self.errors)
+        command = ListCommand.ListCommand(["project"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -111,7 +111,7 @@ class ListCommandTest(CommandTest.CommandTest):
     def test_list12(self):
         config("data/listcommand.conf")
 
-        command = ListCommand.ListCommand(["-x", "project"], self.todolist, self.out, self.errors)
+        command = ListCommand.ListCommand(["-x", "project"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
