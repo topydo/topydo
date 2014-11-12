@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import re
+
 import Command
 from Config import config
 import Filter
@@ -44,21 +46,26 @@ class ListCommand(Command.Command):
     def _filters(self):
         filters = []
 
-        def grep_filters():
+        def arg_filters():
+            result = []
             for arg in self.args:
-                if len(arg) > 1 and arg[0] == '-':
+                if re.match(Filter.ORDINAL_TAG_MATCH, arg):
+                    argfilter = Filter.OrdinalTagFilter(arg)
+                elif len(arg) > 1 and arg[0] == '-':
                     # when a word starts with -, exclude it
-                    grep = Filter.NegationFilter(Filter.GrepFilter(arg[1:]))
+                    argfilter = Filter.NegationFilter(Filter.GrepFilter(arg[1:]))
                 else:
-                    grep = Filter.GrepFilter(arg)
+                    argfilter = Filter.GrepFilter(arg)
 
-                filters.append(grep)
+                result.append(argfilter)
+
+            return result
 
         if not self.show_all:
             filters.append(Filter.DependencyFilter(self.todolist))
             filters.append(Filter.RelevanceFilter())
 
-        grep_filters()
+        filters += arg_filters()
 
         if not self.show_all:
             filters.append(Filter.LimitFilter(config().list_limit()))
