@@ -23,6 +23,10 @@ class ListCommandTest(CommandTest.CommandTest):
     def setUp(self):
         self.todolist = TestFacilities.load_file_to_todolist("data/ListCommandTest.txt")
 
+    def tearDown(self):
+        # restore to the default configuration in case a custom one was set
+        config("")
+
     def test_list1(self):
         command = ListCommand.ListCommand([""], self.todolist, self.out, self.error)
         command.execute()
@@ -105,9 +109,6 @@ class ListCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.output, "  1 (C) Foo @Context2 Not@Context +Project1 Not+Project\n")
         self.assertEquals(self.errors, "")
 
-        # restore
-        config("")
-
     def test_list12(self):
         config("data/listcommand.conf")
 
@@ -117,8 +118,6 @@ class ListCommandTest(CommandTest.CommandTest):
         self.assertFalse(self.todolist.is_dirty())
         self.assertEquals(self.output, "  1 (C) Foo @Context2 Not@Context +Project1 Not+Project\n  3 (C) Baz @Context1 +Project1 key:value id:1\n  2 (D) Bar @Context1 +Project2 p:1\n")
         self.assertEquals(self.errors, "")
-
-        config("")
 
     def test_list13(self):
         command = ListCommand.ListCommand(["-x", "--", "-@Context1 +Project2"], self.todolist, self.out, self.error)
