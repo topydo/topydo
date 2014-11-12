@@ -42,9 +42,9 @@ class View(object):
         for _filter in self._filters:
             self._viewdata = _filter.filter(self._viewdata)
 
-    def pretty_print(self):
+    def pretty_print(self, p_pp_filters=[]):
         """ Pretty prints the view. """
-        pp_filters = [self._todolist.pp_number(), pp_color];
+        pp_filters = [self._todolist.pp_number(), pp_color] + p_pp_filters;
         return '\n'.join(pretty_print_list(self._viewdata, pp_filters))
 
     def __str__(self):
