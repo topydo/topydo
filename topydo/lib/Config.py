@@ -38,6 +38,7 @@ class _Config:
             'archive_filename' : 'done.txt',
 
             # ls
+            'indent': 0,
             'list_limit': '-1',
 
             # tags
@@ -94,6 +95,12 @@ class _Config:
             return self.cp.getint('ls', 'list_limit')
         except ValueError:
             return int(self.defaults['list_limit'])
+
+    def list_indent(self):
+        try:
+            return self.cp.getint('ls', 'indent')
+        except ValueError:
+            return int(self.defaults['indent'])
 
     def sort_string(self):
         return self.cp.get('sort', 'sort_string')

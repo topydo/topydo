@@ -17,6 +17,7 @@
 import Command
 from Config import config
 import Filter
+from PrettyPrinter import pp_indent
 import Sorter
 
 class ListCommand(Command.Command):
@@ -39,7 +40,6 @@ class ListCommand(Command.Command):
                 self.sort_expression = a
 
         self.args = args
-
 
     def _filters(self):
         filters = []
@@ -74,7 +74,8 @@ class ListCommand(Command.Command):
         sorter = Sorter.Sorter(self.sort_expression)
         filters = self._filters()
 
-        self.out(self.todolist.view(sorter, filters).pretty_print())
+        pp_filters = [pp_indent(config().list_indent())]
+        self.out(self.todolist.view(sorter, filters).pretty_print(pp_filters))
 
     def usage(self):
         return """Synopsis: ls [-x] [-s <sort_expression>] [expression]"""
