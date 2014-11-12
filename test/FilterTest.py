@@ -333,3 +333,12 @@ class OrdinalTagFilterTest(unittest.TestCase):
         self.assertEquals(len(result), 2)
         self.assertEquals(str(result[0]), "Foo due:%s" % self.today)
         self.assertEquals(str(result[1]), "Bar due:%s" % self.tomorrow)
+
+    def test_filter5(self):
+        otf = Filter.OrdinalTagFilter('due:!today')
+
+        result = otf.filter(self.todos)
+
+        self.assertEquals(len(result), 1)
+        self.assertEquals(str(result[0]), "Bar due:%s" % self.tomorrow)
+
