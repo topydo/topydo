@@ -14,6 +14,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from datetime import date
+import re
+
+from Config import config
+from RelativeDate import relative_date_to_date
+from Utils import date_string_to_date
+
 class Filter(object):
     def filter(self, p_todos):
         """
@@ -140,3 +147,46 @@ class LimitFilter(Filter):
 
     def filter(self, p_todos):
         return p_todos[:self.limit] if self.limit >= 0 else p_todos
+
+ORDINAL_TAG_MATCH = r"(?P<key>[^:]*):(?P<operator><=?|=|>=?)?(?P<value>\S*)"
+
+class OrdinalTagFilter(Filter):
+    def __init__(self, p_expression):
+        match = re.match(ORDINAL_TAG_MATCH, p_expression)
+        if match:
+            self.key = match.group('key')
+            self.operator = match.group('operator') or '='
+            self.value = match.group('value')
+
+    def match(self, p_todo):
+        if not self.key or not p_todo.has_tag(self.key):
+            return False
+
+        if self.key == config().tag_due() or self.key == config().tag_start():
+            operand1 = date_string_to_date(p_todo.tag_value(self.key))
+            operand2 = relative_date_to_date(self.value)
+
+            if not operand2:
+                operand2 = date_string_to_date(self.value)
+
+            if not operand1 or not operand2:
+                return False
+        else:
+            try:
+                operand1 = int(p_todo.tag_value(self.key))
+                operand2 = int(self.value)
+            except ValueError:
+                return False
+
+        if self.operator == '<':
+            return operand1 < operand2
+        elif self.operator == '<=':
+            return operand1 <= operand2
+        elif self.operator == '=':
+            return operand1 == operand2
+        elif self.operator == '>=':
+            return operand1 >= operand2
+        elif self.operator == '>':
+            return operand1 > operand2
+
+        return False

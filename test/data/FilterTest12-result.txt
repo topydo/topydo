@@ -1,0 +1,2 @@
+Tag with some value:8
+Tag with some other value:16
