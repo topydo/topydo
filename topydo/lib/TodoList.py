@@ -46,9 +46,7 @@ class TodoList(object):
         self._todos = []
         self._depgraph = Graph.DirectedGraph()
 
-        for string in p_todostrings:
-            self.add(string)
-
+        self.add_list(p_todostrings)
         self.dirty = False
 
     def todo(self, p_identifier):
@@ -130,12 +128,15 @@ class TodoList(object):
 
     def add(self, p_src):
         """ Given a todo string, parse it and put it to the end of the list. """
-        todo = None
-        if re.search(r'\S', p_src):
-            todo = Todo.Todo(p_src)
-            self.add_todo(todo)
+        todos = self.add_list([p_src])
 
-        return todo
+        return todos[0] if len(todos) else None
+
+    def add_list(self, p_srcs):
+        todos = [Todo.Todo(src) for src in p_srcs if re.search(r'\S', src)]
+        self.add_todos(todos)
+
+        return todos
 
     def add_todo(self, p_todo):
         """
@@ -154,9 +155,13 @@ class TodoList(object):
 
         Then there will be an edge 1 --> 2 with ID 4.
         """
-        self._todos.append(p_todo)
+        self.add_todos([p_todo])
 
-        self._maintain_dep_graph(p_todo)
+    def add_todos(self, p_todos):
+        for todo in p_todos:
+            self._todos.append(todo)
+            self._maintain_dep_graph(todo)
+
         self._update_parent_cache()
         self.dirty = True
 
