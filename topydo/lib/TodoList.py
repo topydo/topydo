@@ -44,6 +44,7 @@ class TodoList(object):
         The string will be parsed.
         """
         self._todos = []
+        self._tododict = {} # hash(todo) to todo lookup
         self._depgraph = Graph.DirectedGraph()
 
         self.add_list(p_todostrings)
@@ -79,18 +80,6 @@ class TodoList(object):
         else:
             raise InvalidTodoException
 
-        return result
-
-    def todo_by_hash(self, p_hash):
-        """
-        Given the hash value of a todo, return the corresponding instance.
-        """
-
-        result = None
-        for todo in self._todos:
-            if hash(todo) == p_hash:
-                result = todo
-                break
         return result
 
     def todo_by_dep_id(self, p_dep_id):
@@ -160,6 +149,7 @@ class TodoList(object):
     def add_todos(self, p_todos):
         for todo in p_todos:
             self._todos.append(todo)
+            self._tododict[hash(todo)] = todo
             self._maintain_dep_graph(todo)
 
         self._update_parent_cache()
@@ -280,7 +270,7 @@ class TodoList(object):
         given todo.
         """
         parents = self._depgraph.incoming_neighbors(hash(p_todo), not p_only_direct)
-        return [self.todo_by_hash(parent) for parent in parents]
+        return [self._tododict[parent] for parent in parents]
 
     def children(self, p_todo, p_only_direct=False):
         """
@@ -289,7 +279,7 @@ class TodoList(object):
         """
         children = \
             self._depgraph.outgoing_neighbors(hash(p_todo), not p_only_direct)
-        return [self.todo_by_hash(child) for child in children]
+        return [self._tododict[child] for child in children]
 
     def clean_dependencies(self):
         """
