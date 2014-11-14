@@ -18,6 +18,14 @@ import Command
 
 class ArchiveCommand(Command.Command):
     def __init__(self, p_todolist, p_archive_list):
+        """
+        Constructor.
+
+        p_todolist where all completed items will be moved from.
+        p_archive_list is the list where the items go to. This can be a
+        TodoListBase class which does no dependency checking, so a better
+        choice for huge done.txt files.
+        """
         super(ArchiveCommand, self).__init__([], p_todolist)
         self.archive = p_archive_list
 

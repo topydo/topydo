@@ -82,6 +82,7 @@ from topydo.lib.SortCommand import SortCommand
 from topydo.lib.TagCommand import TagCommand
 from topydo.lib import TodoFile
 from topydo.lib import TodoList
+from topydo.lib import TodoListBase
 from topydo.lib.Utils import escape_ansi
 
 class CLIApplication(object):
@@ -96,7 +97,7 @@ class CLIApplication(object):
         (defaults to done.txt).
         """
         archive_file = TodoFile.TodoFile(config().archive())
-        archive = TodoList.TodoList(archive_file.read())
+        archive = TodoListBase.TodoListBase(archive_file.read())
 
         if archive:
             command = ArchiveCommand(self.todolist, archive)
