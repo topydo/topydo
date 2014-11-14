@@ -51,6 +51,8 @@ class _Config:
             'ignore_weekends': '1',
         }
 
+        self.config = {}
+
         self.cp = ConfigParser.SafeConfigParser(self.defaults)
 
         files = ["/etc/topydo.conf", self._home_config_path(), ".topydo", "topydo.conf"]
@@ -111,14 +113,22 @@ class _Config:
         except ValueError:
             return self.defaults['ignore_weekends'] == '1'
 
+    def _get_tag(self, p_tag):
+        try:
+            return self.config[p_tag]
+        except KeyError:
+            value = self.cp.get('tags', p_tag)
+            self.config[p_tag] = value
+            return value
+
     def tag_due(self):
-        return self.cp.get('tags', 'tag_due')
+        return self._get_tag('tag_due')
 
     def tag_start(self):
-        return self.cp.get('tags', 'tag_start')
+        return self._get_tag('tag_start')
 
     def tag_star(self):
-        return self.cp.get('tags', 'tag_star')
+        return self._get_tag('tag_star')
 
 def config(p_path=None):
     """
