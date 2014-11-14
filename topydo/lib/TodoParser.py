@@ -23,6 +23,13 @@ import re
 
 import Utils
 
+_date_match = r'\d{4}-\d{2}-\d{2}'
+_completed_head_match = re.compile(r'x ((?P<completionDate>' + _date_match + ') )' + '((?P<creationDate>' + _date_match + ') )?(?P<rest>.*)')
+_normal_head_match = re.compile(r'(\((?P<priority>[A-Z])\) )?' + '((?P<creationDate>' + _date_match + ') )?(?P<rest>.*)')
+_tag_match = re.compile('(?P<key>[^:]*):(?P<value>.*)')
+_project_match = re.compile(r'\+(\S*\w)')
+_context_match = re.compile(r'@(\S*\w)')
+
 def parse_line(p_string):
     """
     Parses a single line as can be encountered in a todo.txt file.
@@ -45,18 +52,8 @@ def parse_line(p_string):
         'tags': []
     }
 
-    date = r'\d{4}-\d{2}-\d{2}'
-    completed_head = re.match(
-        r'x ((?P<completionDate>' + date + ') )' +
-        '((?P<creationDate>' + date + ') )?(?P<rest>.*)',
-        p_string
-    )
-
-    normal_head = re.match(
-        r'(\((?P<priority>[A-Z])\) )?' +
-        '((?P<creationDate>' + date + ') )?(?P<rest>.*)',
-        p_string
-    )
+    completed_head = _completed_head_match.match(p_string)
+    normal_head = _normal_head_match.match(p_string)
 
     rest = p_string
 
@@ -79,15 +76,15 @@ def parse_line(p_string):
         rest = normal_head.group('rest')
 
     for word in rest.split():
-        project = re.match(r'\+(\S*\w)', word)
+        project = _project_match.match(word)
         if project:
             result['projects'].append(project.group(1))
 
-        context = re.match(r'@(\S*\w)', word)
+        context = _context_match.match(word)
         if context:
             result['contexts'].append(context.group(1))
 
-        tag = re.match('(?P<key>[^:]*):(?P<value>.*)', word)
+        tag = _tag_match.match(word)
         if tag:
             result['tags'].append((tag.group('key'), tag.group('value')))
             continue
