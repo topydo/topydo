@@ -23,6 +23,7 @@ from Config import config
 import Command
 from PrettyPrinter import pretty_print
 from RelativeDate import relative_date_to_date
+from TodoListBase import InvalidTodoException
 import TodoList
 
 class AddCommand(Command.Command):
@@ -70,7 +71,7 @@ class AddCommand(Command.Command):
                         self.todolist.add_dependency(dep, self.todo)
                 except ValueError:
                     continue
-                except TodoList.InvalidTodoException:
+                except InvalidTodoException:
                     pass
 
                 self.todo.remove_tag(p_tag, raw_value)

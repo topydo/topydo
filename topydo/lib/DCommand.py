@@ -16,7 +16,7 @@
 
 from Command import *
 from PrettyPrinter import *
-from TodoList import InvalidTodoException
+from TodoListBase import InvalidTodoException
 
 class DCommand(Command):
     """

@@ -24,12 +24,10 @@ import Filter
 import Graph
 from PrettyPrinter import pretty_print_list
 import Todo
+import TodoListBase
 import View
 
-class InvalidTodoException(Exception):
-    pass
-
-class TodoList(object):
+class TodoList(TodoListBase.TodoListBase):
     """
     Provides operations for a todo list, such as adding items, removing them,
     etc.
@@ -49,38 +47,6 @@ class TodoList(object):
 
         self.add_list(p_todostrings)
         self.dirty = False
-
-    def todo(self, p_identifier):
-        """
-        The _todos list has the same order as in the backend store (usually
-        a todo.txt file. The user refers to the first task as number 1, so use
-        index 0, etc.
-        """
-        result = None
-        try:
-            result = self._todos[int(p_identifier) - 1]
-        except IndexError:
-            raise InvalidTodoException
-        except (TypeError, ValueError):
-            result = self.todo_by_regexp(p_identifier)
-
-        return result
-
-    def todo_by_regexp(self, p_identifier):
-        """
-        Returns the todo that is (uniquely) identified by the given regexp.
-        If the regexp matches more than one item, no result is returned.
-        """
-        result = None
-
-        candidates = Filter.GrepFilter(p_identifier).filter(self._todos)
-
-        if len(candidates) == 1:
-            result = candidates[0]
-        else:
-            raise InvalidTodoException
-
-        return result
 
     def todo_by_dep_id(self, p_dep_id):
         """
@@ -115,37 +81,6 @@ class TodoList(object):
             if parent:
                 self._depgraph.add_edge(hash(parent), hash(p_todo), child)
 
-    def add(self, p_src):
-        """ Given a todo string, parse it and put it to the end of the list. """
-        todos = self.add_list([p_src])
-
-        return todos[0] if len(todos) else None
-
-    def add_list(self, p_srcs):
-        todos = [Todo.Todo(src) for src in p_srcs if re.search(r'\S', src)]
-        self.add_todos(todos)
-
-        return todos
-
-    def add_todo(self, p_todo):
-        """
-        Add an Todo object to the list.
-
-        Also maintains the dependency graph to track the dependencies between
-        tasks.
-
-        The node ids are the todo numbers.
-        The edge ids are the numbers denoted by id: and p: tags.
-
-        For example:
-
-        (C) Parent task id:4
-        (B) Child task p:4
-
-        Then there will be an edge 1 --> 2 with ID 4.
-        """
-        self.add_todos([p_todo])
-
     def add_todos(self, p_todos):
         for todo in p_todos:
             self._todos.append(todo)
@@ -168,59 +103,6 @@ class TodoList(object):
         del self._todos[number - 1]
 
         self.dirty = True
-
-    def erase(self):
-        """
-        Erases all todos from the list.
-        Not done with self.delete to prevent dependencies disappearing from the
-        todo items.
-        """
-
-        self._todos = []
-        self.dirty = True
-
-    def count(self):
-        """ Returns the number of todos on this list. """
-        return len(self._todos)
-
-    def append(self, p_todo, p_string):
-        """
-        Appends a text to the todo, specified by its number.
-        The todo will be parsed again, such that tags and projects in de
-        appended string are processed.
-        """
-        if len(p_string) > 0:
-            new_text = p_todo.source() + ' ' + p_string
-            p_todo.set_source_text(new_text)
-            self.dirty = True
-
-    def projects(self):
-        """ Returns a set of all projects in this list. """
-        result = set()
-        for todo in self._todos:
-            projects = todo.projects()
-            result = result.union(projects)
-
-        return result
-
-    def contexts(self):
-        """ Returns a set of all contexts in this list. """
-        result = set()
-        for todo in self._todos:
-            contexts = todo.contexts()
-            result = result.union(contexts)
-
-        return result
-
-    def view(self, p_sorter, p_filters):
-        """
-        Constructs a view of the todo list.
-
-        A view is a sorted and filtered todo list, where the properties are
-        defined by the end user. Todos is this list should not be modified,
-        modifications should occur through this class.
-        """
-        return View.View(p_sorter, p_filters, self)
 
     def add_dependency(self, p_from_todo, p_to_todo):
         """ Adds a dependency from task 1 to task 2. """
@@ -311,38 +193,4 @@ class TodoList(object):
 
         for todo in self._todos:
             todo.attributes['parents'] = self.parents(todo)
-
-    def is_dirty(self):
-        return self.dirty
-
-    def set_dirty(self):
-        self.dirty = True
-
-    def todos(self):
-        return self._todos
-
-    def set_todo_completed(self, p_todo):
-        p_todo.set_completed()
-        self.dirty = True
-
-    def set_priority(self, p_todo, p_priority):
-        if p_todo.priority() != p_priority:
-            p_todo.set_priority(p_priority)
-            self.dirty = True
-
-    def number(self, p_todo):
-        try:
-            return self._todos.index(p_todo) + 1
-        except ValueError:
-            raise InvalidTodoException
-
-    def pp_number(self):
-        """
-        A filter for the pretty printer to append the todo number to the
-        printed todo.
-        """
-        return lambda p_todo_str, p_todo: "%3d %s" % (self.number(p_todo), p_todo_str)
-
-    def __str__(self):
-        return '\n'.join(pretty_print_list(self._todos))
 

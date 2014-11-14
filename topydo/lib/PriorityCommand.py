@@ -16,7 +16,7 @@
 
 from Command import *
 from PrettyPrinter import pretty_print
-from TodoList import InvalidTodoException
+from TodoListBase import InvalidTodoException
 from Utils import is_valid_priority
 
 class PriorityCommand(Command):

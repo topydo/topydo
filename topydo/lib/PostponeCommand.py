@@ -20,7 +20,7 @@ from Command import *
 from Config import config
 from PrettyPrinter import *
 from RelativeDate import relative_date_to_date
-from TodoList import InvalidTodoException
+from TodoListBase import InvalidTodoException
 from Utils import date_string_to_date
 
 class PostponeCommand(Command):

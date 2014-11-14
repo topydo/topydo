@@ -16,7 +16,7 @@
 
 from Command import *
 from PrettyPrinter import pretty_print
-import TodoList
+from TodoListBase import InvalidTodoException
 
 class AppendCommand(Command):
     def __init__(self, p_args, p_todolist,
@@ -41,7 +41,7 @@ class AppendCommand(Command):
                 self.error(self.usage())
         except InvalidCommandArgument:
             self.error(self.usage())
-        except TodoList.InvalidTodoException:
+        except InvalidTodoException:
             self.error("Invalid todo number given.")
 
     def usage(self):

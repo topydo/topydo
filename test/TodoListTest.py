@@ -21,6 +21,7 @@ import unittest
 
 import Todo
 import TodoFile
+from TodoListBase import InvalidTodoException
 import TodoList
 
 class TodoListTester(unittest.TestCase):
@@ -94,7 +95,7 @@ class TodoListTester(unittest.TestCase):
             "(C) Baz @Context1 +Project1 key:value")
         self.assertEquals(self.todolist.count(), count - 1)
         self.assertTrue(self.todolist.is_dirty())
-        self.assertRaises(TodoList.InvalidTodoException, self.todolist.number, todo)
+        self.assertRaises(InvalidTodoException, self.todolist.number, todo)
 
     def test_append1(self):
         todo = self.todolist.todo(3)
@@ -125,7 +126,7 @@ class TodoListTester(unittest.TestCase):
     def test_todo(self):
         count = self.todolist.count()
 
-        self.assertRaises(TodoList.InvalidTodoException, self.todolist.todo, count + 100)
+        self.assertRaises(InvalidTodoException, self.todolist.todo, count + 100)
         self.assertFalse(self.todolist.is_dirty())
 
     def test_string(self):
@@ -154,7 +155,7 @@ class TodoListTester(unittest.TestCase):
 
     def test_todo_number2(self):
         todo = Todo.Todo("Non-existent")
-        self.assertRaises(TodoList.InvalidTodoException, self.todolist.number, todo)
+        self.assertRaises(InvalidTodoException, self.todolist.number, todo)
 
     def test_todo_complete(self):
         todo = self.todolist.todo(1)
@@ -183,7 +184,7 @@ class TodoListTester(unittest.TestCase):
 
     def test_regex1(self):
         """ Multiple hits should result in None. """
-        self.assertRaises(TodoList.InvalidTodoException, self.todolist.todo, "Project1")
+        self.assertRaises(InvalidTodoException, self.todolist.todo, "Project1")
 
     def test_regex3(self):
         todo = self.todolist.todo("project2")

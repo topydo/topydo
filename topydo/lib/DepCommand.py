@@ -18,7 +18,7 @@ from Command import *
 from Config import config
 import Filter
 import Sorter
-import TodoList
+from TodoListBase import InvalidTodoException
 import View
 
 class DepCommand(Command):
@@ -66,7 +66,7 @@ class DepCommand(Command):
 
             from_todo = self.todolist.todo(from_todo_nr)
             to_todo = self.todolist.todo(to_todo_nr)
-        except (TodoList.InvalidTodoException):
+        except (InvalidTodoException):
             self.error("Invalid todo number given.")
         except InvalidCommandArgument:
             self.error(self.usage())
@@ -98,7 +98,7 @@ class DepCommand(Command):
                 instance_filter = Filter.InstanceFilter(todos)
                 view = View.View(sorter, [instance_filter], self.todolist)
                 self.out(view.pretty_print())
-        except TodoList.InvalidTodoException:
+        except InvalidTodoException:
             self.error("Invalid todo number given.")
         except InvalidCommandArgument:
             self.error(self.usage())

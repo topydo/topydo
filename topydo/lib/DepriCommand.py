@@ -16,7 +16,7 @@
 
 from Command import *
 from PrettyPrinter import pretty_print
-from TodoList import InvalidTodoException
+from TodoListBase import InvalidTodoException
 
 class DepriCommand(Command):
     def __init__(self, p_args, p_todolist,

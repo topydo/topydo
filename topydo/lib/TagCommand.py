@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from Command import *
-import TodoList
+from TodoListBase import InvalidTodoException
 from PrettyPrinter import pretty_print
 
 class TagCommand(Command):
@@ -49,7 +49,7 @@ class TagCommand(Command):
             self.todo = self.todolist.todo(self.argument(0))
             self.tag = self.argument(1)
             self.current_values = self.todo.tag_values(self.tag)
-        except (InvalidCommandArgument, TodoList.InvalidTodoException):
+        except (InvalidCommandArgument, InvalidTodoException):
             self.error("Invalid todo number.")
 
         try:
