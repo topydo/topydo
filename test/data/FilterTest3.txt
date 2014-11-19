@@ -3,3 +3,4 @@ Tag with future due date due:2030-01-01
 Tag with some value:8
 Tag with some other value:16
 Tag with nonsense value:nonsense
+Tag with negative value:-7

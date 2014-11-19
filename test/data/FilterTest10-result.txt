@@ -1,1 +1,2 @@
 Tag with some value:8
+Tag with negative value:-7

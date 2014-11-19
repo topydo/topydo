@@ -286,6 +286,16 @@ class FilterTest(unittest.TestCase):
         self.assertEquals(todolist_to_string(filtered_todos),
             todolist_to_string(reference))
 
+    def test_filter30(self):
+        todos = load_file('data/FilterTest3.txt')
+        otf = Filter.OrdinalTagFilter('value:>-8')
+
+        filtered_todos = otf.filter(todos)
+        reference = load_file('data/FilterTest13-result.txt')
+
+        self.assertEquals(todolist_to_string(filtered_todos),
+            todolist_to_string(reference))
+
 class OrdinalTagFilterTest(unittest.TestCase):
     def setUp(self):
         today = date.today()
