@@ -18,6 +18,7 @@
 A list of todo items.
 """
 
+from datetime import date
 import re
 
 import Filter
@@ -164,8 +165,8 @@ class TodoListBase(object):
     def todos(self):
         return self._todos
 
-    def set_todo_completed(self, p_todo):
-        p_todo.set_completed()
+    def set_todo_completed(self, p_todo, p_completion_date=date.today()):
+        p_todo.set_completed(p_completion_date)
         self.dirty = True
 
     def set_priority(self, p_todo, p_priority):

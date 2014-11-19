@@ -195,6 +195,38 @@ class DoCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.output, "Completed: x %s Baz p:1\n" % self.today)
         self.assertEquals(self.errors, "")
 
+    def test_do_custom_date1(self):
+        command = DoCommand.DoCommand(["-d", "2014-11-18", "3"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEquals(self.output, "Completed: x 2014-11-18 Baz p:1\n")
+        self.assertEquals(self.errors, "")
+
+    def test_do_custom_date2(self):
+        command = DoCommand.DoCommand(["-d", "2014-11-18", "1"], self.todolist, self.out, self.error, _yes_prompt)
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEquals(self.output, "  2 Bar p:1\n  3 Baz p:1\nCompleted: x 2014-11-18 Bar p:1\nCompleted: x 2014-11-18 Baz p:1\nCompleted: x 2014-11-18 Foo id:1\n")
+        self.assertEquals(self.errors, "")
+
+    def test_do_custom_date3(self):
+        command = DoCommand.DoCommand(["--date=2014-11-18", "3"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEquals(self.output, "Completed: x 2014-11-18 Baz p:1\n")
+        self.assertEquals(self.errors, "")
+
+    def test_do_custom_date4(self):
+        command = DoCommand.DoCommand(["-d", "foo", "3"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEquals(self.output, "Completed: x 2014-11-19 Baz p:1\n")
+        self.assertEquals(self.errors, "")
+
     def test_empty(self):
         command = DoCommand.DoCommand([], self.todolist, self.out, self.error)
         command.execute()

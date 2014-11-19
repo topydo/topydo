@@ -14,11 +14,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from datetime import date
 import re
 
 from DCommand import DCommand
 from PrettyPrinter import pretty_print
 from Recurrence import advance_recurring_todo, strict_advance_recurring_todo
+from Utils import date_string_to_date
 
 class DoCommand(DCommand):
     def __init__(self, p_args, p_todolist,
@@ -27,16 +29,19 @@ class DoCommand(DCommand):
                  p_prompt=lambda a: None):
 
         self.strict_recurrence = False
+        self.completion_date = date.today()
 
         super(DoCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
 
     def get_flags(self):
         """ Additional flags. """
-        return ("s", ["strict"])
+        return ("d:s", ["date=", "strict"])
 
     def process_flag(self, p_opt, p_value):
         if p_opt == "-s" or p_opt == "--strict":
             self.strict_recurrence = True
+        elif p_opt == "-d" or p_opt == "--date":
+            self.completion_date = date_string_to_date(p_value) or date.today()
 
     def _handle_recurrence(self):
         if self.todo.has_tag('rec'):
@@ -72,10 +77,10 @@ class DoCommand(DCommand):
         The core operation on the todo itself. Also used to operate on
         child/parent tasks.
         """
-        self.todolist.set_todo_completed(p_todo)
+        self.todolist.set_todo_completed(p_todo, self.completion_date)
 
     def usage(self):
-        return """Synopsis: do [--force] [--strict] <NUMBER>"""
+        return """Synopsis: do [--date] [--force] [--strict] <NUMBER>"""
 
     def help(self):
         return """Marks the todo with given number as complete.
@@ -91,4 +96,6 @@ is used to calculate the new recurrence date. Using --strict prevents this,
 then the actual due date of the todo item is used to calculate the new
 recurrence date. Note that a future due date is always used as such to
 calculate the new due date.
+
+Use --date to set a custom completion date.
 """

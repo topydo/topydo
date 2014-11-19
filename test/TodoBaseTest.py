@@ -16,7 +16,7 @@
 
 """ Tests for the TodoBase class. """
 
-from datetime import date
+from datetime import date, timedelta
 import re
 import unittest
 
@@ -272,6 +272,13 @@ class TodoBaseTester(unittest.TestCase):
         todo.set_completed()
 
         self.assertEquals(todo.src, "x 2014-06-13 Foo")
+
+    def test_set_complete6(self):
+        todo = TodoBase.TodoBase("Foo")
+        yesterday = date.today() - timedelta(1)
+        todo.set_completed(yesterday)
+
+        self.assertEquals(todo.src, "x %s Foo" % yesterday.isoformat())
 
     def test_set_source_text(self):
         todo = TodoBase.TodoBase("(B) Foo")

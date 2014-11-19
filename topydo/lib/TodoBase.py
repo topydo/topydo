@@ -185,7 +185,7 @@ class TodoBase(object):
         """
         return self.fields['completionDate']
 
-    def set_completed(self):
+    def set_completed(self, p_completion_date=date.today()):
         """
         Marks the todo as complete.
         Sets the completed flag and sets the completion date to today.
@@ -194,11 +194,10 @@ class TodoBase(object):
             self.set_priority(None)
 
             self.fields['completed'] = True
-            today = date.today()
-            self.fields['completionDate'] = today
+            self.fields['completionDate'] = p_completion_date
 
             self.src = re.sub(r'^(\([A-Z]\) )?', \
-                'x ' + today.isoformat() + ' ', self.src)
+                'x ' + p_completion_date.isoformat() + ' ', self.src)
 
     def set_creation_date(self, p_date=date.today()):
         """
