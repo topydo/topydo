@@ -18,23 +18,24 @@ import re
 
 from DCommand import DCommand
 from PrettyPrinter import pretty_print
-from Recurrence import advance_recurring_todo
+from Recurrence import advance_recurring_todo, strict_advance_recurring_todo
 
 class DoCommand(DCommand):
     def __init__(self, p_args, p_todolist,
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
-        super(DoCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
 
         self.strict_recurrence = False
+
+        super(DoCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
 
     def get_flags(self):
         """ Additional flags. """
         return ("s", ["strict"])
 
     def process_flag(self, p_opt, p_value):
-        if p_opt == "s" or p_opt == "--strict":
+        if p_opt == "-s" or p_opt == "--strict":
             self.strict_recurrence = True
 
     def _handle_recurrence(self):

@@ -36,6 +36,7 @@ class DoCommandTest(CommandTest.CommandTest):
             "x 2014-10-18 Already complete",
             "Inactive t:2030-12-31 id:2",
             "Subtodo of inactive p:2",
+            "Strict due:2014-01-01 rec:1d",
         ]
 
         self.todolist = TodoList.TodoList(todos)
@@ -108,30 +109,35 @@ class DoCommandTest(CommandTest.CommandTest):
 
     def _recurrence_helper(self, p_flags):
         command = DoCommand.DoCommand(p_flags, self.todolist, self.out, self.error)
-
-        self.assertFalse(self.todolist.todo(4).has_tag('due'))
-
         command.execute()
 
-        todo = self.todolist.todo(8)
-        result = "  8 %s Recurring! rec:1d due:%s\nCompleted: x %s Recurring! rec:1d\n" % (self.today, self.tomorrow, self.today)
-
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEquals(self.output, result)
         self.assertEquals(self.errors, "")
-        self.assertEquals(self.todolist.count(), 8)
+        self.assertEquals(self.todolist.count(), 9)
+
+    def test_recurrence(self):
+        self.assertFalse(self.todolist.todo(4).has_tag('due'))
+
+        self._recurrence_helper(["4"])
+
         self.assertTrue(self.todolist.todo(4).is_completed())
+        result = "  9 %s Recurring! rec:1d due:%s\nCompleted: x %s Recurring! rec:1d\n" % (self.today, self.tomorrow, self.today)
+        self.assertEquals(self.output, result)
+
+        todo = self.todolist.todo(8)
         self.assertFalse(todo.is_completed())
         self.assertTrue(todo.has_tag('due'))
 
-    def test_recurrence(self):
-        self._recurrence_helper(["4"])
-
     def test_strict_recurrence1(self):
-        self._recurrence_helper(["-s", "4"])
+        self._recurrence_helper(["-s", "8"])
+        result = "  9 2014-11-19 Strict due:2014-01-02 rec:1d\nCompleted: x 2014-11-19 Strict due:2014-01-01 rec:1d\n"
+        self.assertEquals(self.output, result)
 
     def test_strict_recurrence2(self):
-        self._recurrence_helper(["--strict", "4"])
+        self._recurrence_helper(["--strict", "8"])
+
+        result = "  9 2014-11-19 Strict due:2014-01-02 rec:1d\nCompleted: x 2014-11-19 Strict due:2014-01-01 rec:1d\n"
+        self.assertEquals(self.output, result)
 
     def test_invalid1(self):
         command = DoCommand.DoCommand(["99"], self.todolist, self.out, self.error)
