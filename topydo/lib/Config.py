@@ -47,6 +47,7 @@ class _Config:
             'tag_star': 'star',
 
             # sort
+            'keep_sorted': '0',
             'sort_string': 'desc:importance,due,desc:priority',
             'ignore_weekends': '1',
         }
@@ -103,6 +104,12 @@ class _Config:
             return self.cp.getint('ls', 'indent')
         except ValueError:
             return int(self.defaults['indent'])
+
+    def keep_sorted(self):
+        try:
+            return self.cp.getboolean('sort', 'keep_sorted')
+        except ValueError:
+            return self.defaults['keep_sorted'] == '1'
 
     def sort_string(self):
         return self.cp.get('sort', 'sort_string')

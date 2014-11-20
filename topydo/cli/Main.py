@@ -106,6 +106,10 @@ class CLIApplication(object):
             if archive.is_dirty():
                 archive_file.write(str(archive))
 
+    def execute(self, p_command, p_args):
+        command = p_command(p_args, self.todolist, lambda o: write(sys.stdout, o), error, raw_input)
+        return False if command.execute() == False else True
+
     def run(self):
         """ Main entry function. """
         todofile = TodoFile.TodoFile(config().todotxt())
@@ -145,16 +149,15 @@ class CLIApplication(object):
             subcommand = config().default_command()
             args = arguments(1)
 
-        command = subcommand_map[subcommand](args, self.todolist,
-            lambda o: write(sys.stdout, o),
-            error,
-            raw_input)
-
-        if command.execute() == False:
+        if self.execute(subcommand_map[subcommand], args) == False:
             exit(1)
 
         if self.todolist.is_dirty():
             self.archive()
+
+            if config().keep_sorted():
+                self.execute(SortCommand, [])
+
             todofile.write(str(self.todolist))
 
 if __name__ == '__main__':
