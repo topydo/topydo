@@ -130,13 +130,13 @@ class DoCommandTest(CommandTest.CommandTest):
 
     def test_strict_recurrence1(self):
         self._recurrence_helper(["-s", "8"])
-        result = "  9 2014-11-19 Strict due:2014-01-02 rec:1d\nCompleted: x 2014-11-19 Strict due:2014-01-01 rec:1d\n"
+        result = "  9 %s Strict due:2014-01-02 rec:1d\nCompleted: x %s Strict due:2014-01-01 rec:1d\n" % (self.today, self.today)
         self.assertEquals(self.output, result)
 
     def test_strict_recurrence2(self):
         self._recurrence_helper(["--strict", "8"])
 
-        result = "  9 2014-11-19 Strict due:2014-01-02 rec:1d\nCompleted: x 2014-11-19 Strict due:2014-01-01 rec:1d\n"
+        result = "  9 %s Strict due:2014-01-02 rec:1d\nCompleted: x %s Strict due:2014-01-01 rec:1d\n" % (self.today, self.today)
         self.assertEquals(self.output, result)
 
     def test_invalid1(self):
@@ -224,7 +224,7 @@ class DoCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEquals(self.output, "Completed: x 2014-11-19 Baz p:1\n")
+        self.assertEquals(self.output, "Completed: x %s Baz p:1\n" % self.today)
         self.assertEquals(self.errors, "")
 
     def test_empty(self):
