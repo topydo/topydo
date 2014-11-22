@@ -46,7 +46,7 @@ class DCommand(Command):
         """ Default implementation of getting specific flags. """
         return ("", [])
 
-    def process_flag(self):
+    def process_flag(self, p_option, p_value):
         """ Default implementation of processing specific flags. """
         pass
 
