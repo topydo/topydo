@@ -15,7 +15,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import date
-import re
 
 from DCommand import DCommand
 from PrettyPrinter import pretty_print

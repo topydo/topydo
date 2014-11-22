@@ -18,14 +18,8 @@
 A list of todo items.
 """
 
-import re
-
-import Filter
 import Graph
-from PrettyPrinter import pretty_print_list
-import Todo
 import TodoListBase
-import View
 
 class TodoList(TodoListBase.TodoListBase):
     """

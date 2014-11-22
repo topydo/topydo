@@ -14,9 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from Command import *
+from Command import Command, InvalidCommandArgument
 from Config import config
-import Filter
 import Sorter
 
 class SortCommand(Command):

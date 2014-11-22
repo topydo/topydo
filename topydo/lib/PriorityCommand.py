@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from Command import *
+from Command import Command, InvalidCommandArgument
 from PrettyPrinter import pretty_print
 from TodoListBase import InvalidTodoException
 from Utils import is_valid_priority

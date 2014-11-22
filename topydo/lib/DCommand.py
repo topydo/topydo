@@ -14,8 +14,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from Command import *
-from PrettyPrinter import *
+import re
+
+from Command import Command, InvalidCommandArgument
+from PrettyPrinter import pretty_print, pretty_print_list
 from TodoListBase import InvalidTodoException
 
 class DCommand(Command):
