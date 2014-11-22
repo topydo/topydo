@@ -61,8 +61,8 @@ from topydo.lib.Config import config, ConfigError
 # make sure to bail out if the configuration is invalid.
 try:
     config()
-except ConfigError as e:
-    error(str(e))
+except ConfigError as config_error:
+    error(str(config_error))
     exit(1)
 
 from topydo.lib.AddCommand import AddCommand
@@ -85,6 +85,11 @@ from topydo.lib import TodoListBase
 from topydo.lib.Utils import escape_ansi
 
 class CLIApplication(object):
+    """
+    Class that represents the Command Line Interface of Topydo.
+
+    Handles input/output of the various subcommand.
+    """
     def __init__(self):
         self.todolist = TodoList.TodoList([])
 
@@ -106,7 +111,17 @@ class CLIApplication(object):
                 archive_file.write(str(archive))
 
     def execute(self, p_command, p_args):
-        command = p_command(p_args, self.todolist, lambda o: write(sys.stdout, o), error, raw_input)
+        """
+        Execute a subcommand with arguments. p_command is a class (not an
+        object).
+        """
+        command = p_command(
+            p_args,
+            self.todolist,
+            lambda o: write(sys.stdout, o),
+            error,
+            raw_input)
+
         return False if command.execute() == False else True
 
     def run(self):
