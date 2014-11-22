@@ -200,7 +200,10 @@ class TodoListBase(object):
         A filter for the pretty printer to append the todo number to the
         printed todo.
         """
-        return lambda p_todo_str, p_todo: "%3d %s" % (self.number(p_todo), p_todo_str)
+        if config().identifiers() == 'text':
+            return lambda p_todo_str, p_todo: "%3s %s" % (self._todo_id_map[p_todo], p_todo_str)
+        else:
+            return lambda p_todo_str, p_todo: "%3d %s" % (self.number(p_todo), p_todo_str)
 
     def _update_todo_ids(self):
         # the idea is to have a hash that is independent of the position of the

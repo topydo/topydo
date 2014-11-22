@@ -145,6 +145,16 @@ class ListCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.output, "  2 (D) Bar @Context1 +Project2 p:1\n")
         self.assertEquals(self.errors, "")
 
+    def test_list16(self):
+        config("data/todolist-uid.conf")
+
+        command = ListCommand.ListCommand([], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+        self.assertEquals(self.output, "6iu (C) Foo @Context2 Not@Context +Project1 Not+Project\ntil (C) Drink beer @ home\n c5 (C) 13 + 29 = 42\nxvb (D) Bar @Context1 +Project2 p:1\n")
+        self.assertEquals(self.errors, "")
+
     def test_help(self):
         command = ListCommand.ListCommand(["help"], self.todolist, self.out, self.error)
         command.execute()
