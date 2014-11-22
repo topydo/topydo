@@ -76,7 +76,6 @@ from topydo.lib.ListCommand import ListCommand
 from topydo.lib.ListContextCommand import ListContextCommand
 from topydo.lib.ListProjectCommand import ListProjectCommand
 from topydo.lib.PostponeCommand import PostponeCommand
-from topydo.lib.PrettyPrinter import *
 from topydo.lib.PriorityCommand import PriorityCommand
 from topydo.lib.SortCommand import SortCommand
 from topydo.lib.TagCommand import TagCommand
