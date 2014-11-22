@@ -22,6 +22,7 @@ from datetime import date
 import re
 
 import Filter
+from HashListValues import hash_list_values
 from PrettyPrinter import pretty_print_list
 import Todo
 import View
@@ -44,6 +45,8 @@ class TodoListBase(object):
         The string will be parsed.
         """
         self._todos = []
+        self._todo_id_map = {}
+        self._id_todo_map = {}
 
         self.add_list(p_todostrings)
         self.dirty = False
@@ -100,6 +103,7 @@ class TodoListBase(object):
         for todo in p_todos:
             self._todos.append(todo)
 
+        self._update_todo_ids()
         self.dirty = True
 
     def delete(self, p_todo):
@@ -186,6 +190,16 @@ class TodoListBase(object):
         printed todo.
         """
         return lambda p_todo_str, p_todo: "%3d %s" % (self.number(p_todo), p_todo_str)
+
+    def _update_todo_ids(self):
+        # the idea is to have a hash that is independent of the position of the
+        # todo. Use the text (without tags) of the todo to keep the id as stable
+        # as possible (not influenced by priorities or due dates, etc.)
+        uids = hash_list_values(self._todos, lambda t: hash(t.text()))
+
+        for (todo, uid) in uids:
+            self._todo_id_map[todo] = uid
+            self._id_todo_map[uid] = todo
 
     def __str__(self):
         return '\n'.join(pretty_print_list(self._todos))

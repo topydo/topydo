@@ -44,6 +44,8 @@ class TodoList(TodoListBase.TodoListBase):
         self._todos = []
         self._tododict = {} # hash(todo) to todo lookup
         self._depgraph = Graph.DirectedGraph()
+        self._todo_id_map = {}
+        self._id_todo_map = {}
 
         self.add_list(p_todostrings)
         self.dirty = False
@@ -87,6 +89,7 @@ class TodoList(TodoListBase.TodoListBase):
             self._tododict[hash(todo)] = todo
             self._maintain_dep_graph(todo)
 
+        self._update_todo_ids()
         self._update_parent_cache()
         self.dirty = True
 
