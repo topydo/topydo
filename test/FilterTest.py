@@ -1,16 +1,16 @@
 # Topydo - A todo.txt client written in Python.
 # Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -20,9 +20,8 @@ from datetime import date, timedelta
 import unittest
 
 import Filter
-from TestFacilities import *
+from TestFacilities import load_file, todolist_to_string, load_file_to_todolist
 import Todo
-import TodoList
 
 class FilterTest(unittest.TestCase):
     def test_filter3(self):
@@ -194,16 +193,15 @@ class FilterTest(unittest.TestCase):
 
         self.assertEquals(todolist_to_string(filtered_todos), \
             todolist_to_string(reference))
-        
+
     def test_filter20(self):
         todos = load_file('data/FilterTest3.txt')
         otf = Filter.OrdinalTagFilter('due:=2014-11-10')
 
         filtered_todos = otf.filter(todos)
-        reference = load_file('data/FilterTest6-result.txt')
 
         self.assertEquals(todolist_to_string(filtered_todos), "")
-        
+
     def test_filter21(self):
         todos = load_file('data/FilterTest3.txt')
         otf = Filter.OrdinalTagFilter('due:=2014-11-10')
@@ -211,7 +209,7 @@ class FilterTest(unittest.TestCase):
         filtered_todos = otf.filter(todos)
 
         self.assertEquals(todolist_to_string(filtered_todos), "")
-        
+
     def test_filter22(self):
         todos = load_file('data/FilterTest3.txt')
         otf = Filter.OrdinalTagFilter('due:=2014-11-99')

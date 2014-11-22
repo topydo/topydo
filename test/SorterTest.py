@@ -18,8 +18,6 @@ import unittest
 
 from Config import config
 import Sorter
-import TodoList
-import View
 
 from TestFacilities import load_file, todolist_to_string, load_file_to_todolist
 

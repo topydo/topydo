@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from Config import config, _Config
+from Config import config
 import CommandTest
 import ListCommand
 import TestFacilities
