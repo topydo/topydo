@@ -19,6 +19,7 @@
 import re
 import unittest
 
+from Config import config
 import Todo
 import TodoFile
 from TodoListBase import InvalidTodoException
@@ -31,6 +32,10 @@ class TodoListTester(unittest.TestCase):
                        if re.search(r'\S', line)]
         self.text = ''.join(lines)
         self.todolist = TodoList.TodoList(lines)
+
+    def tearDown(self):
+        # restore to the default configuration in case a custom one was set
+        config("")
 
     def test_contexts(self):
         self.assertEquals(set(['Context1', 'Context2']), \
@@ -190,6 +195,19 @@ class TodoListTester(unittest.TestCase):
         todo = self.todolist.todo("project2")
         self.assertTrue(todo)
         self.assertEquals(todo.source(), "(D) Bar @Context1 +Project2")
+
+    def test_uid1(self):
+        config("data/todolist-uid.conf")
+
+        self.assertEquals(self.todolist.todo('6iu').source(), "(C) Foo @Context2 Not@Context +Project1 Not+Project")
+
+    def test_uid2(self):
+        """ Changing the priority should not change the identifier. """
+        config("data/todolist-uid.conf")
+
+        todo = self.todolist.todo('6iu')
+        self.todolist.set_priority(todo, 'B')
+        self.assertEquals(self.todolist.todo('6iu').source(), "(B) Foo @Context2 Not@Context +Project1 Not+Project")
 
 class TodoListDependencyTester(unittest.TestCase):
     def setUp(self):

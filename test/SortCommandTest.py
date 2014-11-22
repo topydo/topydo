@@ -15,12 +15,17 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import CommandTest
+from Config import config
 import SortCommand
 import TestFacilities
 
 class SortCommandTest(CommandTest.CommandTest):
     def setUp(self):
         self.todolist = TestFacilities.load_file_to_todolist("data/SorterTest1.txt")
+
+    def tearDown(self):
+        # restore to the default configuration in case a custom one was set
+        config("")
 
     def test_sort1(self):
         """ Alphabetically sorted """
@@ -34,6 +39,17 @@ class SortCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertEquals(str(self.todolist), "(A) Foo\n2014-06-14 Last\nFirst")
+
+    def test_sort3(self):
+        """ Check that order does not influence the UID of a todo. """
+        config("data/todolist-uid.conf")
+
+        todo1 = self.todolist.todo('tpi')
+        command = SortCommand.SortCommand(["text"], self.todolist, self.out, self.error)
+        command.execute()
+        todo2 = self.todolist.todo('tpi')
+
+        self.assertEquals(todo1.source(), todo2.source())
 
     def test_help(self):
         command = SortCommand.SortCommand(["help"], self.todolist, self.out, self.error)

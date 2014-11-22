@@ -21,6 +21,7 @@ A list of todo items.
 from datetime import date
 import re
 
+from Config import config
 import Filter
 from HashListValues import hash_list_values
 from PrettyPrinter import pretty_print_list
@@ -56,13 +57,23 @@ class TodoListBase(object):
         The _todos list has the same order as in the backend store (usually
         a todo.txt file. The user refers to the first task as number 1, so use
         index 0, etc.
+
+        Alternative ways to identify a todo is using a hashed version based on
+        the todo's text, or a regexp that matches the todo's source. The regexp
+        match is a fallback.
+
+        Returns None when the todo couldn't be found.
         """
         result = None
+
         try:
-            result = self._todos[int(p_identifier) - 1]
+            if config().identifiers() == 'text':
+                result = self._id_todo_map[p_identifier]
+            else:
+                result = self._todos[int(p_identifier) - 1]
         except IndexError:
             raise InvalidTodoException
-        except (TypeError, ValueError):
+        except (TypeError, ValueError, KeyError):
             result = self.todo_by_regexp(p_identifier)
 
         return result

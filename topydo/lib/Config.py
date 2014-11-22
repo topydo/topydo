@@ -36,6 +36,7 @@ class _Config:
             'highlight_projects_contexts': '1',
             'filename' : 'todo.txt',
             'archive_filename' : 'done.txt',
+            'identifiers': 'linenumber',
 
             # ls
             'indent': 0,
@@ -92,6 +93,9 @@ class _Config:
 
     def archive(self):
         return self.cp.get('topydo', 'archive_filename')
+
+    def identifiers(self):
+        return self.cp.get('topydo', 'identifiers')
 
     def list_limit(self):
         try:
