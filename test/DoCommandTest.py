@@ -85,6 +85,7 @@ class DoCommandTest(CommandTest.CommandTest):
         prompt_shown = False
 
         def prompt(p_prompt):
+            global prompt_shown
             prompt_shown = True
 
         command = DoCommand.DoCommand(["-f", "1"], self.todolist, self.out, self.error, prompt)
@@ -98,6 +99,7 @@ class DoCommandTest(CommandTest.CommandTest):
         prompt_shown = False
 
         def prompt(p_prompt):
+            global prompt_shown
             prompt_shown = True
 
         command = DoCommand.DoCommand(["--force", "1"], self.todolist, self.out, self.error, prompt)
