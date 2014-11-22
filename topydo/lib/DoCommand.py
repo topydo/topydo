@@ -16,10 +16,10 @@
 
 from datetime import date
 
-from DCommand import DCommand
-from PrettyPrinter import pretty_print
-from Recurrence import advance_recurring_todo, strict_advance_recurring_todo
-from Utils import date_string_to_date
+from topydo.lib.DCommand import DCommand
+from topydo.lib.PrettyPrinter import pretty_print
+from topydo.lib.Recurrence import advance_recurring_todo, strict_advance_recurring_todo
+from topydo.lib.Utils import date_string_to_date
 
 class DoCommand(DCommand):
     def __init__(self, p_args, p_todolist,

@@ -18,10 +18,10 @@
 A list of todo items.
 """
 
-import Graph
-import TodoListBase
+from topydo.lib.Graph import DirectedGraph
+from topydo.lib.TodoListBase import TodoListBase
 
-class TodoList(TodoListBase.TodoListBase):
+class TodoList(TodoListBase):
     """
     Provides operations for a todo list, such as adding items, removing them,
     etc.
@@ -37,7 +37,7 @@ class TodoList(TodoListBase.TodoListBase):
         """
         self._todos = []
         self._tododict = {} # hash(todo) to todo lookup
-        self._depgraph = Graph.DirectedGraph()
+        self._depgraph = DirectedGraph()
 
         self.add_list(p_todostrings)
         self.dirty = False

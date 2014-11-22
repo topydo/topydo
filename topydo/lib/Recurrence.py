@@ -1,16 +1,16 @@
 # Topydo - A todo.txt client written in Python.
 # Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -18,9 +18,9 @@
 
 from datetime import date, timedelta
 
-from Config import config
-from RelativeDate import relative_date_to_date
-import Todo
+from topydo.lib.Config import config
+from topydo.lib.RelativeDate import relative_date_to_date
+from topydo.lib.Todo import Todo
 
 class NoRecurrenceException(Exception):
     pass
@@ -33,7 +33,7 @@ def _advance_recurring_todo_helper(p_todo, p_offset):
     When no recurrence tag is present, an exception is raised.
     """
 
-    todo = Todo.Todo(p_todo.source())
+    todo = Todo(p_todo.source())
     pattern = todo.tag_value('rec')
 
     if not pattern:

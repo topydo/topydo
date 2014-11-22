@@ -16,13 +16,13 @@
 
 import re
 
-import Command
-from Config import config
-import Filter
-from PrettyPrinter import pp_indent
-import Sorter
+from topydo.lib.Command import Command
+from topydo.lib.Config import config
+from topydo.lib import Filter
+from topydo.lib.PrettyPrinter import pp_indent
+from topydo.lib.Sorter import Sorter
 
-class ListCommand(Command.Command):
+class ListCommand(Command):
     def __init__(self, p_args, p_todolist,
                  p_out=lambda a: None,
                  p_err=lambda a: None,
@@ -80,7 +80,7 @@ class ListCommand(Command.Command):
 
         self._process_flags()
 
-        sorter = Sorter.Sorter(self.sort_expression)
+        sorter = Sorter(self.sort_expression)
         filters = self._filters()
 
         pp_filters = [pp_indent(config().list_indent())]

@@ -16,12 +16,12 @@
 
 from datetime import date, timedelta
 
-from Command import Command, InvalidCommandArgument
-from Config import config
-from PrettyPrinter import pretty_print
-from RelativeDate import relative_date_to_date
-from TodoListBase import InvalidTodoException
-from Utils import date_string_to_date
+from topydo.lib.Command import Command, InvalidCommandArgument
+from topydo.lib.Config import config
+from topydo.lib.PrettyPrinter import pretty_print
+from topydo.lib.RelativeDate import relative_date_to_date
+from topydo.lib.TodoListBase import InvalidTodoException
+from topydo.lib.Utils import date_string_to_date
 
 class PostponeCommand(Command):
     def __init__(self, p_args, p_todolist,

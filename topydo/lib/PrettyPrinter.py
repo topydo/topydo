@@ -18,7 +18,7 @@
 
 import re
 
-from Config import config
+from topydo.lib.Config import config
 
 PRIORITY_COLORS = {
     'A': '\033[36m', # cyan

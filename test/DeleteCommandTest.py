@@ -15,8 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import CommandTest
-import DeleteCommand
-import TodoList
+from topydo.lib.DeleteCommand import DeleteCommand
+from topydo.lib.TodoList import TodoList
 
 class DeleteCommandTest(CommandTest.CommandTest):
     def setUp(self):
@@ -25,10 +25,10 @@ class DeleteCommandTest(CommandTest.CommandTest):
             "Bar p:1",
         ]
 
-        self.todolist = TodoList.TodoList(todos)
+        self.todolist = TodoList(todos)
 
     def test_del1(self):
-        command = DeleteCommand.DeleteCommand(["1"], self.todolist, self.out, self.error, lambda p: "n")
+        command = DeleteCommand(["1"], self.todolist, self.out, self.error, lambda p: "n")
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
@@ -37,7 +37,7 @@ class DeleteCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_del1_regex(self):
-        command = DeleteCommand.DeleteCommand(["Foo"], self.todolist, self.out, self.error, lambda p: "n")
+        command = DeleteCommand(["Foo"], self.todolist, self.out, self.error, lambda p: "n")
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
@@ -46,7 +46,7 @@ class DeleteCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_del2(self):
-        command = DeleteCommand.DeleteCommand(["1"], self.todolist, self.out, self.error, lambda p: "y")
+        command = DeleteCommand(["1"], self.todolist, self.out, self.error, lambda p: "y")
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
@@ -55,7 +55,7 @@ class DeleteCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_del3(self):
-        command = DeleteCommand.DeleteCommand(["-f", "1"], self.todolist, self.out, self.error, lambda p: "y")
+        command = DeleteCommand(["-f", "1"], self.todolist, self.out, self.error, lambda p: "y")
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
@@ -64,7 +64,7 @@ class DeleteCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_del4(self):
-        command = DeleteCommand.DeleteCommand(["--force", "1"], self.todolist, self.out, self.error, lambda p: "y")
+        command = DeleteCommand(["--force", "1"], self.todolist, self.out, self.error, lambda p: "y")
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
@@ -73,7 +73,7 @@ class DeleteCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_del5(self):
-        command = DeleteCommand.DeleteCommand(["2"], self.todolist, self.out, self.error)
+        command = DeleteCommand(["2"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
@@ -82,7 +82,7 @@ class DeleteCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_del7(self):
-        command = DeleteCommand.DeleteCommand(["99"], self.todolist, self.out, self.error)
+        command = DeleteCommand(["99"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -90,7 +90,7 @@ class DeleteCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "Invalid todo number given.\n")
 
     def test_del8(self):
-        command = DeleteCommand.DeleteCommand(["A"], self.todolist, self.out, self.error)
+        command = DeleteCommand(["A"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -98,7 +98,7 @@ class DeleteCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "Invalid todo number given.\n")
 
     def test_empty(self):
-        command = DeleteCommand.DeleteCommand([], self.todolist, self.out, self.error)
+        command = DeleteCommand([], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -106,7 +106,7 @@ class DeleteCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, command.usage() + "\n")
 
     def test_help(self):
-        command = DeleteCommand.DeleteCommand(["help"], self.todolist, self.out, self.error)
+        command = DeleteCommand(["help"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertEquals(self.output, "")

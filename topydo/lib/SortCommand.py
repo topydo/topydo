@@ -14,9 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from Command import Command, InvalidCommandArgument
-from Config import config
-import Sorter
+from topydo.lib.Command import Command, InvalidCommandArgument
+from topydo.lib.Config import config
+from topydo.lib.Sorter import Sorter
 
 class SortCommand(Command):
     def __init__(self, p_args, p_todolist,
@@ -35,7 +35,7 @@ class SortCommand(Command):
         except InvalidCommandArgument:
             expression = config().sort_string()
 
-        sorter = Sorter.Sorter(expression) # TODO: validate
+        sorter = Sorter(expression) # TODO: validate
         sorted_todos = sorter.sort(self.todolist.todos())
 
         self.todolist.erase()

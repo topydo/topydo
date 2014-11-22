@@ -21,7 +21,7 @@ todo.txt file.
 
 import re
 
-import Utils
+from topydo.lib.Utils import date_string_to_date
 
 _DATE_MATCH = r'\d{4}-\d{2}-\d{2}'
 
@@ -68,17 +68,17 @@ def parse_line(p_string):
         result['completed'] = True
 
         completion_date = completed_head.group('completionDate')
-        result['completionDate'] = Utils.date_string_to_date(completion_date)
+        result['completionDate'] = date_string_to_date(completion_date)
 
         creation_date = completed_head.group('creationDate')
-        result['creationDate'] = Utils.date_string_to_date(creation_date)
+        result['creationDate'] = date_string_to_date(creation_date)
 
         rest = completed_head.group('rest')
     elif normal_head:
         result['priority'] = normal_head.group('priority')
 
         creation_date = normal_head.group('creationDate')
-        result['creationDate'] = Utils.date_string_to_date(creation_date)
+        result['creationDate'] = date_string_to_date(creation_date)
 
         rest = normal_head.group('rest')
 

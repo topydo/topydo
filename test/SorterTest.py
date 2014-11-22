@@ -16,8 +16,8 @@
 
 import unittest
 
-from Config import config
-import Sorter
+from topydo.lib.Config import config
+from topydo.lib.Sorter import Sorter
 
 from TestFacilities import load_file, todolist_to_string, load_file_to_todolist
 
@@ -37,21 +37,21 @@ class SorterTest(unittest.TestCase):
 
     def test_sort1(self):
         """ Alphabetically sorted """
-        sorter = Sorter.Sorter('text')
+        sorter = Sorter('text')
         self.sort_file('data/SorterTest1.txt', 'data/SorterTest1-result.txt', sorter)
 
     def test_sort2a(self):
         """
         Ascendingly sorted by priority. Also checks stableness of the sort.
         """
-        sorter = Sorter.Sorter('prio')
+        sorter = Sorter('prio')
         self.sort_file('data/SorterTest2.txt', 'data/SorterTest2-result.txt', sorter)
 
     def test_sort2b(self):
         """
         Ascendingly sorted by priority. Also checks stableness of the sort.
         """
-        sorter = Sorter.Sorter('asc:prio')
+        sorter = Sorter('asc:prio')
         self.sort_file('data/SorterTest2.txt', 'data/SorterTest2-result.txt', sorter)
 
     def test_sort3(self):
@@ -59,32 +59,32 @@ class SorterTest(unittest.TestCase):
         Descendingly sorted by priority. Also checks stableness of the
         sort.
         """
-        sorter = Sorter.Sorter('desc:prio')
+        sorter = Sorter('desc:prio')
         self.sort_file('data/SorterTest3.txt', 'data/SorterTest3-result.txt', sorter)
 
     def test_sort4(self):
         """ Ascendingly sorted by due date """
-        sorter = Sorter.Sorter(config().tag_due())
+        sorter = Sorter(config().tag_due())
         self.sort_file('data/SorterTest4.txt', 'data/SorterTest4-result.txt', sorter)
 
     def test_sort5(self):
         """ Descendingly sorted by due date """
-        sorter = Sorter.Sorter('desc:due')
+        sorter = Sorter('desc:due')
         self.sort_file('data/SorterTest5.txt', 'data/SorterTest5-result.txt', sorter)
 
     def test_sort6(self):
         """ Ascendingly sorted by creation date """
-        sorter = Sorter.Sorter('creation')
+        sorter = Sorter('creation')
         self.sort_file('data/SorterTest6.txt', 'data/SorterTest6-result.txt', sorter)
 
     def test_sort7(self):
         """ Ascendingly sorted by completion date. """
-        sorter = Sorter.Sorter('completion')
+        sorter = Sorter('completion')
         self.sort_file('data/SorterTest7.txt', 'data/SorterTest7-result.txt', sorter)
 
     def test_sort8(self):
         """ Descendingly sorted by importance """
-        sorter = Sorter.Sorter('desc:importance')
+        sorter = Sorter('desc:importance')
         self.sort_file('data/SorterTest8.txt', 'data/SorterTest8-result.txt', sorter)
 
     def test_sort9(self):
@@ -92,22 +92,22 @@ class SorterTest(unittest.TestCase):
         Sort on multiple levels: first descending importance, then
         ascending priority.
         """
-        sorter = Sorter.Sorter('desc:importance,priority')
+        sorter = Sorter('desc:importance,priority')
         self.sort_file('data/SorterTest9.txt', 'data/SorterTest9-result.txt', sorter)
 
     def test_sort10(self):
         """ Deal with garbage input. """
-        sorter = Sorter.Sorter('')
+        sorter = Sorter('')
         self.sort_file('data/SorterTest9.txt', 'data/SorterTest9.txt', sorter)
 
     def test_sort11(self):
         """ Deal with garbage input. """
-        sorter = Sorter.Sorter('fnord')
+        sorter = Sorter('fnord')
         self.sort_file('data/SorterTest9.txt', 'data/SorterTest9.txt', sorter)
 
     def test_sort12(self):
         """ Deal with garbage input. """
-        sorter = Sorter.Sorter('desc:importance,,priority')
+        sorter = Sorter('desc:importance,,priority')
         self.sort_file('data/SorterTest9.txt', 'data/SorterTest9-result.txt', sorter)
 
     def test_sort13(self):
@@ -117,11 +117,11 @@ class SorterTest(unittest.TestCase):
         Reusing input and output for normal importance test, since without
         dependencies the average importance should be equal.
         """
-        sorter = Sorter.Sorter('desc:importance-avg')
+        sorter = Sorter('desc:importance-avg')
         self.sort_file('data/SorterTest9.txt', 'data/SorterTest9-result.txt', sorter)
 
     def test_sort14(self):
-        sorter = Sorter.Sorter('desc:importance-average')
+        sorter = Sorter('desc:importance-average')
 
         todolist = load_file_to_todolist('data/SorterTest10.txt')
         view = todolist.view(sorter, [])
@@ -134,7 +134,7 @@ class SorterTest(unittest.TestCase):
         Test that own importance is used when average turns out to be
         lower.
         """
-        sorter = Sorter.Sorter('desc:importance-average')
+        sorter = Sorter('desc:importance-average')
 
         todolist = load_file_to_todolist('data/SorterTest11.txt')
         view = todolist.view(sorter, [])
@@ -146,7 +146,7 @@ class SorterTest(unittest.TestCase):
         """
         Check sort of low priority tasks (D or lower) with non-priority tasks.
         """
-        sorter = Sorter.Sorter('desc:importance,desc:prio')
+        sorter = Sorter('desc:importance,desc:prio')
 
         todolist = load_file_to_todolist('data/SorterTest12.txt')
         view = todolist.view(sorter, [])

@@ -16,9 +16,9 @@
 
 import re
 
-from Command import Command, InvalidCommandArgument
-from PrettyPrinter import pretty_print, pretty_print_list
-from TodoListBase import InvalidTodoException
+from topydo.lib.Command import Command, InvalidCommandArgument
+from topydo.lib.PrettyPrinter import pretty_print, pretty_print_list
+from topydo.lib.TodoListBase import InvalidTodoException
 
 class DCommand(Command):
     """

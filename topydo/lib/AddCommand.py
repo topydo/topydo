@@ -19,13 +19,13 @@
 from datetime import date
 import re
 
-from Config import config
-import Command
-from PrettyPrinter import pretty_print
-from RelativeDate import relative_date_to_date
-from TodoListBase import InvalidTodoException
+from topydo.lib.Config import config
+from topydo.lib.Command import Command
+from topydo.lib.PrettyPrinter import pretty_print
+from topydo.lib.RelativeDate import relative_date_to_date
+from topydo.lib.TodoListBase import InvalidTodoException
 
-class AddCommand(Command.Command):
+class AddCommand(Command):
     def __init__(self, p_args, p_todolist,
                  p_out=lambda a: None,
                  p_err=lambda a: None,

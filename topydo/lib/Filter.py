@@ -16,9 +16,9 @@
 
 import re
 
-from Config import config
-from RelativeDate import relative_date_to_date
-from Utils import date_string_to_date
+from topydo.lib.Config import config
+from topydo.lib.RelativeDate import relative_date_to_date
+from topydo.lib.Utils import date_string_to_date
 
 class Filter(object):
     def filter(self, p_todos):

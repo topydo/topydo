@@ -19,13 +19,13 @@
 from datetime import date, timedelta
 import unittest
 
-import Filter
+from topydo.lib import Filter
 from TestFacilities import load_file, todolist_to_string, load_file_to_todolist
-import Todo
+from topydo.lib.Todo import Todo
 
 class FilterTest(unittest.TestCase):
     def test_filter3(self):
-        todo = Todo.Todo("(C) Relevant")
+        todo = Todo("(C) Relevant")
         relevance = Filter.RelevanceFilter()
         result = relevance.filter([todo])
 
@@ -303,10 +303,10 @@ class OrdinalTagFilterTest(unittest.TestCase):
         self.tomorrow = tomorrow.isoformat()
 
         self.todos = [
-            Todo.Todo("Foo due:%s" % self.today),
-            Todo.Todo("Bar due:%s" % self.tomorrow),
-            Todo.Todo("Baz due:nonsense"),
-            Todo.Todo("Fnord due:2014-10-32")
+            Todo("Foo due:%s" % self.today),
+            Todo("Bar due:%s" % self.tomorrow),
+            Todo("Baz due:nonsense"),
+            Todo("Fnord due:2014-10-32")
         ]
 
     def test_filter1(self):

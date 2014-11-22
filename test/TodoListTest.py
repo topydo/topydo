@@ -19,18 +19,18 @@
 import re
 import unittest
 
-import Todo
-import TodoFile
-from TodoListBase import InvalidTodoException
-import TodoList
+from topydo.lib.Todo import Todo
+from topydo.lib.TodoFile import TodoFile
+from topydo.lib.TodoListBase import InvalidTodoException
+from topydo.lib.TodoList import TodoList
 
 class TodoListTester(unittest.TestCase):
     def setUp(self):
-        self.todofile = TodoFile.TodoFile('data/TodoListTest.txt')
+        self.todofile = TodoFile('data/TodoListTest.txt')
         lines = [line for line in self.todofile.read() \
                        if re.search(r'\S', line)]
         self.text = ''.join(lines)
-        self.todolist = TodoList.TodoList(lines)
+        self.todolist = TodoList(lines)
 
     def test_contexts(self):
         self.assertEquals(set(['Context1', 'Context2']), \
@@ -146,15 +146,15 @@ class TodoListTester(unittest.TestCase):
         self.assertFalse(self.todolist.todo_by_dep_id('2'))
 
     def test_todo_number1(self):
-        todo = Todo.Todo("No number")
+        todo = Todo("No number")
         self.todolist.add_todo(todo)
 
         todo = self.todolist.todo(6)
-        self.assertIsInstance(todo, Todo.Todo)
+        self.assertIsInstance(todo, Todo)
         self.assertEquals(todo.text(), "No number")
 
     def test_todo_number2(self):
-        todo = Todo.Todo("Non-existent")
+        todo = Todo("Non-existent")
         self.assertRaises(InvalidTodoException, self.todolist.number, todo)
 
     def test_todo_complete(self):
@@ -193,7 +193,7 @@ class TodoListTester(unittest.TestCase):
 
 class TodoListDependencyTester(unittest.TestCase):
     def setUp(self):
-        self.todolist = TodoList.TodoList([])
+        self.todolist = TodoList([])
         self.todolist.add("Foo id:1")
         self.todolist.add("Bar p:1")
         self.todolist.add("Baz p:1 id:2")
@@ -290,7 +290,7 @@ class TodoListDependencyTester(unittest.TestCase):
 
 class TodoListCleanDependencyTester(unittest.TestCase):
     def setUp(self):
-        self.todolist = TodoList.TodoList([])
+        self.todolist = TodoList([])
         self.todolist.add("Bar p:1")
         self.todolist.add("Baz p:1 id:2")
         self.todolist.add("Buzz p:2")

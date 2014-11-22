@@ -16,7 +16,7 @@
 
 """ A view is a list of todos, sorted and filtered. """
 
-from PrettyPrinter import pretty_print_list, pp_color
+from topydo.lib.PrettyPrinter import pretty_print_list, pp_color
 
 class View(object):
     """

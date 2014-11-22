@@ -14,9 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import Command
+from topydo.lib.Command import Command
 
-class ArchiveCommand(Command.Command):
+class ArchiveCommand(Command):
     def __init__(self, p_todolist, p_archive_list):
         """
         Constructor.

@@ -14,12 +14,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from Command import Command, InvalidCommandArgument
-from Config import config
-import Filter
-import Sorter
-from TodoListBase import InvalidTodoException
-import View
+from topydo.lib.Command import Command, InvalidCommandArgument
+from topydo.lib.Config import config
+from topydo.lib import Filter
+from topydo.lib.Sorter import Sorter
+from topydo.lib.TodoListBase import InvalidTodoException
+from topydo.lib.View import View
 
 class DepCommand(Command):
     def __init__(self, p_args, p_todolist,
@@ -95,9 +95,9 @@ class DepCommand(Command):
                 self.error(self.usage())
 
             if todos:
-                sorter = Sorter.Sorter(config().sort_string())
+                sorter = Sorter(config().sort_string())
                 instance_filter = Filter.InstanceFilter(todos)
-                view = View.View(sorter, [instance_filter], self.todolist)
+                view = View(sorter, [instance_filter], self.todolist)
                 self.out(view.pretty_print())
         except InvalidTodoException:
             self.error("Invalid todo number given.")

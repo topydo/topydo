@@ -14,8 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from DCommand import DCommand
-from PrettyPrinter import pretty_print
+from topydo.lib.DCommand import DCommand
+from topydo.lib.PrettyPrinter import pretty_print
 
 class DeleteCommand(DCommand):
     def __init__(self, p_args, p_todolist,

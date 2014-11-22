@@ -19,7 +19,7 @@
 from datetime import date
 import re
 
-from Importance import importance, average_importance
+from topydo.lib.Importance import importance, average_importance
 
 def is_priority_field(p_field):
     """ Returns True when the field name denotes the priority. """

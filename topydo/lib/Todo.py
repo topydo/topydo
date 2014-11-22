@@ -1,16 +1,16 @@
 # Topydo - A todo.txt client written in Python.
 # Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -20,24 +20,24 @@ This module provides the Todo class.
 
 from datetime import date
 
-from Config import config
-import Utils
-import TodoBase
+from topydo.lib.Config import config
+from topydo.lib.TodoBase import TodoBase
+from topydo.lib.Utils import date_string_to_date
 
-class Todo(TodoBase.TodoBase):
+class Todo(TodoBase):
     """
     This class adds common functionality with respect to dates to the Todo
     base class, mainly by interpreting the start and due dates of task.
     """
 
     def __init__(self, p_str):
-        TodoBase.TodoBase.__init__(self, p_str)
+        TodoBase.__init__(self, p_str)
         self.attributes = {}
 
     def get_date(self, p_tag):
         """ Given a date tag, return a date object. """
         string = self.tag_value(p_tag)
-        return Utils.date_string_to_date(string) if string else None
+        return date_string_to_date(string) if string else None
 
     def start_date(self):
         """ Returns a date object of the todo's start date. """
