@@ -23,7 +23,8 @@ class SortCommand(Command):
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
-        super(SortCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
+        super(SortCommand, self).__init__(
+            p_args, p_todolist, p_out, p_err, p_prompt)
 
     def execute(self):
         if not super(SortCommand, self).execute():
@@ -46,8 +47,9 @@ class SortCommand(Command):
         return """Synopsis: sort [expression]"""
 
     def help(self):
-        return """Sorts the file according to the expression. If no expression is given,
-the expression in the configuration is used.
+        return """\
+Sorts the file according to the expression. If no expression is given, the
+expression in the configuration is used.
 
 The following sort properties are supported:
 

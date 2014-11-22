@@ -26,7 +26,8 @@ class DepCommand(Command):
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
-        super(DepCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
+        super(DepCommand, self).__init__(
+            p_args, p_todolist, p_out, p_err, p_prompt)
 
         try:
             self.subsubcommand = self.argument(0)
@@ -130,7 +131,10 @@ class DepCommand(Command):
   dep clean"""
 
     def help(self):
-        return """* add: Adds a dependency. Using 1 before 2 creates a dependency from todo item 2 to 1.
-* rm (alias: del): Removes a dependency.
-* ls: Lists all dependencies to or from a certain todo.
-* clean (alias: gc): Removes redundant id or p tags."""
+        return """\
+* add              : Adds a dependency. Using 1 before 2 creates a dependency
+                     from todo item 2 to 1.
+* rm (alias: del)  : Removes a dependency.
+* ls               : Lists all dependencies to or from a certain todo.
+* clean (alias: gc): Removes redundant id or p tags.
+"""

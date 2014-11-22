@@ -23,7 +23,8 @@ class TagCommand(Command):
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
-        super(TagCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
+        super(TagCommand, self).__init__(
+            p_args, p_todolist, p_out, p_err, p_prompt)
 
         self.force = False
         self.force_add = False
@@ -31,10 +32,11 @@ class TagCommand(Command):
         self.tag = None
         self.value = None
         self.values = []
+        self.current_values = []
 
     def _process_flags(self):
         flags, args = self.getopt("af")
-        for flag, value in flags:
+        for flag, _ in flags:
             if flag == "-a":
                 self.force_add = True
             elif flag == "-f":
@@ -70,7 +72,8 @@ class TagCommand(Command):
             for i, value in enumerate(self.current_values):
                 self.out("%2d. %s" % (i + 1, value))
 
-            answer = self.prompt('Which value to remove? Enter number or "all": ')
+            answer = self.prompt(
+                'Which value to remove? Enter number or "all": ')
 
         if answer != "all":
             try:
@@ -118,9 +121,12 @@ class TagCommand(Command):
         return """Synopsis: tag [-a] [-f] <NUMBER> <tag> [<value>]"""
 
     def help(self):
-        return """Sets the given tag to the given todo number with the given value. If
-the value is omitted, the tag is removed from the todo item.
+        return """\
+Sets the given tag to the given todo number with the given value. If the value
+is omitted, the tag is removed from the todo item.
 
--a : Do not change the current value of the tag if it exists, but add a new value.
--f : Force setting/removing all values of the tag. Prevents interaction with the user.
-        """
+-a : Do not change the current value of the tag if it exists, but add a new
+     value.
+-f : Force setting/removing all values of the tag. Prevents interaction with the
+     user.
+"""

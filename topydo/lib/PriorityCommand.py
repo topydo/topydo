@@ -24,7 +24,8 @@ class PriorityCommand(Command):
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
-        super(PriorityCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
+        super(PriorityCommand, self).__init__(
+            p_args, p_todolist, p_out, p_err, p_prompt)
 
     def execute(self):
         if not super(PriorityCommand, self).execute():
@@ -61,4 +62,6 @@ class PriorityCommand(Command):
         return """Synopsis: pri <NUMBER> <PRIORITY>"""
 
     def help(self):
-        return """Sets the priority of todo the given number to the given priority."""
+        return """\
+Sets the priority of todo the given number to the given priority.
+"""

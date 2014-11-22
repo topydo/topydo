@@ -30,7 +30,8 @@ class DCommand(Command):
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
-        super(DCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
+        super(DCommand, self).__init__(
+            p_args, p_todolist, p_out, p_err, p_prompt)
 
         self.force = False
 
@@ -63,7 +64,9 @@ class DCommand(Command):
         self.args = args
 
     def _uncompleted_children(self, p_todo):
-        return sorted([t for t in self.todolist.children(p_todo) if not t.is_completed()])
+        return sorted(
+            [t for t in self.todolist.children(p_todo) if not t.is_completed()]
+        )
 
     def _print_list(self, p_todos, p_print_numbers=True):
         filters = []
@@ -81,17 +84,17 @@ class DCommand(Command):
         return ""
 
     def _process_subtasks(self):
-            children = self._uncompleted_children(self.todo)
-            if children:
-                self._print_list(children)
+        children = self._uncompleted_children(self.todo)
+        if children:
+            self._print_list(children)
 
-                if not self.force:
-                    confirmation = self.prompt(self.prompt_text())
+            if not self.force:
+                confirmation = self.prompt(self.prompt_text())
 
-                if not self.force and re.match('^y(es)?$', confirmation, re.I):
-                    for child in children:
-                        self.execute_specific_core(child)
-                        self.out(self.prefix() + pretty_print(child))
+            if not self.force and re.match('^y(es)?$', confirmation, re.I):
+                for child in children:
+                    self.execute_specific_core(child)
+                    self.out(self.prefix() + pretty_print(child))
 
     def _print_unlocked_todos(self, p_old, p_new):
         delta = [todo for todo in p_new if todo not in p_old]
@@ -109,10 +112,13 @@ class DCommand(Command):
         Since these todos pop up at the end of the list, we cut off the list
         just before that point.
         """
-        return [todo for todo in self.todolist.todos()[:self.length] if not self._uncompleted_children(todo) and todo.is_active()]
+        return [todo for todo in self.todolist.todos()[:self.length]
+            if not self._uncompleted_children(todo) and todo.is_active()]
 
     def condition(self):
-        """ An additional condition whether execute_specific should be executed. """
+        """
+        An additional condition whether execute_specific should be executed.
+        """
         return True
 
     def condition_failed_text(self):

@@ -145,7 +145,8 @@ class TodoList(TodoListBase.TodoListBase):
         Returns a list of parent todos that (in)directly depend on the
         given todo.
         """
-        parents = self._depgraph.incoming_neighbors(hash(p_todo), not p_only_direct)
+        parents = self._depgraph.incoming_neighbors(
+            hash(p_todo), not p_only_direct)
         return [self._tododict[parent] for parent in parents]
 
     def children(self, p_todo, p_only_direct=False):
@@ -167,7 +168,9 @@ class TodoList(TodoListBase.TodoListBase):
         """
         def clean_by_tag(tag_name):
             """ Generic function to handle 'p' and 'id' tags. """
-            for todo in [todo for todo in self._todos if todo.has_tag(tag_name)]:
+            for todo in [todo for todo in self._todos
+                if todo.has_tag(tag_name)]:
+
                 value = todo.tag_value(tag_name)
                 if not self._depgraph.has_edge_id(value):
                     todo.remove_tag(tag_name, value)

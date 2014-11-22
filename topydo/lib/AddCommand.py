@@ -30,8 +30,10 @@ class AddCommand(Command.Command):
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
-        super(AddCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
+        super(AddCommand, self).__init__(
+            p_args, p_todolist, p_out, p_err, p_prompt)
         self.text = ' '.join(p_args)
+        self.todo = None
 
     def _preprocess_input_todo(self):
         """
@@ -102,7 +104,8 @@ class AddCommand(Command.Command):
         return """Synopsis: add <text>"""
 
     def help(self):
-        return """This subcommand automatically adds the creation date to the added item.
+        return """\
+This subcommand automatically adds the creation date to the added item.
 
 <text> may contain:
 

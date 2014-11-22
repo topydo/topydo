@@ -185,7 +185,8 @@ class TodoListBase(object):
         A filter for the pretty printer to append the todo number to the
         printed todo.
         """
-        return lambda p_todo_str, p_todo: "%3d %s" % (self.number(p_todo), p_todo_str)
+        return lambda p_todo_str, p_todo: \
+            "%3d %s" % (self.number(p_todo), p_todo_str)
 
     def __str__(self):
         return '\n'.join(pretty_print_list(self._todos))
