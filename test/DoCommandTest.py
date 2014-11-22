@@ -167,7 +167,7 @@ class DoCommandTest(CommandTest.CommandTest):
         command = DoCommand.DoCommand(["3"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEquals(self.output, first_output + "Completed: x %s Baz p:1\nThe following todo item(s) became active:\nFoo id:1\n" % self.today)
+        self.assertEquals(self.output, first_output + "Completed: x %s Baz p:1\nThe following todo item(s) became active:\n|  1| Foo id:1\n" % self.today)
         self.assertEquals(self.errors, "")
 
     def test_activated_todos2(self):

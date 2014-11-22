@@ -63,12 +63,8 @@ class DCommand(Command):
     def _uncompleted_children(self, p_todo):
         return sorted([t for t in self.todolist.children(p_todo) if not t.is_completed()])
 
-    def _print_list(self, p_todos, p_print_numbers=True):
-        filters = []
-
-        if p_print_numbers:
-            filters = [self.todolist.pp_number()]
-
+    def _print_list(self, p_todos):
+        filters = [self.todolist.pp_number()]
         self.out("\n".join(pretty_print_list(p_todos, filters)))
 
     def prompt_text(self):
@@ -95,7 +91,7 @@ class DCommand(Command):
         delta = [todo for todo in p_new if todo not in p_old]
         if delta:
             self.out("The following todo item(s) became active:")
-            self._print_list(delta, False)
+            self._print_list(delta)
 
     def _active_todos(self):
         """
