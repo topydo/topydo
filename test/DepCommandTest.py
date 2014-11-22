@@ -165,7 +165,7 @@ class DepCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
-        self.assertEquals(self.output, "  2 Bar p:1\n  3 Baz p:1\n")
+        self.assertEquals(self.output, "|  2| Bar p:1\n|  3| Baz p:1\n")
         self.assertEquals(self.errors, "")
 
     def test_ls2(self):
@@ -181,7 +181,7 @@ class DepCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
-        self.assertEquals(self.output, "  1 Foo id:1\n")
+        self.assertEquals(self.output, "|  1| Foo id:1\n")
         self.assertEquals(self.errors, "")
 
     def test_ls4(self):

@@ -58,7 +58,7 @@ class DoCommandTest(CommandTest.CommandTest):
         command = DoCommand.DoCommand(["1"], self.todolist, self.out, self.error, _yes_prompt)
         command.execute()
 
-        result = "  2 Bar p:1\n  3 Baz p:1\nCompleted: x %s Bar p:1\nCompleted: x %s Baz p:1\nCompleted: x %s Foo id:1\n" % (self.today, self.today, self.today)
+        result = "|  2| Bar p:1\n|  3| Baz p:1\nCompleted: x %s Bar p:1\nCompleted: x %s Baz p:1\nCompleted: x %s Foo id:1\n" % (self.today, self.today, self.today)
 
         for number in [1, 2, 3]:
             self.assertTrue(self.todolist.todo(number).is_completed())
@@ -72,7 +72,7 @@ class DoCommandTest(CommandTest.CommandTest):
         command = DoCommand.DoCommand(["1"], self.todolist, self.out, self.error, _no_prompt)
         command.execute()
 
-        result = "  2 Bar p:1\n  3 Baz p:1\nCompleted: x %s Foo id:1\n" % self.today
+        result = "|  2| Bar p:1\n|  3| Baz p:1\nCompleted: x %s Foo id:1\n" % self.today
 
         self.assertTrue(self.todolist.is_dirty())
         self.assertTrue(self.todolist.todo(1).is_completed())
@@ -121,7 +121,7 @@ class DoCommandTest(CommandTest.CommandTest):
         self._recurrence_helper(["4"])
 
         self.assertTrue(self.todolist.todo(4).is_completed())
-        result = "  9 %s Recurring! rec:1d due:%s\nCompleted: x %s Recurring! rec:1d\n" % (self.today, self.tomorrow, self.today)
+        result = "|  9| %s Recurring! rec:1d due:%s\nCompleted: x %s Recurring! rec:1d\n" % (self.today, self.tomorrow, self.today)
         self.assertEquals(self.output, result)
 
         todo = self.todolist.todo(8)
@@ -130,13 +130,13 @@ class DoCommandTest(CommandTest.CommandTest):
 
     def test_strict_recurrence1(self):
         self._recurrence_helper(["-s", "8"])
-        result = "  9 2014-11-19 Strict due:2014-01-02 rec:1d\nCompleted: x 2014-11-19 Strict due:2014-01-01 rec:1d\n"
+        result = "|  9| 2014-11-19 Strict due:2014-01-02 rec:1d\nCompleted: x 2014-11-19 Strict due:2014-01-01 rec:1d\n"
         self.assertEquals(self.output, result)
 
     def test_strict_recurrence2(self):
         self._recurrence_helper(["--strict", "8"])
 
-        result = "  9 2014-11-19 Strict due:2014-01-02 rec:1d\nCompleted: x 2014-11-19 Strict due:2014-01-01 rec:1d\n"
+        result = "|  9| 2014-11-19 Strict due:2014-01-02 rec:1d\nCompleted: x 2014-11-19 Strict due:2014-01-01 rec:1d\n"
         self.assertEquals(self.output, result)
 
     def test_invalid1(self):
@@ -208,7 +208,7 @@ class DoCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEquals(self.output, "  2 Bar p:1\n  3 Baz p:1\nCompleted: x 2014-11-18 Bar p:1\nCompleted: x 2014-11-18 Baz p:1\nCompleted: x 2014-11-18 Foo id:1\n")
+        self.assertEquals(self.output, "|  2| Bar p:1\n|  3| Baz p:1\nCompleted: x 2014-11-18 Bar p:1\nCompleted: x 2014-11-18 Baz p:1\nCompleted: x 2014-11-18 Foo id:1\n")
         self.assertEquals(self.errors, "")
 
     def test_do_custom_date3(self):

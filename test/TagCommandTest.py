@@ -34,7 +34,7 @@ class TagCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertEquals(self.todolist.todo(1).source(), "Foo due:2014-10-22")
-        self.assertEquals(self.output, "  1 Foo due:2014-10-22\n")
+        self.assertEquals(self.output, "|  1| Foo due:2014-10-22\n")
         self.assertEquals(self.errors, "")
         self.assertTrue(self.todolist.is_dirty())
 
@@ -43,7 +43,7 @@ class TagCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertEquals(self.todolist.todo(1).source(), "Foo due:2014-10-22")
-        self.assertEquals(self.output, "  1 Foo due:2014-10-22\n")
+        self.assertEquals(self.output, "|  1| Foo due:2014-10-22\n")
         self.assertEquals(self.errors, "")
         self.assertTrue(self.todolist.is_dirty())
 
@@ -52,7 +52,7 @@ class TagCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertEquals(self.todolist.todo(2).source(), "Bar due:2014-10-22 due:2014-10-19")
-        self.assertEquals(self.output, "  2 Bar due:2014-10-22 due:2014-10-19\n")
+        self.assertEquals(self.output, "|  2| Bar due:2014-10-22 due:2014-10-19\n")
         self.assertEquals(self.errors, "")
         self.assertTrue(self.todolist.is_dirty())
 
@@ -69,7 +69,7 @@ class TagCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
-        self.assertEquals(self.output, "  3 Baz due:2014-10-20\n")
+        self.assertEquals(self.output, "|  3| Baz due:2014-10-20\n")
         self.assertEquals(self.errors, "")
 
     def test_set_tag5(self):
@@ -77,7 +77,7 @@ class TagCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEquals(self.output, " 1. 2014-10-20\n 2. 2014-10-22\n  4 Fnord due:2014-10-20 due:2014-10-20\n")
+        self.assertEquals(self.output, " 1. 2014-10-20\n 2. 2014-10-22\n|  4| Fnord due:2014-10-20 due:2014-10-20\n")
         self.assertEquals(self.errors, "")
 
     def test_set_tag6(self):
@@ -85,7 +85,7 @@ class TagCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
-        self.assertEquals(self.output, " 1. 2014-10-20\n 2. 2014-10-22\n  4 Fnord due:2014-10-20 due:2014-10-22\n")
+        self.assertEquals(self.output, " 1. 2014-10-20\n 2. 2014-10-22\n|  4| Fnord due:2014-10-20 due:2014-10-22\n")
         self.assertEquals(self.errors, "")
 
     def test_set_tag7(self):
@@ -93,7 +93,7 @@ class TagCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEquals(self.output, " 1. 2014-10-20\n 2. 2014-10-22\n  4 Fnord due:2014-10-20 due:2014-10-20\n")
+        self.assertEquals(self.output, " 1. 2014-10-20\n 2. 2014-10-22\n|  4| Fnord due:2014-10-20 due:2014-10-20\n")
         self.assertEquals(self.errors, "")
 
     def test_set_tag8(self):
@@ -101,7 +101,7 @@ class TagCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
-        self.assertEquals(self.output, " 1. 2014-10-20\n 2. 2014-10-22\n  4 Fnord due:2014-10-20 due:2014-10-22\n")
+        self.assertEquals(self.output, " 1. 2014-10-20\n 2. 2014-10-22\n|  4| Fnord due:2014-10-20 due:2014-10-22\n")
         self.assertEquals(self.errors, "")
 
     def test_set_tag9(self):
@@ -109,7 +109,7 @@ class TagCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
-        self.assertEquals(self.output, " 1. 2014-10-20\n 2. 2014-10-22\n  4 Fnord due:2014-10-20 due:2014-10-22\n")
+        self.assertEquals(self.output, " 1. 2014-10-20\n 2. 2014-10-22\n|  4| Fnord due:2014-10-20 due:2014-10-22\n")
         self.assertEquals(self.errors, "")
 
     def test_set_tag10(self):
@@ -117,7 +117,7 @@ class TagCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEquals(self.output, "  4 Fnord due:2014-10-20 due:2014-10-20\n")
+        self.assertEquals(self.output, "|  4| Fnord due:2014-10-20 due:2014-10-20\n")
         self.assertEquals(self.errors, "")
 
     def test_rm_tag1(self):
@@ -125,7 +125,7 @@ class TagCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
-        self.assertEquals(self.output, "  1 Foo\n")
+        self.assertEquals(self.output, "|  1| Foo\n")
         self.assertEquals(self.errors, "")
 
     def test_rm_tag2(self):
@@ -133,7 +133,7 @@ class TagCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEquals(self.output, "  2 Bar\n")
+        self.assertEquals(self.output, "|  2| Bar\n")
         self.assertEquals(self.errors, "")
 
     def test_rm_tag3(self):
@@ -141,7 +141,7 @@ class TagCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEquals(self.output, " 1. 2014-10-20\n 2. 2014-10-22\n  4 Fnord\n")
+        self.assertEquals(self.output, " 1. 2014-10-20\n 2. 2014-10-22\n|  4| Fnord\n")
         self.assertEquals(self.errors, "")
 
     def test_rm_tag4(self):
@@ -149,7 +149,7 @@ class TagCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEquals(self.output, " 1. 2014-10-20\n 2. 2014-10-22\n  4 Fnord due:2014-10-22\n")
+        self.assertEquals(self.output, " 1. 2014-10-20\n 2. 2014-10-22\n|  4| Fnord due:2014-10-22\n")
         self.assertEquals(self.errors, "")
 
     def test_rm_tag6(self):
@@ -157,7 +157,7 @@ class TagCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
-        self.assertEquals(self.output, " 1. 2014-10-20\n 2. 2014-10-22\n  4 Fnord due:2014-10-20 due:2014-10-22\n")
+        self.assertEquals(self.output, " 1. 2014-10-20\n 2. 2014-10-22\n|  4| Fnord due:2014-10-20 due:2014-10-22\n")
         self.assertEquals(self.errors, "")
 
     def test_rm_tag7(self):
@@ -165,7 +165,7 @@ class TagCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
-        self.assertEquals(self.output, " 1. 2014-10-20\n 2. 2014-10-22\n  4 Fnord due:2014-10-20 due:2014-10-22\n")
+        self.assertEquals(self.output, " 1. 2014-10-20\n 2. 2014-10-22\n|  4| Fnord due:2014-10-20 due:2014-10-22\n")
         self.assertEquals(self.errors, "")
 
     def test_rm_tag8(self):
@@ -189,7 +189,7 @@ class TagCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEquals(self.output, "  4 Fnord\n")
+        self.assertEquals(self.output, "|  4| Fnord\n")
         self.assertEquals(self.errors, "")
 
     def test_help(self):

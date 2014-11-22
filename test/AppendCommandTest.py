@@ -1,16 +1,16 @@
 # Topydo - A todo.txt client written in Python.
 # Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -27,7 +27,7 @@ class AppendCommandTest(CommandTest.CommandTest):
         command = AppendCommand.AppendCommand([1, "Bar"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEqual(self.output, "  1 Foo Bar\n")
+        self.assertEqual(self.output, "|  1| Foo Bar\n")
         self.assertEqual(self.errors, "")
 
     def test_append2(self):
@@ -55,7 +55,7 @@ class AppendCommandTest(CommandTest.CommandTest):
         command = AppendCommand.AppendCommand([1, "Bar", "Baz"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEqual(self.output, "  1 Foo Bar Baz\n")
+        self.assertEqual(self.output, "|  1| Foo Bar Baz\n")
         self.assertEqual(self.errors, "")
 
     def test_append6(self):

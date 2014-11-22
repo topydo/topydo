@@ -1,16 +1,16 @@
 # Topydo - A todo.txt client written in Python.
 # Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -113,7 +113,7 @@ class AddCommandTest(CommandTest.CommandTest):
 
         self.assertFalse(self.todolist.todo(1).has_tag("after"))
         self.assertEquals(self.todolist.todo(1).source(), self.today + " Foo")
-        self.assertEquals(self.output, "  1 " + str(self.todolist.todo(1)) + "\n")
+        self.assertEquals(self.output, "|  1| " + str(self.todolist.todo(1)) + "\n")
         self.assertEquals(self.errors, "")
 
     def test_add_dep4(self):
@@ -123,7 +123,7 @@ class AddCommandTest(CommandTest.CommandTest):
 
         self.assertFalse(self.todolist.todo(1).has_tag("after"))
         self.assertEquals(self.todolist.todo(1).source(), self.today + " Foo")
-        self.assertEquals(self.output, "  1 " + str(self.todolist.todo(1)) + "\n")
+        self.assertEquals(self.output, "|  1| " + str(self.todolist.todo(1)) + "\n")
         self.assertEquals(self.errors, "")
 
     def test_add_dep5(self):
@@ -167,7 +167,7 @@ class AddCommandTest(CommandTest.CommandTest):
         command = AddCommand.AddCommand(["Foo t:today due:today"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = "  1 %s Foo t:%s due:%s\n" % (self.today, self.today, self.today)
+        result = "|  1| %s Foo t:%s due:%s\n" % (self.today, self.today, self.today)
         self.assertEquals(self.output, result)
         self.assertEquals(self.errors, "")
 

@@ -32,7 +32,7 @@ class ListCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
-        self.assertEquals(self.output, "  1 (C) Foo @Context2 Not@Context +Project1 Not+Project\n  4 (C) Drink beer @ home\n  5 (C) 13 + 29 = 42\n  2 (D) Bar @Context1 +Project2 p:1\n")
+        self.assertEquals(self.output, "|  1| (C) Foo @Context2 Not@Context +Project1 Not+Project\n|  4| (C) Drink beer @ home\n|  5| (C) 13 + 29 = 42\n|  2| (D) Bar @Context1 +Project2 p:1\n")
         self.assertEquals(self.errors, "")
 
     def test_list3(self):
@@ -40,7 +40,7 @@ class ListCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
-        self.assertEquals(self.output, "  2 (D) Bar @Context1 +Project2 p:1\n")
+        self.assertEquals(self.output, "|  2| (D) Bar @Context1 +Project2 p:1\n")
         self.assertEquals(self.errors, "")
 
     def test_list4(self):
@@ -48,7 +48,7 @@ class ListCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
-        self.assertEquals(self.output, "  3 (C) Baz @Context1 +Project1 key:value id:1\n  2 (D) Bar @Context1 +Project2 p:1\n")
+        self.assertEquals(self.output, "|  3| (C) Baz @Context1 +Project1 key:value id:1\n|  2| (D) Bar @Context1 +Project2 p:1\n")
         self.assertEquals(self.errors, "")
 
     def test_list5(self):
@@ -56,7 +56,7 @@ class ListCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
-        self.assertEquals(self.output, "  1 (C) Foo @Context2 Not@Context +Project1 Not+Project\n  3 (C) Baz @Context1 +Project1 key:value id:1\n  4 (C) Drink beer @ home\n  5 (C) 13 + 29 = 42\n  2 (D) Bar @Context1 +Project2 p:1\n")
+        self.assertEquals(self.output, "|  1| (C) Foo @Context2 Not@Context +Project1 Not+Project\n|  3| (C) Baz @Context1 +Project1 key:value id:1\n|  4| (C) Drink beer @ home\n|  5| (C) 13 + 29 = 42\n|  2| (D) Bar @Context1 +Project2 p:1\n")
         self.assertEquals(self.errors, "")
 
     def test_list6(self):
@@ -72,7 +72,7 @@ class ListCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
-        self.assertEquals(self.output, "  3 (C) Baz @Context1 +Project1 key:value id:1\n  1 (C) Foo @Context2 Not@Context +Project1 Not+Project\n")
+        self.assertEquals(self.output, "|  3| (C) Baz @Context1 +Project1 key:value id:1\n|  1| (C) Foo @Context2 Not@Context +Project1 Not+Project\n")
         self.assertEquals(self.errors, "")
 
     def test_list8(self):
@@ -80,7 +80,7 @@ class ListCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
-        self.assertEquals(self.output, "  4 (C) Drink beer @ home\n  5 (C) 13 + 29 = 42\n  2 (D) Bar @Context1 +Project2 p:1\n")
+        self.assertEquals(self.output, "|  4| (C) Drink beer @ home\n|  5| (C) 13 + 29 = 42\n|  2| (D) Bar @Context1 +Project2 p:1\n")
         self.assertEquals(self.errors, "")
 
     def test_list9(self):
@@ -88,7 +88,7 @@ class ListCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
-        self.assertEquals(self.output, "  5 (C) 13 + 29 = 42\n  2 (D) Bar @Context1 +Project2 p:1\n")
+        self.assertEquals(self.output, "|  5| (C) 13 + 29 = 42\n|  2| (D) Bar @Context1 +Project2 p:1\n")
         self.assertEquals(self.errors, "")
 
     def test_list10(self):
@@ -96,7 +96,7 @@ class ListCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
-        self.assertEquals(self.output, "  2 (D) Bar @Context1 +Project2 p:1\n")
+        self.assertEquals(self.output, "|  2| (D) Bar @Context1 +Project2 p:1\n")
         self.assertEquals(self.errors, "")
 
     def test_list11(self):
@@ -106,7 +106,7 @@ class ListCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
-        self.assertEquals(self.output, "  1 (C) Foo @Context2 Not@Context +Project1 Not+Project\n")
+        self.assertEquals(self.output, "|  1| (C) Foo @Context2 Not@Context +Project1 Not+Project\n")
         self.assertEquals(self.errors, "")
 
     def test_list12(self):
@@ -116,7 +116,7 @@ class ListCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
-        self.assertEquals(self.output, "  1 (C) Foo @Context2 Not@Context +Project1 Not+Project\n  3 (C) Baz @Context1 +Project1 key:value id:1\n  2 (D) Bar @Context1 +Project2 p:1\n")
+        self.assertEquals(self.output, "|  1| (C) Foo @Context2 Not@Context +Project1 Not+Project\n|  3| (C) Baz @Context1 +Project1 key:value id:1\n|  2| (D) Bar @Context1 +Project2 p:1\n")
         self.assertEquals(self.errors, "")
 
     def test_list13(self):
@@ -124,7 +124,7 @@ class ListCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
-        self.assertEquals(self.output, "  1 (C) Foo @Context2 Not@Context +Project1 Not+Project\n  3 (C) Baz @Context1 +Project1 key:value id:1\n  4 (C) Drink beer @ home\n  5 (C) 13 + 29 = 42\n")
+        self.assertEquals(self.output, "|  1| (C) Foo @Context2 Not@Context +Project1 Not+Project\n|  3| (C) Baz @Context1 +Project1 key:value id:1\n|  4| (C) Drink beer @ home\n|  5| (C) 13 + 29 = 42\n")
         self.assertEquals(self.errors, "")
 
     def test_list14(self):
@@ -134,7 +134,7 @@ class ListCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
-        self.assertEquals(self.output, "   1 (C) Foo @Context2 Not@Context +Project1 Not+Project\n   4 (C) Drink beer @ home\n   5 (C) 13 + 29 = 42\n   2 (D) Bar @Context1 +Project2 p:1\n")
+        self.assertEquals(self.output, " |  1| (C) Foo @Context2 Not@Context +Project1 Not+Project\n |  4| (C) Drink beer @ home\n |  5| (C) 13 + 29 = 42\n |  2| (D) Bar @Context1 +Project2 p:1\n")
         self.assertEquals(self.errors, "")
 
     def test_list15(self):
@@ -142,7 +142,7 @@ class ListCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
-        self.assertEquals(self.output, "  2 (D) Bar @Context1 +Project2 p:1\n")
+        self.assertEquals(self.output, "|  2| (D) Bar @Context1 +Project2 p:1\n")
         self.assertEquals(self.errors, "")
 
     def test_list16(self):
@@ -152,7 +152,7 @@ class ListCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
-        self.assertEquals(self.output, "6iu (C) Foo @Context2 Not@Context +Project1 Not+Project\ntil (C) Drink beer @ home\n c5 (C) 13 + 29 = 42\nxvb (D) Bar @Context1 +Project2 p:1\n")
+        self.assertEquals(self.output, "|6iu| (C) Foo @Context2 Not@Context +Project1 Not+Project\n|til| (C) Drink beer @ home\n| c5| (C) 13 + 29 = 42\n|xvb| (D) Bar @Context1 +Project2 p:1\n")
         self.assertEquals(self.errors, "")
 
     def test_help(self):

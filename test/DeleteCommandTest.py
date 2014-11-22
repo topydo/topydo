@@ -33,7 +33,7 @@ class DeleteCommandTest(CommandTest.CommandTest):
 
         self.assertTrue(self.todolist.is_dirty())
         self.assertEquals(self.todolist.todo(1).source(), "Bar")
-        self.assertEquals(self.output, "  2 Bar p:1\nRemoved: Foo id:1\n")
+        self.assertEquals(self.output, "|  2| Bar p:1\nRemoved: Foo id:1\n")
         self.assertEquals(self.errors, "")
 
     def test_del1_regex(self):
@@ -42,7 +42,7 @@ class DeleteCommandTest(CommandTest.CommandTest):
 
         self.assertTrue(self.todolist.is_dirty())
         self.assertEquals(self.todolist.todo(1).source(), "Bar")
-        self.assertEquals(self.output, "  2 Bar p:1\nRemoved: Foo id:1\n")
+        self.assertEquals(self.output, "|  2| Bar p:1\nRemoved: Foo id:1\n")
         self.assertEquals(self.errors, "")
 
     def test_del2(self):
@@ -51,7 +51,7 @@ class DeleteCommandTest(CommandTest.CommandTest):
 
         self.assertTrue(self.todolist.is_dirty())
         self.assertEquals(self.todolist.count(), 0)
-        self.assertEquals(self.output, "  2 Bar p:1\nRemoved: Bar\nRemoved: Foo\n")
+        self.assertEquals(self.output, "|  2| Bar p:1\nRemoved: Bar\nRemoved: Foo\n")
         self.assertEquals(self.errors, "")
 
     def test_del3(self):
@@ -60,7 +60,7 @@ class DeleteCommandTest(CommandTest.CommandTest):
 
         self.assertTrue(self.todolist.is_dirty())
         self.assertEquals(self.todolist.count(), 1) # force won't delete subtasks
-        self.assertEquals(self.output, "  2 Bar p:1\nRemoved: Foo id:1\n")
+        self.assertEquals(self.output, "|  2| Bar p:1\nRemoved: Foo id:1\n")
         self.assertEquals(self.errors, "")
 
     def test_del4(self):
@@ -69,7 +69,7 @@ class DeleteCommandTest(CommandTest.CommandTest):
 
         self.assertTrue(self.todolist.is_dirty())
         self.assertEquals(self.todolist.count(), 1) # force won't delete subtasks
-        self.assertEquals(self.output, "  2 Bar p:1\nRemoved: Foo id:1\n")
+        self.assertEquals(self.output, "|  2| Bar p:1\nRemoved: Foo id:1\n")
         self.assertEquals(self.errors, "")
 
     def test_del5(self):
