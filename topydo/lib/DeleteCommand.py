@@ -14,15 +14,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from DCommand import DCommand
-from PrettyPrinter import pretty_print
+from topydo.lib.DCommand import DCommand
+from topydo.lib.PrettyPrinter import pretty_print
 
 class DeleteCommand(DCommand):
     def __init__(self, p_args, p_todolist,
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
-        super(DeleteCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
+        super(DeleteCommand, self).__init__(
+            p_args, p_todolist, p_out, p_err, p_prompt)
 
     def prompt_text(self):
         return "Also remove subtasks? [y/N] "

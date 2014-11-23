@@ -1,16 +1,16 @@
 # Topydo - A todo.txt client written in Python.
 # Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -81,7 +81,18 @@ def relative_date_to_date(p_date, p_offset=date.today()):
     p_date = p_date.lower()
 
     relative = re.match('(?P<length>[0-9]+)(?P<period>[dwmy])$', p_date, re.I)
-    weekday = re.match('mo(n(day)?)?$|tu(e(sday)?)?$|we(d(nesday)?)?$|th(u(rsday)?)?$|fr(i(day)?)?$|sa(t(urday)?)?$|su(n(day)?)?$', p_date)
+
+    monday = 'mo(n(day)?)?$'
+    tuesday = 'tu(e(sday)?)?$'
+    wednesday = 'we(d(nesday)?)?$'
+    thursday = 'th(u(rsday)?)?$'
+    friday = 'fr(i(day)?)?$'
+    saturday = 'sa(t(urday)?)?$'
+    sunday = 'su(n(day)?)?$'
+
+    weekday = re.match('|'.join(
+        [monday, tuesday, wednesday, thursday, friday, saturday, sunday]),
+        p_date)
 
     if relative:
         length = relative.group('length')

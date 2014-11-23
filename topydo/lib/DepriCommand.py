@@ -14,16 +14,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from Command import Command, InvalidCommandArgument
-from PrettyPrinter import pretty_print
-from TodoListBase import InvalidTodoException
+from topydo.lib.Command import Command, InvalidCommandArgument
+from topydo.lib.PrettyPrinter import pretty_print
+from topydo.lib.TodoListBase import InvalidTodoException
 
 class DepriCommand(Command):
     def __init__(self, p_args, p_todolist,
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
-        super(DepriCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
+        super(DepriCommand, self).__init__(
+            p_args, p_todolist, p_out, p_err, p_prompt)
 
     def execute(self):
         if not super(DepriCommand, self).execute():

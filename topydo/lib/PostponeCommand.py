@@ -16,27 +16,28 @@
 
 from datetime import date, timedelta
 
-from Command import Command, InvalidCommandArgument
-from Config import config
-from PrettyPrinter import pretty_print
-from RelativeDate import relative_date_to_date
-from TodoListBase import InvalidTodoException
-from Utils import date_string_to_date
+from topydo.lib.Command import Command, InvalidCommandArgument
+from topydo.lib.Config import config
+from topydo.lib.PrettyPrinter import pretty_print
+from topydo.lib.RelativeDate import relative_date_to_date
+from topydo.lib.TodoListBase import InvalidTodoException
+from topydo.lib.Utils import date_string_to_date
 
 class PostponeCommand(Command):
     def __init__(self, p_args, p_todolist,
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
-        super(PostponeCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
-        
+        super(PostponeCommand, self).__init__(
+            p_args, p_todolist, p_out, p_err, p_prompt)
+
         self.move_start_date = False
 
     def _process_flags(self):
         opts, args = self.getopt('s')
-            
-        for o, a in opts:
-            if o == '-s':
+
+        for opt, _ in opts:
+            if opt == '-s':
                 self.move_start_date = True
 
         self.args = args
@@ -86,7 +87,8 @@ class PostponeCommand(Command):
         return "Synopsis: postpone [-s] <NUMBER> <PATTERN>"
 
     def help(self):
-        return """Postpone a todo item with the given number and the given pattern.
+        return """\
+Postpone a todo item with the given number and the given pattern.
 
 Postponing is done by adjusting the due date of the todo, and if the -s flag is
 given, the start date accordingly.
@@ -94,4 +96,5 @@ given, the start date accordingly.
 The pattern is a relative date, written in the format <COUNT><PERIOD> where
 count is a number and <PERIOD> is either 'd', 'w', 'm' or 'y', which stands for
 days, weeks, months and years respectively. Example: 'postpone 1 1w' postpones
-todo number 1 for 1 week."""
+todo number 1 for 1 week.
+"""

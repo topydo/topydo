@@ -146,8 +146,8 @@ def config(p_path=None):
     if not config.instance or p_path != None:
         try:
             config.instance = _Config(p_path)
-        except ConfigParser.ParsingError as e:
-            raise ConfigError(str(e))
+        except ConfigParser.ParsingError as perr:
+            raise ConfigError(str(perr))
 
     return config.instance
 

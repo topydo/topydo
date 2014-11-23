@@ -21,10 +21,10 @@ A list of todo items.
 from datetime import date
 import re
 
-import Filter
-from PrettyPrinter import pretty_print_list
-import Todo
-import View
+from topydo.lib import Filter
+from topydo.lib.PrettyPrinter import pretty_print_list
+from topydo.lib.Todo import Todo
+from topydo.lib.View import View
 
 class InvalidTodoException(Exception):
     pass
@@ -87,7 +87,7 @@ class TodoListBase(object):
         return todos[0] if len(todos) else None
 
     def add_list(self, p_srcs):
-        todos = [Todo.Todo(src) for src in p_srcs if re.search(r'\S', src)]
+        todos = [Todo(src) for src in p_srcs if re.search(r'\S', src)]
         self.add_todos(todos)
 
         return todos
@@ -154,7 +154,7 @@ class TodoListBase(object):
         defined by the end user. Todos is this list should not be modified,
         modifications should occur through this class.
         """
-        return View.View(p_sorter, p_filters, self)
+        return View(p_sorter, p_filters, self)
 
     def is_dirty(self):
         return self.dirty
@@ -185,7 +185,8 @@ class TodoListBase(object):
         A filter for the pretty printer to append the todo number to the
         printed todo.
         """
-        return lambda p_todo_str, p_todo: "%3d %s" % (self.number(p_todo), p_todo_str)
+        return lambda p_todo_str, p_todo: \
+            "%3d %s" % (self.number(p_todo), p_todo_str)
 
     def __str__(self):
         return '\n'.join(pretty_print_list(self._todos))

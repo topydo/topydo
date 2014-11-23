@@ -1,22 +1,22 @@
 # Topydo - A todo.txt client written in Python.
 # Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import CommandTest
-import DepriCommand
-import TodoList
+from topydo.lib.DepriCommand import DepriCommand
+from topydo.lib.TodoList import TodoList
 
 class DepriCommandTest(CommandTest.CommandTest):
     def setUp(self):
@@ -25,10 +25,10 @@ class DepriCommandTest(CommandTest.CommandTest):
             "Bar",
         ]
 
-        self.todolist = TodoList.TodoList(todos)
+        self.todolist = TodoList(todos)
 
     def test_set_prio1(self):
-        command = DepriCommand.DepriCommand(["1"], self.todolist, self.out, self.error)
+        command = DepriCommand(["1"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
@@ -37,7 +37,7 @@ class DepriCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_set_prio2(self):
-        command = DepriCommand.DepriCommand(["2"], self.todolist, self.out, self.error)
+        command = DepriCommand(["2"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -46,7 +46,7 @@ class DepriCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_set_prio3(self):
-        command = DepriCommand.DepriCommand(["Foo"], self.todolist, self.out, self.error)
+        command = DepriCommand(["Foo"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
@@ -55,7 +55,7 @@ class DepriCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_invalid1(self):
-        command = DepriCommand.DepriCommand(["99"], self.todolist, self.out, self.error)
+        command = DepriCommand(["99"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -63,7 +63,7 @@ class DepriCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "Invalid todo number given.\n")
 
     def test_empty(self):
-        command = DepriCommand.DepriCommand([], self.todolist, self.out, self.error)
+        command = DepriCommand([], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -71,7 +71,7 @@ class DepriCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, command.usage() + "\n")
 
     def test_help(self):
-        command = DepriCommand.DepriCommand(["help"], self.todolist, self.out, self.error)
+        command = DepriCommand(["help"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertEquals(self.output, "")

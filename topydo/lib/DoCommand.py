@@ -16,10 +16,10 @@
 
 from datetime import date
 
-from DCommand import DCommand
-from PrettyPrinter import pretty_print
-from Recurrence import advance_recurring_todo, strict_advance_recurring_todo
-from Utils import date_string_to_date
+from topydo.lib.DCommand import DCommand
+from topydo.lib.PrettyPrinter import pretty_print
+from topydo.lib.Recurrence import advance_recurring_todo, strict_advance_recurring_todo
+from topydo.lib.Utils import date_string_to_date
 
 class DoCommand(DCommand):
     def __init__(self, p_args, p_todolist,
@@ -30,7 +30,8 @@ class DoCommand(DCommand):
         self.strict_recurrence = False
         self.completion_date = date.today()
 
-        super(DoCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
+        super(DoCommand, self).__init__(
+            p_args, p_todolist, p_out, p_err, p_prompt)
 
     def get_flags(self):
         """ Additional flags. """
@@ -59,7 +60,9 @@ class DoCommand(DCommand):
         return "Completed: "
 
     def condition(self):
-        """ An additional condition whether execute_specific should be executed. """
+        """
+        An additional condition whether execute_specific should be executed.
+        """
         return not self.todo.is_completed()
 
     def condition_failed_text(self):

@@ -19,19 +19,21 @@
 from datetime import date
 import re
 
-from Config import config
-import Command
-from PrettyPrinter import pretty_print
-from RelativeDate import relative_date_to_date
-from TodoListBase import InvalidTodoException
+from topydo.lib.Config import config
+from topydo.lib.Command import Command
+from topydo.lib.PrettyPrinter import pretty_print
+from topydo.lib.RelativeDate import relative_date_to_date
+from topydo.lib.TodoListBase import InvalidTodoException
 
-class AddCommand(Command.Command):
+class AddCommand(Command):
     def __init__(self, p_args, p_todolist,
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
-        super(AddCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
+        super(AddCommand, self).__init__(
+            p_args, p_todolist, p_out, p_err, p_prompt)
         self.text = ' '.join(p_args)
+        self.todo = None
 
     def _preprocess_input_todo(self):
         """
@@ -102,7 +104,8 @@ class AddCommand(Command.Command):
         return """Synopsis: add <text>"""
 
     def help(self):
-        return """This subcommand automatically adds the creation date to the added item.
+        return """\
+This subcommand automatically adds the creation date to the added item.
 
 <text> may contain:
 

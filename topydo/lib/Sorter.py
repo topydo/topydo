@@ -1,16 +1,16 @@
 # Topydo - A todo.txt client written in Python.
 # Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -19,7 +19,7 @@
 from datetime import date
 import re
 
-from Importance import importance, average_importance
+from topydo.lib.Importance import importance, average_importance
 
 def is_priority_field(p_field):
     """ Returns True when the field name denotes the priority. """
@@ -45,9 +45,9 @@ def get_field_function(p_field):
         result = (lambda a: a.completion_date() if a.completion_date() \
             else date.max)
     elif p_field == 'importance':
-        result = lambda a: importance(a)
+        result = importance
     elif p_field == 'importance-avg' or p_field == 'importance-average':
-        result = lambda a: average_importance(a)
+        result = average_importance
     elif p_field == 'text':
         result = lambda a: a.text()
     else:

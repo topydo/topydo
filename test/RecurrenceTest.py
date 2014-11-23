@@ -10,20 +10,20 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import date, timedelta
 import unittest
 
-from Config import config
-from Recurrence import advance_recurring_todo, strict_advance_recurring_todo, NoRecurrenceException
-import Todo
+from topydo.lib.Config import config
+from topydo.lib.Recurrence import advance_recurring_todo, strict_advance_recurring_todo, NoRecurrenceException
+from topydo.lib.Todo import Todo
 
 class RecurrenceTest(unittest.TestCase):
     def setUp(self):
-        self.todo = Todo.Todo("Test rec:1w")
+        self.todo = Todo("Test rec:1w")
 
     def test_duedate1(self):
         """ Where due date is in the future. """

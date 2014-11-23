@@ -1,16 +1,16 @@
 # Topydo - A todo.txt client written in Python.
 # Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -21,14 +21,21 @@ todo.txt file.
 
 import re
 
-import Utils
+from topydo.lib.Utils import date_string_to_date
 
-_date_match = r'\d{4}-\d{2}-\d{2}'
-_completed_head_match = re.compile(r'x ((?P<completionDate>' + _date_match + ') )' + '((?P<creationDate>' + _date_match + ') )?(?P<rest>.*)')
-_normal_head_match = re.compile(r'(\((?P<priority>[A-Z])\) )?' + '((?P<creationDate>' + _date_match + ') )?(?P<rest>.*)')
-_tag_match = re.compile('(?P<key>[^:]*):(?P<value>.*)')
-_project_match = re.compile(r'\+(\S*\w)')
-_context_match = re.compile(r'@(\S*\w)')
+_DATE_MATCH = r'\d{4}-\d{2}-\d{2}'
+
+_COMPLETED_HEAD_MATCH = re.compile(
+    r'x ((?P<completionDate>' + _DATE_MATCH + ') )' + '((?P<creationDate>' +
+    _DATE_MATCH + ') )?(?P<rest>.*)')
+
+_NORMAL_HEAD_MATCH = re.compile(
+    r'(\((?P<priority>[A-Z])\) )?' + '((?P<creationDate>' + _DATE_MATCH +
+    ') )?(?P<rest>.*)')
+
+_TAG_MATCH = re.compile('(?P<key>[^:]*):(?P<value>.*)')
+_PROJECT_MATCH = re.compile(r'\+(\S*\w)')
+_CONTEXT_MATCH = re.compile(r'@(\S*\w)')
 
 def parse_line(p_string):
     """
@@ -52,8 +59,8 @@ def parse_line(p_string):
         'tags': []
     }
 
-    completed_head = _completed_head_match.match(p_string)
-    normal_head = _normal_head_match.match(p_string)
+    completed_head = _COMPLETED_HEAD_MATCH.match(p_string)
+    normal_head = _NORMAL_HEAD_MATCH.match(p_string)
 
     rest = p_string
 
@@ -61,30 +68,30 @@ def parse_line(p_string):
         result['completed'] = True
 
         completion_date = completed_head.group('completionDate')
-        result['completionDate'] = Utils.date_string_to_date(completion_date)
+        result['completionDate'] = date_string_to_date(completion_date)
 
         creation_date = completed_head.group('creationDate')
-        result['creationDate'] = Utils.date_string_to_date(creation_date)
+        result['creationDate'] = date_string_to_date(creation_date)
 
         rest = completed_head.group('rest')
     elif normal_head:
         result['priority'] = normal_head.group('priority')
 
         creation_date = normal_head.group('creationDate')
-        result['creationDate'] = Utils.date_string_to_date(creation_date)
+        result['creationDate'] = date_string_to_date(creation_date)
 
         rest = normal_head.group('rest')
 
     for word in rest.split():
-        project = _project_match.match(word)
+        project = _PROJECT_MATCH.match(word)
         if project:
             result['projects'].append(project.group(1))
 
-        context = _context_match.match(word)
+        context = _CONTEXT_MATCH.match(word)
         if context:
             result['contexts'].append(context.group(1))
 
-        tag = _tag_match.match(word)
+        tag = _TAG_MATCH.match(word)
         if tag:
             result['tags'].append((tag.group('key'), tag.group('value')))
             continue

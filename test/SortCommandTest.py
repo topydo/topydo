@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import CommandTest
-import SortCommand
+from topydo.lib.SortCommand import SortCommand
 import TestFacilities
 
 class SortCommandTest(CommandTest.CommandTest):
@@ -24,19 +24,19 @@ class SortCommandTest(CommandTest.CommandTest):
 
     def test_sort1(self):
         """ Alphabetically sorted """
-        command = SortCommand.SortCommand(["text"], self.todolist, self.out, self.error)
+        command = SortCommand(["text"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertEquals(str(self.todolist), "First\n(A) Foo\n2014-06-14 Last")
 
     def test_sort2(self):
-        command = SortCommand.SortCommand([], self.todolist, self.out, self.error)
+        command = SortCommand([], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertEquals(str(self.todolist), "(A) Foo\n2014-06-14 Last\nFirst")
 
     def test_help(self):
-        command = SortCommand.SortCommand(["help"], self.todolist, self.out, self.error)
+        command = SortCommand(["help"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertEquals(self.output, "")

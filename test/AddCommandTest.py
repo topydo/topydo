@@ -16,9 +16,9 @@
 
 from datetime import date
 
-import AddCommand
+from topydo.lib import AddCommand
 import CommandTest
-import TodoList
+from topydo.lib import TodoList
 
 class AddCommandTest(CommandTest.CommandTest):
     def setUp(self):

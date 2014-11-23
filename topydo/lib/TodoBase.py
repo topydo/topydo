@@ -1,16 +1,16 @@
 # Topydo - A todo.txt client written in Python.
 # Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -21,8 +21,8 @@ This module contains the class that represents a single todo item.
 from datetime import date
 import re
 
-import TodoParser
-from Utils import is_valid_priority
+from topydo.lib.TodoParser import parse_line
+from topydo.lib.Utils import is_valid_priority
 
 class TodoBase(object):
     """
@@ -164,7 +164,7 @@ class TodoBase(object):
     def set_source_text(self, p_text):
         """ Sets the todo source text. The text will be parsed again. """
         self.src = p_text.strip()
-        self.fields = TodoParser.parse_line(self.src)
+        self.fields = parse_line(self.src)
 
     def projects(self):
         """ Returns a set of projects associated with this todo item. """
