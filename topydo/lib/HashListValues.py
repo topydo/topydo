@@ -54,7 +54,7 @@ def hash_list_values(p_list, p_hash=hash):
     used = set()
 
     # choose a larger key size if there's >1% chance of collision
-    size = _table_sizes[3] if len(p_list) < _table_sizes[3] * 0.01 else table_sizes[4]
+    size = _table_sizes[3] if len(p_list) < _table_sizes[3] * 0.01 else _table_sizes[4]
 
     for item in p_list:
         hash_value = p_hash(item) % size
