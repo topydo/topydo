@@ -42,16 +42,17 @@ class PostponeCommand(Command):
 
         self.args = args
 
-    def _get_offset(self, p_todo):
-        offset = p_todo.tag_value(config().tag_due(), date.today().isoformat())
-        offset_date = date_string_to_date(offset)
-
-        if offset_date < date.today():
-            offset_date = date.today()
-
-        return offset_date
-
     def execute(self):
+        def _get_offset(p_todo):
+            offset = p_todo.tag_value(
+                config().tag_due(), date.today().isoformat())
+            offset_date = date_string_to_date(offset)
+
+            if offset_date < date.today():
+                offset_date = date.today()
+
+            return offset_date
+
         if not super(PostponeCommand, self).execute():
             return False
 
@@ -62,7 +63,7 @@ class PostponeCommand(Command):
             pattern = self.argument(1)
 
             # pdb.set_trace()
-            offset = self._get_offset(todo)
+            offset = _get_offset(todo)
             new_due = relative_date_to_date(pattern, offset)
 
             if new_due:
