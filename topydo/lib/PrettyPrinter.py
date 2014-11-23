@@ -58,7 +58,7 @@ def pp_color(p_todo_str, p_todo):
 def pp_indent(p_indent=0):
     return lambda s, t: ' ' * p_indent + s
 
-def pretty_print(p_todo, p_filters=[]):
+def pretty_print(p_todo, p_filters=None):
     """
     Given a todo item, pretty print it and return a list of formatted strings.
 
@@ -70,6 +70,7 @@ def pretty_print(p_todo, p_filters=[]):
 
     Example is pp_color in this fle.
     """
+    p_filters = p_filters or []
 
     todo_str = str(p_todo)
 
@@ -78,9 +79,10 @@ def pretty_print(p_todo, p_filters=[]):
 
     return todo_str
 
-def pretty_print_list(p_todos, p_filters=[]):
+def pretty_print_list(p_todos, p_filters=None):
     """
     Given a list of todo items, pretty print it and return a list of
     formatted strings.
     """
+    p_filters = p_filters or []
     return [pretty_print(todo, p_filters) for todo in p_todos]
