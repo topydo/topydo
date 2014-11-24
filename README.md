@@ -2,7 +2,7 @@ topydo
 ======
 
 topydo is a todo list application using the [todo.txt format][1]. It is heavily
-inspired by the [todo.txt CLI][1] by Gina Trapani. This tool is actually a
+inspired by the [todo.txt CLI][2] by Gina Trapani. This tool is actually a
 merge between the todo.txt CLI and a [number of extensions][3] that I wrote
 on top of the CLI, hereafter refered to as todo.txt-tools. These extensions
 are:
@@ -16,7 +16,7 @@ are:
   **relative dates**);
 
 Consult the [wiki][4] for more information about the features and on how to
-use Topydo.
+use topydo.
 
 Motivation
 ----------
