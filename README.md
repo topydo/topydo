@@ -16,7 +16,7 @@ are:
   **relative dates**);
 
 Consult the [wiki][4] for more information about the features and on how to
-use Topydo.
+use topydo.
 
 Motivation
 ----------
