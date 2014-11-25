@@ -165,11 +165,6 @@ class CLIApplication(object):
         todofile = TodoFile.TodoFile(self.path)
         self.todolist = TodoList.TodoList(todofile.read())
 
-        try:
-            subcommand = args[0]
-        except IndexError:
-            subcommand = self.config.default_command()
-
         subcommand_map = {
           'add': AddCommand,
           'app': AppendCommand,
@@ -194,10 +189,26 @@ class CLIApplication(object):
           'tag': TagCommand,
         }
 
-        if not subcommand in subcommand_map:
+        try:
+            subcommand = args[0]
+
+            if subcommand in subcommand_map:
+                subcommand = subcommand_map[subcommand]
+                if len(args) > 1:
+                    args = args[1:]
+            else:
+                subcommand = self.config.default_command()
+                if subcommand in subcommand_map:
+                    subcommand = subcommand_map[subcommand]
+                    # leave args unchanged
+                else:
+                    usage()
+        except IndexError:
             subcommand = self.config.default_command()
-        else:
-            args.pop(0)
+            if subcommand in subcommand_map:
+                subcommand = subcommand_map[subcommand]
+            else:
+                usage()
 
         if self.execute(subcommand_map[subcommand], args) == False:
             exit(1)
