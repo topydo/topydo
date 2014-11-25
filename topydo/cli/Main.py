@@ -166,7 +166,7 @@ class CLIApplication(object):
         self.todolist = TodoList.TodoList(todofile.read())
 
         try:
-            subcommand = args.pop(0)
+            subcommand = args[0]
         except IndexError:
             subcommand = self.config.default_command()
 
@@ -196,6 +196,8 @@ class CLIApplication(object):
 
         if not subcommand in subcommand_map:
             subcommand = self.config.default_command()
+        else:
+            args.pop(0)
 
         if self.execute(subcommand_map[subcommand], args) == False:
             exit(1)
