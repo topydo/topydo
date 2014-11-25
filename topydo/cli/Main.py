@@ -194,8 +194,7 @@ class CLIApplication(object):
 
             if subcommand in subcommand_map:
                 subcommand = subcommand_map[subcommand]
-                if len(args) > 1:
-                    args = args[1:]
+                args = args[1:]
             else:
                 subcommand = self.config.default_command()
                 if subcommand in subcommand_map:
