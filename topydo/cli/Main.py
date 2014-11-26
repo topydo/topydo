@@ -209,7 +209,7 @@ class CLIApplication(object):
             else:
                 usage()
 
-        if self.execute(subcommand_map[subcommand], args) == False:
+        if self.execute(subcommand, args) == False:
             exit(1)
 
         if self.todolist.is_dirty():
