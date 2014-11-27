@@ -56,6 +56,13 @@ class TodoListBase(object):
         """
         result = None
         try:
+            try:
+                if not re.match('[1-9]\d*', p_identifier):
+                    raise ValueError # leading zeros, pass to regexp
+            except TypeError:
+                # we're dealing with an integer
+                pass
+
             result = self._todos[int(p_identifier) - 1]
         except IndexError:
             raise InvalidTodoException

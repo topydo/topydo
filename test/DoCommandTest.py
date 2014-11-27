@@ -157,6 +157,14 @@ class DoCommandTest(CommandTest.CommandTest):
         self.assertFalse(self.output)
         self.assertEquals(self.errors, "Invalid todo number given.\n")
 
+    def test_invalid3(self):
+        command = DoCommand(["01"], self.todolist, self.out, self.error, _yes_prompt)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.output)
+        self.assertEquals(self.errors, "Invalid todo number given.\n")
+
     def test_activated_todos1(self):
         command = DoCommand(["2"], self.todolist, self.out, self.error)
         command.execute()
