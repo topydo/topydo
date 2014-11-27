@@ -145,6 +145,14 @@ class ListCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.output, "  2 (D) Bar @Context1 +Project2 p:1\n")
         self.assertEquals(self.errors, "")
 
+    def test_list16(self):
+        command = ListCommand(["-x", "id:"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+        self.assertEquals(self.output, "  3 (C) Baz @Context1 +Project1 key:value id:1\n")
+        self.assertEquals(self.errors, "")
+
     def test_help(self):
         command = ListCommand(["help"], self.todolist, self.out, self.error)
         command.execute()

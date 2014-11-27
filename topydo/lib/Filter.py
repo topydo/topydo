@@ -152,7 +152,7 @@ class LimitFilter(Filter):
     def filter(self, p_todos):
         return p_todos[:self.limit] if self.limit >= 0 else p_todos
 
-ORDINAL_TAG_MATCH = r"(?P<key>[^:]*):(?P<operator><=?|=|>=?|!)?(?P<value>\S*)"
+ORDINAL_TAG_MATCH = r"(?P<key>[^:]*):(?P<operator><=?|=|>=?|!)?(?P<value>\S+)"
 
 class OrdinalTagFilter(Filter):
     def __init__(self, p_expression):
