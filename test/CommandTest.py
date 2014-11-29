@@ -16,6 +16,7 @@
 
 import unittest
 
+from topydo.lib.Config import config
 from topydo.lib.Utils import escape_ansi
 
 class CommandTest(unittest.TestCase):
@@ -23,6 +24,9 @@ class CommandTest(unittest.TestCase):
         super(CommandTest, self).__init__(*args, **kwargs)
         self.output = ""
         self.errors = ""
+
+    def setUp(self):
+        config("")
 
     def out(self, p_output):
         if p_output:

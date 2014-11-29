@@ -20,6 +20,7 @@ from topydo.lib.TodoList import TodoList
 
 class TagCommandTest(CommandTest.CommandTest):
     def setUp(self):
+        super(TagCommandTest, self).setUp()
         todos = [
             "Foo",
             "Bar due:2014-10-22",

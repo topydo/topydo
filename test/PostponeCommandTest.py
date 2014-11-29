@@ -22,6 +22,7 @@ from topydo.lib.TodoList import TodoList
 
 class PostponeCommandTest(CommandTest.CommandTest):
     def setUp(self):
+        super(PostponeCommandTest, self).setUp()
         self.today = date.today()
         self.past = date.today() - timedelta(1)
         self.future = date.today() + timedelta(1)
@@ -57,7 +58,7 @@ class PostponeCommandTest(CommandTest.CommandTest):
         self.assertTrue(self.todolist.is_dirty())
         self.assertEquals(self.output, "  2 Bar due:%s\n" % due.isoformat())
         self.assertEquals(self.errors, "")
-  
+
     def test_postpone3(self):
         command = PostponeCommand(["-s", "2", "1w"], self.todolist, self.out, self.error)
         command.execute()

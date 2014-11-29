@@ -22,6 +22,7 @@ from topydo.lib import TodoList
 
 class AddCommandTest(CommandTest.CommandTest):
     def setUp(self):
+        super(AddCommandTest, self).setUp()
         self.todolist = TodoList.TodoList([])
         self.today = date.today().isoformat()
 

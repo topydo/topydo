@@ -20,6 +20,7 @@ from topydo.lib.TodoList import TodoList
 
 class DeleteCommandTest(CommandTest.CommandTest):
     def setUp(self):
+        super(DeleteCommandTest, self).setUp()
         todos = [
             "Foo id:1",
             "Bar p:1",

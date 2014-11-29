@@ -20,6 +20,7 @@ import TestFacilities
 
 class SortCommandTest(CommandTest.CommandTest):
     def setUp(self):
+        super(SortCommandTest, self).setUp()
         self.todolist = TestFacilities.load_file_to_todolist("data/SorterTest1.txt")
 
     def test_sort1(self):

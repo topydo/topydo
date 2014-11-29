@@ -21,6 +21,7 @@ import TestFacilities
 
 class ListCommandTest(CommandTest.CommandTest):
     def setUp(self):
+        super(ListCommandTest, self).setUp()
         self.todolist = TestFacilities.load_file_to_todolist("data/ListCommandTest.txt")
 
     def tearDown(self):

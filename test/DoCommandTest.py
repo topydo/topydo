@@ -28,6 +28,7 @@ def _no_prompt(self):
 
 class DoCommandTest(CommandTest.CommandTest):
     def setUp(self):
+        super(DoCommandTest, self).setUp()
         todos = [
             "Foo id:1",
             "Bar p:1",
