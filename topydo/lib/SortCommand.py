@@ -14,17 +14,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from Command import *
-from Config import config
-import Filter
-import Sorter
+from topydo.lib.Command import Command, InvalidCommandArgument
+from topydo.lib.Config import config
+from topydo.lib.Sorter import Sorter
 
 class SortCommand(Command):
     def __init__(self, p_args, p_todolist,
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
-        super(SortCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
+        super(SortCommand, self).__init__(
+            p_args, p_todolist, p_out, p_err, p_prompt)
 
     def execute(self):
         if not super(SortCommand, self).execute():
@@ -35,7 +35,7 @@ class SortCommand(Command):
         except InvalidCommandArgument:
             expression = config().sort_string()
 
-        sorter = Sorter.Sorter(expression) # TODO: validate
+        sorter = Sorter(expression) # TODO: validate
         sorted_todos = sorter.sort(self.todolist.todos())
 
         self.todolist.erase()
@@ -47,8 +47,9 @@ class SortCommand(Command):
         return """Synopsis: sort [expression]"""
 
     def help(self):
-        return """Sorts the file according to the expression. If no expression is given,
-the expression in the configuration is used.
+        return """\
+Sorts the file according to the expression. If no expression is given, the
+expression in the configuration is used.
 
 The following sort properties are supported:
 

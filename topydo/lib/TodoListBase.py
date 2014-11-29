@@ -21,12 +21,12 @@ A list of todo items.
 from datetime import date
 import re
 
-from Config import config
-import Filter
-from HashListValues import hash_list_values
-from PrettyPrinter import pretty_print_list
-import Todo
-import View
+from topydo.lib.Config import config
+from topydo.lib import Filter
+from topydo.lib.HashListValues import hash_list_values
+from topydo.lib.PrettyPrinter import pretty_print_list
+from topydo.lib.Todo import Todo
+from topydo.lib.View import View
 
 class InvalidTodoException(Exception):
     pass
@@ -70,6 +70,13 @@ class TodoListBase(object):
             if config().identifiers() == 'text':
                 result = self._id_todo_map[p_identifier]
             else:
+                try:
+                    if not re.match('[1-9]\d*', p_identifier):
+                        raise ValueError # leading zeros, pass to regexp
+                except TypeError:
+                    # we're dealing with an integer
+                    pass
+
                 result = self._todos[int(p_identifier) - 1]
         except IndexError:
             raise InvalidTodoException
@@ -101,7 +108,7 @@ class TodoListBase(object):
         return todos[0] if len(todos) else None
 
     def add_list(self, p_srcs):
-        todos = [Todo.Todo(src) for src in p_srcs if re.search(r'\S', src)]
+        todos = [Todo(src) for src in p_srcs if re.search(r'\S', src)]
         self.add_todos(todos)
 
         return todos
@@ -169,7 +176,7 @@ class TodoListBase(object):
         defined by the end user. Todos is this list should not be modified,
         modifications should occur through this class.
         """
-        return View.View(p_sorter, p_filters, self)
+        return View(p_sorter, p_filters, self)
 
     def is_dirty(self):
         return self.dirty
@@ -201,9 +208,11 @@ class TodoListBase(object):
         printed todo.
         """
         if config().identifiers() == 'text':
-            return lambda p_todo_str, p_todo: "|%3s| %s" % (self._todo_id_map[p_todo], p_todo_str)
+            return lambda p_todo_str, p_todo: \
+                "|%3s| %s" % (self._todo_id_map[p_todo], p_todo_str)
         else:
-            return lambda p_todo_str, p_todo: "|%3d| %s" % (self.number(p_todo), p_todo_str)
+            return lambda p_todo_str, p_todo: \
+                "|%3d| %s" % (self.number(p_todo), p_todo_str)
 
     def _update_todo_ids(self):
         # the idea is to have a hash that is independent of the position of the

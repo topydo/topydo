@@ -1,29 +1,29 @@
 # Topydo - A todo.txt client written in Python.
 # Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import date, timedelta
 import unittest
 
-from Config import config
-from Recurrence import advance_recurring_todo, strict_advance_recurring_todo, NoRecurrenceException
-import Todo
+from topydo.lib.Config import config
+from topydo.lib.Recurrence import advance_recurring_todo, strict_advance_recurring_todo, NoRecurrenceException
+from topydo.lib.Todo import Todo
 
 class RecurrenceTest(unittest.TestCase):
     def setUp(self):
-        self.todo = Todo.Todo("Test rec:1w")
+        self.todo = Todo("Test rec:1w")
 
     def test_duedate1(self):
         """ Where due date is in the future. """
@@ -99,7 +99,7 @@ class RecurrenceTest(unittest.TestCase):
         self.assertTrue(new_todo.has_tag(config().tag_due()))
         self.assertEquals(new_todo.due_date(), new_due)
 
-    def test_startdate(self):
+    def test_startdate1(self):
         """ Start date is before due date. """
         self.todo.set_tag(config().tag_due(), date.today().isoformat())
         yesterday = date.today() - timedelta(1)
@@ -110,7 +110,7 @@ class RecurrenceTest(unittest.TestCase):
 
         self.assertEquals(new_todo.start_date(), new_start)
 
-    def test_startdate(self):
+    def test_startdate2(self):
         """ Strict recurrence. Start date is before due date. """
         due = date.today() - timedelta(1)
         self.todo.set_tag(config().tag_due(), date.today().isoformat())
@@ -122,7 +122,7 @@ class RecurrenceTest(unittest.TestCase):
 
         self.assertEquals(new_todo.start_date(), new_start)
 
-    def test_startdate2(self):
+    def test_startdate3(self):
         """ Start date equals due date. """
         self.todo.set_tag(config().tag_due(), date.today().isoformat())
         self.todo.set_tag(config().tag_start(), date.today().isoformat())

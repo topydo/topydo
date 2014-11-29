@@ -14,13 +14,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from Config import config, _Config
+from topydo.lib.Config import config
 import CommandTest
-import ListCommand
+from topydo.lib.ListCommand import ListCommand
 import TestFacilities
 
 class ListCommandTest(CommandTest.CommandTest):
     def setUp(self):
+        super(ListCommandTest, self).setUp()
         self.todolist = TestFacilities.load_file_to_todolist("data/ListCommandTest.txt")
 
     def tearDown(self):
@@ -28,7 +29,7 @@ class ListCommandTest(CommandTest.CommandTest):
         config("")
 
     def test_list1(self):
-        command = ListCommand.ListCommand([""], self.todolist, self.out, self.error)
+        command = ListCommand([""], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -36,7 +37,7 @@ class ListCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_list3(self):
-        command = ListCommand.ListCommand(["Context1"], self.todolist, self.out, self.error)
+        command = ListCommand(["Context1"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -44,7 +45,7 @@ class ListCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_list4(self):
-        command = ListCommand.ListCommand(["-x", "Context1"], self.todolist, self.out, self.error)
+        command = ListCommand(["-x", "Context1"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -52,7 +53,7 @@ class ListCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_list5(self):
-        command = ListCommand.ListCommand(["-x"], self.todolist, self.out, self.error)
+        command = ListCommand(["-x"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -60,7 +61,7 @@ class ListCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_list6(self):
-        command = ListCommand.ListCommand(["Project3"], self.todolist, self.out, self.error)
+        command = ListCommand(["Project3"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -68,7 +69,7 @@ class ListCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_list7(self):
-        command = ListCommand.ListCommand(["-s", "text", "-x", "Project1"], self.todolist, self.out, self.error)
+        command = ListCommand(["-s", "text", "-x", "Project1"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -76,7 +77,7 @@ class ListCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_list8(self):
-        command = ListCommand.ListCommand(["--", "-project1"], self.todolist, self.out, self.error)
+        command = ListCommand(["--", "-project1"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -84,7 +85,7 @@ class ListCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_list9(self):
-        command = ListCommand.ListCommand(["--", "-project1", "-Drink"], self.todolist, self.out, self.error)
+        command = ListCommand(["--", "-project1", "-Drink"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -92,7 +93,7 @@ class ListCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_list10(self):
-        command = ListCommand.ListCommand(["text1", "2"], self.todolist, self.out, self.error)
+        command = ListCommand(["text1", "2"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -102,7 +103,7 @@ class ListCommandTest(CommandTest.CommandTest):
     def test_list11(self):
         config("data/listcommand.conf")
 
-        command = ListCommand.ListCommand(["project"], self.todolist, self.out, self.error)
+        command = ListCommand(["project"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -112,7 +113,7 @@ class ListCommandTest(CommandTest.CommandTest):
     def test_list12(self):
         config("data/listcommand.conf")
 
-        command = ListCommand.ListCommand(["-x", "project"], self.todolist, self.out, self.error)
+        command = ListCommand(["-x", "project"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -120,7 +121,7 @@ class ListCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_list13(self):
-        command = ListCommand.ListCommand(["-x", "--", "-@Context1 +Project2"], self.todolist, self.out, self.error)
+        command = ListCommand(["-x", "--", "-@Context1 +Project2"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -130,7 +131,7 @@ class ListCommandTest(CommandTest.CommandTest):
     def test_list14(self):
         config("data/listcommand2.conf")
 
-        command = ListCommand.ListCommand([], self.todolist, self.out, self.error)
+        command = ListCommand([], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -138,7 +139,7 @@ class ListCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_list15(self):
-        command = ListCommand.ListCommand(["p:<10"], self.todolist, self.out, self.error)
+        command = ListCommand(["p:<10"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -148,15 +149,23 @@ class ListCommandTest(CommandTest.CommandTest):
     def test_list16(self):
         config("data/todolist-uid.conf")
 
-        command = ListCommand.ListCommand([], self.todolist, self.out, self.error)
+        command = ListCommand([], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
         self.assertEquals(self.output, "|6iu| (C) Foo @Context2 Not@Context +Project1 Not+Project\n|til| (C) Drink beer @ home\n| c5| (C) 13 + 29 = 42\n|xvb| (D) Bar @Context1 +Project2 p:1\n")
         self.assertEquals(self.errors, "")
 
+    def test_list17(self):
+        command = ListCommand(["-x", "id:"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+        self.assertEquals(self.output, "|  3| (C) Baz @Context1 +Project1 key:value id:1\n")
+        self.assertEquals(self.errors, "")
+
     def test_help(self):
-        command = ListCommand.ListCommand(["help"], self.todolist, self.out, self.error)
+        command = ListCommand(["help"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertEquals(self.output, "")

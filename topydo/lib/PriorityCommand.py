@@ -14,17 +14,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from Command import *
-from PrettyPrinter import pretty_print
-from TodoListBase import InvalidTodoException
-from Utils import is_valid_priority
+from topydo.lib.Command import Command, InvalidCommandArgument
+from topydo.lib.PrettyPrinter import pretty_print
+from topydo.lib.TodoListBase import InvalidTodoException
+from topydo.lib.Utils import is_valid_priority
 
 class PriorityCommand(Command):
     def __init__(self, p_args, p_todolist,
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
-        super(PriorityCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
+        super(PriorityCommand, self).__init__(
+            p_args, p_todolist, p_out, p_err, p_prompt)
 
     def execute(self):
         if not super(PriorityCommand, self).execute():
@@ -61,4 +62,6 @@ class PriorityCommand(Command):
         return """Synopsis: pri <NUMBER> <PRIORITY>"""
 
     def help(self):
-        return """Sets the priority of todo the given number to the given priority."""
+        return """\
+Sets the priority of todo the given number to the given priority.
+"""

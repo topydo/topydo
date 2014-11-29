@@ -1,25 +1,24 @@
 # Topydo - A todo.txt client written in Python.
 # Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from datetime import date
 import re
 
-from Config import config
-from RelativeDate import relative_date_to_date
-from Utils import date_string_to_date
+from topydo.lib.Config import config
+from topydo.lib.RelativeDate import relative_date_to_date
+from topydo.lib.Utils import date_string_to_date
 
 class Filter(object):
     def filter(self, p_todos):
@@ -61,6 +60,8 @@ class GrepFilter(Filter):
     """ Matches when the todo text contains a text. """
 
     def __init__(self, p_expression, p_case_sensitive=None):
+        super(GrepFilter, self).__init__()
+
         self.expression = p_expression
 
         if p_case_sensitive != None:
@@ -108,6 +109,7 @@ class DependencyFilter(Filter):
         Pass on a TodoList instance such that the dependencies can be
         looked up.
         """
+        super(DependencyFilter, self).__init__()
         self.todolist = p_todolist
 
     def match(self, p_todo):
@@ -129,6 +131,7 @@ class InstanceFilter(Filter):
 
         This is handy for constructing a view given a plain list of Todo items.
         """
+        super(InstanceFilter, self).__init__()
         self.todos = p_todos
 
     def match(self, p_todo):
@@ -143,15 +146,17 @@ class InstanceFilter(Filter):
 
 class LimitFilter(Filter):
     def __init__(self, p_limit):
+        super(LimitFilter, self).__init__()
         self.limit = p_limit
 
     def filter(self, p_todos):
         return p_todos[:self.limit] if self.limit >= 0 else p_todos
 
-ORDINAL_TAG_MATCH = r"(?P<key>[^:]*):(?P<operator><=?|=|>=?|!)?(?P<value>\S*)"
+ORDINAL_TAG_MATCH = r"(?P<key>[^:]*):(?P<operator><=?|=|>=?|!)?(?P<value>\S+)"
 
 class OrdinalTagFilter(Filter):
     def __init__(self, p_expression):
+        super(OrdinalTagFilter, self).__init__()
         match = re.match(ORDINAL_TAG_MATCH, p_expression)
         if match:
             self.key = match.group('key')

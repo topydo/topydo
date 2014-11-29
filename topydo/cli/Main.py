@@ -16,26 +16,21 @@
 
 """ Entry file for the Python todo.txt CLI. """
 
+import getopt
 import sys
 
 def usage():
     """ Prints the usage of the todo.txt CLI """
-    exit(1)
 
-def arguments(p_start=2):
-    """
-    Retrieves all values from the argument list starting from the given
-    position.
+    print """\
+-c : Specify an alternative configuration file.
+-d : Specify an alternative archive file (done.txt)
+-h : This help text
+-t : Specify an alternative todo file
+-v : Print version and exit
+"""
 
-    This is a parameter, because argv has a different structure when no
-    subcommand was given and it fallbacks to the default subcommand.
-    """
-    try:
-        values = sys.argv[p_start:]
-    except IndexError:
-        usage()
-
-    return values
+    exit(0)
 
 def write(p_file, p_string):
     """
@@ -54,6 +49,13 @@ def error(p_string):
 
     write(sys.stderr, p_string)
 
+def version():
+    """ Print the current version and exit. """
+    from topydo.lib.Version import VERSION, LICENSE
+    print "topydo %s\n" % (VERSION)
+    print LICENSE
+    exit(0)
+
 from topydo.lib.Config import config, ConfigError
 
 # First thing is to poke the configuration and check whether it's sane
@@ -61,8 +63,8 @@ from topydo.lib.Config import config, ConfigError
 # make sure to bail out if the configuration is invalid.
 try:
     config()
-except ConfigError as e:
-    error(str(e))
+except ConfigError as config_error:
+    error(str(config_error))
     exit(1)
 
 from topydo.lib.AddCommand import AddCommand
@@ -76,7 +78,6 @@ from topydo.lib.ListCommand import ListCommand
 from topydo.lib.ListContextCommand import ListContextCommand
 from topydo.lib.ListProjectCommand import ListProjectCommand
 from topydo.lib.PostponeCommand import PostponeCommand
-from topydo.lib.PrettyPrinter import *
 from topydo.lib.PriorityCommand import PriorityCommand
 from topydo.lib.SortCommand import SortCommand
 from topydo.lib.TagCommand import TagCommand
@@ -86,8 +87,45 @@ from topydo.lib import TodoListBase
 from topydo.lib.Utils import escape_ansi
 
 class CLIApplication(object):
+    """
+    Class that represents the Command Line Interface of Topydo.
+
+    Handles input/output of the various subcommand.
+    """
     def __init__(self):
         self.todolist = TodoList.TodoList([])
+
+        self.config = config()
+        self.path = self.config.todotxt()
+        self.archive_path = self.config.archive()
+
+    def _process_flags(self):
+        try:
+            opts, args = getopt.getopt(sys.argv[1:], "c:d:ht:v")
+        except getopt.GetoptError as e:
+            error(str(e))
+            exit(1)
+
+        alt_path = None
+        alt_archive = None
+
+        for opt, value in opts:
+            if opt == "-c":
+                self.config = config(value)
+            elif opt == "-t":
+                alt_path = value
+            elif opt == "-d":
+                alt_archive = value
+            elif opt == "-v":
+                version()
+            else:
+                usage()
+
+        self.path = alt_path if alt_path else self.config.todotxt()
+        self.archive_path = alt_archive \
+            if alt_archive else self.config.archive()
+
+        return args
 
     def archive(self):
         """
@@ -96,7 +134,7 @@ class CLIApplication(object):
         This means that all completed tasks are moved to the archive file
         (defaults to done.txt).
         """
-        archive_file = TodoFile.TodoFile(config().archive())
+        archive_file = TodoFile.TodoFile(self.archive_path)
         archive = TodoListBase.TodoListBase(archive_file.read())
 
         if archive:
@@ -107,18 +145,25 @@ class CLIApplication(object):
                 archive_file.write(str(archive))
 
     def execute(self, p_command, p_args):
-        command = p_command(p_args, self.todolist, lambda o: write(sys.stdout, o), error, raw_input)
+        """
+        Execute a subcommand with arguments. p_command is a class (not an
+        object).
+        """
+        command = p_command(
+            p_args,
+            self.todolist,
+            lambda o: write(sys.stdout, o),
+            error,
+            raw_input)
+
         return False if command.execute() == False else True
 
     def run(self):
         """ Main entry function. """
-        todofile = TodoFile.TodoFile(config().todotxt())
-        self.todolist = TodoList.TodoList(todofile.read())
+        args = self._process_flags()
 
-        try:
-            subcommand = sys.argv[1]
-        except IndexError:
-            subcommand = config().default_command()
+        todofile = TodoFile.TodoFile(self.path)
+        self.todolist = TodoList.TodoList(todofile.read())
 
         subcommand_map = {
           'add': AddCommand,
@@ -144,12 +189,27 @@ class CLIApplication(object):
           'tag': TagCommand,
         }
 
-        args = arguments()
-        if not subcommand in subcommand_map:
-            subcommand = config().default_command()
-            args = arguments(1)
+        try:
+            subcommand = args[0]
 
-        if self.execute(subcommand_map[subcommand], args) == False:
+            if subcommand in subcommand_map:
+                subcommand = subcommand_map[subcommand]
+                args = args[1:]
+            else:
+                subcommand = self.config.default_command()
+                if subcommand in subcommand_map:
+                    subcommand = subcommand_map[subcommand]
+                    # leave args unchanged
+                else:
+                    usage()
+        except IndexError:
+            subcommand = self.config.default_command()
+            if subcommand in subcommand_map:
+                subcommand = subcommand_map[subcommand]
+            else:
+                usage()
+
+        if self.execute(subcommand, args) == False:
             exit(1)
 
         if self.todolist.is_dirty():

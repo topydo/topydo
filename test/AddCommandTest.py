@@ -16,12 +16,13 @@
 
 from datetime import date
 
-import AddCommand
+from topydo.lib import AddCommand
 import CommandTest
-import TodoList
+from topydo.lib import TodoList
 
 class AddCommandTest(CommandTest.CommandTest):
     def setUp(self):
+        super(AddCommandTest, self).setUp()
         self.todolist = TodoList.TodoList([])
         self.today = date.today().isoformat()
 
@@ -116,7 +117,7 @@ class AddCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.output, "|  1| " + str(self.todolist.todo(1)) + "\n")
         self.assertEquals(self.errors, "")
 
-    def test_add_dep4(self):
+    def test_add_dep5(self):
         """ Test for using an after: tag with non-existing value. """
         command = AddCommand.AddCommand(["Foo after:2"], self.todolist, self.out, self.error)
         command.execute()
@@ -126,7 +127,7 @@ class AddCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.output, "|  1| " + str(self.todolist.todo(1)) + "\n")
         self.assertEquals(self.errors, "")
 
-    def test_add_dep5(self):
+    def test_add_dep6(self):
         command = AddCommand.AddCommand(["Foo"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -141,7 +142,7 @@ class AddCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.todolist.todo(3).source(), self.today + " Baz p:1 p:2")
         self.assertEquals(self.errors, "")
 
-    def test_add_dep6(self):
+    def test_add_dep7(self):
         command = AddCommand.AddCommand(["Foo"], self.todolist, self.out, self.error)
         command.execute()
 

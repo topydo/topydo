@@ -15,12 +15,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import CommandTest
-from Config import config
-import SortCommand
+from topydo.lib.Config import config
+from topydo.lib.SortCommand import SortCommand
 import TestFacilities
 
 class SortCommandTest(CommandTest.CommandTest):
     def setUp(self):
+        super(SortCommandTest, self).setUp()
         self.todolist = TestFacilities.load_file_to_todolist("data/SorterTest1.txt")
 
     def tearDown(self):
@@ -29,13 +30,13 @@ class SortCommandTest(CommandTest.CommandTest):
 
     def test_sort1(self):
         """ Alphabetically sorted """
-        command = SortCommand.SortCommand(["text"], self.todolist, self.out, self.error)
+        command = SortCommand(["text"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertEquals(str(self.todolist), "First\n(A) Foo\n2014-06-14 Last")
 
     def test_sort2(self):
-        command = SortCommand.SortCommand([], self.todolist, self.out, self.error)
+        command = SortCommand([], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertEquals(str(self.todolist), "(A) Foo\n2014-06-14 Last\nFirst")
@@ -45,14 +46,14 @@ class SortCommandTest(CommandTest.CommandTest):
         config("data/todolist-uid.conf")
 
         todo1 = self.todolist.todo('tpi')
-        command = SortCommand.SortCommand(["text"], self.todolist, self.out, self.error)
+        command = SortCommand(["text"], self.todolist, self.out, self.error)
         command.execute()
         todo2 = self.todolist.todo('tpi')
 
         self.assertEquals(todo1.source(), todo2.source())
 
     def test_help(self):
-        command = SortCommand.SortCommand(["help"], self.todolist, self.out, self.error)
+        command = SortCommand(["help"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertEquals(self.output, "")

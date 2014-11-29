@@ -18,16 +18,10 @@
 A list of todo items.
 """
 
-import re
+from topydo.lib.Graph import DirectedGraph
+from topydo.lib.TodoListBase import TodoListBase
 
-import Filter
-import Graph
-from PrettyPrinter import pretty_print_list
-import Todo
-import TodoListBase
-import View
-
-class TodoList(TodoListBase.TodoListBase):
+class TodoList(TodoListBase):
     """
     Provides operations for a todo list, such as adding items, removing them,
     etc.
@@ -43,7 +37,7 @@ class TodoList(TodoListBase.TodoListBase):
         """
         self._todos = []
         self._tododict = {} # hash(todo) to todo lookup
-        self._depgraph = Graph.DirectedGraph()
+        self._depgraph = DirectedGraph()
         self._todo_id_map = {}
         self._id_todo_map = {}
 
@@ -154,7 +148,8 @@ class TodoList(TodoListBase.TodoListBase):
         Returns a list of parent todos that (in)directly depend on the
         given todo.
         """
-        parents = self._depgraph.incoming_neighbors(hash(p_todo), not p_only_direct)
+        parents = self._depgraph.incoming_neighbors(
+            hash(p_todo), not p_only_direct)
         return [self._tododict[parent] for parent in parents]
 
     def children(self, p_todo, p_only_direct=False):
@@ -176,7 +171,9 @@ class TodoList(TodoListBase.TodoListBase):
         """
         def clean_by_tag(tag_name):
             """ Generic function to handle 'p' and 'id' tags. """
-            for todo in [todo for todo in self._todos if todo.has_tag(tag_name)]:
+            for todo in [todo for todo in self._todos
+                if todo.has_tag(tag_name)]:
+
                 value = todo.tag_value(tag_name)
                 if not self._depgraph.has_edge_id(value):
                     todo.remove_tag(tag_name, value)

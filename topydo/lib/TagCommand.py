@@ -1,29 +1,30 @@
 # Topydo - A todo.txt client written in Python.
 # Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from Command import *
-from TodoListBase import InvalidTodoException
-from PrettyPrinter import pretty_print
+from topydo.lib.Command import Command, InvalidCommandArgument
+from topydo.lib.TodoListBase import InvalidTodoException
+from topydo.lib.PrettyPrinter import pretty_print
 
 class TagCommand(Command):
     def __init__(self, p_args, p_todolist,
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
-        super(TagCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
+        super(TagCommand, self).__init__(
+            p_args, p_todolist, p_out, p_err, p_prompt)
 
         self.force = False
         self.force_add = False
@@ -31,10 +32,11 @@ class TagCommand(Command):
         self.tag = None
         self.value = None
         self.values = []
+        self.current_values = []
 
     def _process_flags(self):
         flags, args = self.getopt("af")
-        for flag, value in flags:
+        for flag, _ in flags:
             if flag == "-a":
                 self.force_add = True
             elif flag == "-f":
@@ -70,7 +72,8 @@ class TagCommand(Command):
             for i, value in enumerate(self.current_values):
                 self.out("%2d. %s" % (i + 1, value))
 
-            answer = self.prompt('Which value to remove? Enter number or "all": ')
+            answer = self.prompt(
+                'Which value to remove? Enter number or "all": ')
 
         if answer != "all":
             try:
@@ -118,9 +121,12 @@ class TagCommand(Command):
         return """Synopsis: tag [-a] [-f] <NUMBER> <tag> [<value>]"""
 
     def help(self):
-        return """Sets the given tag to the given todo number with the given value. If
-the value is omitted, the tag is removed from the todo item.
+        return """\
+Sets the given tag to the given todo number with the given value. If the value
+is omitted, the tag is removed from the todo item.
 
--a : Do not change the current value of the tag if it exists, but add a new value.
--f : Force setting/removing all values of the tag. Prevents interaction with the user.
-        """
+-a : Do not change the current value of the tag if it exists, but add a new
+     value.
+-f : Force setting/removing all values of the tag. Prevents interaction with the
+     user.
+"""

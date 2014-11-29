@@ -1,16 +1,16 @@
 # Topydo - A todo.txt client written in Python.
 # Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -19,20 +19,21 @@
 from datetime import date
 import re
 
-from Config import config
-import Command
-from PrettyPrinter import pretty_print
-from RelativeDate import relative_date_to_date
-from TodoListBase import InvalidTodoException
-import TodoList
+from topydo.lib.Config import config
+from topydo.lib.Command import Command
+from topydo.lib.PrettyPrinter import pretty_print
+from topydo.lib.RelativeDate import relative_date_to_date
+from topydo.lib.TodoListBase import InvalidTodoException
 
-class AddCommand(Command.Command):
+class AddCommand(Command):
     def __init__(self, p_args, p_todolist,
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
-        super(AddCommand, self).__init__(p_args, p_todolist, p_out, p_err, p_prompt)
+        super(AddCommand, self).__init__(
+            p_args, p_todolist, p_out, p_err, p_prompt)
         self.text = ' '.join(p_args)
+        self.todo = None
 
     def _preprocess_input_todo(self):
         """
@@ -103,7 +104,8 @@ class AddCommand(Command.Command):
         return """Synopsis: add <text>"""
 
     def help(self):
-        return """This subcommand automatically adds the creation date to the added item.
+        return """\
+This subcommand automatically adds the creation date to the added item.
 
 <text> may contain:
 
