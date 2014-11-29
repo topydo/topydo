@@ -20,9 +20,10 @@ from topydo.lib.Config import config
 from topydo.lib.Sorter import Sorter
 
 from TestFacilities import load_file, todolist_to_string, load_file_to_todolist
+import TopydoTest
 
-class SorterTest(unittest.TestCase):
-    def sort_file(self,p_filename, p_filename_ref, p_sorter):
+class SorterTest(TopydoTest.TopydoTest):
+    def sort_file(self, p_filename, p_filename_ref, p_sorter):
         """
         Sorts a file and compares it with a reference result.
         Also check that the sort algorithm hasn't touched the original data.

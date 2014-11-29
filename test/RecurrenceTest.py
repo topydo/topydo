@@ -20,9 +20,11 @@ import unittest
 from topydo.lib.Config import config
 from topydo.lib.Recurrence import advance_recurring_todo, strict_advance_recurring_todo, NoRecurrenceException
 from topydo.lib.Todo import Todo
+import TopydoTest
 
-class RecurrenceTest(unittest.TestCase):
+class RecurrenceTest(TopydoTest.TopydoTest):
     def setUp(self):
+        super(RecurrenceTest, self).setUp()
         self.todo = Todo("Test rec:1w")
 
     def test_duedate1(self):

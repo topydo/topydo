@@ -24,9 +24,12 @@ from topydo.lib.Todo import Todo
 from topydo.lib.TodoFile import TodoFile
 from topydo.lib.TodoListBase import InvalidTodoException
 from topydo.lib.TodoList import TodoList
+import TopydoTest
 
-class TodoListTester(unittest.TestCase):
+class TodoListTester(TopydoTest.TopydoTest):
     def setUp(self):
+        super(TodoListTester, self).setUp()
+
         self.todofile = TodoFile('test/data/TodoListTest.txt')
         lines = [line for line in self.todofile.read() \
                        if re.search(r'\S', line)]
@@ -209,8 +212,10 @@ class TodoListTester(unittest.TestCase):
         self.todolist.set_priority(todo, 'B')
         self.assertEquals(self.todolist.todo('6iu').source(), "(B) Foo @Context2 Not@Context +Project1 Not+Project")
 
-class TodoListDependencyTester(unittest.TestCase):
+class TodoListDependencyTester(TopydoTest.TopydoTest):
     def setUp(self):
+        super(TodoListDependencyTester, self).setUp()
+
         self.todolist = TodoList([])
         self.todolist.add("Foo id:1")
         self.todolist.add("Bar p:1")
@@ -306,8 +311,10 @@ class TodoListDependencyTester(unittest.TestCase):
         self.assertEqual(todo1.source(), 'Foo id:1')
         self.assertEqual(todo2.source(), 'Bar p:1')
 
-class TodoListCleanDependencyTester(unittest.TestCase):
+class TodoListCleanDependencyTester(TopydoTest.TopydoTest):
     def setUp(self):
+        super(TodoListCleanDependencyTester, self).setUp()
+
         self.todolist = TodoList([])
         self.todolist.add("Bar p:1")
         self.todolist.add("Baz p:1 id:2")

@@ -17,8 +17,9 @@
 import unittest
 
 from TestFacilities import load_file
+import TopydoTest
 
-class TodoFileTest(unittest.TestCase):
+class TodoFileTest(TopydoTest.TopydoTest):
     def test_empty_file(self):
         todofile = load_file('test/data/TodoFileTest1.txt')
 

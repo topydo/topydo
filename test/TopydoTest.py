@@ -14,31 +14,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from datetime import date
 import unittest
 
 from topydo.lib.Config import config
-from topydo.lib.Importance import importance
-from topydo.lib.Todo import Todo
-import TopydoTest
 
-class ImportanceTest(TopydoTest.TopydoTest):
-    def test_importance1(self):
-        todo = Todo("Foo")
-        self.assertEqual(importance(todo), 2)
+class TopydoTest(unittest.TestCase):
+    def setUp(self):
+        """
+        Make sure that every test case starts with a clean configuration.
+        """
+        config("")
 
-    def test_importance2(self):
-        todo = Todo("(A) Foo")
-        self.assertEqual(importance(todo), 5)
-
-    def test_importance3(self):
-        todo = Todo("(A) Foo " + config().tag_star() + ":1")
-        self.assertEqual(importance(todo), 6)
-
-    def test_importance4(self):
-        today_str = date.today().isoformat()
-        todo = Todo("(C) Foo " + config().tag_due() + ":" + today_str)
-        self.assertEqual(importance(todo), 8)
-
-if __name__ == '__main__':
-    unittest.main()

@@ -22,8 +22,9 @@ import unittest
 from topydo.lib import Filter
 from TestFacilities import load_file, todolist_to_string, load_file_to_todolist
 from topydo.lib.Todo import Todo
+import TopydoTest
 
-class FilterTest(unittest.TestCase):
+class FilterTest(TopydoTest.TopydoTest):
     def test_filter3(self):
         todo = Todo("(C) Relevant")
         relevance = Filter.RelevanceFilter()
@@ -294,8 +295,10 @@ class FilterTest(unittest.TestCase):
         self.assertEquals(todolist_to_string(filtered_todos),
             todolist_to_string(reference))
 
-class OrdinalTagFilterTest(unittest.TestCase):
+class OrdinalTagFilterTest(TopydoTest.TopydoTest):
     def setUp(self):
+        super(OrdinalTagFilterTest, self).setUp()
+
         today = date.today()
         tomorrow = today + timedelta(1)
 

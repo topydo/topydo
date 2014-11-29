@@ -18,6 +18,7 @@ from datetime import date, timedelta
 import unittest
 
 from topydo.lib.Todo import Todo
+import TopydoTest
 
 def today_date():
     today = date.today()
@@ -27,7 +28,7 @@ def tomorrow_date():
     tomorrow = date.today() + timedelta(days=1)
     return tomorrow.isoformat()
 
-class TodoTest(unittest.TestCase):
+class TodoTest(TopydoTest.TopydoTest):
     def test_due_date1(self):
         todo = Todo("(C) Foo due:2014-06-09")
         due = date(2014, 6, 9)

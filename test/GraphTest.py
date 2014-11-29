@@ -17,9 +17,12 @@
 import unittest
 
 from topydo.lib.Graph import DirectedGraph
+import TopydoTest
 
-class GraphTest(unittest.TestCase):
+class GraphTest(TopydoTest.TopydoTest):
     def setUp(self):
+        super(GraphTest, self).setUp()
+
         self.graph = DirectedGraph()
 
         self.graph.add_edge(1, 2, 1)

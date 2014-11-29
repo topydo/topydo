@@ -16,17 +16,14 @@
 
 import unittest
 
-from topydo.lib.Config import config
 from topydo.lib.Utils import escape_ansi
+import TopydoTest
 
-class CommandTest(unittest.TestCase):
+class CommandTest(TopydoTest.TopydoTest):
     def __init__(self, *args, **kwargs):
         super(CommandTest, self).__init__(*args, **kwargs)
         self.output = ""
         self.errors = ""
-
-    def setUp(self):
-        config("")
 
     def out(self, p_output):
         if p_output:
