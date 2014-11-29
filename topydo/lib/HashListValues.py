@@ -14,8 +14,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-_table_sizes = {
-    # we choose a large table size reduce the change of collisions
+"""
+Module that calculates identifiers for each item in a list, based on the hash
+value of each item.
+"""
+
+_TABLE_SIZES = {
+    # we choose a large table size to reduce the change of collisions.
     3: 46649, # largest prime under zzz_36
     4: 1679609 # largest prime under zzzz_36
 }
@@ -43,7 +48,7 @@ def hash_list_values(p_list, p_hash=hash):
 
     The value is based on hashing an item using the p_hash function.
 
-    Suitable for lists not larger than approx. 16K items
+    Suitable for lists not larger than approx. 16K items.
 
     Returns a tuple with the status and a list of tuples where each item is
     combined with the ID.
@@ -52,7 +57,8 @@ def hash_list_values(p_list, p_hash=hash):
     used = set()
 
     # choose a larger key size if there's >1% chance of collision
-    size = _table_sizes[3] if len(p_list) < _table_sizes[3] * 0.01 else _table_sizes[4]
+    size = _TABLE_SIZES[3] \
+        if len(p_list) < _TABLE_SIZES[3] * 0.01 else _TABLE_SIZES[4]
 
     for item in p_list:
         hash_value = p_hash(item) % size
