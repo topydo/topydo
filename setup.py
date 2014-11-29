@@ -8,7 +8,6 @@ setup(
     author = "Bram Schoenmakers",
     author_email = "me@bramschoenmakers.nl",
     url = "https://github.com/bram85/topydo",
-    download_url = "https://github.com/bram85/topydo/archive/stable.zip",
     scripts = ["bin/topydo"],
     classifiers = [
         "Development Status :: 4 - Beta",
