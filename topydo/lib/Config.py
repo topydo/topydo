@@ -27,6 +27,12 @@ class ConfigError(Exception):
 
 class _Config:
     def __init__(self, p_path=None):
+        """
+        Constructor.
+
+        If p_path is given, that is the only configuration file that will be
+        read.
+        """
         self.sections = ['topydo', 'tags', 'sort', 'ls']
 
         self.defaults = {
@@ -56,9 +62,17 @@ class _Config:
 
         self.cp = ConfigParser.SafeConfigParser(self.defaults)
 
-        files = ["/etc/topydo.conf", self._home_config_path(), ".topydo", "topydo.conf"]
+        files = [
+            "/etc/topydo.conf",
+            self._home_config_path(),
+            ".topydo",
+            "topydo.conf"
+        ]
+
+        # when a path is given, *only* use the values in that file, or the
+        # defaults listed above.
         if p_path != None:
-            files.append(p_path)
+            files = [p_path]
 
         self.cp.read(files)
 
@@ -140,8 +154,10 @@ class _Config:
 def config(p_path=None):
     """
     Retrieve the config instance.
+
     If a path is given, the instance is overwritten by the one that supplies an
-    additional filename (for testability).
+    additional filename (for testability). Moreover, no other configuration
+    files will be read when a path is given.
     """
     if not config.instance or p_path != None:
         try:
