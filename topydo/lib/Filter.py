@@ -62,7 +62,8 @@ class GrepFilter(Filter):
     def __init__(self, p_expression, p_case_sensitive=None):
         super(GrepFilter, self).__init__()
 
-        self.expression = p_expression
+        # convert to string in case we receive integers
+        self.expression = str(p_expression)
 
         if p_case_sensitive != None:
             self.case_sensitive = p_case_sensitive
@@ -70,7 +71,7 @@ class GrepFilter(Filter):
             # only be case sensitive when the expression contains at least one
             # capital character.
             self.case_sensitive = \
-                len([c for c in p_expression if c.isupper()]) > 0
+                len([c for c in self.expression if c.isupper()]) > 0
 
     def match(self, p_todo):
         expr = self.expression

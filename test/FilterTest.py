@@ -185,6 +185,13 @@ class FilterTest(unittest.TestCase):
             todolist_to_string(reference))
 
     def test_filter19(self):
+        todos = load_file('data/FilterTest1.txt')
+        grep = Filter.GrepFilter(1)
+        filtered_todos = grep.filter(todos)
+
+        self.assertEquals(filtered_todos, [])
+
+    def test_filter20(self):
         todos = load_file('data/FilterTest3.txt')
         otf = Filter.OrdinalTagFilter('due:<2014-11-10')
 
@@ -193,14 +200,6 @@ class FilterTest(unittest.TestCase):
 
         self.assertEquals(todolist_to_string(filtered_todos), \
             todolist_to_string(reference))
-
-    def test_filter20(self):
-        todos = load_file('data/FilterTest3.txt')
-        otf = Filter.OrdinalTagFilter('due:=2014-11-10')
-
-        filtered_todos = otf.filter(todos)
-
-        self.assertEquals(todolist_to_string(filtered_todos), "")
 
     def test_filter21(self):
         todos = load_file('data/FilterTest3.txt')
@@ -212,7 +211,7 @@ class FilterTest(unittest.TestCase):
 
     def test_filter22(self):
         todos = load_file('data/FilterTest3.txt')
-        otf = Filter.OrdinalTagFilter('due:=2014-11-99')
+        otf = Filter.OrdinalTagFilter('due:=2014-11-10')
 
         filtered_todos = otf.filter(todos)
 
@@ -220,13 +219,21 @@ class FilterTest(unittest.TestCase):
 
     def test_filter23(self):
         todos = load_file('data/FilterTest3.txt')
-        otf = Filter.OrdinalTagFilter('due:=garbage')
+        otf = Filter.OrdinalTagFilter('due:=2014-11-99')
 
         filtered_todos = otf.filter(todos)
 
         self.assertEquals(todolist_to_string(filtered_todos), "")
 
     def test_filter24(self):
+        todos = load_file('data/FilterTest3.txt')
+        otf = Filter.OrdinalTagFilter('due:=garbage')
+
+        filtered_todos = otf.filter(todos)
+
+        self.assertEquals(todolist_to_string(filtered_todos), "")
+
+    def test_filter25(self):
         todos = load_file('data/FilterTest3.txt')
         otf = Filter.OrdinalTagFilter('value:<10')
 
@@ -236,7 +243,7 @@ class FilterTest(unittest.TestCase):
         self.assertEquals(todolist_to_string(filtered_todos),
             todolist_to_string(reference))
 
-    def test_filter25(self):
+    def test_filter26(self):
         todos = load_file('data/FilterTest3.txt')
         otf = Filter.OrdinalTagFilter('value:<=16')
 
@@ -246,7 +253,7 @@ class FilterTest(unittest.TestCase):
         self.assertEquals(todolist_to_string(filtered_todos),
             todolist_to_string(reference))
 
-    def test_filter26(self):
+    def test_filter27(self):
         todos = load_file('data/FilterTest3.txt')
         otf = Filter.OrdinalTagFilter('value:<16')
 
@@ -256,7 +263,7 @@ class FilterTest(unittest.TestCase):
         self.assertEquals(todolist_to_string(filtered_todos),
             todolist_to_string(reference))
 
-    def test_filter27(self):
+    def test_filter28(self):
         todos = load_file('data/FilterTest3.txt')
         otf = Filter.OrdinalTagFilter('value:<16a')
 
@@ -264,7 +271,7 @@ class FilterTest(unittest.TestCase):
 
         self.assertEquals(todolist_to_string(filtered_todos), "")
 
-    def test_filter28(self):
+    def test_filter29(self):
         todos = load_file('data/FilterTest3.txt')
         otf = Filter.OrdinalTagFilter('value:>8')
 
@@ -274,7 +281,7 @@ class FilterTest(unittest.TestCase):
         self.assertEquals(todolist_to_string(filtered_todos),
             todolist_to_string(reference))
 
-    def test_filter29(self):
+    def test_filter30(self):
         todos = load_file('data/FilterTest3.txt')
         otf = Filter.OrdinalTagFilter('value:>=8')
 
@@ -284,7 +291,7 @@ class FilterTest(unittest.TestCase):
         self.assertEquals(todolist_to_string(filtered_todos),
             todolist_to_string(reference))
 
-    def test_filter30(self):
+    def test_filter31(self):
         todos = load_file('data/FilterTest3.txt')
         otf = Filter.OrdinalTagFilter('value:>-8')
 
