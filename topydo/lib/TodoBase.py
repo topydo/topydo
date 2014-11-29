@@ -209,9 +209,9 @@ class TodoBase(object):
         # http://bugs.python.org/issue1519638 non-existent matches trigger
         # exceptions, hence the lambda
         self.src = re.sub(
-            r'^(x \d{4}-\d{2}-\d{2} |\([A-Z]\) )?(\d{4}-\d{2}-\d{2} )?(.*)$', \
+            r'^(x \d{4}-\d{2}-\d{2} |\([A-Z]\) )?(\d{4}-\d{2}-\d{2} )?(.*)$',
             lambda m: \
-            "%s%s %s" % (m.group(1) or '', p_date.isoformat(), m.group(3)), \
+            "{}{} {}".format(m.group(1) or '', p_date.isoformat(), m.group(3)),
             self.src)
 
     def creation_date(self):

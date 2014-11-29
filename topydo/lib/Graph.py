@@ -199,14 +199,14 @@ class DirectedGraph(object):
         out = 'digraph g {\n'
 
         for from_node, neighbors in self._edges.iteritems():
-            out += "  %s\n" % from_node
+            out += "  {}\n".format(from_node)
 
             for neighbor in neighbors:
-                out += "  %s -> %s" % (from_node, neighbor)
+                out += "  {} -> {}".format(from_node, neighbor)
 
                 edge_id = self.edge_id(from_node, neighbor)
                 if edge_id and p_print_labels:
-                    out += ' [label="%s"]' % edge_id
+                    out += ' [label="{}"]'.format(edge_id)
 
                 out += "\n"
 

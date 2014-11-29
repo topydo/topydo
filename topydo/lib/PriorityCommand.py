@@ -43,9 +43,10 @@ class PriorityCommand(Command):
                 self.todolist.set_priority(todo, priority)
 
                 if old_priority and priority and old_priority != priority:
-                    self.out("Priority changed from %s to %s" % (old_priority, priority))
+                    self.out("Priority changed from {} to {}".format(
+                        old_priority, priority))
                 elif not old_priority:
-                    self.out("Priority set to %s." % priority)
+                    self.out("Priority set to {}.".format(priority))
 
                 self.out(pretty_print(todo))
             else:

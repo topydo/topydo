@@ -111,10 +111,10 @@ class TodoList(TodoListBase):
             """
 
             new_id = 1
-            while self._depgraph.has_edge_id('%d' % new_id):
+            while self._depgraph.has_edge_id(str(new_id)):
                 new_id += 1
 
-            return '%d' % new_id
+            return str(new_id)
 
         if p_from_todo != p_to_todo and not self._depgraph.has_edge(hash(p_from_todo), hash(p_to_todo)):
             dep_id = None

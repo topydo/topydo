@@ -31,10 +31,10 @@ class PostponeCommandTest(CommandTest.CommandTest):
 
         todos = [
             "Foo",
-            "Bar due:%s" % self.today.isoformat(),
-            "Baz due:%s t:%s" % (self.today.isoformat(), self.start.isoformat()),
-            "Past due:%s" % self.past.isoformat(),
-            "Future due:%s t:%s" % (self.future.isoformat(), self.future_start.isoformat()),
+            "Bar due:{}".format(self.today.isoformat()),
+            "Baz due:{} t:{}".format(self.today.isoformat(), self.start.isoformat()),
+            "Past due:{}".format(self.past.isoformat()),
+            "Future due:{} t:{}".format(self.future.isoformat(), self.future_start.isoformat()),
         ]
 
         self.todolist = TodoList(todos)
@@ -46,7 +46,7 @@ class PostponeCommandTest(CommandTest.CommandTest):
         due = self.today + timedelta(7)
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEquals(self.output, "|  1| Foo due:%s\n" % due.isoformat())
+        self.assertEquals(self.output, "|  1| Foo due:{}\n".format(due.isoformat()))
         self.assertEquals(self.errors, "")
 
     def test_postpone2(self):
@@ -56,7 +56,7 @@ class PostponeCommandTest(CommandTest.CommandTest):
         due = self.today + timedelta(7)
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEquals(self.output, "|  2| Bar due:%s\n" % due.isoformat())
+        self.assertEquals(self.output, "|  2| Bar due:{}\n".format(due.isoformat()))
         self.assertEquals(self.errors, "")
 
     def test_postpone3(self):
@@ -66,7 +66,7 @@ class PostponeCommandTest(CommandTest.CommandTest):
         due = self.today + timedelta(7)
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEquals(self.output, "|  2| Bar due:%s\n" % due.isoformat())
+        self.assertEquals(self.output, "|  2| Bar due:{}\n".format(due.isoformat()))
         self.assertEquals(self.errors, "")
 
     def test_postpone4(self):
@@ -76,7 +76,7 @@ class PostponeCommandTest(CommandTest.CommandTest):
         due = self.today + timedelta(7)
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEquals(self.output, "|  3| Baz due:%s t:%s\n" % (due.isoformat(), self.start.isoformat()))
+        self.assertEquals(self.output, "|  3| Baz due:{} t:{}\n".format(due.isoformat(), self.start.isoformat()))
         self.assertEquals(self.errors, "")
 
     def test_postpone5(self):
@@ -87,7 +87,7 @@ class PostponeCommandTest(CommandTest.CommandTest):
         start = self.start + timedelta(7)
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEquals(self.output, "|  3| Baz due:%s t:%s\n" % (due.isoformat(), start.isoformat()))
+        self.assertEquals(self.output, "|  3| Baz due:{} t:{}\n".format(due.isoformat(), start.isoformat()))
         self.assertEquals(self.errors, "")
 
     def test_postpone6(self):
@@ -97,7 +97,7 @@ class PostponeCommandTest(CommandTest.CommandTest):
         due = self.today + timedelta(7)
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEquals(self.output, "|  4| Past due:%s\n" % due.isoformat())
+        self.assertEquals(self.output, "|  4| Past due:{}\n".format(due.isoformat()))
         self.assertEquals(self.errors, "")
 
     def test_postpone7(self):
@@ -107,7 +107,7 @@ class PostponeCommandTest(CommandTest.CommandTest):
         due = self.future + timedelta(7)
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEquals(self.output, "|  5| Future due:%s t:%s\n" % (due.isoformat(), self.future_start.isoformat()))
+        self.assertEquals(self.output, "|  5| Future due:{} t:{}\n".format(due.isoformat(), self.future_start.isoformat()))
         self.assertEquals(self.errors, "")
 
     def test_postpone8(self):
@@ -118,7 +118,7 @@ class PostponeCommandTest(CommandTest.CommandTest):
         start = self.future_start + timedelta(7)
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEquals(self.output, "|  5| Future due:%s t:%s\n" % (due.isoformat(), start.isoformat()))
+        self.assertEquals(self.output, "|  5| Future due:{} t:{}\n".format(due.isoformat(), start.isoformat()))
         self.assertEquals(self.errors, "")
 
     def test_postpone9(self):
@@ -160,7 +160,7 @@ class PostponeCommandTest(CommandTest.CommandTest):
         due = self.today + timedelta(7)
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEquals(self.output, "|  1| Foo due:%s\n" % due.isoformat())
+        self.assertEquals(self.output, "|  1| Foo due:{}\n".format(due.isoformat()))
         self.assertEquals(self.errors, "")
 
     def test_help(self):

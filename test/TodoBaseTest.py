@@ -293,7 +293,7 @@ class TodoBaseTester(TopydoTest.TopydoTest):
         yesterday = date.today() - timedelta(1)
         todo.set_completed(yesterday)
 
-        self.assertEquals(todo.src, "x %s Foo" % yesterday.isoformat())
+        self.assertEquals(todo.src, "x {} Foo".format(yesterday.isoformat()))
 
     def test_set_source_text(self):
         todo = TodoBase("(B) Foo")

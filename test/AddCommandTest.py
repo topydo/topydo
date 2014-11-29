@@ -168,7 +168,7 @@ class AddCommandTest(CommandTest.CommandTest):
         command = AddCommand.AddCommand(["Foo t:today due:today"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = "|  1| %s Foo t:%s due:%s\n" % (self.today, self.today, self.today)
+        result = "|  1| {} Foo t:{} due:{}\n".format(self.today, self.today, self.today)
         self.assertEquals(self.output, result)
         self.assertEquals(self.errors, "")
 

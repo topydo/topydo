@@ -52,14 +52,15 @@ class DoCommandTest(CommandTest.CommandTest):
 
         self.assertTrue(self.todolist.is_dirty())
         self.assertTrue(self.todolist.todo(3).is_completed())
-        self.assertEquals(self.output, "Completed: x %s Baz p:1\n" % self.today)
+        self.assertEquals(self.output, "Completed: x {} Baz p:1\n".format(
+            self.today))
         self.assertEquals(self.errors, "")
 
     def test_do_subtasks1(self):
         command = DoCommand(["1"], self.todolist, self.out, self.error, _yes_prompt)
         command.execute()
 
-        result = "|  2| Bar p:1\n|  3| Baz p:1\nCompleted: x %s Bar p:1\nCompleted: x %s Baz p:1\nCompleted: x %s Foo id:1\n" % (self.today, self.today, self.today)
+        result = "|  2| Bar p:1\n|  3| Baz p:1\nCompleted: x {today} Bar p:1\nCompleted: x {today} Baz p:1\nCompleted: x {today} Foo id:1\n".format(today=self.today)
 
         for number in [1, 2, 3]:
             self.assertTrue(self.todolist.todo(number).is_completed())
@@ -73,7 +74,7 @@ class DoCommandTest(CommandTest.CommandTest):
         command = DoCommand(["1"], self.todolist, self.out, self.error, _no_prompt)
         command.execute()
 
-        result = "|  2| Bar p:1\n|  3| Baz p:1\nCompleted: x %s Foo id:1\n" % self.today
+        result = "|  2| Bar p:1\n|  3| Baz p:1\nCompleted: x {} Foo id:1\n".format(self.today)
 
         self.assertTrue(self.todolist.is_dirty())
         self.assertTrue(self.todolist.todo(1).is_completed())
@@ -124,7 +125,7 @@ class DoCommandTest(CommandTest.CommandTest):
         self._recurrence_helper(["4"])
 
         self.assertTrue(self.todolist.todo(4).is_completed())
-        result = "|  9| %s Recurring! rec:1d due:%s\nCompleted: x %s Recurring! rec:1d\n" % (self.today, self.tomorrow, self.today)
+        result = "|  9| {today} Recurring! rec:1d due:{tomorrow}\nCompleted: x {today} Recurring! rec:1d\n".format(today=self.today, tomorrow=self.tomorrow)
         self.assertEquals(self.output, result)
 
         todo = self.todolist.todo(8)
@@ -133,13 +134,13 @@ class DoCommandTest(CommandTest.CommandTest):
 
     def test_strict_recurrence1(self):
         self._recurrence_helper(["-s", "8"])
-        result = "|  9| %s Strict due:2014-01-02 rec:1d\nCompleted: x %s Strict due:2014-01-01 rec:1d\n" % (self.today, self.today)
+        result = "|  9| {today} Strict due:2014-01-02 rec:1d\nCompleted: x {today} Strict due:2014-01-01 rec:1d\n".format(today=self.today)
         self.assertEquals(self.output, result)
 
     def test_strict_recurrence2(self):
         self._recurrence_helper(["--strict", "8"])
 
-        result = "|  9| %s Strict due:2014-01-02 rec:1d\nCompleted: x %s Strict due:2014-01-01 rec:1d\n" % (self.today, self.today)
+        result = "|  9| {today} Strict due:2014-01-02 rec:1d\nCompleted: x {today} Strict due:2014-01-01 rec:1d\n".format(today=self.today)
         self.assertEquals(self.output, result)
 
     def test_invalid1(self):
@@ -170,7 +171,7 @@ class DoCommandTest(CommandTest.CommandTest):
         command = DoCommand(["2"], self.todolist, self.out, self.error)
         command.execute()
 
-        first_output = "Completed: x %s Bar p:1\n" % self.today
+        first_output = "Completed: x {} Bar p:1\n".format(self.today)
 
         self.assertEquals(self.output, first_output)
         self.assertEquals(self.errors, "")
@@ -178,14 +179,14 @@ class DoCommandTest(CommandTest.CommandTest):
         command = DoCommand(["3"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEquals(self.output, first_output + "Completed: x %s Baz p:1\nThe following todo item(s) became active:\n|  1| Foo id:1\n" % self.today)
+        self.assertEquals(self.output, first_output + "Completed: x {} Baz p:1\nThe following todo item(s) became active:\n|  1| Foo id:1\n".format(self.today))
         self.assertEquals(self.errors, "")
 
     def test_activated_todos2(self):
         command = DoCommand(["7"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEquals(self.output, "Completed: x %s Subtodo of inactive p:2\n" % self.today)
+        self.assertEquals(self.output, "Completed: x {} Subtodo of inactive p:2\n".format(self.today))
         self.assertEquals(self.errors, "")
 
     def test_already_complete(self):
@@ -203,7 +204,7 @@ class DoCommandTest(CommandTest.CommandTest):
 
         self.assertTrue(self.todolist.is_dirty())
         self.assertTrue(self.todolist.todo(3).is_completed())
-        self.assertEquals(self.output, "Completed: x %s Baz p:1\n" % self.today)
+        self.assertEquals(self.output, "Completed: x {} Baz p:1\n".format(self.today))
         self.assertEquals(self.errors, "")
 
     def test_do_custom_date1(self):
@@ -235,7 +236,7 @@ class DoCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEquals(self.output, "Completed: x %s Baz p:1\n" % self.today)
+        self.assertEquals(self.output, "Completed: x {} Baz p:1\n".format(self.today))
         self.assertEquals(self.errors, "")
 
     def test_empty(self):

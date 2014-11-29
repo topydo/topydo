@@ -70,7 +70,7 @@ class TagCommand(Command):
 
         if not self.force:
             for i, value in enumerate(self.current_values):
-                self.out("%2d. %s" % (i + 1, value))
+                self.out("{:>2d}. {}".format(i + 1, value))
 
             answer = self.prompt(
                 'Which value to remove? Enter number or "all": ')

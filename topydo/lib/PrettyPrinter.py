@@ -43,7 +43,7 @@ def pp_color(p_todo_str, p_todo):
         except KeyError:
             pass
 
-        p_todo_str = '%s%s%s' % (color, p_todo_str, NEUTRAL_COLOR)
+        p_todo_str = color + p_todo_str + NEUTRAL_COLOR
 
         if config().highlight_projects_contexts():
             p_todo_str = re.sub(

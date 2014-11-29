@@ -52,7 +52,7 @@ def error(p_string):
 def version():
     """ Print the current version and exit. """
     from topydo.lib.Version import VERSION, LICENSE
-    print "topydo %s\n" % (VERSION)
+    print "topydo {}\n".format(VERSION)
     print LICENSE
     exit(0)
 
