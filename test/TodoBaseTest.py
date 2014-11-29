@@ -105,6 +105,20 @@ class TodoBaseTester(unittest.TestCase):
         self.assertFalse(todo.has_tag('foo'))
         self.assertFalse(re.search(r'\bfoo:', todo.src))
 
+    def test_tag_empty_value(self):
+        """ Tag should not be recorded when there is no value. """
+
+        todo = TodoBase("(C) Foo foo:")
+
+        self.assertFalse(todo.has_tag('foo'))
+
+    def test_tag_empty_key(self):
+        """ Tag should not be recorded when there is no key. """
+
+        todo = TodoBase("(C) Foo :bar")
+
+        self.assertFalse(todo.has_tag(''))
+
     def test_remove_all(self):
         todo = TodoBase("(C) Foo foo:bar foo:baz foo:")
         todo.remove_tag('foo')
