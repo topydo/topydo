@@ -66,38 +66,65 @@ class TodoListBase(object):
         """
         result = None
 
-        try:
+        def todo_by_uid(p_identifier):
+            """ Returns the todo that corresponds to the unique ID. """
+            result = None
+
             if config().identifiers() == 'text':
-                result = self._id_todo_map[p_identifier]
-            else:
                 try:
-                    if not re.match('[1-9]\d*', p_identifier):
-                        raise ValueError # leading zeros, pass to regexp
+                    result = self._id_todo_map[p_identifier]
+                except KeyError:
+                    pass # we'll try something else
+
+            return result
+
+        def todo_by_linenumber(p_identifier):
+            """
+            Attempts to find the todo on the given line number.
+
+            When the identifier is a number but has leading zeroes, the result
+            will be None.
+            """
+
+            result = None
+
+            if config().identifiers() != 'text':
+                try:
+                    if re.match('[1-9]\d*', p_identifier):
+                        # the expression is a string and no leading zeroes,
+                        # treat it as an integer
+                        raise TypeError
                 except TypeError:
-                    # we're dealing with an integer
-                    pass
+                    try:
+                        result = self._todos[int(p_identifier) - 1]
+                    except IndexError:
+                        raise InvalidTodoException
 
-                result = self._todos[int(p_identifier) - 1]
-        except IndexError:
-            raise InvalidTodoException
-        except (TypeError, ValueError, KeyError):
-            result = self.todo_by_regexp(p_identifier)
+            return result
 
-        return result
+        def todo_by_regexp(p_identifier):
+            """
+            Returns the todo that is (uniquely) identified by the given regexp.
+            If the regexp matches more than one item, no result is returned.
+            """
+            result = None
 
-    def todo_by_regexp(self, p_identifier):
-        """
-        Returns the todo that is (uniquely) identified by the given regexp.
-        If the regexp matches more than one item, no result is returned.
-        """
-        result = None
+            candidates = Filter.GrepFilter(p_identifier).filter(self._todos)
 
-        candidates = Filter.GrepFilter(p_identifier).filter(self._todos)
+            if len(candidates) == 1:
+                result = candidates[0]
+            else:
+                raise InvalidTodoException
 
-        if len(candidates) == 1:
-            result = candidates[0]
-        else:
-            raise InvalidTodoException
+            return result
+
+        result = todo_by_uid(p_identifier)
+
+        if not result:
+            result = todo_by_linenumber(p_identifier)
+
+        if not result:
+            result = todo_by_regexp(p_identifier)
 
         return result
 

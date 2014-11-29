@@ -212,6 +212,14 @@ class TodoListTester(TopydoTest.TopydoTest):
         self.todolist.set_priority(todo, 'B')
         self.assertEquals(self.todolist.todo('6iu').source(), "(B) Foo @Context2 Not@Context +Project1 Not+Project")
 
+    def test_uid3(self):
+        """
+        Must be able to handle integers when text identifiers are enabled.
+        """
+
+        config("test/data/todolist-uid.conf")
+        self.assertRaises(InvalidTodoException, self.todolist.todo, 1)
+
 class TodoListDependencyTester(TopydoTest.TopydoTest):
     def setUp(self):
         super(TodoListDependencyTester, self).setUp()
