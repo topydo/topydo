@@ -33,7 +33,7 @@ _NORMAL_HEAD_MATCH = re.compile(
     r'(\((?P<priority>[A-Z])\) )?' + '((?P<creationDate>' + _DATE_MATCH +
     ') )?(?P<rest>.*)')
 
-_TAG_MATCH = re.compile('(?P<key>[^:]*):(?P<value>.*)')
+_TAG_MATCH = re.compile('(?P<key>[^:]+):(?P<value>.+)')
 _PROJECT_MATCH = re.compile(r'\+(\S*\w)')
 _CONTEXT_MATCH = re.compile(r'@(\S*\w)')
 
