@@ -22,7 +22,7 @@ import TestFacilities
 class SortCommandTest(CommandTest.CommandTest):
     def setUp(self):
         super(SortCommandTest, self).setUp()
-        self.todolist = TestFacilities.load_file_to_todolist("data/SorterTest1.txt")
+        self.todolist = TestFacilities.load_file_to_todolist("test/data/SorterTest1.txt")
 
     def tearDown(self):
         # restore to the default configuration in case a custom one was set
@@ -43,7 +43,7 @@ class SortCommandTest(CommandTest.CommandTest):
 
     def test_sort3(self):
         """ Check that order does not influence the UID of a todo. """
-        config("data/todolist-uid.conf")
+        config("test/data/todolist-uid.conf")
 
         todo1 = self.todolist.todo('tpi')
         command = SortCommand(["text"], self.todolist, self.out, self.error)
@@ -58,3 +58,6 @@ class SortCommandTest(CommandTest.CommandTest):
 
         self.assertEquals(self.output, "")
         self.assertEquals(self.errors, command.usage() + "\n\n" + command.help() + "\n")
+
+if __name__ == '__main__':
+    unittest.main()

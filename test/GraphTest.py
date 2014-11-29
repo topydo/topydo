@@ -167,3 +167,6 @@ class GraphTest(unittest.TestCase):
     def test_dot_output_without_labels(self):
         out = 'digraph g {\n  1\n  1 -> 2\n  1 -> 3\n  2\n  2 -> 4\n  3\n  3 -> 5\n  4\n  4 -> 3\n  4 -> 6\n  5\n  6\n  6 -> 2\n}\n'
         self.assertEquals(self.graph.dot(False), out)
+
+if __name__ == '__main__':
+    unittest.main()

@@ -38,3 +38,6 @@ class ImportanceTest(unittest.TestCase):
         today_str = date.today().isoformat()
         todo = Todo("(C) Foo " + config().tag_due() + ":" + today_str)
         self.assertEqual(importance(todo), 8)
+
+if __name__ == '__main__':
+    unittest.main()

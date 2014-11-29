@@ -27,7 +27,7 @@ from topydo.lib.TodoList import TodoList
 
 class TodoListTester(unittest.TestCase):
     def setUp(self):
-        self.todofile = TodoFile('data/TodoListTest.txt')
+        self.todofile = TodoFile('test/data/TodoListTest.txt')
         lines = [line for line in self.todofile.read() \
                        if re.search(r'\S', line)]
         self.text = ''.join(lines)
@@ -197,13 +197,13 @@ class TodoListTester(unittest.TestCase):
         self.assertEquals(todo.source(), "(D) Bar @Context1 +Project2")
 
     def test_uid1(self):
-        config("data/todolist-uid.conf")
+        config("test/data/todolist-uid.conf")
 
         self.assertEquals(self.todolist.todo('6iu').source(), "(C) Foo @Context2 Not@Context +Project1 Not+Project")
 
     def test_uid2(self):
         """ Changing the priority should not change the identifier. """
-        config("data/todolist-uid.conf")
+        config("test/data/todolist-uid.conf")
 
         todo = self.todolist.todo('6iu')
         self.todolist.set_priority(todo, 'B')
@@ -320,3 +320,6 @@ class TodoListCleanDependencyTester(unittest.TestCase):
         self.assertFalse(self.todolist.todo(2).has_tag('p'))
         self.assertTrue(self.todolist.todo(2).has_tag('id', '2'))
         self.assertTrue(self.todolist.todo(3).has_tag('p', '2'))
+
+if __name__ == '__main__':
+    unittest.main()

@@ -22,7 +22,7 @@ import TestFacilities
 class ListCommandTest(CommandTest.CommandTest):
     def setUp(self):
         super(ListCommandTest, self).setUp()
-        self.todolist = TestFacilities.load_file_to_todolist("data/ListCommandTest.txt")
+        self.todolist = TestFacilities.load_file_to_todolist("test/data/ListCommandTest.txt")
 
     def tearDown(self):
         # restore to the default configuration in case a custom one was set
@@ -101,7 +101,7 @@ class ListCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_list11(self):
-        config("data/listcommand.conf")
+        config("test/data/listcommand.conf")
 
         command = ListCommand(["project"], self.todolist, self.out, self.error)
         command.execute()
@@ -111,7 +111,7 @@ class ListCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_list12(self):
-        config("data/listcommand.conf")
+        config("test/data/listcommand.conf")
 
         command = ListCommand(["-x", "project"], self.todolist, self.out, self.error)
         command.execute()
@@ -129,7 +129,7 @@ class ListCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_list14(self):
-        config("data/listcommand2.conf")
+        config("test/data/listcommand2.conf")
 
         command = ListCommand([], self.todolist, self.out, self.error)
         command.execute()
@@ -147,7 +147,7 @@ class ListCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
 
     def test_list16(self):
-        config("data/todolist-uid.conf")
+        config("test/data/todolist-uid.conf")
 
         command = ListCommand([], self.todolist, self.out, self.error)
         command.execute()
@@ -170,3 +170,6 @@ class ListCommandTest(CommandTest.CommandTest):
 
         self.assertEquals(self.output, "")
         self.assertEquals(self.errors, command.usage() + "\n\n" + command.help() + "\n")
+
+if __name__ == '__main__':
+    unittest.main()

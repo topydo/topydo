@@ -20,7 +20,7 @@ from topydo.lib.ListProjectCommand import ListProjectCommand
 
 class ListProjectCommandTest(CommandTest.CommandTest):
     def test_projects1(self):
-        todolist = TestFacilities.load_file_to_todolist("data/TodoListTest.txt")
+        todolist = TestFacilities.load_file_to_todolist("test/data/TodoListTest.txt")
         command = ListProjectCommand([""], todolist, self.out, self.error)
         command.execute()
 
@@ -28,7 +28,7 @@ class ListProjectCommandTest(CommandTest.CommandTest):
         self.assertFalse(self.errors)
 
     def test_projects2(self):
-        todolist = TestFacilities.load_file_to_todolist("data/TodoListTest.txt")
+        todolist = TestFacilities.load_file_to_todolist("test/data/TodoListTest.txt")
         command = ListProjectCommand(["aaa"], todolist, self.out, self.error)
         command.execute()
 
@@ -41,3 +41,6 @@ class ListProjectCommandTest(CommandTest.CommandTest):
 
         self.assertEquals(self.output, "")
         self.assertEquals(self.errors, command.usage() + "\n\n" + command.help() + "\n")
+
+if __name__ == '__main__':
+    unittest.main()

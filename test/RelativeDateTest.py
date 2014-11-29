@@ -108,3 +108,6 @@ class RelativeDateTester(unittest.TestCase):
     def test_offset1(self):
         result = relative_date_to_date('1d', self.tomorrow)
         self.assertEquals(result, date.today() + timedelta(2))
+
+if __name__ == '__main__':
+    unittest.main()

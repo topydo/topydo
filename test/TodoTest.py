@@ -85,3 +85,6 @@ class TodoTest(unittest.TestCase):
     def test_length3(self):
         todo = Todo("(C) Foo t:2014-01-01 due:2014-01-02")
         self.assertEqual(todo.length(), 1)
+
+if __name__ == '__main__':
+    unittest.main()

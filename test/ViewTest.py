@@ -25,8 +25,8 @@ from topydo.lib.TodoList import TodoList
 class ViewTest(unittest.TestCase):
     def test_view(self):
         """ Check filters and printer for views. """
-        todofile = TodoFile('data/FilterTest1.txt')
-        ref = load_file('data/ViewTest1-result.txt')
+        todofile = TodoFile('test/data/FilterTest1.txt')
+        ref = load_file('test/data/ViewTest1-result.txt')
 
         todolist = TodoList(todofile.read())
         sorter = Sorter('text')
@@ -34,4 +34,7 @@ class ViewTest(unittest.TestCase):
         view = todolist.view(sorter, [todofilter])
 
         self.assertEquals(str(view), todolist_to_string(ref))
+
+if __name__ == '__main__':
+    unittest.main()
 

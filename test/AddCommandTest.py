@@ -185,3 +185,6 @@ class AddCommandTest(CommandTest.CommandTest):
 
         self.assertEquals(self.output, "")
         self.assertEquals(self.errors, command.usage() + "\n\n" + command.help() + "\n")
+
+if __name__ == '__main__':
+    unittest.main()

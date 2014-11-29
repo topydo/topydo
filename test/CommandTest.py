@@ -35,3 +35,6 @@ class CommandTest(unittest.TestCase):
     def error(self, p_error):
         if p_error:
             self.errors += escape_ansi(p_error + "\n")
+
+if __name__ == '__main__':
+    unittest.main()

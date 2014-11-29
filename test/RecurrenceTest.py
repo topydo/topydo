@@ -135,3 +135,6 @@ class RecurrenceTest(unittest.TestCase):
     def test_no_recurrence(self):
         self.todo.remove_tag('rec')
         self.assertRaises(NoRecurrenceException,advance_recurring_todo,self.todo)
+
+if __name__ == '__main__':
+    unittest.main()
