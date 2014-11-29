@@ -14,8 +14,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from math import ceil, log
-
 _table_sizes = {
     # we choose a large table size reduce the change of collisions
     3: 46649, # largest prime under zzz_36
