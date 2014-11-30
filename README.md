@@ -18,8 +18,13 @@ are:
 Consult the [wiki][4] for more information about the features and on how to
 use topydo.
 
+[Demo]
+
+![gif][5]
+
 
 [1]: https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format
 [2]: https://github.com/ginatrapani/todo.txt-cli
 [3]: https://github.com/bram85/todo.txt-tools
 [4]: https://github.com/bram85/topydo/wiki
+[5]: https://raw.githubusercontent.com/bram85/topydo/stable/doc/topydo.gif
