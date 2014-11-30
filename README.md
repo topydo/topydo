@@ -18,7 +18,8 @@ are:
 Consult the [wiki][4] for more information about the features and on how to
 use topydo.
 
-[Demo]
+Demo
+----
 
 ![gif][5]
 
