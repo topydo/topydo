@@ -52,4 +52,6 @@ class TodoFile(object):
         else:
             todofile.write(p_todos)
 
+        todofile.write("\n")
+
         todofile.close()
