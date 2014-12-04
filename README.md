@@ -18,6 +18,13 @@ are:
 Consult the [wiki][4] for more information about the features and on how to
 use topydo.
 
+Install
+-------
+
+Install simply with:
+
+    pip install topydo
+
 Demo
 ----
 
