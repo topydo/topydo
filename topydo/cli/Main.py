@@ -220,5 +220,9 @@ class CLIApplication(object):
 
             todofile.write(str(self.todolist))
 
-if __name__ == '__main__':
+def main():
+    """ Main entry point of the CLI. """
     CLIApplication().run()
+
+if __name__ == '__main__':
+    main()

@@ -8,7 +8,9 @@ setup(
     author = "Bram Schoenmakers",
     author_email = "me@bramschoenmakers.nl",
     url = "https://github.com/bram85/topydo",
-    scripts = ["bin/topydo"],
+    entry_points= {
+        'console_scripts': ['topydo = topydo.cli.Main:main'],
+    },
     classifiers = [
         "Development Status :: 4 - Beta",
         "Environment :: Console",
