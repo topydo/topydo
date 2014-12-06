@@ -46,9 +46,11 @@ class DoCommand(DCommand):
     def _handle_recurrence(self):
         if self.todo.has_tag('rec'):
             if self.strict_recurrence:
-                new_todo = strict_advance_recurring_todo(self.todo)
+                new_todo = strict_advance_recurring_todo(self.todo,
+                    self.completion_date)
             else:
-                new_todo = advance_recurring_todo(self.todo)
+                new_todo = advance_recurring_todo(self.todo,
+                    self.completion_date)
 
             self.todolist.add_todo(new_todo)
             self.out(pretty_print(new_todo, [self.todolist.pp_number()]))

@@ -43,6 +43,9 @@ class DoCommandTest(CommandTest.CommandTest):
         self.todolist = TodoList(todos)
         self.today = date.today()
         self.tomorrow = self.today + timedelta(1)
+        self.yesterday = self.today - timedelta(1)
+
+        self.yesterday = self.yesterday.isoformat()
         self.today = self.today.isoformat()
         self.tomorrow = self.tomorrow.isoformat()
 
@@ -236,6 +239,43 @@ class DoCommandTest(CommandTest.CommandTest):
 
         self.assertTrue(self.todolist.is_dirty())
         self.assertEquals(self.output, "Completed: x %s Baz p:1\n" % self.today)
+        self.assertEquals(self.errors, "")
+
+    def test_do_custom_date5(self):
+        """
+        Make sure that the new recurrence date is correct when a custom
+        date is given.
+        """
+        command = DoCommand(["-d", self.yesterday, "4"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEquals(self.output, "  9 {today} Recurring! rec:1d due:{today}\nCompleted: x {yesterday} Recurring! rec:1d\n".format(today=self.today, yesterday=self.yesterday))
+        self.assertEquals(self.errors, "")
+
+    def test_do_custom_date6(self):
+        """
+        When a custom date is set, strict recurrence must still hold on to the
+        due date as the offset. This todo item however, has no due date, then
+        the completion date must be used as an offset.
+        """
+        command = DoCommand(["-s", "-d", self.yesterday, "4"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEquals(self.output, "  9 {today} Recurring! rec:1d due:{today}\nCompleted: x {yesterday} Recurring! rec:1d\n".format(today=self.today, yesterday=self.yesterday))
+        self.assertEquals(self.errors, "")
+
+    def test_do_custom_date7(self):
+        """
+        When a custom date is set, strict recurrence must still hold on to the
+        due date as the offset.
+        """
+        command = DoCommand(["-s", "-d", self.yesterday, "8"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEquals(self.output, "  9 {today} Strict due:2014-01-02 rec:1d\nCompleted: x {yesterday} Strict due:2014-01-01 rec:1d\n".format(today=self.today, yesterday=self.yesterday))
         self.assertEquals(self.errors, "")
 
     def test_empty(self):
