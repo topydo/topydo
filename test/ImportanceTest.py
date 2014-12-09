@@ -20,9 +20,9 @@ import unittest
 from topydo.lib.Config import config
 from topydo.lib.Importance import importance
 from topydo.lib.Todo import Todo
-import TopydoTest
+from test.TopydoTest import TopydoTest
 
-class ImportanceTest(TopydoTest.TopydoTest):
+class ImportanceTest(TopydoTest):
     def test_importance1(self):
         todo = Todo("Foo")
         self.assertEqual(importance(todo), 2)

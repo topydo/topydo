@@ -18,12 +18,12 @@ import unittest
 
 from topydo.lib import Filter
 from topydo.lib.Sorter import Sorter
-from TestFacilities import load_file, todolist_to_string
+from test.TestFacilities import load_file, todolist_to_string
 from topydo.lib.TodoFile import TodoFile
 from topydo.lib.TodoList import TodoList
-import TopydoTest
+from test.TopydoTest import TopydoTest
 
-class ViewTest(TopydoTest.TopydoTest):
+class ViewTest(TopydoTest):
     def test_view(self):
         """ Check filters and printer for views. """
         todofile = TodoFile('test/data/FilterTest1.txt')

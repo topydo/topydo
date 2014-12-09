@@ -17,9 +17,9 @@
 import unittest
 
 from topydo.lib.Utils import escape_ansi
-import TopydoTest
+from test.TopydoTest import TopydoTest
 
-class CommandTest(TopydoTest.TopydoTest):
+class CommandTest(TopydoTest):
     def __init__(self, *args, **kwargs):
         super(CommandTest, self).__init__(*args, **kwargs)
         self.output = ""

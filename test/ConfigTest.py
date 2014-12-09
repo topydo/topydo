@@ -17,9 +17,9 @@
 import unittest
 
 from topydo.lib.Config import config
-import TopydoTest
+from test.TopydoTest import TopydoTest
 
-class ConfigTest(TopydoTest.TopydoTest):
+class ConfigTest(TopydoTest):
     def test_config1(self):
         self.assertEquals(config("test/data/config1").default_command(), 'do')
 

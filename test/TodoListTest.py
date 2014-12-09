@@ -24,9 +24,9 @@ from topydo.lib.Todo import Todo
 from topydo.lib.TodoFile import TodoFile
 from topydo.lib.TodoListBase import InvalidTodoException
 from topydo.lib.TodoList import TodoList
-import TopydoTest
+from test.TopydoTest import TopydoTest
 
-class TodoListTester(TopydoTest.TopydoTest):
+class TodoListTester(TopydoTest):
     def setUp(self):
         super(TodoListTester, self).setUp()
 
@@ -220,7 +220,7 @@ class TodoListTester(TopydoTest.TopydoTest):
         config("test/data/todolist-uid.conf")
         self.assertRaises(InvalidTodoException, self.todolist.todo, 1)
 
-class TodoListDependencyTester(TopydoTest.TopydoTest):
+class TodoListDependencyTester(TopydoTest):
     def setUp(self):
         super(TodoListDependencyTester, self).setUp()
 
@@ -348,7 +348,7 @@ class TodoListDependencyTester(TopydoTest.TopydoTest):
         self.assertEqual(todo1.source(), 'Foo id:1')
         self.assertEqual(todo2.source(), 'Bar p:1')
 
-class TodoListCleanDependencyTester(TopydoTest.TopydoTest):
+class TodoListCleanDependencyTester(TopydoTest):
     def setUp(self):
         super(TodoListCleanDependencyTester, self).setUp()
 

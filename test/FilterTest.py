@@ -20,11 +20,11 @@ from datetime import date, timedelta
 import unittest
 
 from topydo.lib import Filter
-from TestFacilities import load_file, todolist_to_string, load_file_to_todolist
+from test.TestFacilities import load_file, todolist_to_string, load_file_to_todolist
 from topydo.lib.Todo import Todo
-import TopydoTest
+from test.TopydoTest import TopydoTest
 
-class FilterTest(TopydoTest.TopydoTest):
+class FilterTest(TopydoTest):
     def test_filter3(self):
         todo = Todo("(C) Relevant")
         relevance = Filter.RelevanceFilter()
@@ -302,7 +302,7 @@ class FilterTest(TopydoTest.TopydoTest):
         self.assertEquals(todolist_to_string(filtered_todos),
             todolist_to_string(reference))
 
-class OrdinalTagFilterTest(TopydoTest.TopydoTest):
+class OrdinalTagFilterTest(TopydoTest):
     def setUp(self):
         super(OrdinalTagFilterTest, self).setUp()
 

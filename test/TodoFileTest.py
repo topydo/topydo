@@ -16,10 +16,10 @@
 
 import unittest
 
-from TestFacilities import load_file
-import TopydoTest
+from test.TestFacilities import load_file
+from test.TopydoTest import TopydoTest
 
-class TodoFileTest(TopydoTest.TopydoTest):
+class TodoFileTest(TopydoTest):
     def test_empty_file(self):
         todofile = load_file('test/data/TodoFileTest1.txt')
 
