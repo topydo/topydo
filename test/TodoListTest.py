@@ -230,6 +230,9 @@ class TodoListDependencyTester(TopydoTest.TopydoTest):
         self.todolist.add("Baz p:1 id:2")
         self.todolist.add("Buzz p:2")
         self.todolist.add("Fnord")
+        self.todolist.add("Something with +Project")
+        self.todolist.add("Another one with +Project")
+        self.todolist.add("Todo with +AnotherProject")
 
     def test_check_dep(self):
         children = self.todolist.children(self.todolist.todo(1))
@@ -278,6 +281,32 @@ class TodoListDependencyTester(TopydoTest.TopydoTest):
 
         self.assertTrue(todo4.has_tag('id', '4'))
         self.assertTrue(todo1.has_tag('p', '4'))
+
+    def test_add_dep3(self):
+        """
+        Test that projects are not added double.
+        """
+
+        todo6 = self.todolist.todo(6)
+        todo7 = self.todolist.todo(7)
+        projects = todo7.projects().copy()
+
+        self.todolist.add_dependency(todo6, todo7)
+
+        self.assertEquals(projects, todo7.projects())
+
+    def test_add_dep4(self):
+        """
+        Test that a new project is added to the sub todo.
+        """
+        config("test/data/config3")
+
+        todo6 = self.todolist.todo(6)
+        todo8 = self.todolist.todo(8)
+
+        self.todolist.add_dependency(todo6, todo8)
+
+        self.assertEquals(set(["Project", "AnotherProject"]), todo8.projects())
 
     def test_remove_dep1(self):
         from_todo = self.todolist.todo(3)

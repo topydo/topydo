@@ -33,7 +33,7 @@ class _Config:
         If p_path is given, that is the only configuration file that will be
         read.
         """
-        self.sections = ['topydo', 'tags', 'sort', 'ls']
+        self.sections = ['topydo', 'tags', 'sort', 'ls', 'dep']
 
         self.defaults = {
             # topydo
@@ -57,6 +57,9 @@ class _Config:
             'keep_sorted': '0',
             'sort_string': 'desc:importance,due,desc:priority',
             'ignore_weekends': '1',
+
+            # dep
+            'append_parent_projects': '0',
         }
 
         self.config = {}
@@ -137,6 +140,12 @@ class _Config:
             return self.cp.getboolean('sort', 'ignore_weekends')
         except ValueError:
             return self.defaults['ignore_weekends'] == '1'
+
+    def append_parent_projects(self):
+        try:
+            return self.cp.getboolean('dep', 'append_parent_projects')
+        except ValueError:
+            return self.defaults['append_parent_projects'] == '1'
 
     def _get_tag(self, p_tag):
         try:

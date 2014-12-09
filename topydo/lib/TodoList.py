@@ -18,6 +18,7 @@
 A list of todo items.
 """
 
+from topydo.lib.Config import config
 from topydo.lib.Graph import DirectedGraph
 from topydo.lib.TodoListBase import TodoListBase
 
@@ -116,7 +117,20 @@ class TodoList(TodoListBase):
 
             return str(new_id)
 
-        if p_from_todo != p_to_todo and not self._depgraph.has_edge(hash(p_from_todo), hash(p_to_todo)):
+        def append_projects_to_subtodo():
+            """
+            Appends projects in the parent todo item that are not present in
+            the sub todo item.
+            """
+            if config().append_parent_projects():
+                for project in p_from_todo.projects() - p_to_todo.projects():
+                    src = p_to_todo.source()
+                    src += " +{}".format(project)
+                    p_to_todo.set_source_text(src)
+
+        if p_from_todo != p_to_todo and not self._depgraph.has_edge(
+            hash(p_from_todo), hash(p_to_todo)):
+
             dep_id = None
             if p_from_todo.has_tag('id'):
                 dep_id = p_from_todo.tag_value('id')
@@ -127,6 +141,7 @@ class TodoList(TodoListBase):
             p_to_todo.add_tag('p', dep_id)
             self._depgraph.add_edge(hash(p_from_todo), hash(p_to_todo), dep_id)
             self._update_parent_cache()
+            append_projects_to_subtodo()
             self.dirty = True
 
     def remove_dependency(self, p_from_todo, p_to_todo):
