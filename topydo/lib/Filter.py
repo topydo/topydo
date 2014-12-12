@@ -168,7 +168,7 @@ class OrdinalTagFilter(Filter):
         if not self.key or not p_todo.has_tag(self.key):
             return False
 
-        if self.key == config().tag_due() or self.key == config().tag_start():
+        try:
             operand1 = date_string_to_date(p_todo.tag_value(self.key))
             operand2 = relative_date_to_date(self.value)
 
@@ -176,8 +176,8 @@ class OrdinalTagFilter(Filter):
                 operand2 = date_string_to_date(self.value)
 
             if not operand1 or not operand2:
-                return False
-        else:
+                raise ValueError
+        except ValueError:
             try:
                 operand1 = int(p_todo.tag_value(self.key))
                 operand2 = int(self.value)
