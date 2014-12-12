@@ -41,7 +41,10 @@ class DoCommand(DCommand):
         if p_opt == "-s" or p_opt == "--strict":
             self.strict_recurrence = True
         elif p_opt == "-d" or p_opt == "--date":
-            self.completion_date = date_string_to_date(p_value) or date.today()
+            try:
+                self.completion_date = date_string_to_date(p_value)
+            except ValueError:
+                self.completion_date = date.today()
 
     def _handle_recurrence(self):
         if self.todo.has_tag('rec'):

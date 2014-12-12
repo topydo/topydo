@@ -175,8 +175,6 @@ class OrdinalTagFilter(Filter):
             if not operand2:
                 operand2 = date_string_to_date(self.value)
 
-            if not operand1 or not operand2:
-                raise ValueError
         except ValueError:
             try:
                 operand1 = int(p_todo.tag_value(self.key))
