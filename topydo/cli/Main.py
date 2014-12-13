@@ -30,7 +30,7 @@ def usage():
 -v : Print version and exit
 """
 
-    exit(0)
+    sys.exit(0)
 
 def write(p_file, p_string):
     """
@@ -54,7 +54,7 @@ def version():
     from topydo.lib.Version import VERSION, LICENSE
     print "topydo {}\n".format(VERSION)
     print LICENSE
-    exit(0)
+    sys.exit(0)
 
 from topydo.lib.Config import config, ConfigError
 
@@ -65,7 +65,7 @@ try:
     config()
 except ConfigError as config_error:
     error(str(config_error))
-    exit(1)
+    sys.exit(1)
 
 from topydo.lib.AddCommand import AddCommand
 from topydo.lib.AppendCommand import AppendCommand
@@ -104,7 +104,7 @@ class CLIApplication(object):
             opts, args = getopt.getopt(sys.argv[1:], "c:d:ht:v")
         except getopt.GetoptError as e:
             error(str(e))
-            exit(1)
+            sys.exit(1)
 
         alt_path = None
         alt_archive = None
@@ -210,7 +210,7 @@ class CLIApplication(object):
                 usage()
 
         if self.execute(subcommand, args) == False:
-            exit(1)
+            sys.exit(1)
 
         if self.todolist.is_dirty():
             self.archive()
