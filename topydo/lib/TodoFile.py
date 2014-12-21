@@ -28,7 +28,7 @@ class TodoFile(object):
         self.path = p_path
 
     def read(self):
-        """ Reads the todo.txt file and returns a list of todo items.  """
+        """ Reads the todo.txt file and returns a list of todo items. """
         todos = []
         try:
             todofile = open(self.path, 'r')
@@ -41,7 +41,10 @@ class TodoFile(object):
 
     def write(self, p_todos):
         """
-        Writes all the todo items in the p_todos array to a todo.txt file.
+        Writes all the todo items to the todo.txt file.
+
+        p_todos can be a list of todo items, or a string that is just written
+        to the file.
         """
 
         todofile = open(self.path, 'w')
