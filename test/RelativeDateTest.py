@@ -62,10 +62,6 @@ class RelativeDateTester(TopydoTest.TopydoTest):
         result = relative_date_to_date('0dd')
         self.assertFalse(result)
 
-    def test_garbage2(self):
-        result = relative_date_to_date('-0d')
-        self.assertFalse(result)
-
     def test_one_day_capital(self):
         result = relative_date_to_date('1D')
         self.assertEquals(result, self.tomorrow)
@@ -110,6 +106,14 @@ class RelativeDateTester(TopydoTest.TopydoTest):
     def test_offset1(self):
         result = relative_date_to_date('1d', self.tomorrow)
         self.assertEquals(result, date.today() + timedelta(2))
+
+    def test_negative_period1(self):
+        result = relative_date_to_date('-1d')
+        self.assertEquals(result, date.today() - timedelta(1))
+
+    def test_negative_period2(self):
+        result = relative_date_to_date('-0d')
+        self.assertTrue(result, self.today)
 
 if __name__ == '__main__':
     unittest.main()

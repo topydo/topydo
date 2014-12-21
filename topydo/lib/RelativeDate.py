@@ -80,7 +80,7 @@ def relative_date_to_date(p_date, p_offset=date.today()):
     result = None
     p_date = p_date.lower()
 
-    relative = re.match('(?P<length>[0-9]+)(?P<period>[dwmy])$', p_date, re.I)
+    relative = re.match('(?P<length>-?[0-9]+)(?P<period>[dwmy])$', p_date, re.I)
 
     monday = 'mo(n(day)?)?$'
     tuesday = 'tu(e(sday)?)?$'
