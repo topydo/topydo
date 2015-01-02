@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name = "topydo",
     packages = ["topydo", "topydo.lib", "topydo.cli"],
-    version = "0.1.1",
+    version = "0.1.2",
     description = "A todo list application using the todo.txt format.",
     author = "Bram Schoenmakers",
     author_email = "me@bramschoenmakers.nl",
