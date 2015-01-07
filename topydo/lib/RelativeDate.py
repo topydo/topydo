@@ -17,7 +17,15 @@
 """ This module deals with relative dates (2d, 5y, Monday, today, etc.) """
 
 from datetime import date, timedelta
+import calendar
 import re
+
+def _add_months(sourcedate, months):
+    month = sourcedate.month - 1 + months
+    year = sourcedate.year + month / 12
+    month = month % 12 + 1
+    day = min(sourcedate.day,calendar.monthrange(year,month)[1])
+    return date(year,month,day)
 
 def _convert_pattern(p_length, p_periodunit, p_offset=date.today()):
     """
@@ -33,11 +41,9 @@ def _convert_pattern(p_length, p_periodunit, p_offset=date.today()):
     elif p_periodunit == 'w':
         result = p_offset + timedelta(weeks=p_length)
     elif p_periodunit == 'm':
-        # we'll consider a month to be 30 days
-        result = p_offset + timedelta(30 * p_length)
+        result = _add_months(p_offset, p_length)
     elif p_periodunit == 'y':
-        # we'll consider a year to be 365 days (yeah, I'm aware of leap years)
-        result = p_offset + timedelta(365 * p_length)
+        result = _add_months(p_offset, p_length * 12)
 
     return result
 
