@@ -43,12 +43,40 @@ class RelativeDateTester(TopydoTest.TopydoTest):
         self.assertEquals(result, date.today() + timedelta(weeks=1))
 
     def test_one_month(self):
-        result = relative_date_to_date('1m')
-        self.assertEquals(result, date.today() + timedelta(30))
+        test_date = date(2015, 1, 10)
+        result = relative_date_to_date('1m', test_date)
+        self.assertEquals(result, date(2015, 2, 10))
+
+    def test_one_month_ext(self):
+        test_date1 = date(2015, 1, 29)
+        test_date2 = date(2016, 1, 31)
+        test_date3 = date(2015, 12, 31)
+        test_date4 = date(2015, 7, 31)
+        test_date5 = date(2015, 10, 31)
+
+        result1 = relative_date_to_date('1m', test_date1)
+        result2 = relative_date_to_date('1m', test_date2)
+        result3 = relative_date_to_date('1m', test_date3)
+        result4 = relative_date_to_date('1m', test_date4)
+        result5 = relative_date_to_date('1m', test_date5)
+
+        self.assertEquals(result1, date(2015, 2, 28))
+        self.assertEquals(result2, date(2016, 2, 29))
+        self.assertEquals(result3, date(2016, 1, 31))
+        self.assertEquals(result4, date(2015, 8, 31))
+        self.assertEquals(result5, date(2015, 11, 30))
 
     def test_one_year(self):
-        result = relative_date_to_date('1y')
-        self.assertEquals(result, date.today() + timedelta(365))
+        test_date = date(2015, 1, 10)
+        result = relative_date_to_date('1y', test_date)
+        self.assertEquals(result, date(2016, 1, 10))
+
+    def test_leap_year(self):
+        test_date = date(2016, 2, 29)
+        result1 = relative_date_to_date('1y', test_date)
+        result2 = relative_date_to_date('4y', test_date)
+        self.assertEquals(result1, date(2017, 2, 28))
+        self.assertEquals(result2, date(2020, 2, 29))
 
     def test_zero_months(self):
         result = relative_date_to_date('0m')
