@@ -61,21 +61,18 @@ class AddCommand(Command):
                     self.todo.set_tag(p_tag, dateobj.isoformat())
 
         def add_dependencies(p_tag):
-            for raw_value in self.todo.tag_values(p_tag):
+            for value in self.todo.tag_values(p_tag):
                 try:
-                    value = int(raw_value)
                     dep = self.todolist.todo(value)
 
                     if p_tag == 'after':
                         self.todolist.add_dependency(self.todo, dep)
                     elif p_tag == 'before' or p_tag == 'partof':
                         self.todolist.add_dependency(dep, self.todo)
-                except ValueError:
-                    continue
                 except InvalidTodoException:
                     pass
 
-                self.todo.remove_tag(p_tag, raw_value)
+                self.todo.remove_tag(p_tag, value)
 
         convert_date(config().tag_start())
         convert_date(config().tag_due())

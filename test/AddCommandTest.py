@@ -18,6 +18,7 @@ from datetime import date
 
 from topydo.lib import AddCommand
 import CommandTest
+from topydo.lib.Config import config
 from topydo.lib import TodoList
 
 class AddCommandTest(CommandTest.CommandTest):
@@ -156,6 +157,18 @@ class AddCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.todolist.todo(2).source(), self.today + " Bar p:1")
         self.assertEquals(self.todolist.todo(3).source(), self.today + " Baz id:1")
         self.assertEquals(self.errors, "")
+
+    def test_add_dep8(self):
+        config("test/data/todolist-uid.conf")
+
+        command = AddCommand.AddCommand(["Foo"], self.todolist, self.out, self.error)
+        command.execute()
+
+        command = AddCommand.AddCommand(["Bar after:tpi"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEquals(self.todolist.todo('tpi').source(), "{} Foo p:1".format(self.today))
+        self.assertEquals(self.todolist.todo('b0n').source(), "{} Bar id:1".format(self.today))
 
     def test_add_reldate1(self):
         command = AddCommand.AddCommand(["Foo due:today"], self.todolist, self.out, self.error)
