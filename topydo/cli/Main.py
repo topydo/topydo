@@ -74,6 +74,7 @@ from topydo.lib.DeleteCommand import DeleteCommand
 from topydo.lib.DepCommand import DepCommand
 from topydo.lib.DepriCommand import DepriCommand
 from topydo.lib.DoCommand import DoCommand
+from topydo.lib.EditCommand import EditCommand
 from topydo.lib.ListCommand import ListCommand
 from topydo.lib.ListContextCommand import ListContextCommand
 from topydo.lib.ListProjectCommand import ListProjectCommand
@@ -173,6 +174,7 @@ class CLIApplication(object):
           'dep': DepCommand,
           'depri': DepriCommand,
           'do': DoCommand,
+          'edit': EditCommand,
           'ls': ListCommand,
           'lscon': ListContextCommand,
           'listcon': ListContextCommand,
