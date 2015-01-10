@@ -20,12 +20,20 @@ from datetime import date, timedelta
 import calendar
 import re
 
-def _add_months(sourcedate, months):
-    month = sourcedate.month - 1 + months
-    year = sourcedate.year + month / 12
+def _add_months(p_sourcedate, p_months):
+    """
+    Adds a number of months to the source date.
+
+    Takes into account shorter months and leap years and such.
+
+    https://stackoverflow.com/questions/4130922/how-to-increment-datetime-month-in-python
+    """
+    month = p_sourcedate.month - 1 + p_months
+    year = p_sourcedate.year + month / 12
     month = month % 12 + 1
-    day = min(sourcedate.day,calendar.monthrange(year,month)[1])
-    return date(year,month,day)
+    day = min(p_sourcedate.day, calendar.monthrange(year, month)[1])
+
+    return date(year, month, day)
 
 def _convert_pattern(p_length, p_periodunit, p_offset=date.today()):
     """
