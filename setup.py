@@ -4,7 +4,7 @@ setup(
     name = "topydo",
     packages = ["topydo", "topydo.lib", "topydo.cli"],
     version = "0.1.1",
-    description = "A todo list application using the todo.txt format.",
+    description = "A command-line todo list application using the todo.txt format.",
     author = "Bram Schoenmakers",
     author_email = "me@bramschoenmakers.nl",
     url = "https://github.com/bram85/topydo",
