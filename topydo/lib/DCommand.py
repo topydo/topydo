@@ -65,7 +65,8 @@ class DCommand(Command):
 
     def _uncompleted_children(self, p_todo):
         return sorted(
-            [t for t in self.todolist.children(p_todo) if not t.is_completed()]
+            [t for t in self.todolist.children(p_todo) if not t.is_completed()],
+            key=self.todolist.number
         )
 
     def _print_list(self, p_todos):
