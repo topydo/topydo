@@ -175,6 +175,7 @@ class TodoListBase(object):
         if len(p_string) > 0:
             new_text = p_todo.source() + ' ' + p_string
             p_todo.set_source_text(new_text)
+            self._update_todo_ids()
             self.dirty = True
 
     def projects(self):

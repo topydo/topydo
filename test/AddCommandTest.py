@@ -17,6 +17,7 @@
 from datetime import date
 
 from topydo.lib import AddCommand
+from topydo.lib import ListCommand
 import CommandTest
 from topydo.lib.Config import config
 from topydo.lib import TodoList
@@ -169,6 +170,26 @@ class AddCommandTest(CommandTest.CommandTest):
 
         self.assertEquals(self.todolist.todo('tpi').source(), "{} Foo p:1".format(self.today))
         self.assertEquals(self.todolist.todo('b0n').source(), "{} Bar id:1".format(self.today))
+
+    def test_add_dep9(self):
+        """
+        The text ID shown after adding and after an 'ls' must be equal."
+        By appending the parent's projects, the textual ID may change.
+        """
+        config("test/data/todolist-uid-projects.conf")
+
+        # pass identitiy function to for writing output, we're not interested
+        # in this output
+        command = AddCommand.AddCommand(["Foo +Project"], self.todolist, lambda t: t, self.error)
+        command.execute()
+
+        command = AddCommand.AddCommand(["Bar before:eqk"], self.todolist, self.out, self.error)
+        command.execute()
+
+        command = ListCommand.ListCommand(["Bar"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEquals(self.output, "|5dh| {today} Bar p:1 +Project\n|5dh| {today} Bar p:1 +Project\n".format(today=self.today))
 
     def test_add_reldate1(self):
         command = AddCommand.AddCommand(["Foo due:today"], self.todolist, self.out, self.error)

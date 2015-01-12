@@ -220,6 +220,15 @@ class TodoListTester(TopydoTest):
         config("test/data/todolist-uid.conf")
         self.assertRaises(InvalidTodoException, self.todolist.todo, 1)
 
+    def test_new_uid(self):
+        """ Make sure that item has new text ID after append. """
+
+        config("test/data/todolist-uid.conf")
+        todo = self.todolist.todo('6iu')
+        self.todolist.append(todo, "A")
+
+        self.assertNotEquals(self.todolist.number(todo), '6iu')
+
 class TodoListDependencyTester(TopydoTest):
     def setUp(self):
         super(TodoListDependencyTester, self).setUp()
