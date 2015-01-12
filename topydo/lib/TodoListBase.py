@@ -225,8 +225,11 @@ class TodoListBase(object):
 
     def number(self, p_todo):
         try:
-            return self._todos.index(p_todo) + 1
-        except ValueError:
+            if config().identifiers() == 'text':
+                return self._todo_id_map[p_todo]
+            else:
+                return self._todos.index(p_todo) + 1
+        except (ValueError, KeyError):
             raise InvalidTodoException
 
     def pp_number(self):
