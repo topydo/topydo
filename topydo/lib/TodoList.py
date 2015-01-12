@@ -124,9 +124,7 @@ class TodoList(TodoListBase):
             """
             if config().append_parent_projects():
                 for project in p_from_todo.projects() - p_to_todo.projects():
-                    src = p_to_todo.source()
-                    src += " +{}".format(project)
-                    p_to_todo.set_source_text(src)
+                    self.append(p_to_todo, "+{}".format(project))
 
         if p_from_todo != p_to_todo and not self._depgraph.has_edge(
             hash(p_from_todo), hash(p_to_todo)):
