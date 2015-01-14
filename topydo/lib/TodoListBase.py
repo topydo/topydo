@@ -225,6 +225,10 @@ class TodoListBase(object):
             self.dirty = True
 
     def number(self, p_todo):
+        """
+        Returns the line number or text ID of a todo (depends on the
+        configuration.
+        """
         try:
             if config().identifiers() == 'text':
                 return self._todo_id_map[p_todo]
@@ -238,11 +242,7 @@ class TodoListBase(object):
         A filter for the pretty printer to append the todo number to the
         printed todo.
         """
-        if config().identifiers() == 'text':
-            return lambda p_todo_str, p_todo: \
-                "|{:>3s}| {}".format(self._todo_id_map[p_todo], p_todo_str)
-        else:
-            return lambda p_todo_str, p_todo: \
+        return lambda p_todo_str, p_todo: \
                 "|{:>3}| {}".format(self.number(p_todo), p_todo_str)
 
     def _update_todo_ids(self):
