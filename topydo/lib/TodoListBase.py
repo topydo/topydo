@@ -153,8 +153,9 @@ class TodoListBase(object):
 
     def delete(self, p_todo):
         """ Deletes a todo item from the list. """
-        number = self.number(p_todo)
-        del self._todos[number - 1]
+        number = self._todos.index(p_todo)
+        del self._todos[number]
+        self._update_todo_ids()
         self.dirty = True
 
     def erase(self):
@@ -249,6 +250,9 @@ class TodoListBase(object):
         # the idea is to have a hash that is independent of the position of the
         # todo. Use the text (without tags) of the todo to keep the id as stable
         # as possible (not influenced by priorities or due dates, etc.)
+        self._todo_id_map = {}
+        self._id_todo_map = {}
+
         uids = hash_list_values(self._todos, lambda t: hash(t.text()))
 
         for (todo, uid) in uids:

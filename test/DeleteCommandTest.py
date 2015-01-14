@@ -15,8 +15,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import CommandTest
+from topydo.lib.Config import config
 from topydo.lib.DeleteCommand import DeleteCommand
 from topydo.lib.TodoList import TodoList
+from topydo.lib.TodoListBase import InvalidTodoException
 
 class DeleteCommandTest(CommandTest.CommandTest):
     def setUp(self):
@@ -97,6 +99,16 @@ class DeleteCommandTest(CommandTest.CommandTest):
         self.assertFalse(self.todolist.is_dirty())
         self.assertEquals(self.output, "")
         self.assertEquals(self.errors, "Invalid todo number given.\n")
+
+    def test_del9(self):
+        """ Test deletion with textual IDs. """
+        config("test/data/todolist-uid.conf")
+
+        command = DeleteCommand(["b0n"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEquals(str(self.todolist), "Foo")
+        self.assertRaises(InvalidTodoException, self.todolist.todo, 'b0n')
 
     def test_empty(self):
         command = DeleteCommand([], self.todolist, self.out, self.error)

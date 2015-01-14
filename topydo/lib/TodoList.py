@@ -90,7 +90,7 @@ class TodoList(TodoListBase):
 
     def delete(self, p_todo):
         """ Deletes a todo item from the list. """
-        number = self.number(p_todo)
+        number = self._todos.index(p_todo)
 
         for child in self.children(p_todo):
             self.remove_dependency(p_todo, child)
@@ -98,7 +98,8 @@ class TodoList(TodoListBase):
         for parent in self.parents(p_todo):
             self.remove_dependency(parent, p_todo)
 
-        del self._todos[number - 1]
+        del self._todos[number]
+        self._update_todo_ids()
 
         self.dirty = True
 
