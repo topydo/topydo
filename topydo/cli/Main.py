@@ -128,7 +128,7 @@ class CLIApplication(object):
 
         return args
 
-    def archive(self):
+    def _archive(self):
         """
         Performs an archive action on the todolist.
 
@@ -145,7 +145,7 @@ class CLIApplication(object):
             if archive.is_dirty():
                 archive_file.write(str(archive))
 
-    def execute(self, p_command, p_args):
+    def _execute(self, p_command, p_args):
         """
         Execute a subcommand with arguments. p_command is a class (not an
         object).
@@ -211,14 +211,14 @@ class CLIApplication(object):
             else:
                 usage()
 
-        if self.execute(subcommand, args) == False:
+        if self._execute(subcommand, args) == False:
             sys.exit(1)
 
         if self.todolist.is_dirty():
-            self.archive()
+            self._archive()
 
             if config().keep_sorted():
-                self.execute(SortCommand, [])
+                self._execute(SortCommand, [])
 
             todofile.write(str(self.todolist))
 
