@@ -15,6 +15,7 @@
   identifier.
 * Relative dates with months and years are more accurate now (thanks to Jacek
   Sowiński).
+* Multiple items can be marked as complete or deleted at once.
 * Added option to automatically add the projects of the parent todo item when
   adding a child todo item. Enable append_parent_projects in topydo.conf.
 * `topydo help` shows a list of available subcommands. Moreover, you can run
