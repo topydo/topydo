@@ -1,5 +1,5 @@
 # Topydo - A todo.txt client written in Python.
-# Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
+# Copyright (C) 2014 - 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -62,13 +62,10 @@ class Command(object):
 
     def argument(self, p_number):
         """ Retrieves a value from the argument list at the given position. """
-        value = None
         try:
-            value = self.args[p_number]
+            return self.args[p_number]
         except IndexError:
             raise InvalidCommandArgument
-
-        return value
 
     def getopt(self, p_flags, p_long=None):
         p_long = p_long or []
