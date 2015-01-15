@@ -1,5 +1,5 @@
 # Topydo - A todo.txt client written in Python.
-# Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
+# Copyright (C) 2014 - 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,14 +20,36 @@ import getopt
 import sys
 
 def usage():
-    """ Prints the usage of the todo.txt CLI """
+    """ Prints the command-line usage of topydo. """
 
     print """\
+Synopsis: topydo [-c <config>] [-d <archive>] [-t <todo.txt>] subcommand [help|args]
+          topydo -h
+          topydo -v
+
 -c : Specify an alternative configuration file.
 -d : Specify an alternative archive file (done.txt)
 -h : This help text
 -t : Specify an alternative todo file
 -v : Print version and exit
+
+Available commands:
+
+* add
+* append (app)
+* del (rm)
+* dep
+* do
+* edit
+* ls
+* listcon (lscon)
+* listprojects (lsprj)
+* postpone
+* pri
+* sort
+* tag
+
+Run `topydo help <subcommand>` for command-specific help.
 """
 
     sys.exit(0)
@@ -87,6 +109,31 @@ from topydo.lib import TodoList
 from topydo.lib import TodoListBase
 from topydo.lib.Utils import escape_ansi
 
+SUBCOMMAND_MAP = {
+  'add': AddCommand,
+  'app': AppendCommand,
+  'append': AppendCommand,
+  'del': DeleteCommand,
+  'dep': DepCommand,
+  'depri': DepriCommand,
+  'do': DoCommand,
+  'edit': EditCommand,
+  'ls': ListCommand,
+  'lscon': ListContextCommand,
+  'listcon': ListContextCommand,
+  'lsprj': ListProjectCommand,
+  'lsproj': ListProjectCommand,
+  'listprj': ListProjectCommand,
+  'listproj': ListProjectCommand,
+  'listproject': ListProjectCommand,
+  'listprojects': ListProjectCommand,
+  'postpone': PostponeCommand,
+  'pri': PriorityCommand,
+  'rm': DeleteCommand,
+  'sort': SortCommand,
+  'tag': TagCommand,
+}
+
 class CLIApplication(object):
     """
     Class that represents the Command Line Interface of Topydo.
@@ -145,6 +192,12 @@ class CLIApplication(object):
             if archive.is_dirty():
                 archive_file.write(str(archive))
 
+    def _help(self, args):
+        if args == None:
+            pass # TODO
+        else:
+            pass # TODO
+
     def _execute(self, p_command, p_args):
         """
         Execute a subcommand with arguments. p_command is a class (not an
@@ -159,6 +212,52 @@ class CLIApplication(object):
 
         return False if command.execute() == False else True
 
+    def _get_subcommand(self, p_args):
+        """
+        Retrieves the to-be executed Command and returns a tuple
+        (Command, args).
+
+        If args is an empty list, then the Command that corresponds with the
+        default command specified in the configuration will be returned.
+
+        If the first argument is 'help' and the second a valid subcommand, the
+        help text this function returns the Command instance of that subcommand
+        with a single argument 'help' (every Command has a help text).
+
+        If no valid command could be found, the subcommand part of the tuple
+        is None.
+        """
+        result = None
+        args = p_args
+
+        try:
+            subcommand = p_args[0]
+
+            if subcommand in SUBCOMMAND_MAP:
+                result = SUBCOMMAND_MAP[subcommand]
+                args = args[1:]
+            elif subcommand == 'help':
+                try:
+                    subcommand = args[1]
+
+                    if subcommand in SUBCOMMAND_MAP:
+                        args = [subcommand, 'help']
+                        return self._get_subcommand(args)
+                except IndexError:
+                    # will result in empty result
+                    pass
+            else:
+                p_command = self.config.default_command()
+                if p_command in SUBCOMMAND_MAP:
+                    result = SUBCOMMAND_MAP[p_command]
+                    # leave args unchanged
+        except IndexError:
+            p_command = self.config.default_command()
+            if p_command in SUBCOMMAND_MAP:
+                result = SUBCOMMAND_MAP[p_command]
+
+        return (result, args)
+
     def run(self):
         """ Main entry function. """
         args = self._process_flags()
@@ -166,50 +265,10 @@ class CLIApplication(object):
         todofile = TodoFile.TodoFile(self.path)
         self.todolist = TodoList.TodoList(todofile.read())
 
-        subcommand_map = {
-          'add': AddCommand,
-          'app': AppendCommand,
-          'append': AppendCommand,
-          'del': DeleteCommand,
-          'dep': DepCommand,
-          'depri': DepriCommand,
-          'do': DoCommand,
-          'edit': EditCommand,
-          'ls': ListCommand,
-          'lscon': ListContextCommand,
-          'listcon': ListContextCommand,
-          'lsprj': ListProjectCommand,
-          'lsproj': ListProjectCommand,
-          'listprj': ListProjectCommand,
-          'listproj': ListProjectCommand,
-          'listproject': ListProjectCommand,
-          'listprojects': ListProjectCommand,
-          'postpone': PostponeCommand,
-          'pri': PriorityCommand,
-          'rm': DeleteCommand,
-          'sort': SortCommand,
-          'tag': TagCommand,
-        }
+        (subcommand, args) = self._get_subcommand(args)
 
-        try:
-            subcommand = args[0]
-
-            if subcommand in subcommand_map:
-                subcommand = subcommand_map[subcommand]
-                args = args[1:]
-            else:
-                subcommand = self.config.default_command()
-                if subcommand in subcommand_map:
-                    subcommand = subcommand_map[subcommand]
-                    # leave args unchanged
-                else:
-                    usage()
-        except IndexError:
-            subcommand = self.config.default_command()
-            if subcommand in subcommand_map:
-                subcommand = subcommand_map[subcommand]
-            else:
-                usage()
+        if subcommand == None:
+            usage()
 
         if self._execute(subcommand, args) == False:
             sys.exit(1)
