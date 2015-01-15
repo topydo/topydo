@@ -21,11 +21,25 @@ from topydo.lib.Command import Command
 from topydo.lib.Config import config
 
 class EditCommand(Command):
-    def __init__(self, p_todolist, *p_args):
-        super(EditCommand, self).__init__([], None)
+    def __init__(self, p_args, p_todolist, p_output, p_error, p_input):
+        super(EditCommand, self).__init__(p_args, p_todolist, p_output,
+            p_error, p_input)
 
     def execute(self):
+        if not super(EditCommand, self).execute():
+            return False
+
         editor = os.environ['EDITOR'] or 'vi'
         todo = config().todotxt()
 
         return call([editor, todo]) == 0
+
+    def usage(self):
+        return """Synopsis: edit"""
+
+    def help(self):
+        return """Launches a text editor with the todo.txt file.
+
+By default it will use $EDITOR in your environment, otherwise it will fall back
+to 'vi'.
+"""
