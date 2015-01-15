@@ -116,6 +116,27 @@ class DeleteCommandTest(CommandTest.CommandTest):
         self.assertEquals(str(self.todolist), "Foo")
         self.assertRaises(InvalidTodoException, self.todolist.todo, 'b0n')
 
+    def test_multi_del1(self):
+        """ Test deletion of multiple items. """
+        command = DeleteCommand(["1", "2"], self.todolist, self.out, self.error, _no_prompt)
+        command.execute()
+
+        self.assertEquals(self.todolist.count(), 0)
+
+    def test_multi_del2(self):
+        """ Test deletion of multiple items. """
+        command = DeleteCommand(["1", "2"], self.todolist, self.out, self.error, _yes_prompt)
+        command.execute()
+
+        self.assertEquals(self.todolist.count(), 0)
+
+    def test_multi_del3(self):
+        """ Test deletion of multiple items. """
+        command = DeleteCommand(["99", "2"], self.todolist, self.out, self.error, _yes_prompt)
+        command.execute()
+
+        self.assertEquals(self.todolist.count(), 1)
+
     def test_empty(self):
         command = DeleteCommand([], self.todolist, self.out, self.error)
         command.execute()

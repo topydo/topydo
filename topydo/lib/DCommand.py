@@ -1,5 +1,5 @@
 # Topydo - A todo.txt client written in Python.
-# Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
+# Copyright (C) 2014 - 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -38,10 +38,12 @@ class DCommand(Command):
         self.process_flags()
         self.length = len(self.todolist.todos()) # to determine newly activated todos
 
-        try:
-            self.todo = self.todolist.todo(self.argument(0))
-        except (InvalidCommandArgument, InvalidTodoException):
-            self.todo = None
+        self.todos = []
+        for number in self.args:
+            try:
+                self.todos.append(self.todolist.todo(number))
+            except InvalidTodoException:
+                self.todos.append(None)
 
     def get_flags(self):
         """ Default implementation of getting specific flags. """
@@ -80,8 +82,8 @@ class DCommand(Command):
         """ Prefix to use when printing a todo. """
         return ""
 
-    def _process_subtasks(self):
-        children = self._uncompleted_children(self.todo)
+    def _process_subtasks(self, p_todo):
+        children = self._uncompleted_children(p_todo)
         if children:
             self._print_list(children)
 
@@ -112,7 +114,7 @@ class DCommand(Command):
         return [todo for todo in self.todolist.todos()[:self.length]
             if not self._uncompleted_children(todo) and todo.is_active()]
 
-    def condition(self):
+    def condition(self, p_todo):
         """
         An additional condition whether execute_specific should be executed.
         """
@@ -121,7 +123,7 @@ class DCommand(Command):
     def condition_failed_text(self):
         return ""
 
-    def execute_specific(self):
+    def execute_specific(self, _):
         pass
 
     def execute_specific_core(self, p_todo):
@@ -137,14 +139,18 @@ class DCommand(Command):
 
         if len(self.args) == 0:
             self.error(self.usage())
-        elif not self.todo:
-            self.error("Invalid todo number given.")
-        elif self.todo and self.condition():
+        else:
             old_active = self._active_todos()
-            self._process_subtasks()
-            self.execute_specific()
+
+            for todo in self.todos:
+                if not todo:
+                    self.error("Invalid todo number given.")
+                elif todo and self.condition(todo):
+                    self._process_subtasks(todo)
+                    self.execute_specific(todo)
+                else:
+                    self.error(self.condition_failed_text())
+
             current_active = self._active_todos()
             self._print_unlocked_todos(old_active, current_active)
-        else:
-            self.error(self.condition_failed_text())
 

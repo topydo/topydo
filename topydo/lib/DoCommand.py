@@ -46,13 +46,13 @@ class DoCommand(DCommand):
             except ValueError:
                 self.completion_date = date.today()
 
-    def _handle_recurrence(self):
-        if self.todo.has_tag('rec'):
+    def _handle_recurrence(self, p_todo):
+        if p_todo.has_tag('rec'):
             if self.strict_recurrence:
-                new_todo = strict_advance_recurring_todo(self.todo,
+                new_todo = strict_advance_recurring_todo(p_todo,
                     self.completion_date)
             else:
-                new_todo = advance_recurring_todo(self.todo,
+                new_todo = advance_recurring_todo(p_todo,
                     self.completion_date)
 
             self.todolist.add_todo(new_todo)
@@ -64,20 +64,20 @@ class DoCommand(DCommand):
     def prefix(self):
         return "Completed: "
 
-    def condition(self):
+    def condition(self, p_todo):
         """
         An additional condition whether execute_specific should be executed.
         """
-        return not self.todo.is_completed()
+        return not p_todo.is_completed()
 
     def condition_failed_text(self):
         return "Todo has already been completed."
 
-    def execute_specific(self):
+    def execute_specific(self, p_todo):
         """ Actions specific to this command. """
-        self._handle_recurrence()
-        self.execute_specific_core(self.todo)
-        self.out(self.prefix() + pretty_print(self.todo))
+        self._handle_recurrence(p_todo)
+        self.execute_specific_core(p_todo)
+        self.out(self.prefix() + pretty_print(p_todo))
 
     def execute_specific_core(self, p_todo):
         """
@@ -87,16 +87,16 @@ class DoCommand(DCommand):
         self.todolist.set_todo_completed(p_todo, self.completion_date)
 
     def usage(self):
-        return """Synopsis: do [--date] [--force] [--strict] <NUMBER>"""
+        return """Synopsis: do [--date] [--force] [--strict] <NUMBER1> [<NUMBER2> ...]"""
 
     def help(self):
-        return """Marks the todo with given number as complete.
+        return """Marks the todo(s) with given number(s) as complete.
 
-In case the todo has subitems, a question is asked whether the subitems should
-be marked as completed as well. When --force is given, no interaction is
-required and the subitems are not marked completed.
+In case a todo has subitems, a question is asked whether the subitems should be
+marked as completed as well. When --force is given, no interaction is required
+and the subitems are not marked completed.
 
-In case the completed todo is recurring, a new todo will be added to the list,
+In case a completed todo is recurring, a new todo will be added to the list,
 while the given todo item is marked as complete. The new date is calculated
 based on the todo item's due date. If the due date is in the past, today's date
 is used to calculate the new recurrence date. Using --strict prevents this,

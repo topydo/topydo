@@ -1,5 +1,5 @@
 # Topydo - A todo.txt client written in Python.
-# Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
+# Copyright (C) 2014 - 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -90,18 +90,22 @@ class TodoList(TodoListBase):
 
     def delete(self, p_todo):
         """ Deletes a todo item from the list. """
-        number = self._todos.index(p_todo)
+        try:
+            number = self._todos.index(p_todo)
 
-        for child in self.children(p_todo):
-            self.remove_dependency(p_todo, child)
+            for child in self.children(p_todo):
+                self.remove_dependency(p_todo, child)
 
-        for parent in self.parents(p_todo):
-            self.remove_dependency(parent, p_todo)
+            for parent in self.parents(p_todo):
+                self.remove_dependency(parent, p_todo)
 
-        del self._todos[number]
-        self._update_todo_ids()
+            del self._todos[number]
+            self._update_todo_ids()
 
-        self.dirty = True
+            self.dirty = True
+        except ValueError:
+            # todo item couldn't be found, ignore
+            pass
 
     def add_dependency(self, p_from_todo, p_to_todo):
         """ Adds a dependency from task 1 to task 2. """

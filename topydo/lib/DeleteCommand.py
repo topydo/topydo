@@ -1,5 +1,5 @@
 # Topydo - A todo.txt client written in Python.
-# Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
+# Copyright (C) 2014 - 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -34,12 +34,13 @@ class DeleteCommand(DCommand):
     def execute_specific_core(self, p_todo):
         self.todolist.delete(p_todo)
 
-    def execute_specific(self):
-        self.out(self.prefix() + pretty_print(self.todo))
-        self.execute_specific_core(self.todo)
+    def execute_specific(self, p_todo):
+        self.out(self.prefix() + pretty_print(p_todo))
+        self.execute_specific_core(p_todo)
 
     def usage(self):
-        return """Synopsis: del [-f] <NUMBER>"""
+        return """Synopsis: del [-f] <NUMBER1> [<NUMBER2> ...]"""
 
     def help(self):
-        return """Deletes the todo item with the given number from the list."""
+        return """\
+Deletes the todo item(s) with the given number(s) from the list."""

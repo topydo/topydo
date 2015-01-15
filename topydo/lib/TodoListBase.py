@@ -1,5 +1,5 @@
 # Topydo - A todo.txt client written in Python.
-# Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
+# Copyright (C) 2014 - 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -153,10 +153,14 @@ class TodoListBase(object):
 
     def delete(self, p_todo):
         """ Deletes a todo item from the list. """
-        number = self._todos.index(p_todo)
-        del self._todos[number]
-        self._update_todo_ids()
-        self.dirty = True
+        try:
+            number = self._todos.index(p_todo)
+            del self._todos[number]
+            self._update_todo_ids()
+            self.dirty = True
+        except ValueError:
+            # todo item couldn't be found, ignore
+            pass
 
     def erase(self):
         """ Erases all todos from the list. """
