@@ -1,9 +1,7 @@
 0.2
 ---
 
-(unreleased)
-
-* A new 'edit' subcommand to launch an editor.
+* A new 'edit' subcommand to launch an editor with the configured todo.txt file.
 * Introduced textual identifiers in addition to line numbers.
 
   Line numbers are still the default, textual identifiers can be enabled with
