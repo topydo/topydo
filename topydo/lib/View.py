@@ -1,5 +1,5 @@
 # Topydo - A todo.txt client written in Python.
-# Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
+# Copyright (C) 2014 - 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,7 +16,11 @@
 
 """ A view is a list of todos, sorted and filtered. """
 
-from topydo.lib.PrettyPrinter import pretty_print_list, pp_color
+from topydo.lib.PrettyPrinterFilter import (
+    PrettyPrinterColorFilter,
+    PrettyPrinterNumbers
+)
+from topydo.lib.PrettyPrinter import PrettyPrinter
 
 class View(object):
     """
@@ -29,6 +33,7 @@ class View(object):
         self._viewdata = []
         self._sorter = p_sorter
         self._filters = p_filters
+        self._printer = PrettyPrinter()
 
         self.update()
 
@@ -45,8 +50,14 @@ class View(object):
     def pretty_print(self, p_pp_filters=None):
         """ Pretty prints the view. """
         p_pp_filters = p_pp_filters or []
-        pp_filters = [self._todolist.pp_number(), pp_color] + p_pp_filters
-        return '\n'.join(pretty_print_list(self._viewdata, pp_filters))
+
+        pp_filters = [
+            PrettyPrinterNumbers(self._todolist),
+            PrettyPrinterColorFilter()
+        ]
+        pp_filters += p_pp_filters
+
+        return '\n'.join(self._printer.print_list(self._viewdata, pp_filters))
 
     def __str__(self):
-        return '\n'.join(pretty_print_list(self._viewdata))
+        return '\n'.join(self._printer.print_list(self._viewdata))

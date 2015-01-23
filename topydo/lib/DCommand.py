@@ -17,7 +17,7 @@
 import re
 
 from topydo.lib.Command import Command
-from topydo.lib.PrettyPrinter import pretty_print, pretty_print_list
+from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
 from topydo.lib.TodoListBase import InvalidTodoException
 
 class DCommand(Command):
@@ -72,8 +72,8 @@ class DCommand(Command):
         )
 
     def _print_list(self, p_todos):
-        filters = [self.todolist.pp_number()]
-        self.out("\n".join(pretty_print_list(p_todos, filters)))
+        filters = [PrettyPrinterNumbers(self.todolist)]
+        self.out("\n".join(self.printer.print_list(p_todos, filters)))
 
     def prompt_text(self):
         return "Yes or no? [y/N] "
@@ -93,7 +93,7 @@ class DCommand(Command):
             if not self.force and re.match('^y(es)?$', confirmation, re.I):
                 for child in children:
                     self.execute_specific_core(child)
-                    self.out(self.prefix() + pretty_print(child))
+                    self.out(self.prefix() + self.printer.print_todo(child))
 
     def _print_unlocked_todos(self, p_old, p_new):
         delta = [todo for todo in p_new if todo not in p_old]

@@ -1,5 +1,5 @@
 # Topydo - A todo.txt client written in Python.
-# Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
+# Copyright (C) 2014 - 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@ from datetime import date, timedelta
 
 from topydo.lib.Command import Command, InvalidCommandArgument
 from topydo.lib.Config import config
-from topydo.lib.PrettyPrinter import pretty_print
+from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
 from topydo.lib.RelativeDate import relative_date_to_date
 from topydo.lib.TodoListBase import InvalidTodoException
 from topydo.lib.Utils import date_string_to_date
@@ -75,7 +75,8 @@ class PostponeCommand(Command):
                 todo.set_tag(config().tag_due(), new_due.isoformat())
 
                 self.todolist.set_dirty()
-                self.out(pretty_print(todo, [self.todolist.pp_number()]))
+                self.out(self.printer.print_todo(todo,
+                    [PrettyPrinterNumbers(self.todolist)]))
             else:
                 self.error("Invalid date pattern given.")
 
