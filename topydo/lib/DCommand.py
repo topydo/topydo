@@ -16,7 +16,7 @@
 
 import re
 
-from topydo.lib.Command import Command, InvalidCommandArgument
+from topydo.lib.Command import Command
 from topydo.lib.PrettyPrinter import pretty_print, pretty_print_list
 from topydo.lib.TodoListBase import InvalidTodoException
 
