@@ -21,6 +21,7 @@ from topydo.lib.Config import config
 from topydo.lib import Filter
 from topydo.lib.PrettyPrinterFilter import PrettyPrinterIndentFilter
 from topydo.lib.Sorter import Sorter
+from topydo.lib.View import View
 
 class ListCommand(Command):
     def __init__(self, p_args, p_todolist,
@@ -74,18 +75,23 @@ class ListCommand(Command):
 
         return filters
 
+    def _print(self):
+        """ Prints the todos. """
+
+        sorter = Sorter(self.sort_expression)
+        filters = self._filters()
+
+        view = View(sorter, filters, self.todolist)
+
+        indent = config().list_indent()
+        self.out(view.pretty_print([PrettyPrinterIndentFilter(indent)]))
+
     def execute(self):
         if not super(ListCommand, self).execute():
             return False
 
         self._process_flags()
-
-        sorter = Sorter(self.sort_expression)
-        filters = self._filters()
-
-        indent = config().list_indent()
-        pp_filters = [PrettyPrinterIndentFilter(indent)]
-        self.out(self.todolist.view(sorter, filters).pretty_print(pp_filters))
+        self._print()
 
     def usage(self):
         return """Synopsis: ls [-x] [-s <sort_expression>] [expression]"""

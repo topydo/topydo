@@ -60,8 +60,8 @@ class TagCommand(Command):
             self.value = ""
 
     def _print(self):
-        filters = [PrettyPrinterNumbers(self.todolist)]
-        self.out(self.printer.print_todo(self.todo, filters))
+        self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
+        self.out(self.printer.print_todo(self.todo))
 
     def _choose(self):
         """

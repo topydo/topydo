@@ -97,7 +97,8 @@ class DepCommand(Command):
             if todos:
                 sorter = Sorter(config().sort_string())
                 instance_filter = Filter.InstanceFilter(todos)
-                view = View(sorter, [instance_filter], self.todolist)
+                view = View(sorter, [instance_filter], self.todolist,
+                    self.printer)
                 self.out(view.pretty_print())
         except InvalidTodoException:
             self.error("Invalid todo number given.")

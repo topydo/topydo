@@ -38,8 +38,8 @@ class AppendCommand(Command):
                 todo = self.todolist.todo(number)
                 self.todolist.append(todo, text)
 
-                self.out(self.printer.print_todo(todo,
-                    [PrettyPrinterNumbers(self.todolist)]))
+                self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
+                self.out(self.printer.print_todo(todo))
             else:
                 self.error(self.usage())
         except InvalidCommandArgument:

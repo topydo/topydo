@@ -40,28 +40,26 @@ class PrettyPrinter(Printer):
     add colors, indentation, etc. These filters are found in the
     PrettyPrinterFilter module.
     """
-    def print_todo(self, p_todo, p_filters=None):
+    def __init__(self):
         """
-        Given a todo item, pretty print it.
-
-        p_filters is a list of PrettyPrinterFilter objects (typically
-        subclasses of it, see PrettyPrinterFilter module)
+        Constructor.
         """
-        p_filters = p_filters or []
+        super(PrettyPrinter, self).__init__()
+        self.filters = []
 
+    def add_filter(self, p_filter):
+        """
+        Adds a filter to be applied when calling print_todo.
+
+        p_filter is an instance of a PrettyPrinterFilter.
+        """
+        self.filters.append(p_filter)
+
+    def print_todo(self, p_todo):
+        """ Given a todo item, pretty print it. """
         todo_str = str(p_todo)
 
-        for ppf in p_filters:
+        for ppf in self.filters:
             todo_str = ppf.filter(todo_str, p_todo)
 
         return todo_str
-
-    def print_list(self, p_todos, p_filters=None):
-        """
-        Given a list of todo items, pretty print it and return a list of
-        formatted strings.
-
-        This override also passes on filters.
-        """
-        p_filters = p_filters or []
-        return [self.print_todo(todo, p_filters) for todo in p_todos]

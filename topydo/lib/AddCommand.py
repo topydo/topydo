@@ -93,9 +93,8 @@ class AddCommand(Command):
             self.todo = self.todolist.add(self.text)
             self._postprocess_input_todo()
 
-            self.out(
-                self.printer.print_todo(self.todo,
-                [PrettyPrinterNumbers(self.todolist)]))
+            self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
+            self.out(self.printer.print_todo(self.todo))
         else:
             self.error(self.usage())
 

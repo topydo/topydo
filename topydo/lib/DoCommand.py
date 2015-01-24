@@ -17,6 +17,7 @@
 from datetime import date
 
 from topydo.lib.DCommand import DCommand
+from topydo.lib.PrettyPrinter import PrettyPrinter
 from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
 from topydo.lib.Recurrence import advance_recurring_todo, strict_advance_recurring_todo
 from topydo.lib.Utils import date_string_to_date
@@ -56,8 +57,10 @@ class DoCommand(DCommand):
                     self.completion_date)
 
             self.todolist.add_todo(new_todo)
-            self.out(self.printer.print_todo(new_todo,
-                [PrettyPrinterNumbers(self.todolist)]))
+
+            printer = PrettyPrinter()
+            printer.add_filter(PrettyPrinterNumbers(self.todolist))
+            self.out(printer.print_todo(new_todo))
 
     def prompt_text(self):
         return "Also mark subtasks as done? [y/N] "
@@ -78,7 +81,9 @@ class DoCommand(DCommand):
         """ Actions specific to this command. """
         self._handle_recurrence(p_todo)
         self.execute_specific_core(p_todo)
-        self.out(self.prefix() + self.printer.print_todo(p_todo))
+
+        printer = PrettyPrinter()
+        self.out(self.prefix() + printer.print_todo(p_todo))
 
     def execute_specific_core(self, p_todo):
         """

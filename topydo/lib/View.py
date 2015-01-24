@@ -27,13 +27,18 @@ class View(object):
     A view is instantiated by a todo list, usually obtained from a todo.txt
     file. Also a sorter and a list of filters should be given that is applied
     to the list.
+
+    A printer can be passed, but it won't be used when pretty_print() is
+    called, since it will instantiate its own pretty printer instance.
     """
-    def __init__(self, p_sorter, p_filters, p_todolist):
+    def __init__(self, p_sorter, p_filters, p_todolist,
+            p_printer=PrettyPrinter()):
+
         self._todolist = p_todolist
         self._viewdata = []
         self._sorter = p_sorter
         self._filters = p_filters
-        self._printer = PrettyPrinter()
+        self._printer = p_printer
 
         self.update()
 
@@ -51,13 +56,15 @@ class View(object):
         """ Pretty prints the view. """
         p_pp_filters = p_pp_filters or []
 
-        pp_filters = [
-            PrettyPrinterNumbers(self._todolist),
-            PrettyPrinterColorFilter()
-        ]
-        pp_filters += p_pp_filters
+        # since we're using filters, always use PrettyPrinter
+        printer = PrettyPrinter()
+        printer.add_filter(PrettyPrinterNumbers(self._todolist))
+        printer.add_filter(PrettyPrinterColorFilter())
 
-        return '\n'.join(self._printer.print_list(self._viewdata, pp_filters))
+        for ppf in p_pp_filters:
+            printer.add_filter(ppf)
+
+        return '\n'.join(printer.print_list(self._viewdata))
 
     def __str__(self):
         return '\n'.join(self._printer.print_list(self._viewdata))

@@ -17,6 +17,7 @@
 import re
 
 from topydo.lib.Command import Command
+from topydo.lib.PrettyPrinter import PrettyPrinter
 from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
 from topydo.lib.TodoListBase import InvalidTodoException
 
@@ -72,8 +73,9 @@ class DCommand(Command):
         )
 
     def _print_list(self, p_todos):
-        filters = [PrettyPrinterNumbers(self.todolist)]
-        self.out("\n".join(self.printer.print_list(p_todos, filters)))
+        printer = PrettyPrinter()
+        printer.add_filter(PrettyPrinterNumbers(self.todolist))
+        self.out("\n".join(printer.print_list(p_todos)))
 
     def prompt_text(self):
         return "Yes or no? [y/N] "

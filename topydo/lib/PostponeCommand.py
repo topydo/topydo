@@ -75,8 +75,8 @@ class PostponeCommand(Command):
                 todo.set_tag(config().tag_due(), new_due.isoformat())
 
                 self.todolist.set_dirty()
-                self.out(self.printer.print_todo(todo,
-                    [PrettyPrinterNumbers(self.todolist)]))
+                self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
+                self.out(self.printer.print_todo(todo))
             else:
                 self.error("Invalid date pattern given.")
 
