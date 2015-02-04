@@ -75,7 +75,7 @@ class DCommand(Command):
     def _print_list(self, p_todos):
         printer = PrettyPrinter()
         printer.add_filter(PrettyPrinterNumbers(self.todolist))
-        self.out("\n".join(printer.print_list(p_todos)))
+        self.out(printer.print_list(p_todos))
 
     def prompt_text(self):
         return "Yes or no? [y/N] "

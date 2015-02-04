@@ -64,7 +64,7 @@ class View(object):
         for ppf in p_pp_filters:
             printer.add_filter(ppf)
 
-        return '\n'.join(printer.print_list(self._viewdata))
+        return printer.print_list(self._viewdata)
 
     def __str__(self):
-        return '\n'.join(self._printer.print_list(self._viewdata))
+        return self._printer.print_list(self._viewdata)

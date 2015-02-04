@@ -29,7 +29,7 @@ class Printer(object):
         Given a list of todo items, pretty print it and return a list of
         formatted strings.
         """
-        return [self.print_todo(todo) for todo in p_todos]
+        return "\n".join([self.print_todo(todo) for todo in p_todos])
 
 class PrettyPrinter(Printer):
     """
