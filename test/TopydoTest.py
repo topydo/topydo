@@ -19,9 +19,9 @@ import unittest
 from topydo.lib.Config import config
 
 class TopydoTest(unittest.TestCase):
-    def setUp(self):
+    def tearDown(self):
         """
-        Make sure that every test case starts with a clean configuration.
+        Make sure that every test case leaves a clean configuration.
         """
         config("")
 
