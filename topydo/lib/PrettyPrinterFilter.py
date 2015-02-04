@@ -88,3 +88,17 @@ class PrettyPrinterNumbers(PrettyPrinterFilter):
     def filter(self, p_todo_str, p_todo):
         """ Prepends the number to the todo string. """
         return "|{:>3}| {}".format(self.todolist.number(p_todo), p_todo_str)
+
+class PrettyPrinterHideTagFilter(PrettyPrinterFilter):
+    """ Removes all occurences of the given tags from the text. """
+    def __init__(self, p_hidden_tags):
+        super(PrettyPrinterHideTagFilter, self).__init__()
+        self.hidden_tags = p_hidden_tags
+
+    def filter(self, p_todo_str, _):
+        for hidden_tag in self.hidden_tags:
+            # inspired from remove_tag in TodoBase
+            p_todo_str = re.sub(r'\s?\b' + hidden_tag + r':\S+\b', '',
+                p_todo_str)
+
+        return p_todo_str

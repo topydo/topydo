@@ -1,5 +1,5 @@
 # Topydo - A todo.txt client written in Python.
-# Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
+# Copyright (C) 2014 - 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -45,6 +45,7 @@ class _Config:
             'identifiers': 'linenumber',
 
             # ls
+            'hide_tags': 'id,p,ical',
             'indent': 0,
             'list_limit': '-1',
 
@@ -163,6 +164,11 @@ class _Config:
 
     def tag_star(self):
         return self._get_tag('tag_star')
+
+    def hidden_tags(self):
+        """ Returns a list of tags to be hidden from the 'ls' output. """
+        hidden_tags = self.cp.get('ls', 'hide_tags')
+        return [] if hidden_tags == '' else hidden_tags.split(',')
 
 def config(p_path=None):
     """

@@ -19,7 +19,10 @@ import re
 from topydo.lib.Command import Command
 from topydo.lib.Config import config
 from topydo.lib import Filter
-from topydo.lib.PrettyPrinterFilter import PrettyPrinterIndentFilter
+from topydo.lib.PrettyPrinterFilter import (
+    PrettyPrinterIndentFilter,
+    PrettyPrinterHideTagFilter
+)
 from topydo.lib.Sorter import Sorter
 from topydo.lib.View import View
 
@@ -84,7 +87,13 @@ class ListCommand(Command):
     def _print(self):
         """ Prints the todos. """
         indent = config().list_indent()
-        self.out(self._view().pretty_print([PrettyPrinterIndentFilter(indent)]))
+        hidden_tags = config().hidden_tags()
+
+        filters = []
+        filters.append(PrettyPrinterIndentFilter(indent))
+        filters.append(PrettyPrinterHideTagFilter(hidden_tags))
+
+        self.out(self._view().pretty_print(filters))
 
     def execute(self):
         if not super(ListCommand, self).execute():
