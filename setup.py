@@ -10,6 +10,7 @@ setup(
     url = "https://github.com/bram85/topydo",
     extras_require = {
         'ical': ['icalendar'],
+        'prompt-toolkit': ['prompt-toolkit'],
     },
     entry_points= {
         'console_scripts': ['topydo = topydo.cli.Main:main'],
