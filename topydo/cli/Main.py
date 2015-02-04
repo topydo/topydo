@@ -90,52 +90,12 @@ except ConfigError as config_error:
     error(str(config_error))
     sys.exit(1)
 
-from topydo.lib.AddCommand import AddCommand
-from topydo.lib.AppendCommand import AppendCommand
+from topydo.lib.Commands import get_subcommand
 from topydo.lib.ArchiveCommand import ArchiveCommand
-from topydo.lib.DeleteCommand import DeleteCommand
-from topydo.lib.DepCommand import DepCommand
-from topydo.lib.DepriCommand import DepriCommand
-from topydo.lib.DoCommand import DoCommand
-from topydo.lib.EditCommand import EditCommand
-from topydo.lib.IcalCommand import IcalCommand
-from topydo.lib.ListCommand import ListCommand
-from topydo.lib.ListContextCommand import ListContextCommand
-from topydo.lib.ListProjectCommand import ListProjectCommand
-from topydo.lib.PostponeCommand import PostponeCommand
-from topydo.lib.PriorityCommand import PriorityCommand
-from topydo.lib.SortCommand import SortCommand
-from topydo.lib.TagCommand import TagCommand
 from topydo.lib import TodoFile
 from topydo.lib import TodoList
 from topydo.lib import TodoListBase
 from topydo.lib.Utils import escape_ansi
-
-SUBCOMMAND_MAP = {
-  'add': AddCommand,
-  'app': AppendCommand,
-  'append': AppendCommand,
-  'del': DeleteCommand,
-  'dep': DepCommand,
-  'depri': DepriCommand,
-  'do': DoCommand,
-  'edit': EditCommand,
-  'ical': IcalCommand,
-  'ls': ListCommand,
-  'lscon': ListContextCommand,
-  'listcon': ListContextCommand,
-  'lsprj': ListProjectCommand,
-  'lsproj': ListProjectCommand,
-  'listprj': ListProjectCommand,
-  'listproj': ListProjectCommand,
-  'listproject': ListProjectCommand,
-  'listprojects': ListProjectCommand,
-  'postpone': PostponeCommand,
-  'pri': PriorityCommand,
-  'rm': DeleteCommand,
-  'sort': SortCommand,
-  'tag': TagCommand,
-}
 
 class CLIApplication(object):
     """
@@ -215,52 +175,6 @@ class CLIApplication(object):
 
         return False if command.execute() == False else True
 
-    def _get_subcommand(self, p_args):
-        """
-        Retrieves the to-be executed Command and returns a tuple
-        (Command, args).
-
-        If args is an empty list, then the Command that corresponds with the
-        default command specified in the configuration will be returned.
-
-        If the first argument is 'help' and the second a valid subcommand, the
-        help text this function returns the Command instance of that subcommand
-        with a single argument 'help' (every Command has a help text).
-
-        If no valid command could be found, the subcommand part of the tuple
-        is None.
-        """
-        result = None
-        args = p_args
-
-        try:
-            subcommand = p_args[0]
-
-            if subcommand in SUBCOMMAND_MAP:
-                result = SUBCOMMAND_MAP[subcommand]
-                args = args[1:]
-            elif subcommand == 'help':
-                try:
-                    subcommand = args[1]
-
-                    if subcommand in SUBCOMMAND_MAP:
-                        args = [subcommand, 'help']
-                        return self._get_subcommand(args)
-                except IndexError:
-                    # will result in empty result
-                    pass
-            else:
-                p_command = self.config.default_command()
-                if p_command in SUBCOMMAND_MAP:
-                    result = SUBCOMMAND_MAP[p_command]
-                    # leave args unchanged
-        except IndexError:
-            p_command = self.config.default_command()
-            if p_command in SUBCOMMAND_MAP:
-                result = SUBCOMMAND_MAP[p_command]
-
-        return (result, args)
-
     def run(self):
         """ Main entry function. """
         args = self._process_flags()
@@ -268,7 +182,7 @@ class CLIApplication(object):
         todofile = TodoFile.TodoFile(self.path)
         self.todolist = TodoList.TodoList(todofile.read())
 
-        (subcommand, args) = self._get_subcommand(args)
+        (subcommand, args) = get_subcommand(args)
 
         if subcommand == None:
             usage()
