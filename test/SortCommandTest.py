@@ -26,10 +26,6 @@ class SortCommandTest(CommandTest.CommandTest):
         super(SortCommandTest, self).setUp()
         self.todolist = TestFacilities.load_file_to_todolist("test/data/SorterTest1.txt")
 
-    def tearDown(self):
-        # restore to the default configuration in case a custom one was set
-        config("")
-
     def test_sort1(self):
         """ Alphabetically sorted """
         command = SortCommand(["text"], self.todolist, self.out, self.error)

@@ -36,10 +36,6 @@ class TodoListTester(TopydoTest):
         self.text = ''.join(lines)
         self.todolist = TodoList(lines)
 
-    def tearDown(self):
-        # restore to the default configuration in case a custom one was set
-        config("")
-
     def test_contexts(self):
         self.assertEquals(set(['Context1', 'Context2']), \
             self.todolist.contexts())

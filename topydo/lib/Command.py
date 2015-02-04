@@ -16,6 +16,8 @@
 
 import getopt
 
+from topydo.lib.PrettyPrinter import PrettyPrinter
+
 class InvalidCommandArgument(Exception):
     pass
 
@@ -48,6 +50,9 @@ class Command(object):
         self.out = p_out
         self.error = p_err
         self.prompt = p_prompt
+
+        # make pretty printer available
+        self.printer = PrettyPrinter()
 
     def execute(self):
         """

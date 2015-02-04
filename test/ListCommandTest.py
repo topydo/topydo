@@ -26,10 +26,6 @@ class ListCommandTest(CommandTest.CommandTest):
         super(ListCommandTest, self).setUp()
         self.todolist = TestFacilities.load_file_to_todolist("test/data/ListCommandTest.txt")
 
-    def tearDown(self):
-        # restore to the default configuration in case a custom one was set
-        config("")
-
     def test_list1(self):
         command = ListCommand([""], self.todolist, self.out, self.error)
         command.execute()

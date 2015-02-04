@@ -1,5 +1,5 @@
 # Topydo - A todo.txt client written in Python.
-# Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
+# Copyright (C) 2014 - 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from topydo.lib.Command import Command, InvalidCommandArgument
-from topydo.lib.PrettyPrinter import pretty_print
+from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
 from topydo.lib.TodoListBase import InvalidTodoException
 
 class AppendCommand(Command):
@@ -37,7 +37,9 @@ class AppendCommand(Command):
             if text:
                 todo = self.todolist.todo(number)
                 self.todolist.append(todo, text)
-                self.out(pretty_print(todo, [self.todolist.pp_number()]))
+
+                self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
+                self.out(self.printer.print_todo(todo))
             else:
                 self.error(self.usage())
         except InvalidCommandArgument:

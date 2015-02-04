@@ -24,7 +24,7 @@ import re
 from topydo.lib.Config import config
 from topydo.lib import Filter
 from topydo.lib.HashListValues import hash_list_values
-from topydo.lib.PrettyPrinter import pretty_print_list
+from topydo.lib.PrettyPrinter import PrettyPrinter
 from topydo.lib.Todo import Todo
 from topydo.lib.View import View
 
@@ -242,14 +242,6 @@ class TodoListBase(object):
         except (ValueError, KeyError):
             raise InvalidTodoException
 
-    def pp_number(self):
-        """
-        A filter for the pretty printer to append the todo number to the
-        printed todo.
-        """
-        return lambda p_todo_str, p_todo: \
-                "|{:>3}| {}".format(self.number(p_todo), p_todo_str)
-
     def _update_todo_ids(self):
         # the idea is to have a hash that is independent of the position of the
         # todo. Use the text (without tags) of the todo to keep the id as stable
@@ -264,5 +256,6 @@ class TodoListBase(object):
             self._id_todo_map[uid] = todo
 
     def __str__(self):
-        return '\n'.join(pretty_print_list(self._todos))
+        printer = PrettyPrinter()
+        return printer.print_list(self._todos)
 

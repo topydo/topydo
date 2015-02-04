@@ -8,6 +8,9 @@ setup(
     author = "Bram Schoenmakers",
     author_email = "me@bramschoenmakers.nl",
     url = "https://github.com/bram85/topydo",
+    extras_require = {
+        'ical': ['icalendar'],
+    },
     entry_points= {
         'console_scripts': ['topydo = topydo.cli.Main:main'],
     },

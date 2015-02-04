@@ -1,5 +1,5 @@
 # Topydo - A todo.txt client written in Python.
-# Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
+# Copyright (C) 2014 - 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,19 +16,29 @@
 
 """ A view is a list of todos, sorted and filtered. """
 
-from topydo.lib.PrettyPrinter import pretty_print_list, pp_color
+from topydo.lib.PrettyPrinterFilter import (
+    PrettyPrinterColorFilter,
+    PrettyPrinterNumbers
+)
+from topydo.lib.PrettyPrinter import PrettyPrinter
 
 class View(object):
     """
     A view is instantiated by a todo list, usually obtained from a todo.txt
     file. Also a sorter and a list of filters should be given that is applied
     to the list.
+
+    A printer can be passed, but it won't be used when pretty_print() is
+    called, since it will instantiate its own pretty printer instance.
     """
-    def __init__(self, p_sorter, p_filters, p_todolist):
+    def __init__(self, p_sorter, p_filters, p_todolist,
+            p_printer=PrettyPrinter()):
+
         self._todolist = p_todolist
         self._viewdata = []
         self._sorter = p_sorter
         self._filters = p_filters
+        self._printer = p_printer
 
         self.update()
 
@@ -45,8 +55,16 @@ class View(object):
     def pretty_print(self, p_pp_filters=None):
         """ Pretty prints the view. """
         p_pp_filters = p_pp_filters or []
-        pp_filters = [self._todolist.pp_number(), pp_color] + p_pp_filters
-        return '\n'.join(pretty_print_list(self._viewdata, pp_filters))
+
+        # since we're using filters, always use PrettyPrinter
+        printer = PrettyPrinter()
+        printer.add_filter(PrettyPrinterNumbers(self._todolist))
+        printer.add_filter(PrettyPrinterColorFilter())
+
+        for ppf in p_pp_filters:
+            printer.add_filter(ppf)
+
+        return printer.print_list(self._viewdata)
 
     def __str__(self):
-        return '\n'.join(pretty_print_list(self._viewdata))
+        return self._printer.print_list(self._viewdata)
