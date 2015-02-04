@@ -62,7 +62,6 @@ class PostponeCommand(Command):
             todo = self.todolist.todo(self.argument(0))
             pattern = self.argument(1)
 
-            # pdb.set_trace()
             offset = _get_offset(todo)
             new_due = relative_date_to_date(pattern, offset)
 
