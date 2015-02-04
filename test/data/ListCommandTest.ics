@@ -1,0 +1,29 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//bramschoenmakers.nl//topydo//
+BEGIN:VTODO
+DESCRIPTION:(C) Foo @Context2 Not@Context +Project1 Not+Project ical:zOID
+PRIORITY:6
+SUMMARY:Foo @Context2 Not@Context +Project1 Not+Project
+UID:zOID
+END:VTODO
+BEGIN:VTODO
+DESCRIPTION:(C) Drink beer @ home ical:vlP2
+PRIORITY:6
+SUMMARY:Drink beer @ home
+UID:vlP2
+END:VTODO
+BEGIN:VTODO
+DESCRIPTION:(C) 13 + 29 = 42 ical:JHzb
+PRIORITY:6
+SUMMARY:13 + 29 = 42
+UID:JHzb
+END:VTODO
+BEGIN:VTODO
+DESCRIPTION:(D) Bar @Context1 +Project2 p:1 ical:QdNz
+PRIORITY:7
+SUMMARY:Bar @Context1 +Project2
+UID:QdNz
+END:VTODO
+END:VCALENDAR
+
