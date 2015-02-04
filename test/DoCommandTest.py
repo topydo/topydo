@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import date, timedelta
+import unittest
 
 import CommandTest
 from topydo.lib.DoCommand import DoCommand

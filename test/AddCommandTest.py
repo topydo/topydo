@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from datetime import date
+import unittest
 
 from topydo.lib import AddCommand
 from topydo.lib import ListCommand
