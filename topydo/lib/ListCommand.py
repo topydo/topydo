@@ -75,16 +75,16 @@ class ListCommand(Command):
 
         return filters
 
-    def _print(self):
-        """ Prints the todos. """
-
+    def _view(self):
         sorter = Sorter(self.sort_expression)
         filters = self._filters()
 
-        view = View(sorter, filters, self.todolist)
+        return View(sorter, filters, self.todolist, self.printer)
 
+    def _print(self):
+        """ Prints the todos. """
         indent = config().list_indent()
-        self.out(view.pretty_print([PrettyPrinterIndentFilter(indent)]))
+        self.out(self._view().pretty_print([PrettyPrinterIndentFilter(indent)]))
 
     def execute(self):
         if not super(ListCommand, self).execute():
