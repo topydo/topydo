@@ -92,6 +92,7 @@ except ConfigError as config_error:
 
 from topydo.lib.Commands import get_subcommand
 from topydo.lib.ArchiveCommand import ArchiveCommand
+from topydo.lib.SortCommand import SortCommand
 from topydo.lib import TodoFile
 from topydo.lib import TodoList
 from topydo.lib import TodoListBase
