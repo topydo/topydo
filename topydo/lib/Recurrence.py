@@ -42,8 +42,11 @@ def _advance_recurring_todo_helper(p_todo, p_offset):
         raise NoRecurrenceException()
 
     length = todo.length()
-
     new_due = relative_date_to_date(pattern, p_offset)
+
+    if not new_due:
+        raise NoRecurrenceException()
+
     todo.set_tag(config().tag_due(), new_due.isoformat())
 
     if todo.start_date():
