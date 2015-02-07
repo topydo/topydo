@@ -30,30 +30,39 @@ class PriorityCommand(Command):
         if not super(PriorityCommand, self).execute():
             return False
 
-        number = None
+        numbers = None
         priority = None
         try:
-            number = self.argument(0)
-            priority = self.argument(1)
-            todo = self.todolist.todo(number)
+            numbers = self.args[:-1]
+            priority = self.args[-1]
 
-            if is_valid_priority(priority):
-                old_priority = todo.priority()
-                self.todolist.set_priority(todo, priority)
+            if len(numbers) > 0:
+                todos = []
+                for number in numbers:
+                    todos.append(self.todolist.todo(number))
 
-                if old_priority and priority and old_priority != priority:
-                    self.out("Priority changed from {} to {}".format(
-                        old_priority, priority))
-                elif not old_priority:
-                    self.out("Priority set to {}.".format(priority))
+                if is_valid_priority(priority):
+                    for todo in todos:
+                        old_priority = todo.priority()
+                        self.todolist.set_priority(todo, priority)
 
-                self.out(self.printer.print_todo(todo))
+                        if old_priority and priority and old_priority != priority:
+                            self.out("Priority changed from {} to {}".format(
+                                old_priority, priority))
+                        elif not old_priority:
+                            self.out("Priority set to {}.".format(priority))
+
+                        self.out(self.printer.print_todo(todo))
+                else:
+                    self.error("Invalid priority given.")
             else:
-                self.error("Invalid priority given.")
+                self.error(self.usage())
+        except IndexError:
+            self.error(self.usage())
         except InvalidCommandArgument:
             self.error(self.usage())
         except (InvalidTodoException):
-            if number and priority:
+            if len(numbers) > 0 and priority:
                 self.error( "Invalid todo number given.")
             else:
                 self.error(self.usage())
