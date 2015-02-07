@@ -242,6 +242,7 @@ class TodoListDependencyTester(TopydoTest):
         self.todolist.add("Something with +Project")
         self.todolist.add("Another one with +Project")
         self.todolist.add("Todo with +AnotherProject")
+        self.todolist.add("Todo without children id:3")
 
     def test_check_dep(self):
         children = self.todolist.children(self.todolist.todo(1))
@@ -272,8 +273,8 @@ class TodoListDependencyTester(TopydoTest):
         todo5 = self.todolist.todo(5)
         self.todolist.add_dependency(todo5, todo4)
 
-        self.assertTrue(todo5.has_tag('id', '3'))
-        self.assertTrue(todo4.has_tag('p', '3'))
+        self.assertTrue(todo5.has_tag('id', '4'))
+        self.assertTrue(todo4.has_tag('p', '4'))
 
     def test_add_dep2(self):
         """
@@ -288,8 +289,8 @@ class TodoListDependencyTester(TopydoTest):
         self.todolist.add_dependency(todo5, todo4)
         self.todolist.add_dependency(todo4, todo1)
 
-        self.assertTrue(todo4.has_tag('id', '4'))
-        self.assertTrue(todo1.has_tag('p', '4'))
+        self.assertTrue(todo4.has_tag('id', '5'))
+        self.assertTrue(todo1.has_tag('p', '5'))
 
     def test_add_dep3(self):
         """
