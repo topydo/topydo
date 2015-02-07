@@ -19,7 +19,7 @@ from datetime import date
 from topydo.lib.DCommand import DCommand
 from topydo.lib.PrettyPrinter import PrettyPrinter
 from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
-from topydo.lib.Recurrence import advance_recurring_todo, strict_advance_recurring_todo
+from topydo.lib.Recurrence import advance_recurring_todo, strict_advance_recurring_todo, NoRecurrenceException
 from topydo.lib.Utils import date_string_to_date
 
 class DoCommand(DCommand):
@@ -49,18 +49,21 @@ class DoCommand(DCommand):
 
     def _handle_recurrence(self, p_todo):
         if p_todo.has_tag('rec'):
-            if self.strict_recurrence:
-                new_todo = strict_advance_recurring_todo(p_todo,
-                    self.completion_date)
-            else:
-                new_todo = advance_recurring_todo(p_todo,
-                    self.completion_date)
+            try:
+                if self.strict_recurrence:
+                    new_todo = strict_advance_recurring_todo(p_todo,
+                        self.completion_date)
+                else:
+                    new_todo = advance_recurring_todo(p_todo,
+                        self.completion_date)
 
-            self.todolist.add_todo(new_todo)
+                self.todolist.add_todo(new_todo)
 
-            printer = PrettyPrinter()
-            printer.add_filter(PrettyPrinterNumbers(self.todolist))
-            self.out(printer.print_todo(new_todo))
+                printer = PrettyPrinter()
+                printer.add_filter(PrettyPrinterNumbers(self.todolist))
+                self.out(printer.print_todo(new_todo))
+            except NoRecurrenceException:
+                self.error("Warning: todo item has an invalid recurrence pattern.")
 
     def prompt_text(self):
         return "Also mark subtasks as done? [y/N] "
