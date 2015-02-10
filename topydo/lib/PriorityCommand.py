@@ -68,9 +68,9 @@ class PriorityCommand(Command):
                 self.error(self.usage())
 
     def usage(self):
-        return """Synopsis: pri <NUMBER> <PRIORITY>"""
+        return """Synopsis: pri <NUMBER1> [<NUMBER2> ...] <PRIORITY>"""
 
     def help(self):
         return """\
-Sets the priority of todo the given number to the given priority.
+Sets the priority of todo(s) the given number(s) to the given priority.
 """
