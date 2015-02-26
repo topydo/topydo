@@ -37,9 +37,7 @@ class PriorityCommand(Command):
             priority = self.args[-1]
 
             if len(numbers) > 0:
-                todos = []
-                for number in numbers:
-                    todos.append(self.todolist.todo(number))
+                todos = [self.todolist.todo(number) for number in numbers]
 
                 if is_valid_priority(priority):
                     for todo in todos:
@@ -57,9 +55,7 @@ class PriorityCommand(Command):
                     self.error("Invalid priority given.")
             else:
                 self.error(self.usage())
-        except IndexError:
-            self.error(self.usage())
-        except InvalidCommandArgument:
+        except (IndexError, InvalidCommandArgument):
             self.error(self.usage())
         except (InvalidTodoException):
             if len(numbers) > 0 and priority:
