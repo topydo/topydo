@@ -62,6 +62,14 @@ class PriorityCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.output, "(A) Foo\n")
         self.assertEquals(self.errors, "")
 
+    def test_set_prio5(self):
+        command = PriorityCommand(["Foo", "2", "C"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEquals(self.output, "Priority changed from A to C\n(C) Foo\nPriority set to C.\n(C) Bar\n")
+        self.assertEquals(self.errors, "")
+
     def test_invalid1(self):
         command = PriorityCommand(["99", "A"], self.todolist, self.out, self.error)
         command.execute()
