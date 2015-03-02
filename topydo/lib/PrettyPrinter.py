@@ -26,8 +26,7 @@ PRIORITY_COLORS = {
     'C': '\033[34m'  # blue
 }
 
-PROJECT_COLOR = '\033[36m' # color for + keyword : cyan
-CONTEXT_COLOR = '\033[32m' # color for @ keyword : green
+PROJECT_COLOR = '\033[31m' # red
 NEUTRAL_COLOR = '\033[0m'
 
 def pp_color(p_todo_str, p_todo):
@@ -44,15 +43,12 @@ def pp_color(p_todo_str, p_todo):
         except KeyError:
             pass
 
-        p_todo_str = '%s%s%s' % (color, p_todo_str, NEUTRAL_COLOR)
+        p_todo_str = color + p_todo_str + NEUTRAL_COLOR
 
         if config().highlight_projects_contexts():
             p_todo_str = re.sub(
                 r'\B(\+|@)(\S*\w)',
-                #PROJECT_COLOR + r'\g<0>' + color,
-                lambda m: (
-                    CONTEXT_COLOR if m.group(0)[0] == "+"
-                    else PROJECT_COLOR)+m.group(0)+color,
+                PROJECT_COLOR + r'\g<0>' + color,
                 p_todo_str)
 
         p_todo_str += NEUTRAL_COLOR
