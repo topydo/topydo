@@ -115,19 +115,9 @@ class TodoList(TodoListBase):
             Unused means that no task has it as an 'id' value or as a 'p'
             value.
             """
-            def id_exists(p_id):
-                """
-                Returns True if there exists a todo with the given parent
-                ID.
-                """
-                for todo in self._todos:
-                    if todo.has_tag('id', str(p_id)):
-                        return True
-
-                return False
 
             new_id = 1
-            while id_exists(new_id):
+            while self._depgraph.has_edge_id(str(new_id)):
                 new_id += 1
 
             return str(new_id)
