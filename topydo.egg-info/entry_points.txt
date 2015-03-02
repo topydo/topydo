@@ -1,0 +1,3 @@
+[console_scripts]
+topydo = topydo.cli.Main:main
+
