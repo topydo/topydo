@@ -21,16 +21,14 @@ import re
 from topydo.lib.Config import config
 
 PRIORITY_COLORS = {
-    'A': '\033[0;36m', # cyan
-    'B': '\033[0;33m', # yellow
-    'C': '\033[0;34m'  # blue
+    'A': '\033[36m', # cyan
+    'B': '\033[33m', # yellow
+    'C': '\033[34m'  # blue
 }
 
-PROJECT_COLOR  = '\033[1;31m' # color for + keyword  : red
-CONTEXT_COLOR  = '\033[1;35m' # color for @ keyword  : magenta
-METADATA_COLOR = '\033[1;32m' # color for @ metadata : green
-LINK_COLOR     = '\033[4;36m' # color for @ links : cyan/underline
-NEUTRAL_COLOR  = '\033[0m'
+PROJECT_COLOR = '\033[36m' # color for + keyword : cyan
+CONTEXT_COLOR = '\033[32m' # color for @ keyword : green
+NEUTRAL_COLOR = '\033[0m'
 
 def pp_color(p_todo_str, p_todo):
     """
@@ -56,8 +54,7 @@ def pp_color(p_todo_str, p_todo):
                     CONTEXT_COLOR if m.group(0)[0] == "+"
                     else PROJECT_COLOR)+m.group(0)+color,
                 p_todo_str)
-            p_todo_str = re.sub(r'\w(\S*:[^/\s]\S*)\w',METADATA_COLOR+r'\g<0>'+color,p_todo_str)
-            p_todo_str = re.sub(r'\w(\S*://\S*)\w',LINK_COLOR+r'\g<0>'+color,p_todo_str)
+
         p_todo_str += NEUTRAL_COLOR
 
     return p_todo_str
