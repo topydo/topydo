@@ -103,13 +103,13 @@ class PostponeCommand(Command):
                 self.error(self.usage())
 
     def usage(self):
-        return "Synopsis: postpone [-s] <NUMBER> <PATTERN>"
+        return "Synopsis: postpone [-s] <NUMBER> [<NUMBER2> ...] <PATTERN>"
 
     def help(self):
         return """\
-Postpone a todo item with the given number and the given pattern.
+Postpone the todo item(s) with the given number(s) and the given pattern.
 
-Postponing is done by adjusting the due date of the todo, and if the -s flag is
+Postponing is done by adjusting the due date(s) of the todo(s), and if the -s flag is
 given, the start date accordingly.
 
 The pattern is a relative date, written in the format <COUNT><PERIOD> where
