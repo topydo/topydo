@@ -58,31 +58,49 @@ class PostponeCommand(Command):
 
         self._process_flags()
 
-        try:
-            todo = self.todolist.todo(self.argument(0))
-            pattern = self.argument(1)
+        todos = []
+        invalid_numbers = []
+        for number in self.args[:-1]:
+            try:
+                todos.append(self.todolist.todo(number))
+            except InvalidTodoException:
+                invalid_numbers.append(number)
 
-            offset = _get_offset(todo)
-            new_due = relative_date_to_date(pattern, offset)
-
-            if new_due:
-                if self.move_start_date and todo.has_tag(config().tag_start()):
-                    length = todo.length()
-                    new_start = new_due - timedelta(length)
-                    todo.set_tag(config().tag_start(), new_start.isoformat())
-
-                todo.set_tag(config().tag_due(), new_due.isoformat())
-
-                self.todolist.set_dirty()
-                self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
-                self.out(self.printer.print_todo(todo))
-            else:
-                self.error("Invalid date pattern given.")
-
-        except InvalidCommandArgument:
-            self.error(self.usage())
-        except (InvalidTodoException):
+        if len(invalid_numbers) > 0 and len(todos) > 0:
+            for number in invalid_numbers:
+                self.error("Invalid todo number given: {}.".format(number))
+        elif len(invalid_numbers) == 1 and len(todos) == 0:
             self.error("Invalid todo number given.")
+        else:
+
+            try:
+                pattern = self.args[-1]
+
+                self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
+
+                if len(todos) > 0:
+                    for todo in todos:
+                        offset = _get_offset(todo)
+                        new_due = relative_date_to_date(pattern, offset)
+
+                        if new_due:
+                            if self.move_start_date and todo.has_tag(config().tag_start()):
+                                length = todo.length()
+                                new_start = new_due - timedelta(length)
+                                todo.set_tag(config().tag_start(), new_start.isoformat())
+
+                            todo.set_tag(config().tag_due(), new_due.isoformat())
+
+                            self.todolist.set_dirty()
+                            self.out(self.printer.print_todo(todo))
+                        else:
+                            self.error("Invalid date pattern given.")
+                            break
+                else:
+                    self.error(self.usage())
+
+            except (InvalidCommandArgument, IndexError):
+                self.error(self.usage())
 
     def usage(self):
         return "Synopsis: postpone [-s] <NUMBER> <PATTERN>"
