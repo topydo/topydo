@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from topydo.lib.Command import Command, InvalidCommandArgument
+from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
 from topydo.lib.TodoListBase import InvalidTodoException
 from topydo.lib.Utils import is_valid_priority
 
@@ -35,6 +36,8 @@ class PriorityCommand(Command):
         try:
             numbers = self.args[:-1]
             priority = self.args[-1]
+
+            self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
 
             if len(numbers) > 0:
                 todos = [self.todolist.todo(number) for number in numbers]
