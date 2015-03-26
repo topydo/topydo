@@ -60,6 +60,7 @@ class PostponeCommand(Command):
 
         todos = []
         invalid_numbers = []
+
         for number in self.args[:-1]:
             try:
                 todos.append(self.todolist.todo(number))
@@ -72,10 +73,8 @@ class PostponeCommand(Command):
         elif len(invalid_numbers) == 1 and len(todos) == 0:
             self.error("Invalid todo number given.")
         else:
-
             try:
                 pattern = self.args[-1]
-
                 self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
 
                 if len(todos) > 0:
