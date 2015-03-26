@@ -211,6 +211,14 @@ class PostponeCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.output, "")
         self.assertEquals(self.errors, "Invalid todo number given: 99.\nInvalid todo number given: 123.\n")
 
+    def test_postpone19(self):
+        command = PostponeCommand(["Zoo", "99", "123", "1w"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+        self.assertEquals(self.output, "")
+        self.assertEquals(self.errors, "Invalid todo number given: Zoo.\nInvalid todo number given: 99.\nInvalid todo number given: 123.\n")
+
     def test_help(self):
         command = PostponeCommand(["help"], self.todolist, self.out, self.error)
         command.execute()
