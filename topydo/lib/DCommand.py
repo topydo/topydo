@@ -40,11 +40,12 @@ class DCommand(Command):
         self.length = len(self.todolist.todos()) # to determine newly activated todos
 
         self.todos = []
+        self.invalid_numbers = []
         for number in self.args:
             try:
                 self.todos.append(self.todolist.todo(number))
             except InvalidTodoException:
-                self.todos.append(None)
+                self.invalid_numbers.append(number)
 
     def get_flags(self):
         """ Default implementation of getting specific flags. """
@@ -141,13 +142,16 @@ class DCommand(Command):
 
         if len(self.args) == 0:
             self.error(self.usage())
+        elif len(self.invalid_numbers) > 1 or len(self.invalid_numbers) > 0 and len(self.todos) > 0:
+            for number in self.invalid_numbers:
+                self.error("Invalid todo number given: {}.".format(number))
+        elif len(self.invalid_numbers) == 1 and len(self.todos) == 0:
+            self.error("Invalid todo number given.")
         else:
             old_active = self._active_todos()
 
             for todo in self.todos:
-                if not todo:
-                    self.error("Invalid todo number given.")
-                elif todo and self.condition(todo):
+                if todo and self.condition(todo):
                     self._process_subtasks(todo)
                     self.execute_specific(todo)
                 else:
