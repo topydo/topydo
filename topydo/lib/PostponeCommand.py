@@ -67,7 +67,7 @@ class PostponeCommand(Command):
             except InvalidTodoException:
                 invalid_numbers.append(number)
 
-        if len(invalid_numbers) > 0 and len(todos) > 0:
+        if len(invalid_numbers) > 1 or len(invalid_numbers) > 0 and len(todos) > 0:
             for number in invalid_numbers:
                 self.error("Invalid todo number given: {}.".format(number))
         elif len(invalid_numbers) == 1 and len(todos) == 0:
