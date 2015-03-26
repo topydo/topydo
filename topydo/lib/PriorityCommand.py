@@ -31,39 +31,44 @@ class PriorityCommand(Command):
         if not super(PriorityCommand, self).execute():
             return False
 
-        numbers = None
         priority = None
-        try:
-            numbers = self.args[:-1]
-            priority = self.args[-1]
+        todos = []
+        invalid_numbers = []
 
-            self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
+        for number in self.args[:-1]:
+            try:
+                todos.append(self.todolist.todo(number))
+            except InvalidTodoException:
+                invalid_numbers.append(number)
 
-            if len(numbers) > 0:
-                todos = [self.todolist.todo(number) for number in numbers]
+        if len(invalid_numbers) > 1 or len(invalid_numbers) > 0 and len(todos) > 0:
+            for number in invalid_numbers:
+                self.error("Invalid todo number given: {}.".format(number))
+        elif len(invalid_numbers) == 1 and len(todos) == 0:
+            self.error("Invalid todo number given.")
+        else:
+            try:
+                priority = self.args[-1]
+                self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
 
-                if is_valid_priority(priority):
-                    for todo in todos:
-                        old_priority = todo.priority()
-                        self.todolist.set_priority(todo, priority)
+                if len(todos) > 0:
+                    if is_valid_priority(priority):
+                        for todo in todos:
+                            old_priority = todo.priority()
+                            self.todolist.set_priority(todo, priority)
 
-                        if old_priority and priority and old_priority != priority:
-                            self.out("Priority changed from {} to {}".format(
-                                old_priority, priority))
-                        elif not old_priority:
-                            self.out("Priority set to {}.".format(priority))
+                            if old_priority and priority and old_priority != priority:
+                                self.out("Priority changed from {} to {}".format(
+                                    old_priority, priority))
+                            elif not old_priority:
+                                self.out("Priority set to {}.".format(priority))
 
-                        self.out(self.printer.print_todo(todo))
+                            self.out(self.printer.print_todo(todo))
+                    else:
+                        self.error("Invalid priority given.")
                 else:
-                    self.error("Invalid priority given.")
-            else:
-                self.error(self.usage())
-        except (IndexError, InvalidCommandArgument):
-            self.error(self.usage())
-        except (InvalidTodoException):
-            if len(numbers) > 0 and priority:
-                self.error( "Invalid todo number given.")
-            else:
+                    self.error(self.usage())
+            except (IndexError, InvalidCommandArgument):
                 self.error(self.usage())
 
     def usage(self):
