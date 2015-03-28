@@ -192,6 +192,26 @@ class AddCommandTest(CommandTest.CommandTest):
 
         self.assertEquals(self.output, "|5dh| {today} Bar p:1 +Project\n|5dh| {today} Bar +Project\n".format(today=self.today))
 
+    def test_add_dep10(self):
+        """
+        The text ID shown after adding and after an 'ls' must be equal."
+        By appending the parent's contexts, the textual ID may change.
+        """
+        config("test/data/todolist-uid-contexts.conf")
+
+        # pass identitiy function to for writing output, we're not interested
+        # in this output
+        command = AddCommand.AddCommand(["Foo @Context"], self.todolist, lambda t: t, self.error)
+        command.execute()
+
+        command = AddCommand.AddCommand(["Bar before:x2k"], self.todolist, self.out, self.error)
+        command.execute()
+
+        command = ListCommand.ListCommand(["Bar"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEquals(self.output, "|5dc| {today} Bar p:1 @Context\n|5dc| {today} Bar @Context\n".format(today=self.today))
+
     def test_add_reldate1(self):
         command = AddCommand.AddCommand(["Foo due:today"], self.todolist, self.out, self.error)
         command.execute()
