@@ -141,6 +141,15 @@ class TodoList(TodoListBase):
                 for project in p_from_todo.projects() - p_to_todo.projects():
                     self.append(p_to_todo, "+{}".format(project))
 
+        def append_contexts_to_subtodo():
+            """
+            Appends contexts in the parent todo item that are not present in
+            the sub todo item.
+            """
+            if config().append_parent_contexts():
+                for context in p_from_todo.contexts() - p_to_todo.contexts():
+                    self.append(p_to_todo, "@{}".format(context))
+
         if p_from_todo != p_to_todo and not self._depgraph.has_edge(
             hash(p_from_todo), hash(p_to_todo)):
 
@@ -155,6 +164,7 @@ class TodoList(TodoListBase):
             self._depgraph.add_edge(hash(p_from_todo), hash(p_to_todo), dep_id)
             self._update_parent_cache()
             append_projects_to_subtodo()
+            append_contexts_to_subtodo()
             self.dirty = True
 
     def remove_dependency(self, p_from_todo, p_to_todo):
