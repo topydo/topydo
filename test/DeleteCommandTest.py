@@ -133,11 +133,22 @@ class DeleteCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.todolist.count(), 0)
 
     def test_multi_del3(self):
-        """ Test deletion of multiple items. """
+        """  Fail if any of supplied todo numbers is invalid. """
         command = DeleteCommand(["99", "2"], self.todolist, self.out, self.error, _yes_prompt)
         command.execute()
 
-        self.assertEquals(self.todolist.count(), 1)
+        self.assertFalse(self.todolist.is_dirty())
+        self.assertEquals(self.output, "")
+        self.assertEquals(self.errors, "Invalid todo number given: 99.\n")
+
+    def test_multi_del4(self):
+        """  Check output when all supplied todo numbers are invalid. """
+        command = DeleteCommand(["99", "A"], self.todolist, self.out, self.error, _yes_prompt)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+        self.assertEquals(self.output, "")
+        self.assertEquals(self.errors, "Invalid todo number given: 99.\nInvalid todo number given: A.\n")
 
     def test_empty(self):
         command = DeleteCommand([], self.todolist, self.out, self.error)
