@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from topydo.lib.Command import Command, InvalidCommandArgument
+from topydo.lib.Command import Command
 from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
 from topydo.lib.TodoListBase import InvalidTodoException
 from topydo.lib.Utils import is_valid_priority
@@ -68,7 +68,7 @@ class PriorityCommand(Command):
                         self.error("Invalid priority given.")
                 else:
                     self.error(self.usage())
-            except (IndexError, InvalidCommandArgument):
+            except IndexError:
                 self.error(self.usage())
 
     def usage(self):
