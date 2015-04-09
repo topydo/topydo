@@ -29,7 +29,10 @@ class EditCommand(Command):
         if not super(EditCommand, self).execute():
             return False
 
-        editor = os.environ['EDITOR'] or 'vi'
+        try:
+            editor = os.environ['EDITOR'] or 'vi'
+        except(KeyError):
+            editor =  'vi'
         todo = config().todotxt()
 
         return call([editor, todo]) == 0
