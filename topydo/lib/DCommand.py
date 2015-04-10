@@ -16,12 +16,12 @@
 
 import re
 
-from topydo.lib.Command import Command
+from topydo.lib.MultiCommand import MultiCommand
 from topydo.lib.PrettyPrinter import PrettyPrinter
 from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
 from topydo.lib.TodoListBase import InvalidTodoException
 
-class DCommand(Command):
+class DCommand(MultiCommand):
     """
     A common class for the 'do' and 'del' operations, because they're quite
     alike.
@@ -38,14 +38,7 @@ class DCommand(Command):
 
         self.process_flags()
         self.length = len(self.todolist.todos()) # to determine newly activated todos
-
-        self.todos = []
-        self.invalid_numbers = []
-        for number in self.args:
-            try:
-                self.todos.append(self.todolist.todo(number))
-            except InvalidTodoException:
-                self.invalid_numbers.append(number)
+        self.get_todos(self.args)
 
     def get_flags(self):
         """ Default implementation of getting specific flags. """
@@ -140,14 +133,9 @@ class DCommand(Command):
         if not super(DCommand, self).execute():
             return False
 
-        if len(self.args) == 0:
-            self.error(self.usage())
-        elif len(self.invalid_numbers) > 1 or len(self.invalid_numbers) > 0 and len(self.todos) > 0:
-            for number in self.invalid_numbers:
-                self.error("Invalid todo number given: {}.".format(number))
-        elif len(self.invalid_numbers) == 1 and len(self.todos) == 0:
-            self.error("Invalid todo number given.")
-        else:
+        todo_errors = self.catch_todo_errors()
+
+        if not todo_errors:
             old_active = self._active_todos()
 
             for todo in self.todos:
@@ -159,4 +147,6 @@ class DCommand(Command):
 
             current_active = self._active_todos()
             self._print_unlocked_todos(old_active, current_active)
-
+        else:
+            for error in todo_errors:
+                self.error(error)
