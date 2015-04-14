@@ -129,24 +129,15 @@ class DCommand(MultiCommand):
         """
         pass
 
-    def execute(self):
-        if not super(DCommand, self).execute():
-            return False
+    def execute_multi_specific(self):
+        old_active = self._active_todos()
 
-        todo_errors = self.catch_todo_errors()
+        for todo in self.todos:
+            if todo and self.condition(todo):
+                self._process_subtasks(todo)
+                self.execute_specific(todo)
+            else:
+                self.error(self.condition_failed_text())
 
-        if not todo_errors:
-            old_active = self._active_todos()
-
-            for todo in self.todos:
-                if todo and self.condition(todo):
-                    self._process_subtasks(todo)
-                    self.execute_specific(todo)
-                else:
-                    self.error(self.condition_failed_text())
-
-            current_active = self._active_todos()
-            self._print_unlocked_todos(old_active, current_active)
-        else:
-            for error in todo_errors:
-                self.error(error)
+        current_active = self._active_todos()
+        self._print_unlocked_todos(old_active, current_active)

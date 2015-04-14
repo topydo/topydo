@@ -29,37 +29,29 @@ class PriorityCommand(MultiCommand):
 
         self.get_todos(self.args[:-1])
 
-    def execute(self):
-        if not super(PriorityCommand, self).execute():
-            return False
-
+    def execute_multi_specific(self):
         priority = None
-        todo_errors = self.catch_todo_errors()
 
-        if not todo_errors:
-            try:
-                priority = self.args[-1]
-                self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
+        try:
+            priority = self.args[-1]
+            self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
 
-                if is_valid_priority(priority):
-                    for todo in self.todos:
-                        old_priority = todo.priority()
-                        self.todolist.set_priority(todo, priority)
+            if is_valid_priority(priority):
+                for todo in self.todos:
+                    old_priority = todo.priority()
+                    self.todolist.set_priority(todo, priority)
 
-                        if old_priority and priority and old_priority != priority:
-                            self.out("Priority changed from {} to {}".format(
-                                old_priority, priority))
-                        elif not old_priority:
-                            self.out("Priority set to {}.".format(priority))
+                    if old_priority and priority and old_priority != priority:
+                        self.out("Priority changed from {} to {}".format(
+                            old_priority, priority))
+                    elif not old_priority:
+                        self.out("Priority set to {}.".format(priority))
 
-                        self.out(self.printer.print_todo(todo))
-                else:
-                    self.error("Invalid priority given.")
-            except IndexError:
-                self.error(self.usage())
-        else:
-            for error in todo_errors:
-                self.error(error)
+                    self.out(self.printer.print_todo(todo))
+            else:
+                self.error("Invalid priority given.")
+        except IndexError:
+            self.error(self.usage())
 
     def usage(self):
         return """Synopsis: pri <NUMBER1> [<NUMBER2> ...] <PRIORITY>"""

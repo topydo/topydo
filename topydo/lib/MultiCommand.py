@@ -40,7 +40,7 @@ class MultiCommand(Command):
             except InvalidTodoException:
                 self.invalid_numbers.append(number)
 
-    def catch_todo_errors(self):
+    def _catch_todo_errors(self):
         """
         Returns None or list of error messages depending on number of valid todo
         objects and number of invalid todo IDs.
@@ -62,3 +62,22 @@ class MultiCommand(Command):
             return errors
         else:
             return None
+
+    def execute_multi_specific(self):
+        """
+        Operations specific for particular command dealing with multiple todo
+        IDs.
+        """
+        pass
+
+    def execute(self):
+        if not super(MultiCommand, self).execute():
+            return False
+
+        todo_errors = self._catch_todo_errors()
+
+        if not todo_errors:
+            self.execute_multi_specific()
+        else:
+            for error in todo_errors:
+                self.error(error)
