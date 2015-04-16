@@ -16,12 +16,12 @@
 
 import re
 
-from topydo.lib.Command import Command
+from topydo.lib.MultiCommand import MultiCommand
 from topydo.lib.PrettyPrinter import PrettyPrinter
 from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
 from topydo.lib.TodoListBase import InvalidTodoException
 
-class DCommand(Command):
+class DCommand(MultiCommand):
     """
     A common class for the 'do' and 'del' operations, because they're quite
     alike.
@@ -38,14 +38,7 @@ class DCommand(Command):
 
         self.process_flags()
         self.length = len(self.todolist.todos()) # to determine newly activated todos
-
-        self.todos = []
-        self.invalid_numbers = []
-        for number in self.args:
-            try:
-                self.todos.append(self.todolist.todo(number))
-            except InvalidTodoException:
-                self.invalid_numbers.append(number)
+        self.get_todos(self.args)
 
     def get_flags(self):
         """ Default implementation of getting specific flags. """
@@ -136,27 +129,15 @@ class DCommand(Command):
         """
         pass
 
-    def execute(self):
-        if not super(DCommand, self).execute():
-            return False
+    def execute_multi_specific(self):
+        old_active = self._active_todos()
 
-        if len(self.args) == 0:
-            self.error(self.usage())
-        elif len(self.invalid_numbers) > 1 or len(self.invalid_numbers) > 0 and len(self.todos) > 0:
-            for number in self.invalid_numbers:
-                self.error("Invalid todo number given: {}.".format(number))
-        elif len(self.invalid_numbers) == 1 and len(self.todos) == 0:
-            self.error("Invalid todo number given.")
-        else:
-            old_active = self._active_todos()
+        for todo in self.todos:
+            if todo and self.condition(todo):
+                self._process_subtasks(todo)
+                self.execute_specific(todo)
+            else:
+                self.error(self.condition_failed_text())
 
-            for todo in self.todos:
-                if todo and self.condition(todo):
-                    self._process_subtasks(todo)
-                    self.execute_specific(todo)
-                else:
-                    self.error(self.condition_failed_text())
-
-            current_active = self._active_todos()
-            self._print_unlocked_todos(old_active, current_active)
-
+        current_active = self._active_todos()
+        self._print_unlocked_todos(old_active, current_active)
