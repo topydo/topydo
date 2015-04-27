@@ -58,11 +58,15 @@ class View(object):
 
         # since we're using filters, always use PrettyPrinter
         printer = PrettyPrinter()
+
         printer.add_filter(PrettyPrinterNumbers(self._todolist))
-        printer.add_filter(PrettyPrinterColorFilter())
 
         for ppf in p_pp_filters:
             printer.add_filter(ppf)
+
+        # apply colors at the last step, the ANSI codes may confuse the
+        # preceding filters.
+        printer.add_filter(PrettyPrinterColorFilter())
 
         return printer.print_list(self._viewdata)
 
