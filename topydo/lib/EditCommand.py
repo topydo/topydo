@@ -133,11 +133,24 @@ class EditCommand(MultiCommand, ListCommand):
                         'Check your $EDITOR and/or $PATH')
 
     def usage(self):
-        return """Synopsis: edit"""
+        return """Synopsis:
+  edit
+  edit <NUMBER1> [<NUMBER2> ...]
+  edit -e [-x] [expression]"""
 
     def help(self):
-        return """Launches a text editor with the todo.txt file.
+        return """\
+Launches a text editor to edit todos.
+
+Without any arguments it will just open todo.txt file. Alternatively it can
+edit todo item(s) with the given number(s) or edit relevant todos matching
+given expression. Definition of relevant todo is given in the help message
+of `ls` command.
 
 By default it will use $EDITOR in your environment, otherwise it will fall back
 to 'vi'.
+
+-e : Treat the subsequent arguments as an expression.
+-x : Edit *all* todos matching the expression (i.e. do not filter on
+     dependencies or relevance).
 """
