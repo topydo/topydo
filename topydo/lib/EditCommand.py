@@ -142,10 +142,10 @@ class EditCommand(MultiCommand, ListCommand):
         return """\
 Launches a text editor to edit todos.
 
-Without any arguments it will just open todo.txt file. Alternatively it can
+Without any arguments it will just open the todo.txt file. Alternatively it can
 edit todo item(s) with the given number(s) or edit relevant todos matching
-given expression. Definition of relevant todo is given in the help message
-of `ls` command.
+the given expression. See `topydo help ls` for more information on relevant
+todo items.
 
 By default it will use $EDITOR in your environment, otherwise it will fall back
 to 'vi'.
