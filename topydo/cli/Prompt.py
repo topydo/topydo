@@ -60,8 +60,8 @@ class PromptApplication(CLIApplicationBase):
         """ Main entry function. """
         args = self._process_flags()
 
-        todofile = TodoFile.TodoFile(self.path)
-        self.todolist = TodoList.TodoList(todofile.read())
+        self.todofile = TodoFile.TodoFile(self.path)
+        self.todolist = TodoList.TodoList(self.todofile.read())
 
         while True:
             try:
@@ -78,7 +78,7 @@ class PromptApplication(CLIApplicationBase):
                     if config().keep_sorted():
                         self._execute(SortCommand, [])
 
-                    todofile.write(str(self.todolist))
+                    self.todofile.write(str(self.todolist))
 
 def main():
     """ Main entry point of the CLI. """
