@@ -18,7 +18,7 @@
 
 import sys
 
-from topydo.cli.CLIApplicationBase import CLIApplicationBase, write, error
+from topydo.cli.CLIApplicationBase import CLIApplicationBase, error
 from topydo.lib import TodoFile
 from topydo.lib.Config import config, ConfigError
 
