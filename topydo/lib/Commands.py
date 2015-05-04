@@ -28,6 +28,7 @@ from topydo.lib.DepCommand import DepCommand
 from topydo.lib.DepriCommand import DepriCommand
 from topydo.lib.DoCommand import DoCommand
 from topydo.lib.EditCommand import EditCommand
+from topydo.lib.ExitCommand import ExitCommand
 from topydo.lib.IcalCommand import IcalCommand
 from topydo.lib.ListCommand import ListCommand
 from topydo.lib.ListContextCommand import ListContextCommand
@@ -46,6 +47,7 @@ _SUBCOMMAND_MAP = {
   'depri': DepriCommand,
   'do': DoCommand,
   'edit': EditCommand,
+  'exit': ExitCommand, # used for the prompt
   'ical': IcalCommand,
   'ls': ListCommand,
   'lscon': ListContextCommand,
@@ -58,6 +60,7 @@ _SUBCOMMAND_MAP = {
   'listprojects': ListProjectCommand,
   'postpone': PostponeCommand,
   'pri': PriorityCommand,
+  'quit': ExitCommand,
   'rm': DeleteCommand,
   'sort': SortCommand,
   'tag': TagCommand,
