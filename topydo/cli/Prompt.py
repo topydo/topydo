@@ -20,6 +20,7 @@ import sys
 
 from topydo.cli.CLIApplicationBase import CLIApplicationBase, error
 from prompt_toolkit.contrib.shortcuts import get_input
+from prompt_toolkit.contrib.completers import WordCompleter
 
 from topydo.lib.Config import config, ConfigError
 
@@ -46,6 +47,15 @@ class PromptApplication(CLIApplicationBase):
     def __init__(self):
         super(PromptApplication, self).__init__()
 
+    def completer(self):
+        """ Returns a completer instance with projects and contexts. """
+        projects = ["+" + project for project in self.todolist.projects()]
+        contexts = ["@" + context for context in self.todolist.contexts()]
+
+        complete_list = projects + contexts
+
+        return WordCompleter(complete_list)
+
     def run(self):
         """ Main entry function. """
         args = self._process_flags()
@@ -55,7 +65,7 @@ class PromptApplication(CLIApplicationBase):
 
         while True:
             try:
-                user_input = get_input('topydo> ').split()
+                user_input = get_input('topydo> ', completer=self.completer()).split()
             except (EOFError, KeyboardInterrupt):
                 sys.exit(0)
 
