@@ -18,7 +18,7 @@ import unittest
 
 import CommandTest
 import TestFacilities
-from topydo.lib.ListContextCommand import ListContextCommand
+from topydo.commands.ListContextCommand import ListContextCommand
 
 class ListContextCommandTest(CommandTest.CommandTest):
     def test_contexts1(self):

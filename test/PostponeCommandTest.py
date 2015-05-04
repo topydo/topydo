@@ -18,7 +18,7 @@ from datetime import date, timedelta
 import unittest
 
 import CommandTest
-from topydo.lib.PostponeCommand import PostponeCommand
+from topydo.commands.PostponeCommand import PostponeCommand
 from topydo.lib.TodoList import TodoList
 
 class PostponeCommandTest(CommandTest.CommandTest):

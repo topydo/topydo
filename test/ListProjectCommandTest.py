@@ -18,7 +18,7 @@ import unittest
 
 import CommandTest
 import TestFacilities
-from topydo.lib.ListProjectCommand import ListProjectCommand
+from topydo.commands.ListProjectCommand import ListProjectCommand
 
 class ListProjectCommandTest(CommandTest.CommandTest):
     def test_projects1(self):

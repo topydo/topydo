@@ -16,7 +16,7 @@
 
 import unittest
 
-from topydo.lib.AppendCommand import AppendCommand
+from topydo.commands.AppendCommand import AppendCommand
 import CommandTest
 from topydo.lib.TodoList import TodoList
 

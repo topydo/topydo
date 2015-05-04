@@ -16,7 +16,7 @@
 
 import unittest
 
-from topydo.lib.ArchiveCommand import ArchiveCommand
+from topydo.commands.ArchiveCommand import ArchiveCommand
 import CommandTest
 import TestFacilities
 from topydo.lib.TodoList import TodoList

@@ -18,7 +18,7 @@ import unittest
 
 import CommandTest
 from topydo.lib.Config import config
-from topydo.lib.DeleteCommand import DeleteCommand
+from topydo.commands.DeleteCommand import DeleteCommand
 from topydo.lib.TodoList import TodoList
 from topydo.lib.TodoListBase import InvalidTodoException
 

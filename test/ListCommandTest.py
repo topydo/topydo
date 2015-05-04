@@ -18,7 +18,7 @@ import unittest
 
 from topydo.lib.Config import config
 import CommandTest
-from topydo.lib.ListCommand import ListCommand
+from topydo.commands.ListCommand import ListCommand
 import TestFacilities
 
 class ListCommandTest(CommandTest.CommandTest):

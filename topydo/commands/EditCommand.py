@@ -18,7 +18,7 @@ import os
 from subprocess import call, check_call, CalledProcessError
 import tempfile
 
-from topydo.lib.ListCommand import ListCommand
+from topydo.commands.ListCommand import ListCommand
 from topydo.lib.MultiCommand import MultiCommand
 from topydo.lib.Config import config
 from topydo.lib.Todo import Todo

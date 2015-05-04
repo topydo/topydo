@@ -19,7 +19,7 @@ Implements a subcommand that outputs an iCalendar file.
 """
 
 from topydo.lib.IcalPrinter import IcalPrinter
-from topydo.lib.ListCommand import ListCommand
+from topydo.commands.ListCommand import ListCommand
 
 class IcalCommand(ListCommand):
     def __init__(self, p_args, p_todolist,

@@ -21,22 +21,22 @@ instance based on an argument list.
 
 from topydo.lib.Config import config
 
-from topydo.lib.AddCommand import AddCommand
-from topydo.lib.AppendCommand import AppendCommand
-from topydo.lib.DeleteCommand import DeleteCommand
-from topydo.lib.DepCommand import DepCommand
-from topydo.lib.DepriCommand import DepriCommand
-from topydo.lib.DoCommand import DoCommand
-from topydo.lib.EditCommand import EditCommand
-from topydo.lib.ExitCommand import ExitCommand
-from topydo.lib.IcalCommand import IcalCommand
-from topydo.lib.ListCommand import ListCommand
-from topydo.lib.ListContextCommand import ListContextCommand
-from topydo.lib.ListProjectCommand import ListProjectCommand
-from topydo.lib.PostponeCommand import PostponeCommand
-from topydo.lib.PriorityCommand import PriorityCommand
-from topydo.lib.SortCommand import SortCommand
-from topydo.lib.TagCommand import TagCommand
+from topydo.commands.AddCommand import AddCommand
+from topydo.commands.AppendCommand import AppendCommand
+from topydo.commands.DeleteCommand import DeleteCommand
+from topydo.commands.DepCommand import DepCommand
+from topydo.commands.DepriCommand import DepriCommand
+from topydo.commands.DoCommand import DoCommand
+from topydo.commands.EditCommand import EditCommand
+from topydo.commands.ExitCommand import ExitCommand
+from topydo.commands.IcalCommand import IcalCommand
+from topydo.commands.ListCommand import ListCommand
+from topydo.commands.ListContextCommand import ListContextCommand
+from topydo.commands.ListProjectCommand import ListProjectCommand
+from topydo.commands.PostponeCommand import PostponeCommand
+from topydo.commands.PriorityCommand import PriorityCommand
+from topydo.commands.SortCommand import SortCommand
+from topydo.commands.TagCommand import TagCommand
 
 _SUBCOMMAND_MAP = {
   'add': AddCommand,

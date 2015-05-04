@@ -32,8 +32,8 @@ except ConfigError as config_error:
     error(str(config_error))
     sys.exit(1)
 
-from topydo.lib.Commands import get_subcommand
-from topydo.lib.SortCommand import SortCommand
+from topydo.Commands import get_subcommand
+from topydo.commands.SortCommand import SortCommand
 from topydo.lib import TodoFile
 from topydo.lib import TodoList
 

@@ -19,7 +19,7 @@ import unittest
 
 from topydo.lib.Config import config
 import CommandTest
-from topydo.lib.IcalCommand import IcalCommand
+from topydo.commands.IcalCommand import IcalCommand
 import TestFacilities
 
 class IcalCommandTest(CommandTest.CommandTest):

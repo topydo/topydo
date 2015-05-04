@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from topydo.lib.DCommand import DCommand
+from topydo.commands.DCommand import DCommand
 
 class DeleteCommand(DCommand):
     def __init__(self, p_args, p_todolist,

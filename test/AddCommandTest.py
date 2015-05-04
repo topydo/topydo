@@ -17,8 +17,8 @@
 from datetime import date
 import unittest
 
-from topydo.lib import AddCommand
-from topydo.lib import ListCommand
+from topydo.commands import AddCommand
+from topydo.commands import ListCommand
 import CommandTest
 from topydo.lib.Config import config
 from topydo.lib import TodoList

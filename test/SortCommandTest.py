@@ -18,7 +18,7 @@ import unittest
 
 import CommandTest
 from topydo.lib.Config import config
-from topydo.lib.SortCommand import SortCommand
+from topydo.commands.SortCommand import SortCommand
 import TestFacilities
 
 class SortCommandTest(CommandTest.CommandTest):

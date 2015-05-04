@@ -17,7 +17,7 @@
 import unittest
 
 import CommandTest
-from topydo.lib.DepCommand import DepCommand
+from topydo.commands.DepCommand import DepCommand
 from topydo.lib.TodoList import TodoList
 
 class DepCommandTest(CommandTest.CommandTest):

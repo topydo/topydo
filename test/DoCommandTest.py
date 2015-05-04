@@ -18,7 +18,7 @@ from datetime import date, timedelta
 import unittest
 
 import CommandTest
-from topydo.lib.DoCommand import DoCommand
+from topydo.commands.DoCommand import DoCommand
 from topydo.lib.TodoList import TodoList
 
 def _yes_prompt(self):

@@ -31,7 +31,7 @@ except ConfigError as config_error:
     error(str(config_error))
     sys.exit(1)
 
-from topydo.lib.Commands import get_subcommand
+from topydo.Commands import get_subcommand
 from topydo.lib import TodoList
 
 class CLIApplication(CLIApplicationBase):

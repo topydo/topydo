@@ -17,7 +17,7 @@
 import unittest
 
 import CommandTest
-from topydo.lib.DepriCommand import DepriCommand
+from topydo.commands.DepriCommand import DepriCommand
 from topydo.lib.TodoList import TodoList
 
 class DepriCommandTest(CommandTest.CommandTest):

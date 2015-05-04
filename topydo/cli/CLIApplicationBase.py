@@ -85,8 +85,8 @@ except ConfigError as config_error:
     error(str(config_error))
     sys.exit(1)
 
-from topydo.lib.ArchiveCommand import ArchiveCommand
-from topydo.lib.SortCommand import SortCommand
+from topydo.commands.ArchiveCommand import ArchiveCommand
+from topydo.commands.SortCommand import SortCommand
 from topydo.lib import TodoFile
 from topydo.lib import TodoList
 from topydo.lib import TodoListBase
