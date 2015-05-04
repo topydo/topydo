@@ -1,5 +1,5 @@
 # Topydo - A todo.txt client written in Python.
-# Copyright (C) 2014 - 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
+# Copyright (C) 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,10 +19,7 @@
 import getopt
 import sys
 
-def usage():
-    """ Prints the command-line usage of topydo. """
-
-    print """\
+USAGE = """\
 Synopsis: topydo [-c <config>] [-d <archive>] [-t <todo.txt>] subcommand [help|args]
           topydo -h
           topydo -v
@@ -52,8 +49,6 @@ Available commands:
 
 Run `topydo help <subcommand>` for command-specific help.
 """
-
-    sys.exit(0)
 
 def write(p_file, p_string):
     """
@@ -90,7 +85,6 @@ except ConfigError as config_error:
     error(str(config_error))
     sys.exit(1)
 
-from topydo.lib.Commands import get_subcommand
 from topydo.lib.ArchiveCommand import ArchiveCommand
 from topydo.lib.SortCommand import SortCommand
 from topydo.lib import TodoFile
@@ -98,7 +92,7 @@ from topydo.lib import TodoList
 from topydo.lib import TodoListBase
 from topydo.lib.Utils import escape_ansi
 
-class CLIApplication(object):
+class CLIApplicationBase(object):
     """
     Class that represents the Command Line Interface of Topydo.
 
@@ -110,6 +104,12 @@ class CLIApplication(object):
         self.config = config()
         self.path = self.config.todotxt()
         self.archive_path = self.config.archive()
+
+        self.todofile = None
+
+    def _usage(self):
+        print USAGE
+        sys.exit(0)
 
     def _process_flags(self):
         try:
@@ -131,7 +131,7 @@ class CLIApplication(object):
             elif opt == "-v":
                 version()
             else:
-                usage()
+                self._usage()
 
         self.path = alt_path if alt_path else self.config.todotxt()
         self.archive_path = alt_archive \
@@ -162,6 +162,12 @@ class CLIApplication(object):
         else:
             pass # TODO
 
+    def _input(self):
+        """
+        Returns a function that retrieves user input.
+        """
+        return raw_input
+
     def _execute(self, p_command, p_args):
         """
         Execute a subcommand with arguments. p_command is a class (not an
@@ -172,36 +178,23 @@ class CLIApplication(object):
             self.todolist,
             lambda o: write(sys.stdout, o),
             error,
-            raw_input)
+            self._input())
 
-        return False if command.execute() == False else True
+        if command.execute() != False:
+            self._post_execute()
+            return True
 
-    def run(self):
-        """ Main entry function. """
-        args = self._process_flags()
+        return False
 
-        todofile = TodoFile.TodoFile(self.path)
-        self.todolist = TodoList.TodoList(todofile.read())
-
-        (subcommand, args) = get_subcommand(args)
-
-        if subcommand == None:
-            usage()
-
-        if self._execute(subcommand, args) == False:
-            sys.exit(1)
-
+    def _post_execute(self):
         if self.todolist.is_dirty():
             self._archive()
 
             if config().keep_sorted():
                 self._execute(SortCommand, [])
 
-            todofile.write(str(self.todolist))
+            self.todofile.write(str(self.todolist))
 
-def main():
-    """ Main entry point of the CLI. """
-    CLIApplication().run()
+    def run(self):
+        raise NotImplementedError
 
-if __name__ == '__main__':
-    main()

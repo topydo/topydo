@@ -13,7 +13,7 @@ setup(
         'prompt-toolkit': ['prompt-toolkit'],
     },
     entry_points= {
-        'console_scripts': ['topydo = topydo.cli.Main:main'],
+        'console_scripts': ['topydo = topydo.cli.CLI:main'],
     },
     classifiers = [
         "Development Status :: 4 - Beta",
