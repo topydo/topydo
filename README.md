@@ -1,6 +1,8 @@
 topydo
 ======
 
+[![Build Status](https://travis-ci.org/bram85/topydo.svg?branch=master)](https://travis-ci.org/bram85/topydo)
+
 topydo is a todo list application using the [todo.txt format][1]. It is heavily
 inspired by the [todo.txt CLI][2] by Gina Trapani. This tool is actually a
 merge between the todo.txt CLI and a [number of extensions][3] that I wrote
