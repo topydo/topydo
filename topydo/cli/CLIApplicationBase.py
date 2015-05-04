@@ -94,9 +94,9 @@ from topydo.lib.Utils import escape_ansi
 
 class CLIApplicationBase(object):
     """
-    Class that represents the Command Line Interface of Topydo.
+    Base class for Command Line Interfaces (CLI) for topydo.
 
-    Handles input/output of the various subcommand.
+    Handles input/output of the various subcommands.
     """
     def __init__(self):
         self.todolist = TodoList.TodoList([])
