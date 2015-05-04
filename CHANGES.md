@@ -2,10 +2,13 @@
 ---
 
 * 'edit' subcommand accepts a list of numbers or an expression to select which
-  items to edit. (Jacek Sowiński).
+  items to edit. (Jacek Sowiński)
 * The commands 'del', 'do', 'pri' and 'postpone' can operate on multiple todo
   items at once. (Jacek Sowiński)
 * A new 'ical' subcommand that outputs in the iCalendar format.
+* New configuration option: `append_parent_contexts`. Similar to
+  `append_parent_projects` where the parent's contexts are automatically added
+  to child todo items. (Jacek Sowiński)
 * New configuration option: `hide_tags` to hide certain tags from the `ls`
   output. Multiple tags can be specified separated by commas. By default, `p`,
   `id` and `ical` are hidden.
