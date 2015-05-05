@@ -1,11 +1,11 @@
 0.3
 ---
 
-* 'edit' subcommand accepts a list of numbers or an expression to select which
+* `edit` subcommand accepts a list of numbers or an expression to select which
   items to edit. (Jacek Sowiński)
-* The commands 'del', 'do', 'pri' and 'postpone' can operate on multiple todo
-  items at once. (Jacek Sowiński)
-* A new 'ical' subcommand that outputs in the iCalendar format.
+* The commands `del`, `do`, `pri`, `depri` and `postpone` can operate on multiple
+  todo items at once. (Jacek Sowiński)
+* A new `ical` subcommand that outputs in the iCalendar format.
 * New configuration option: `append_parent_contexts`. Similar to
   `append_parent_projects` where the parent's contexts are automatically added
   to child todo items. (Jacek Sowiński)
