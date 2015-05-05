@@ -20,7 +20,7 @@ value of each item.
 """
 
 _TABLE_SIZES = {
-    # we choose a large table size to reduce the change of collisions.
+    # we choose a large table size to reduce the chance of collisions.
     3: 46649, # largest prime under zzz_36
     4: 1679609 # largest prime under zzzz_36
 }
