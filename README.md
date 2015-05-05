@@ -1,6 +1,8 @@
 topydo
 ======
 
+[![Join the chat at https://gitter.im/bram85/topydo](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/bram85/topydo?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 topydo is a todo list application using the [todo.txt format][1]. It is heavily
 inspired by the [todo.txt CLI][2] by Gina Trapani. This tool is actually a
 merge between the todo.txt CLI and a [number of extensions][3] that I wrote
