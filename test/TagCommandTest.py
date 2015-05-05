@@ -195,6 +195,14 @@ class TagCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.output, "|  4| Fnord\n")
         self.assertEquals(self.errors, "")
 
+    def test_no_tag(self):
+        command = TagCommand(["4"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+        self.assertEquals(self.output, "")
+        self.assertEquals(self.errors, command.usage() + "\n")
+
     def test_help(self):
         command = TagCommand(["help"], self.todolist, self.out, self.error)
         command.execute()
