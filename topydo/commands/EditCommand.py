@@ -32,12 +32,15 @@ class EditCommand(MultiCommand, ListCommand):
             p_error, p_input)
 
         self.is_expression = False
+        self.edit_archive = False
 
     def _process_flags(self):
-        opts, args = self.getopt('xe')
+        opts, args = self.getopt('xed')
 
         for opt, value in opts:
-            if opt == '-x':
+            if opt == '-d':
+                self.edit_archive = True
+            elif opt == '-x':
                 self.show_all = True
             elif opt == '-e':
                 self.is_expression = True
@@ -101,6 +104,11 @@ class EditCommand(MultiCommand, ListCommand):
             else:
                 self._process_flags()
 
+                if self.edit_archive:
+                    archive = config().archive()
+
+                    return call([editor, archive]) == 0
+
                 if self.is_expression:
                     self.todos = self._view()._viewdata
                 else:
@@ -136,7 +144,8 @@ class EditCommand(MultiCommand, ListCommand):
         return """Synopsis:
   edit
   edit <NUMBER1> [<NUMBER2> ...]
-  edit -e [-x] [expression]"""
+  edit -e [-x] [expression]
+  edit -d"""
 
     def help(self):
         return """\
@@ -145,7 +154,7 @@ Launches a text editor to edit todos.
 Without any arguments it will just open the todo.txt file. Alternatively it can
 edit todo item(s) with the given number(s) or edit relevant todos matching
 the given expression. See `topydo help ls` for more information on relevant
-todo items.
+todo items. It is also possible to open the archive file.
 
 By default it will use $EDITOR in your environment, otherwise it will fall back
 to 'vi'.
@@ -153,4 +162,5 @@ to 'vi'.
 -e : Treat the subsequent arguments as an expression.
 -x : Edit *all* todos matching the expression (i.e. do not filter on
      dependencies or relevance).
+-d : Open the archive file.
 """

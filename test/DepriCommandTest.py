@@ -26,20 +26,21 @@ class DepriCommandTest(CommandTest.CommandTest):
         todos = [
             "(A) Foo",
             "Bar",
+            "(B) Baz",
         ]
 
         self.todolist = TodoList(todos)
 
-    def test_set_prio1(self):
+    def test_depri1(self):
         command = DepriCommand(["1"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
         self.assertEquals(self.todolist.todo(1).priority(), None)
-        self.assertEquals(self.output, "Priority removed.\nFoo\n")
+        self.assertEquals(self.output, "Priority removed.\n|  1| Foo\n")
         self.assertEquals(self.errors, "")
 
-    def test_set_prio2(self):
+    def test_depri2(self):
         command = DepriCommand(["2"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -48,14 +49,25 @@ class DepriCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.output, "")
         self.assertEquals(self.errors, "")
 
-    def test_set_prio3(self):
+    def test_depri3(self):
         command = DepriCommand(["Foo"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
         self.assertEquals(self.todolist.todo(1).priority(), None)
-        self.assertEquals(self.output, "Priority removed.\nFoo\n")
+        self.assertEquals(self.output, "Priority removed.\n|  1| Foo\n")
         self.assertEquals(self.errors, "")
+
+    def test_depri4(self):
+        command = DepriCommand(["1","Baz"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEquals(self.todolist.todo(1).priority(), None)
+        self.assertEquals(self.todolist.todo(3).priority(), None)
+        self.assertEquals(self.output, "Priority removed.\n|  1| Foo\nPriority removed.\n|  3| Baz\n")
+        self.assertEquals(self.errors, "")
+
 
     def test_invalid1(self):
         command = DepriCommand(["99"], self.todolist, self.out, self.error)
@@ -64,6 +76,22 @@ class DepriCommandTest(CommandTest.CommandTest):
         self.assertFalse(self.todolist.is_dirty())
         self.assertFalse(self.output)
         self.assertEquals(self.errors, "Invalid todo number given.\n")
+
+    def test_invalid2(self):
+        command = DepriCommand(["99", "1"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.output)
+        self.assertEquals(self.errors, "Invalid todo number given: 99.\n")
+
+    def test_invalid3(self):
+        command = DepriCommand(["99", "FooBar"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.output)
+        self.assertEquals(self.errors, "Invalid todo number given: 99.\nInvalid todo number given: FooBar.\n")
 
     def test_empty(self):
         command = DepriCommand([], self.todolist, self.out, self.error)

@@ -36,6 +36,7 @@ Available commands:
 * append (app)
 * del (rm)
 * dep
+* depri
 * do
 * edit
 * ical

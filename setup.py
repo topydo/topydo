@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name = "topydo",
     packages = ["topydo", "topydo.lib", "topydo.cli"],
-    version = "0.2",
+    version = "0.3",
     description = "A command-line todo list application using the todo.txt format.",
     author = "Bram Schoenmakers",
     author_email = "me@bramschoenmakers.nl",
@@ -11,6 +11,7 @@ setup(
     extras_require = {
         'ical': ['icalendar'],
         'prompt-toolkit': ['prompt-toolkit'],
+        'edit-cmd-tests': ['mock'],
     },
     entry_points= {
         'console_scripts': ['topydo = topydo.cli.CLI:main'],
