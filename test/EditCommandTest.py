@@ -18,7 +18,7 @@ import unittest
 import mock
 
 import CommandTest
-from topydo.lib.EditCommand import EditCommand
+from topydo.commands.EditCommand import EditCommand
 from topydo.lib.TodoList import TodoList
 from topydo.lib.Todo import Todo
 
@@ -34,7 +34,7 @@ class EditCommandTest(CommandTest.CommandTest):
         self.todolist = TodoList(todos)
 
 
-    @mock.patch('topydo.lib.EditCommand.EditCommand._open_in_editor')
+    @mock.patch('topydo.commands.EditCommand.EditCommand._open_in_editor')
     def test_edit1(self, mock_open_in_editor):
         """ Preserve dependencies after editing. """
         mock_open_in_editor.return_value = 0
@@ -46,8 +46,8 @@ class EditCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "")
         self.assertEquals(str(self.todolist), "Bar p:1 @test\nBaz @test\nFoo id:1")
 
-    @mock.patch('topydo.lib.EditCommand.EditCommand._todos_from_temp')
-    @mock.patch('topydo.lib.EditCommand.EditCommand._open_in_editor')
+    @mock.patch('topydo.commands.EditCommand.EditCommand._todos_from_temp')
+    @mock.patch('topydo.commands.EditCommand.EditCommand._open_in_editor')
     def test_edit2(self, mock_open_in_editor, mock_todos_from_temp):
         """ Edit some todo. """
         mock_open_in_editor.return_value = 0
@@ -76,8 +76,8 @@ class EditCommandTest(CommandTest.CommandTest):
         self.assertFalse(self.todolist.is_dirty())
         self.assertEquals(self.errors, "Invalid todo number given: 4.\n")
 
-    @mock.patch('topydo.lib.EditCommand.EditCommand._todos_from_temp')
-    @mock.patch('topydo.lib.EditCommand.EditCommand._open_in_editor')
+    @mock.patch('topydo.commands.EditCommand.EditCommand._todos_from_temp')
+    @mock.patch('topydo.commands.EditCommand.EditCommand._open_in_editor')
     def test_edit5(self, mock_open_in_editor, mock_todos_from_temp):
         """ Don't let to delete todos acidentally while editing. """
         mock_open_in_editor.return_value = 0
@@ -90,8 +90,8 @@ class EditCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.errors, "Number of edited todos is not equal to number of supplied todo IDs.\n")
         self.assertEquals(str(self.todolist), "Foo id:1\nBar p:1 @test\nBaz @test")
 
-    @mock.patch('topydo.lib.EditCommand.EditCommand._todos_from_temp')
-    @mock.patch('topydo.lib.EditCommand.EditCommand._open_in_editor')
+    @mock.patch('topydo.commands.EditCommand.EditCommand._todos_from_temp')
+    @mock.patch('topydo.commands.EditCommand.EditCommand._open_in_editor')
     def test_edit_expr(self, mock_open_in_editor, mock_todos_from_temp):
         """ Edit todos matching expression. """
         mock_open_in_editor.return_value = 0
