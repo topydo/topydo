@@ -1,5 +1,5 @@
 # Topydo - A todo.txt client written in Python.
-# Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
+# Copyright (C) 2014 - 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,14 +16,15 @@
 
 from datetime import date, timedelta
 
-from topydo.lib.Command import Command, InvalidCommandArgument
+from topydo.lib.MultiCommand import MultiCommand
+from topydo.lib.Command import InvalidCommandArgument
 from topydo.lib.Config import config
-from topydo.lib.PrettyPrinter import pretty_print
+from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
 from topydo.lib.RelativeDate import relative_date_to_date
 from topydo.lib.TodoListBase import InvalidTodoException
 from topydo.lib.Utils import date_string_to_date
 
-class PostponeCommand(Command):
+class PostponeCommand(MultiCommand):
     def __init__(self, p_args, p_todolist,
                  p_out=lambda a: None,
                  p_err=lambda a: None,
@@ -32,6 +33,8 @@ class PostponeCommand(Command):
             p_args, p_todolist, p_out, p_err, p_prompt)
 
         self.move_start_date = False
+        self._process_flags()
+        self.get_todos(self.args[:-1])
 
     def _process_flags(self):
         opts, args = self.getopt('s')
@@ -42,7 +45,7 @@ class PostponeCommand(Command):
 
         self.args = args
 
-    def execute(self):
+    def execute_multi_specific(self):
         def _get_offset(p_todo):
             offset = p_todo.tag_value(
                 config().tag_due(), date.today().isoformat())
@@ -53,45 +56,38 @@ class PostponeCommand(Command):
 
             return offset_date
 
-        if not super(PostponeCommand, self).execute():
-            return False
-
-        self._process_flags()
-
         try:
-            todo = self.todolist.todo(self.argument(0))
-            pattern = self.argument(1)
+            pattern = self.args[-1]
+            self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
 
-            # pdb.set_trace()
-            offset = _get_offset(todo)
-            new_due = relative_date_to_date(pattern, offset)
+            for todo in self.todos:
+                offset = _get_offset(todo)
+                new_due = relative_date_to_date(pattern, offset)
 
-            if new_due:
-                if self.move_start_date and todo.has_tag(config().tag_start()):
-                    length = todo.length()
-                    new_start = new_due - timedelta(length)
-                    todo.set_tag(config().tag_start(), new_start.isoformat())
+                if new_due:
+                    if self.move_start_date and todo.has_tag(config().tag_start()):
+                        length = todo.length()
+                        new_start = new_due - timedelta(length)
+                        todo.set_tag(config().tag_start(), new_start.isoformat())
 
-                todo.set_tag(config().tag_due(), new_due.isoformat())
+                    todo.set_tag(config().tag_due(), new_due.isoformat())
 
-                self.todolist.set_dirty()
-                self.out(pretty_print(todo, [self.todolist.pp_number()]))
-            else:
-                self.error("Invalid date pattern given.")
-
-        except InvalidCommandArgument:
+                    self.todolist.set_dirty()
+                    self.out(self.printer.print_todo(todo))
+                else:
+                    self.error("Invalid date pattern given.")
+                    break
+        except (InvalidCommandArgument, IndexError):
             self.error(self.usage())
-        except (InvalidTodoException):
-            self.error("Invalid todo number given.")
 
     def usage(self):
-        return "Synopsis: postpone [-s] <NUMBER> <PATTERN>"
+        return "Synopsis: postpone [-s] <NUMBER> [<NUMBER2> ...] <PATTERN>"
 
     def help(self):
         return """\
-Postpone a todo item with the given number and the given pattern.
+Postpone the todo item(s) with the given number(s) and the given pattern.
 
-Postponing is done by adjusting the due date of the todo, and if the -s flag is
+Postponing is done by adjusting the due date(s) of the todo(s), and if the -s flag is
 given, the start date accordingly.
 
 The pattern is a relative date, written in the format <COUNT><PERIOD> where

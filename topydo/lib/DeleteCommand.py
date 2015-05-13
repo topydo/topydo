@@ -15,7 +15,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from topydo.lib.DCommand import DCommand
-from topydo.lib.PrettyPrinter import pretty_print
 
 class DeleteCommand(DCommand):
     def __init__(self, p_args, p_todolist,
@@ -35,7 +34,7 @@ class DeleteCommand(DCommand):
         self.todolist.delete(p_todo)
 
     def execute_specific(self, p_todo):
-        self.out(self.prefix() + pretty_print(p_todo))
+        self.out(self.prefix() + self.printer.print_todo(p_todo))
         self.execute_specific_core(p_todo)
 
     def usage(self):

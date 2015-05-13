@@ -16,11 +16,12 @@
 
 import re
 
-from topydo.lib.Command import Command, InvalidCommandArgument
-from topydo.lib.PrettyPrinter import pretty_print, pretty_print_list
+from topydo.lib.MultiCommand import MultiCommand
+from topydo.lib.PrettyPrinter import PrettyPrinter
+from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
 from topydo.lib.TodoListBase import InvalidTodoException
 
-class DCommand(Command):
+class DCommand(MultiCommand):
     """
     A common class for the 'do' and 'del' operations, because they're quite
     alike.
@@ -37,13 +38,7 @@ class DCommand(Command):
 
         self.process_flags()
         self.length = len(self.todolist.todos()) # to determine newly activated todos
-
-        self.todos = []
-        for number in self.args:
-            try:
-                self.todos.append(self.todolist.todo(number))
-            except InvalidTodoException:
-                self.todos.append(None)
+        self.get_todos(self.args)
 
     def get_flags(self):
         """ Default implementation of getting specific flags. """
@@ -72,8 +67,9 @@ class DCommand(Command):
         )
 
     def _print_list(self, p_todos):
-        filters = [self.todolist.pp_number()]
-        self.out("\n".join(pretty_print_list(p_todos, filters)))
+        printer = PrettyPrinter()
+        printer.add_filter(PrettyPrinterNumbers(self.todolist))
+        self.out(printer.print_list(p_todos))
 
     def prompt_text(self):
         return "Yes or no? [y/N] "
@@ -93,7 +89,7 @@ class DCommand(Command):
             if not self.force and re.match('^y(es)?$', confirmation, re.I):
                 for child in children:
                     self.execute_specific_core(child)
-                    self.out(self.prefix() + pretty_print(child))
+                    self.out(self.prefix() + self.printer.print_todo(child))
 
     def _print_unlocked_todos(self, p_old, p_new):
         delta = [todo for todo in p_new if todo not in p_old]
@@ -133,24 +129,15 @@ class DCommand(Command):
         """
         pass
 
-    def execute(self):
-        if not super(DCommand, self).execute():
-            return False
+    def execute_multi_specific(self):
+        old_active = self._active_todos()
 
-        if len(self.args) == 0:
-            self.error(self.usage())
-        else:
-            old_active = self._active_todos()
+        for todo in self.todos:
+            if todo and self.condition(todo):
+                self._process_subtasks(todo)
+                self.execute_specific(todo)
+            else:
+                self.error(self.condition_failed_text())
 
-            for todo in self.todos:
-                if not todo:
-                    self.error("Invalid todo number given.")
-                elif todo and self.condition(todo):
-                    self._process_subtasks(todo)
-                    self.execute_specific(todo)
-                else:
-                    self.error(self.condition_failed_text())
-
-            current_active = self._active_todos()
-            self._print_unlocked_todos(old_active, current_active)
-
+        current_active = self._active_todos()
+        self._print_unlocked_todos(old_active, current_active)

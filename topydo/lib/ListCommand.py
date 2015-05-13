@@ -1,5 +1,5 @@
 # Topydo - A todo.txt client written in Python.
-# Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
+# Copyright (C) 2014 - 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,8 +19,12 @@ import re
 from topydo.lib.Command import Command
 from topydo.lib.Config import config
 from topydo.lib import Filter
-from topydo.lib.PrettyPrinter import pp_indent
+from topydo.lib.PrettyPrinterFilter import (
+    PrettyPrinterIndentFilter,
+    PrettyPrinterHideTagFilter
+)
 from topydo.lib.Sorter import Sorter
+from topydo.lib.View import View
 
 class ListCommand(Command):
     def __init__(self, p_args, p_todolist,
@@ -74,17 +78,29 @@ class ListCommand(Command):
 
         return filters
 
+    def _view(self):
+        sorter = Sorter(self.sort_expression)
+        filters = self._filters()
+
+        return View(sorter, filters, self.todolist, self.printer)
+
+    def _print(self):
+        """ Prints the todos. """
+        indent = config().list_indent()
+        hidden_tags = config().hidden_tags()
+
+        filters = []
+        filters.append(PrettyPrinterIndentFilter(indent))
+        filters.append(PrettyPrinterHideTagFilter(hidden_tags))
+
+        self.out(self._view().pretty_print(filters))
+
     def execute(self):
         if not super(ListCommand, self).execute():
             return False
 
         self._process_flags()
-
-        sorter = Sorter(self.sort_expression)
-        filters = self._filters()
-
-        pp_filters = [pp_indent(config().list_indent())]
-        self.out(self.todolist.view(sorter, filters).pretty_print(pp_filters))
+        self._print()
 
     def usage(self):
         return """Synopsis: ls [-x] [-s <sort_expression>] [expression]"""

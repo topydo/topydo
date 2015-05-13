@@ -164,6 +164,61 @@ class PostponeCommandTest(CommandTest.CommandTest):
         self.assertEquals(self.output, "|  1| Foo due:{}\n".format(due.isoformat()))
         self.assertEquals(self.errors, "")
 
+    def test_postpone14(self):
+        command = PostponeCommand(["1", "2", "1w"], self.todolist, self.out, self.error)
+        command.execute()
+
+        due = self.today + timedelta(7)
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEquals(self.output, "|  1| Foo due:{}\n|  2| Bar due:{}\n".format(due.isoformat(), due.isoformat()))
+        self.assertEquals(self.errors, "")
+
+    def test_postpone15(self):
+        command = PostponeCommand(["Foo", "2", "1w"], self.todolist, self.out, self.error)
+        command.execute()
+
+        due = self.today + timedelta(7)
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEquals(self.output, "|  1| Foo due:{}\n|  2| Bar due:{}\n".format(due.isoformat(), due.isoformat()))
+        self.assertEquals(self.errors, "")
+
+    def test_postpone16(self):
+        command = PostponeCommand(["-s", "2", "3", "1w"], self.todolist, self.out, self.error)
+        command.execute()
+
+        due = self.today + timedelta(7)
+        start = self.start + timedelta(7)
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEquals(self.output, "|  2| Bar due:{}\n|  3| Baz due:{} t:{}\n".format(due.isoformat(), due.isoformat(), start.isoformat()))
+        self.assertEquals(self.errors, "")
+
+    def test_postpone17(self):
+        command = PostponeCommand(["1", "2", "3"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+        self.assertEquals(self.output, "")
+        self.assertEquals(self.errors, "Invalid date pattern given.\n")
+
+    def test_postpone18(self):
+        command = PostponeCommand(["1", "99", "123", "1w"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+        self.assertEquals(self.output, "")
+        self.assertEquals(self.errors, "Invalid todo number given: 99.\nInvalid todo number given: 123.\n")
+
+    def test_postpone19(self):
+        command = PostponeCommand(["Zoo", "99", "123", "1w"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+        self.assertEquals(self.output, "")
+        self.assertEquals(self.errors, "Invalid todo number given: Zoo.\nInvalid todo number given: 99.\nInvalid todo number given: 123.\n")
+
     def test_help(self):
         command = PostponeCommand(["help"], self.todolist, self.out, self.error)
         command.execute()

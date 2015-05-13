@@ -1,5 +1,5 @@
 # Topydo - A todo.txt client written in Python.
-# Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
+# Copyright (C) 2014 - 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,11 +14,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from topydo.lib.Command import Command, InvalidCommandArgument
-from topydo.lib.PrettyPrinter import pretty_print
-from topydo.lib.TodoListBase import InvalidTodoException
+from topydo.lib.MultiCommand import MultiCommand
+from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
 
-class DepriCommand(Command):
+class DepriCommand(MultiCommand):
     def __init__(self, p_args, p_todolist,
                  p_out=lambda a: None,
                  p_err=lambda a: None,
@@ -26,28 +25,23 @@ class DepriCommand(Command):
         super(DepriCommand, self).__init__(
             p_args, p_todolist, p_out, p_err, p_prompt)
 
-    def execute(self):
-        if not super(DepriCommand, self).execute():
-            return False
+        self.get_todos(self.args)
 
-        todo = None
+    def execute_multi_specific(self):
         try:
-            todo = self.todolist.todo(self.argument(0))
+            self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
 
-            if todo.priority() != None:
-                self.todolist.set_priority(todo, None)
-                self.out("Priority removed.")
-                self.out(pretty_print(todo))
-        except InvalidCommandArgument:
+            for todo in self.todos:
+                if todo.priority() != None:
+                    self.todolist.set_priority(todo, None)
+                    self.out("Priority removed.")
+                    self.out(self.printer.print_todo(todo))
+
+        except IndexError:
             self.error(self.usage())
-        except (InvalidTodoException):
-            if not todo:
-                self.error( "Invalid todo number given.")
-            else:
-                self.error(self.usage())
 
     def usage(self):
-        return """Synopsis: depri <NUMBER>"""
+        return """Synopsis: depri <NUMBER1> [<NUMBER2> ...]"""
 
     def help(self):
-        return """Removes the priority of the given todo item."""
+        return """Removes the priority of the given todo item(s)."""

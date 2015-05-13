@@ -1,17 +1,18 @@
 topydo
 ======
 
+[![Build Status](https://travis-ci.org/bram85/topydo.svg?branch=master)](https://travis-ci.org/bram85/topydo) [![Join the chat at https://gitter.im/bram85/topydo](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/bram85/topydo?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 topydo is a todo list application using the [todo.txt format][1]. It is heavily
 inspired by the [todo.txt CLI][2] by Gina Trapani. This tool is actually a
 merge between the todo.txt CLI and a [number of extensions][3] that I wrote
-on top of the CLI, hereafter refered to as todo.txt-tools. These extensions
-are:
+on top of the CLI. These extensions are:
 
 * Set **due** and **start dates**;
 * Custom sorting;
 * Dealing with tags;
 * Maintain **dependencies** between todo items;
-* Allow todos to **recur**;
+* Allow todo items to **recur**;
 * Some conveniences when adding new items (e.g. adding creation date and use
   **relative dates**);
 
