@@ -16,7 +16,7 @@
 
 import unittest
 
-import CommandTest
+from test.CommandTest import CommandTest
 from topydo.lib.Config import config
 from topydo.lib.DeleteCommand import DeleteCommand
 from topydo.lib.TodoList import TodoList
@@ -28,7 +28,7 @@ def _yes_prompt(self):
 def _no_prompt(self):
     return "n"
 
-class DeleteCommandTest(CommandTest.CommandTest):
+class DeleteCommandTest(CommandTest):
     def setUp(self):
         super(DeleteCommandTest, self).setUp()
         todos = [

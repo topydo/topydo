@@ -16,11 +16,11 @@
 
 import unittest
 
-import CommandTest
+from test.CommandTest import CommandTest
 from topydo.lib.DepriCommand import DepriCommand
 from topydo.lib.TodoList import TodoList
 
-class DepriCommandTest(CommandTest.CommandTest):
+class DepriCommandTest(CommandTest):
     def setUp(self):
         super(DepriCommandTest, self).setUp()
         todos = [

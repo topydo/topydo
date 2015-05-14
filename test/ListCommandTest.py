@@ -17,14 +17,14 @@
 import unittest
 
 from topydo.lib.Config import config
-import CommandTest
+from test.CommandTest import CommandTest
 from topydo.lib.ListCommand import ListCommand
-import TestFacilities
+from test.TestFacilities import load_file_to_todolist
 
-class ListCommandTest(CommandTest.CommandTest):
+class ListCommandTest(CommandTest):
     def setUp(self):
         super(ListCommandTest, self).setUp()
-        self.todolist = TestFacilities.load_file_to_todolist("test/data/ListCommandTest.txt")
+        self.todolist = load_file_to_todolist("test/data/ListCommandTest.txt")
 
     def test_list1(self):
         command = ListCommand([""], self.todolist, self.out, self.error)

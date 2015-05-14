@@ -17,12 +17,12 @@
 import unittest
 import mock
 
-import CommandTest
+from test.CommandTest import CommandTest
 from topydo.lib.EditCommand import EditCommand
 from topydo.lib.TodoList import TodoList
 from topydo.lib.Todo import Todo
 
-class EditCommandTest(CommandTest.CommandTest):
+class EditCommandTest(CommandTest):
     def setUp(self):
         super(EditCommandTest, self).setUp()
         todos = [
@@ -70,7 +70,7 @@ class EditCommandTest(CommandTest.CommandTest):
 
     def test_edit4(self):
         """ Throw an error with pointing invalid argument. """
-        command = EditCommand(["Bar","4"], self.todolist, self.out, self.error, None)
+        command = EditCommand(["Bar", "4"], self.todolist, self.out, self.error, None)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -83,7 +83,7 @@ class EditCommandTest(CommandTest.CommandTest):
         mock_open_in_editor.return_value = 0
         mock_todos_from_temp.return_value = [Todo('Only one line')]
 
-        command = EditCommand(["1","Bar"], self.todolist, self.out, self.error, None)
+        command = EditCommand(["1", "Bar"], self.todolist, self.out, self.error, None)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -97,7 +97,7 @@ class EditCommandTest(CommandTest.CommandTest):
         mock_open_in_editor.return_value = 0
         mock_todos_from_temp.return_value = [Todo('Lazy Cat'), Todo('Lazy Dog')]
 
-        command = EditCommand(["-e","@test"], self.todolist, self.out, self.error, None)
+        command = EditCommand(["-e", "@test"], self.todolist, self.out, self.error, None)
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())

@@ -18,9 +18,9 @@ from datetime import date, timedelta
 import unittest
 
 from topydo.lib.RelativeDate import relative_date_to_date
-import TopydoTest
+from test.TopydoTest import TopydoTest
 
-class RelativeDateTester(TopydoTest.TopydoTest):
+class RelativeDateTester(TopydoTest):
     def setUp(self):
         super(RelativeDateTester, self).setUp()
         self.today = date.today()

@@ -100,7 +100,8 @@ class Sorter(object):
 
         sorted_todos = p_todos
         for function, order in reversed(self.functions):
-            sorted_todos = sorted(sorted_todos, None, function, order == 'desc')
+            sorted_todos = sorted(sorted_todos, key=function,
+                                  reverse=(order == 'desc'))
 
         return sorted_todos
 

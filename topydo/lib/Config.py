@@ -16,7 +16,7 @@
 
 import os
 
-import ConfigParser
+from six.moves import configparser
 
 class ConfigError(Exception):
     def __init__(self, p_text):
@@ -66,7 +66,7 @@ class _Config:
 
         self.config = {}
 
-        self.cp = ConfigParser.SafeConfigParser(self.defaults)
+        self.cp = configparser.SafeConfigParser(self.defaults)
 
         files = [
             "/etc/topydo.conf",
@@ -188,7 +188,7 @@ def config(p_path=None):
     if not config.instance or p_path != None:
         try:
             config.instance = _Config(p_path)
-        except ConfigParser.ParsingError as perr:
+        except configparser.ParsingError as perr:
             raise ConfigError(str(perr))
 
     return config.instance

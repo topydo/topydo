@@ -92,7 +92,7 @@ class DirectedGraph(object):
             visited.add(current)
 
             if p_reverse:
-                parents = [node for node, neighbors in self._edges.iteritems() \
+                parents = [node for node, neighbors in self._edges.items() \
                     if current in neighbors]
 
                 stack = stack + parents
@@ -182,7 +182,7 @@ class DirectedGraph(object):
         """
         removals = set()
 
-        for from_node, neighbors in self._edges.iteritems():
+        for from_node, neighbors in self._edges.items():
             childpairs = \
                 [(c1, c2) for c1 in neighbors for c2 in neighbors if c1 != c2]
 
@@ -198,7 +198,7 @@ class DirectedGraph(object):
         """ Prints the graph in Dot format. """
         out = 'digraph g {\n'
 
-        for from_node, neighbors in self._edges.iteritems():
+        for from_node, neighbors in self._edges.items():
             out += "  {}\n".format(from_node)
 
             for neighbor in neighbors:

@@ -17,10 +17,10 @@
 import unittest
 
 from topydo.lib.AppendCommand import AppendCommand
-import CommandTest
+from test.CommandTest import CommandTest
 from topydo.lib.TodoList import TodoList
 
-class AppendCommandTest(CommandTest.CommandTest):
+class AppendCommandTest(CommandTest):
     def setUp(self):
         super(AppendCommandTest, self).setUp()
         self.todolist = TodoList([])

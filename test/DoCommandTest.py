@@ -17,7 +17,7 @@
 from datetime import date, timedelta
 import unittest
 
-import CommandTest
+from test.CommandTest import CommandTest
 from topydo.lib.DoCommand import DoCommand
 from topydo.lib.TodoList import TodoList
 
@@ -27,7 +27,7 @@ def _yes_prompt(self):
 def _no_prompt(self):
     return "n"
 
-class DoCommandTest(CommandTest.CommandTest):
+class DoCommandTest(CommandTest):
     def setUp(self):
         super(DoCommandTest, self).setUp()
         todos = [

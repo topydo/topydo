@@ -8,6 +8,9 @@ setup(
     author = "Bram Schoenmakers",
     author_email = "me@bramschoenmakers.nl",
     url = "https://github.com/bram85/topydo",
+    install_requires = [
+        'six',
+    ],
     extras_require = {
         'ical': ['icalendar'],
         'edit-cmd-tests': ['mock'],

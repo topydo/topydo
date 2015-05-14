@@ -17,11 +17,11 @@
 from datetime import date, timedelta
 import unittest
 
-import CommandTest
+from test.CommandTest import CommandTest
 from topydo.lib.PostponeCommand import PostponeCommand
 from topydo.lib.TodoList import TodoList
 
-class PostponeCommandTest(CommandTest.CommandTest):
+class PostponeCommandTest(CommandTest):
     def setUp(self):
         super(PostponeCommandTest, self).setUp()
         self.today = date.today()

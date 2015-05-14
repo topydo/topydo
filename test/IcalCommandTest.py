@@ -18,14 +18,14 @@ import re
 import unittest
 
 from topydo.lib.Config import config
-import CommandTest
+from test.CommandTest import CommandTest
 from topydo.lib.IcalCommand import IcalCommand
-import TestFacilities
+from test.TestFacilities import load_file_to_todolist
 
-class IcalCommandTest(CommandTest.CommandTest):
+class IcalCommandTest(CommandTest):
     def setUp(self):
         super(IcalCommandTest, self).setUp()
-        self.todolist = TestFacilities.load_file_to_todolist("test/data/ListCommandTest.txt")
+        self.todolist = load_file_to_todolist("test/data/ListCommandTest.txt")
 
     def test_ical(self):
         def replace_ical_tags(p_text):

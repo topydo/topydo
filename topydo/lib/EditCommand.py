@@ -50,7 +50,7 @@ class EditCommand(MultiCommand, ListCommand):
     def _todos_to_temp(self):
         f = tempfile.NamedTemporaryFile()
         for todo in self.todos:
-            f.write("%s\n" % todo.__str__())
+            f.write((str(todo) + "\n").encode('utf-8'))
         f.seek(0)
 
         return f

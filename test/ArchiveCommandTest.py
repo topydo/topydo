@@ -17,13 +17,13 @@
 import unittest
 
 from topydo.lib.ArchiveCommand import ArchiveCommand
-import CommandTest
-import TestFacilities
+from test.CommandTest import CommandTest
+from test.TestFacilities import load_file_to_todolist
 from topydo.lib.TodoList import TodoList
 
-class ArchiveCommandTest(CommandTest.CommandTest):
+class ArchiveCommandTest(CommandTest):
     def test_archive(self):
-        todolist = TestFacilities.load_file_to_todolist("test/data/ArchiveCommandTest.txt")
+        todolist = load_file_to_todolist("test/data/ArchiveCommandTest.txt")
         archive = TodoList([])
 
         command = ArchiveCommand(todolist, archive)

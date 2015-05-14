@@ -16,15 +16,15 @@
 
 import unittest
 
-import CommandTest
+from test.CommandTest import CommandTest
 from topydo.lib.Config import config
 from topydo.lib.SortCommand import SortCommand
-import TestFacilities
+from test.TestFacilities import load_file_to_todolist
 
-class SortCommandTest(CommandTest.CommandTest):
+class SortCommandTest(CommandTest):
     def setUp(self):
         super(SortCommandTest, self).setUp()
-        self.todolist = TestFacilities.load_file_to_todolist("test/data/SorterTest1.txt")
+        self.todolist = load_file_to_todolist("test/data/SorterTest1.txt")
 
     def test_sort1(self):
         """ Alphabetically sorted """
