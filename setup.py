@@ -1,8 +1,8 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name = "topydo",
-    packages = ["topydo", "topydo.lib", "topydo.cli"],
+    packages = find_packages(exclude=["test"]),
     version = "0.3",
     description = "A command-line todo list application using the todo.txt format.",
     author = "Bram Schoenmakers",
