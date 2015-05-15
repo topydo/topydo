@@ -1,3 +1,5 @@
+#-*- coding: utf-8 -*-
+
 # Topydo - A todo.txt client written in Python.
 # Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
 #
@@ -23,7 +25,12 @@ class TodoFileTest(TopydoTest):
     def test_empty_file(self):
         todofile = load_file('test/data/TodoFileTest1.txt')
 
-        self.assertEquals(len(todofile), 0)
+        self.assertEqual(len(todofile), 0)
+
+    def test_utf_8(self):
+        todofile = load_file('test/data/utf-8.txt')
+
+        self.assertEqual(todofile[0].source(), u'(C) ► UTF-8 test ◄' )
 
 if __name__ == '__main__':
     unittest.main()
