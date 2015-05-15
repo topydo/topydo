@@ -32,7 +32,7 @@ class ListProjectCommand(Command):
             self.out(project)
 
     def usage(self):
-        return """Synopsis: lscon"""
+        return """Synopsis: lsprj"""
 
     def help(self):
         return """Lists all projects in the todo list."""
