@@ -90,7 +90,7 @@ class _Config:
                 self.cp.add_section(section)
 
     def _home_config_path(self):
-        return os.path.join(os.getenv('HOME'), '.topydo')
+        return os.path.join(os.path.expanduser('~'), '.topydo')
 
     def default_command(self):
         return self.cp.get('topydo', 'default_command')
