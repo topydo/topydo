@@ -10,7 +10,7 @@ setup(
     url = "https://github.com/bram85/topydo",
     extras_require = {
         'ical': ['icalendar'],
-        'prompt-toolkit': ['prompt-toolkit'],
+        'prompt-toolkit': ['prompt-toolkit >= 0.37'],
         'edit-cmd-tests': ['mock'],
     },
     entry_points= {

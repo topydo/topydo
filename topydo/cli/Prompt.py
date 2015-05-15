@@ -20,7 +20,7 @@ import sys
 
 from topydo.cli.CLIApplicationBase import CLIApplicationBase, error
 from topydo.cli.TopydoCompleter import TopydoCompleter
-from prompt_toolkit.contrib.shortcuts import get_input
+from prompt_toolkit.shortcuts import get_input
 
 from topydo.lib.Config import config, ConfigError
 
@@ -58,7 +58,7 @@ class PromptApplication(CLIApplicationBase):
 
         while True:
             try:
-                user_input = get_input('topydo> ', completer=completer).split()
+                user_input = get_input(u'topydo> ', completer=completer).split()
             except (EOFError, KeyboardInterrupt):
                 sys.exit(0)
 
