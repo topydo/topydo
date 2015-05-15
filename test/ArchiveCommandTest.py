@@ -31,8 +31,8 @@ class ArchiveCommandTest(CommandTest):
 
         self.assertTrue(todolist.is_dirty())
         self.assertTrue(archive.is_dirty())
-        self.assertEquals(str(todolist), "x Not complete\n(C) Active")
-        self.assertEquals(str(archive), "x 2014-10-19 Complete\nx 2014-10-20 Another one complete")
+        self.assertEqual(str(todolist), "x Not complete\n(C) Active")
+        self.assertEqual(str(archive), "x 2014-10-19 Complete\nx 2014-10-20 Another one complete")
 
 if __name__ == '__main__':
     unittest.main()

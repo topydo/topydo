@@ -33,8 +33,8 @@ class SorterTest(TopydoTest):
         todos_sorted = todolist_to_string(p_sorter.sort(todos))
         todos_ref = todolist_to_string(load_file(p_filename_ref))
 
-        self.assertEquals(todos_sorted, todos_ref)
-        self.assertEquals(todolist_to_string(todos), text_before)
+        self.assertEqual(todos_sorted, todos_ref)
+        self.assertEqual(todolist_to_string(todos), text_before)
 
     def test_sort1(self):
         """ Alphabetically sorted """
@@ -128,7 +128,7 @@ class SorterTest(TopydoTest):
         view = todolist.view(sorter, [])
         result = load_file('test/data/SorterTest10-result.txt')
 
-        self.assertEquals(str(view), todolist_to_string(result))
+        self.assertEqual(str(view), todolist_to_string(result))
 
     def test_sort15(self):
         """
@@ -141,7 +141,7 @@ class SorterTest(TopydoTest):
         view = todolist.view(sorter, [])
         result = load_file('test/data/SorterTest11-result.txt')
 
-        self.assertEquals(str(view), todolist_to_string(result))
+        self.assertEqual(str(view), todolist_to_string(result))
 
     def test_sort16(self):
         """
@@ -153,7 +153,7 @@ class SorterTest(TopydoTest):
         view = todolist.view(sorter, [])
         result = load_file('test/data/SorterTest12-result.txt')
 
-        self.assertEquals(str(view), todolist_to_string(result))
+        self.assertEqual(str(view), todolist_to_string(result))
 
 if __name__ == '__main__':
     unittest.main()

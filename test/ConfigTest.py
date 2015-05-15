@@ -21,7 +21,7 @@ from test.TopydoTest import TopydoTest
 
 class ConfigTest(TopydoTest):
     def test_config1(self):
-        self.assertEquals(config("test/data/config1").default_command(), 'do')
+        self.assertEqual(config("test/data/config1").default_command(), 'do')
 
     def test_config2(self):
         self.assertNotEquals(config("").default_command(), 'do')

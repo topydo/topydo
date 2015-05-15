@@ -37,12 +37,12 @@ class TodoListTester(TopydoTest):
         self.todolist = TodoList(lines)
 
     def test_contexts(self):
-        self.assertEquals(set(['Context1', 'Context2']), \
+        self.assertEqual(set(['Context1', 'Context2']), \
             self.todolist.contexts())
         self.assertFalse(self.todolist.is_dirty())
 
     def test_projects(self):
-        self.assertEquals(set(['Project1', 'Project2']), \
+        self.assertEqual(set(['Project1', 'Project2']), \
             self.todolist.projects())
         self.assertFalse(self.todolist.is_dirty())
 
@@ -51,18 +51,18 @@ class TodoListTester(TopydoTest):
         count = self.todolist.count()
         todo = self.todolist.add(text)
 
-        self.assertEquals(self.todolist.todo(count+1).source(), text)
-        self.assertEquals(set(['Project1', 'Project2', 'Project3']), \
+        self.assertEqual(self.todolist.todo(count+1).source(), text)
+        self.assertEqual(set(['Project1', 'Project2', 'Project3']), \
             self.todolist.projects())
-        self.assertEquals(set(['Context1', 'Context2', 'Context3']), \
+        self.assertEqual(set(['Context1', 'Context2', 'Context3']), \
             self.todolist.contexts())
-        self.assertEquals(self.todolist.number(todo), 6)
+        self.assertEqual(self.todolist.number(todo), 6)
         self.assertTrue(self.todolist.is_dirty())
 
     def test_add2(self):
         text = str(self.todolist)
         self.todolist.add('')
-        self.assertEquals(str(self.todolist), text)
+        self.assertEqual(str(self.todolist), text)
 
     def test_add3a(self):
         count = self.todolist.count()
@@ -83,21 +83,21 @@ class TodoListTester(TopydoTest):
     def test_add4(self):
         text = str(self.todolist)
         self.todolist.add(' ')
-        self.assertEquals(str(self.todolist), text)
+        self.assertEqual(str(self.todolist), text)
 
     def test_add5(self):
         text = str(self.todolist)
         self.todolist.add("\n")
-        self.assertEquals(str(self.todolist), text)
+        self.assertEqual(str(self.todolist), text)
 
     def test_delete1(self):
         count = self.todolist.count()
         todo = self.todolist.todo(2)
         self.todolist.delete(todo)
 
-        self.assertEquals(self.todolist.todo(2).source(), \
+        self.assertEqual(self.todolist.todo(2).source(), \
             "(C) Baz @Context1 +Project1 key:value")
-        self.assertEquals(self.todolist.count(), count - 1)
+        self.assertEqual(self.todolist.count(), count - 1)
         self.assertTrue(self.todolist.is_dirty())
         self.assertRaises(InvalidTodoException, self.todolist.number, todo)
 
@@ -105,9 +105,9 @@ class TodoListTester(TopydoTest):
         todo = self.todolist.todo(3)
         self.todolist.append(todo, "@Context3")
 
-        self.assertEquals(todo.source(), \
+        self.assertEqual(todo.source(), \
             "(C) Baz @Context1 +Project1 key:value @Context3")
-        self.assertEquals(set(['Context1', 'Context2', 'Context3']), \
+        self.assertEqual(set(['Context1', 'Context2', 'Context3']), \
             self.todolist.contexts())
         self.assertTrue(self.todolist.is_dirty())
 
@@ -116,8 +116,8 @@ class TodoListTester(TopydoTest):
         text = todo.text()
         self.todolist.append(todo, "foo:bar")
 
-        self.assertEquals(todo.text(), text)
-        self.assertEquals(todo.source(), \
+        self.assertEqual(todo.text(), text)
+        self.assertEqual(todo.source(), \
             "(C) Baz @Context1 +Project1 key:value foo:bar")
 
     def test_append3(self):
@@ -125,7 +125,7 @@ class TodoListTester(TopydoTest):
         text = todo.text()
         self.todolist.append(todo, '')
 
-        self.assertEquals(todo.text(), text)
+        self.assertEqual(todo.text(), text)
 
     def test_todo(self):
         count = self.todolist.count()
@@ -136,11 +136,11 @@ class TodoListTester(TopydoTest):
     def test_string(self):
         # readlines() always ends a string with \n, but join() in str(todolist)
         # doesn't necessarily.
-        self.assertEquals(str(self.todolist) + '\n', self.text)
+        self.assertEqual(str(self.todolist) + '\n', self.text)
 
     def test_count(self):
         """ Test that empty lines are not counted. """
-        self.assertEquals(self.todolist.count(), 5)
+        self.assertEqual(self.todolist.count(), 5)
 
     def test_todo_by_dep_id(self):
         """ Tests that todos can be retrieved by their id tag. """
@@ -155,7 +155,7 @@ class TodoListTester(TopydoTest):
 
         todo = self.todolist.todo(6)
         self.assertIsInstance(todo, Todo)
-        self.assertEquals(todo.text(), "No number")
+        self.assertEqual(todo.text(), "No number")
 
     def test_todo_number2(self):
         todo = Todo("Non-existent")
@@ -171,7 +171,7 @@ class TodoListTester(TopydoTest):
         todo = self.todolist.todo(1)
         self.todolist.set_priority(todo, 'F')
 
-        self.assertEquals(self.todolist.todo(1).priority(), 'F')
+        self.assertEqual(self.todolist.todo(1).priority(), 'F')
         self.assertTrue(self.todolist.is_dirty())
 
     def test_todo_priority2(self):
@@ -183,7 +183,7 @@ class TodoListTester(TopydoTest):
     def test_erase(self):
         self.todolist.erase()
 
-        self.assertEquals(self.todolist.count(), 0)
+        self.assertEqual(self.todolist.count(), 0)
         self.assertTrue(self.todolist.is_dirty())
 
     def test_regex1(self):
@@ -193,12 +193,12 @@ class TodoListTester(TopydoTest):
     def test_regex3(self):
         todo = self.todolist.todo("project2")
         self.assertTrue(todo)
-        self.assertEquals(todo.source(), "(D) Bar @Context1 +Project2")
+        self.assertEqual(todo.source(), "(D) Bar @Context1 +Project2")
 
     def test_uid1(self):
         config("test/data/todolist-uid.conf")
 
-        self.assertEquals(self.todolist.todo('t5c').source(), "(C) Foo @Context2 Not@Context +Project1 Not+Project")
+        self.assertEqual(self.todolist.todo('t5c').source(), "(C) Foo @Context2 Not@Context +Project1 Not+Project")
 
     def test_uid2(self):
         """ Changing the priority should not change the identifier. """
@@ -206,7 +206,7 @@ class TodoListTester(TopydoTest):
 
         todo = self.todolist.todo('t5c')
         self.todolist.set_priority(todo, 'B')
-        self.assertEquals(self.todolist.todo('t5c').source(), "(B) Foo @Context2 Not@Context +Project1 Not+Project")
+        self.assertEqual(self.todolist.todo('t5c').source(), "(B) Foo @Context2 Not@Context +Project1 Not+Project")
 
     def test_uid3(self):
         """
@@ -299,7 +299,7 @@ class TodoListDependencyTester(TopydoTest):
 
         self.todolist.add_dependency(todo6, todo7)
 
-        self.assertEquals(projects, todo7.projects())
+        self.assertEqual(projects, todo7.projects())
 
     def test_add_dep4(self):
         """
@@ -312,7 +312,7 @@ class TodoListDependencyTester(TopydoTest):
 
         self.todolist.add_dependency(todo6, todo8)
 
-        self.assertEquals(set(["Project", "AnotherProject"]), todo8.projects())
+        self.assertEqual(set(["Project", "AnotherProject"]), todo8.projects())
 
     def test_remove_dep1(self):
         from_todo = self.todolist.todo(3)
@@ -328,7 +328,7 @@ class TodoListDependencyTester(TopydoTest):
         to_todo = self.todolist.todo(4)
         self.todolist.remove_dependency(from_todo, to_todo)
 
-        self.assertEquals(str(self.todolist), old)
+        self.assertEqual(str(self.todolist), old)
 
     def test_remove_todo_check_children(self):
         todo = self.todolist.todo(2)

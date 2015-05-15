@@ -44,15 +44,15 @@ class IcalCommandTest(CommandTest):
         with open('test/data/ListCommandTest.ics', 'r') as ical:
             icaltext = "".join(ical.readlines())
 
-        self.assertEquals(replace_ical_tags(self.output), replace_ical_tags(icaltext))
-        self.assertEquals(self.errors, "")
+        self.assertEqual(replace_ical_tags(self.output), replace_ical_tags(icaltext))
+        self.assertEqual(self.errors, "")
 
     def test_help(self):
         command = IcalCommand(["help"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEquals(self.output, "")
-        self.assertEquals(self.errors, command.usage() + "\n\n" + command.help() + "\n")
+        self.assertEqual(self.output, "")
+        self.assertEqual(self.errors, command.usage() + "\n\n" + command.help() + "\n")
 
 if __name__ == '__main__':
     unittest.main()

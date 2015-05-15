@@ -32,20 +32,20 @@ class RelativeDateTester(TopydoTest):
 
     def test_zero_days(self):
         result = relative_date_to_date('0d')
-        self.assertEquals(result, self.today)
+        self.assertEqual(result, self.today)
 
     def test_one_day(self):
         result = relative_date_to_date('1d')
-        self.assertEquals(result, self.tomorrow)
+        self.assertEqual(result, self.tomorrow)
 
     def test_one_week(self):
         result = relative_date_to_date('1w')
-        self.assertEquals(result, date.today() + timedelta(weeks=1))
+        self.assertEqual(result, date.today() + timedelta(weeks=1))
 
     def test_one_month(self):
         test_date = date(2015, 1, 10)
         result = relative_date_to_date('1m', test_date)
-        self.assertEquals(result, date(2015, 2, 10))
+        self.assertEqual(result, date(2015, 2, 10))
 
     def test_one_month_ext(self):
         test_date1 = date(2015, 1, 29)
@@ -60,31 +60,31 @@ class RelativeDateTester(TopydoTest):
         result4 = relative_date_to_date('1m', test_date4)
         result5 = relative_date_to_date('1m', test_date5)
 
-        self.assertEquals(result1, date(2015, 2, 28))
-        self.assertEquals(result2, date(2016, 2, 29))
-        self.assertEquals(result3, date(2016, 1, 31))
-        self.assertEquals(result4, date(2015, 8, 31))
-        self.assertEquals(result5, date(2015, 11, 30))
+        self.assertEqual(result1, date(2015, 2, 28))
+        self.assertEqual(result2, date(2016, 2, 29))
+        self.assertEqual(result3, date(2016, 1, 31))
+        self.assertEqual(result4, date(2015, 8, 31))
+        self.assertEqual(result5, date(2015, 11, 30))
 
     def test_one_year(self):
         test_date = date(2015, 1, 10)
         result = relative_date_to_date('1y', test_date)
-        self.assertEquals(result, date(2016, 1, 10))
+        self.assertEqual(result, date(2016, 1, 10))
 
     def test_leap_year(self):
         test_date = date(2016, 2, 29)
         result1 = relative_date_to_date('1y', test_date)
         result2 = relative_date_to_date('4y', test_date)
-        self.assertEquals(result1, date(2017, 2, 28))
-        self.assertEquals(result2, date(2020, 2, 29))
+        self.assertEqual(result1, date(2017, 2, 28))
+        self.assertEqual(result2, date(2020, 2, 29))
 
     def test_zero_months(self):
         result = relative_date_to_date('0m')
-        self.assertEquals(result, self.today)
+        self.assertEqual(result, self.today)
 
     def test_zero_years(self):
         result = relative_date_to_date('0y')
-        self.assertEquals(result, self.today)
+        self.assertEqual(result, self.today)
 
     def test_garbage1(self):
         result = relative_date_to_date('0dd')
@@ -92,40 +92,40 @@ class RelativeDateTester(TopydoTest):
 
     def test_one_day_capital(self):
         result = relative_date_to_date('1D')
-        self.assertEquals(result, self.tomorrow)
+        self.assertEqual(result, self.tomorrow)
 
     def test_today1(self):
         result = relative_date_to_date('today')
-        self.assertEquals(result, self.today)
+        self.assertEqual(result, self.today)
 
     def test_today2(self):
         result = relative_date_to_date('tod')
-        self.assertEquals(result, self.today)
+        self.assertEqual(result, self.today)
 
     def test_today3(self):
         result = relative_date_to_date('today', \
             date.today() + timedelta(1))
-        self.assertEquals(result, self.today)
+        self.assertEqual(result, self.today)
 
     def test_tomorrow1(self):
         result = relative_date_to_date('Tomorrow')
-        self.assertEquals(result, self.tomorrow)
+        self.assertEqual(result, self.tomorrow)
 
     def test_tomorrow2(self):
         result = relative_date_to_date('tom')
-        self.assertEquals(result, self.tomorrow)
+        self.assertEqual(result, self.tomorrow)
 
     def test_monday1(self):
         result = relative_date_to_date('monday')
-        self.assertEquals(result, self.monday)
+        self.assertEqual(result, self.monday)
 
     def test_monday2(self):
         result = relative_date_to_date('mo')
-        self.assertEquals(result, self.monday)
+        self.assertEqual(result, self.monday)
 
     def test_monday3(self):
         result = relative_date_to_date('mon')
-        self.assertEquals(result, self.monday)
+        self.assertEqual(result, self.monday)
 
     def test_monday4(self):
         result = relative_date_to_date('mondayy')
@@ -133,11 +133,11 @@ class RelativeDateTester(TopydoTest):
 
     def test_offset1(self):
         result = relative_date_to_date('1d', self.tomorrow)
-        self.assertEquals(result, date.today() + timedelta(2))
+        self.assertEqual(result, date.today() + timedelta(2))
 
     def test_negative_period1(self):
         result = relative_date_to_date('-1d')
-        self.assertEquals(result, date.today() - timedelta(1))
+        self.assertEqual(result, date.today() - timedelta(1))
 
     def test_negative_period2(self):
         result = relative_date_to_date('-0d')

@@ -36,37 +36,37 @@ class DepriCommandTest(CommandTest):
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEquals(self.todolist.todo(1).priority(), None)
-        self.assertEquals(self.output, "Priority removed.\n|  1| Foo\n")
-        self.assertEquals(self.errors, "")
+        self.assertEqual(self.todolist.todo(1).priority(), None)
+        self.assertEqual(self.output, "Priority removed.\n|  1| Foo\n")
+        self.assertEqual(self.errors, "")
 
     def test_depri2(self):
         command = DepriCommand(["2"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
-        self.assertEquals(self.todolist.todo(2).priority(), None)
-        self.assertEquals(self.output, "")
-        self.assertEquals(self.errors, "")
+        self.assertEqual(self.todolist.todo(2).priority(), None)
+        self.assertEqual(self.output, "")
+        self.assertEqual(self.errors, "")
 
     def test_depri3(self):
         command = DepriCommand(["Foo"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEquals(self.todolist.todo(1).priority(), None)
-        self.assertEquals(self.output, "Priority removed.\n|  1| Foo\n")
-        self.assertEquals(self.errors, "")
+        self.assertEqual(self.todolist.todo(1).priority(), None)
+        self.assertEqual(self.output, "Priority removed.\n|  1| Foo\n")
+        self.assertEqual(self.errors, "")
 
     def test_depri4(self):
         command = DepriCommand(["1","Baz"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEquals(self.todolist.todo(1).priority(), None)
-        self.assertEquals(self.todolist.todo(3).priority(), None)
-        self.assertEquals(self.output, "Priority removed.\n|  1| Foo\nPriority removed.\n|  3| Baz\n")
-        self.assertEquals(self.errors, "")
+        self.assertEqual(self.todolist.todo(1).priority(), None)
+        self.assertEqual(self.todolist.todo(3).priority(), None)
+        self.assertEqual(self.output, "Priority removed.\n|  1| Foo\nPriority removed.\n|  3| Baz\n")
+        self.assertEqual(self.errors, "")
 
 
     def test_invalid1(self):
@@ -75,7 +75,7 @@ class DepriCommandTest(CommandTest):
 
         self.assertFalse(self.todolist.is_dirty())
         self.assertFalse(self.output)
-        self.assertEquals(self.errors, "Invalid todo number given.\n")
+        self.assertEqual(self.errors, "Invalid todo number given.\n")
 
     def test_invalid2(self):
         command = DepriCommand(["99", "1"], self.todolist, self.out, self.error)
@@ -83,7 +83,7 @@ class DepriCommandTest(CommandTest):
 
         self.assertFalse(self.todolist.is_dirty())
         self.assertFalse(self.output)
-        self.assertEquals(self.errors, "Invalid todo number given: 99.\n")
+        self.assertEqual(self.errors, "Invalid todo number given: 99.\n")
 
     def test_invalid3(self):
         command = DepriCommand(["99", "FooBar"], self.todolist, self.out, self.error)
@@ -91,7 +91,7 @@ class DepriCommandTest(CommandTest):
 
         self.assertFalse(self.todolist.is_dirty())
         self.assertFalse(self.output)
-        self.assertEquals(self.errors, "Invalid todo number given: 99.\nInvalid todo number given: FooBar.\n")
+        self.assertEqual(self.errors, "Invalid todo number given: 99.\nInvalid todo number given: FooBar.\n")
 
     def test_empty(self):
         command = DepriCommand([], self.todolist, self.out, self.error)
@@ -99,14 +99,14 @@ class DepriCommandTest(CommandTest):
 
         self.assertFalse(self.todolist.is_dirty())
         self.assertFalse(self.output)
-        self.assertEquals(self.errors, command.usage() + "\n")
+        self.assertEqual(self.errors, command.usage() + "\n")
 
     def test_help(self):
         command = DepriCommand(["help"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEquals(self.output, "")
-        self.assertEquals(self.errors, command.usage() + "\n\n" + command.help() + "\n")
+        self.assertEqual(self.output, "")
+        self.assertEqual(self.errors, command.usage() + "\n\n" + command.help() + "\n")
 
 if __name__ == '__main__':
     unittest.main()

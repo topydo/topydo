@@ -26,7 +26,7 @@ class ListContextCommandTest(CommandTest):
         command = ListContextCommand([""], todolist, self.out, self.error)
         command.execute()
 
-        self.assertEquals(self.output,"Context1\nContext2\n")
+        self.assertEqual(self.output,"Context1\nContext2\n")
         self.assertFalse(self.errors)
 
     def test_contexts2(self):
@@ -34,15 +34,15 @@ class ListContextCommandTest(CommandTest):
         command = ListContextCommand(["aaa"], todolist, self.out, self.error)
         command.execute()
 
-        self.assertEquals(self.output,"Context1\nContext2\n")
+        self.assertEqual(self.output,"Context1\nContext2\n")
         self.assertFalse(self.errors)
 
     def test_help(self):
         command = ListContextCommand(["help"], None, self.out, self.error)
         command.execute()
 
-        self.assertEquals(self.output, "")
-        self.assertEquals(self.errors, command.usage() + "\n\n" + command.help() + "\n")
+        self.assertEqual(self.output, "")
+        self.assertEqual(self.errors, command.usage() + "\n\n" + command.help() + "\n")
 
 if __name__ == '__main__':
     unittest.main()

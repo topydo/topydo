@@ -43,8 +43,8 @@ class EditCommandTest(CommandTest):
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEquals(self.errors, "")
-        self.assertEquals(str(self.todolist), "Bar p:1 @test\nBaz @test\nFoo id:1")
+        self.assertEqual(self.errors, "")
+        self.assertEqual(str(self.todolist), "Bar p:1 @test\nBaz @test\nFoo id:1")
 
     @mock.patch('topydo.lib.EditCommand.EditCommand._todos_from_temp')
     @mock.patch('topydo.lib.EditCommand.EditCommand._open_in_editor')
@@ -57,8 +57,8 @@ class EditCommandTest(CommandTest):
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEquals(self.errors, "")
-        self.assertEquals(str(self.todolist), "Foo id:1\nBaz @test\nLazy Cat")
+        self.assertEqual(self.errors, "")
+        self.assertEqual(str(self.todolist), "Foo id:1\nBaz @test\nLazy Cat")
 
     def test_edit3(self):
         """ Throw an error after invalid todo number given as argument. """
@@ -66,7 +66,7 @@ class EditCommandTest(CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
-        self.assertEquals(self.errors, "Invalid todo number given.\n")
+        self.assertEqual(self.errors, "Invalid todo number given.\n")
 
     def test_edit4(self):
         """ Throw an error with pointing invalid argument. """
@@ -74,7 +74,7 @@ class EditCommandTest(CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
-        self.assertEquals(self.errors, "Invalid todo number given: 4.\n")
+        self.assertEqual(self.errors, "Invalid todo number given: 4.\n")
 
     @mock.patch('topydo.lib.EditCommand.EditCommand._todos_from_temp')
     @mock.patch('topydo.lib.EditCommand.EditCommand._open_in_editor')
@@ -87,8 +87,8 @@ class EditCommandTest(CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
-        self.assertEquals(self.errors, "Number of edited todos is not equal to number of supplied todo IDs.\n")
-        self.assertEquals(str(self.todolist), "Foo id:1\nBar p:1 @test\nBaz @test")
+        self.assertEqual(self.errors, "Number of edited todos is not equal to number of supplied todo IDs.\n")
+        self.assertEqual(str(self.todolist), "Foo id:1\nBar p:1 @test\nBaz @test")
 
     @mock.patch('topydo.lib.EditCommand.EditCommand._todos_from_temp')
     @mock.patch('topydo.lib.EditCommand.EditCommand._open_in_editor')
@@ -101,8 +101,8 @@ class EditCommandTest(CommandTest):
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEquals(self.errors, "")
-        self.assertEquals(str(self.todolist), "Foo id:1\nLazy Cat\nLazy Dog")
+        self.assertEqual(self.errors, "")
+        self.assertEqual(str(self.todolist), "Foo id:1\nLazy Cat\nLazy Dog")
 
 if __name__ == '__main__':
     unittest.main()
