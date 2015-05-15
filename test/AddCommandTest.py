@@ -166,11 +166,11 @@ class AddCommandTest(CommandTest):
         command = AddCommand.AddCommand(["Foo"], self.todolist, self.out, self.error)
         command.execute()
 
-        command = AddCommand.AddCommand(["Bar after:tpi"], self.todolist, self.out, self.error)
+        command = AddCommand.AddCommand(["Bar after:7ui"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEquals(self.todolist.todo('tpi').source(), "{} Foo p:1".format(self.today))
-        self.assertEquals(self.todolist.todo('b0n').source(), "{} Bar id:1".format(self.today))
+        self.assertEquals(self.todolist.todo('7ui').source(), "{} Foo p:1".format(self.today))
+        self.assertEquals(self.todolist.todo('8to').source(), "{} Bar id:1".format(self.today))
 
     def test_add_dep9(self):
         """
@@ -184,13 +184,13 @@ class AddCommandTest(CommandTest):
         command = AddCommand.AddCommand(["Foo +Project"], self.todolist, lambda t: t, self.error)
         command.execute()
 
-        command = AddCommand.AddCommand(["Bar before:eqk"], self.todolist, self.out, self.error)
+        command = AddCommand.AddCommand(["Bar before:kh0"], self.todolist, self.out, self.error)
         command.execute()
 
         command = ListCommand.ListCommand(["Bar"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEquals(self.output, "|5dh| {today} Bar p:1 +Project\n|5dh| {today} Bar +Project\n".format(today=self.today))
+        self.assertEquals(self.output, "|kbn| {today} Bar p:1 +Project\n|kbn| {today} Bar +Project\n".format(today=self.today))
 
     def test_add_dep10(self):
         """
@@ -204,13 +204,13 @@ class AddCommandTest(CommandTest):
         command = AddCommand.AddCommand(["Foo @Context"], self.todolist, lambda t: t, self.error)
         command.execute()
 
-        command = AddCommand.AddCommand(["Bar before:x2k"], self.todolist, self.out, self.error)
+        command = AddCommand.AddCommand(["Bar before:2a2"], self.todolist, self.out, self.error)
         command.execute()
 
         command = ListCommand.ListCommand(["Bar"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEquals(self.output, "|5dc| {today} Bar p:1 @Context\n|5dc| {today} Bar @Context\n".format(today=self.today))
+        self.assertEquals(self.output, "|wb3| {today} Bar p:1 @Context\n|wb3| {today} Bar @Context\n".format(today=self.today))
 
     def test_add_reldate1(self):
         command = AddCommand.AddCommand(["Foo due:today"], self.todolist, self.out, self.error)

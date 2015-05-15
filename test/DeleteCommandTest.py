@@ -112,7 +112,7 @@ class DeleteCommandTest(CommandTest):
         """ Test deletion with textual IDs. """
         config("test/data/todolist-uid.conf")
 
-        command = DeleteCommand(["b0n"], self.todolist, self.out, self.error)
+        command = DeleteCommand(["8to"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertEquals(str(self.todolist), "Foo")

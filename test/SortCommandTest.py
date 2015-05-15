@@ -43,10 +43,10 @@ class SortCommandTest(CommandTest):
         """ Check that order does not influence the UID of a todo. """
         config("test/data/todolist-uid.conf")
 
-        todo1 = self.todolist.todo('tpi')
+        todo1 = self.todolist.todo('7ui')
         command = SortCommand(["text"], self.todolist, self.out, self.error)
         command.execute()
-        todo2 = self.todolist.todo('tpi')
+        todo2 = self.todolist.todo('7ui')
 
         self.assertEquals(todo1.source(), todo2.source())
 

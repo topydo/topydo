@@ -19,6 +19,8 @@ Module that calculates identifiers for each item in a list, based on the hash
 value of each item.
 """
 
+from hashlib import sha1
+
 _TABLE_SIZES = {
     # we choose a large table size to reduce the chance of collisions.
     3: 46649, # largest prime under zzz_36
@@ -41,7 +43,7 @@ def _to_base36(p_value):
 
     return base36 or alphabet[0]
 
-def hash_list_values(p_list, p_hash=hash):
+def hash_list_values(p_list, p_key=lambda i: i):
     """
     Calculates a unique value for each item in the list, these can be used as
     identifiers.
@@ -61,8 +63,15 @@ def hash_list_values(p_list, p_hash=hash):
         if len(p_list) < _TABLE_SIZES[3] * 0.01 else _TABLE_SIZES[4]
 
     for item in p_list:
-        hash_value = p_hash(item) % size
+        # obtain the to-be-hashed value
+        raw_value = p_key(item)
 
+        # hash
+        hasher = sha1()
+        hasher.update(raw_value)
+        hash_value = int(hasher.hexdigest(), 16) % size
+
+        # resolve possible collisions
         while hash_value in used:
             hash_value = (hash_value + 1) % size
 

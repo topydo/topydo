@@ -198,15 +198,15 @@ class TodoListTester(TopydoTest):
     def test_uid1(self):
         config("test/data/todolist-uid.conf")
 
-        self.assertEquals(self.todolist.todo('6iu').source(), "(C) Foo @Context2 Not@Context +Project1 Not+Project")
+        self.assertEquals(self.todolist.todo('t5c').source(), "(C) Foo @Context2 Not@Context +Project1 Not+Project")
 
     def test_uid2(self):
         """ Changing the priority should not change the identifier. """
         config("test/data/todolist-uid.conf")
 
-        todo = self.todolist.todo('6iu')
+        todo = self.todolist.todo('t5c')
         self.todolist.set_priority(todo, 'B')
-        self.assertEquals(self.todolist.todo('6iu').source(), "(B) Foo @Context2 Not@Context +Project1 Not+Project")
+        self.assertEquals(self.todolist.todo('t5c').source(), "(B) Foo @Context2 Not@Context +Project1 Not+Project")
 
     def test_uid3(self):
         """
@@ -220,10 +220,10 @@ class TodoListTester(TopydoTest):
         """ Make sure that item has new text ID after append. """
 
         config("test/data/todolist-uid.conf")
-        todo = self.todolist.todo('6iu')
+        todo = self.todolist.todo('t5c')
         self.todolist.append(todo, "A")
 
-        self.assertNotEquals(self.todolist.number(todo), '6iu')
+        self.assertNotEquals(self.todolist.number(todo), 't5c')
 
 class TodoListDependencyTester(TopydoTest):
     def setUp(self):

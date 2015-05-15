@@ -151,7 +151,7 @@ class ListCommandTest(CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
-        self.assertEquals(self.output, "|6iu| (C) Foo @Context2 Not@Context +Project1 Not+Project\n|til| (C) Drink beer @ home\n| c5| (C) 13 + 29 = 42\n|xvb| (D) Bar @Context1 +Project2\n")
+        self.assertEquals(self.output, "|t5c| (C) Foo @Context2 Not@Context +Project1 Not+Project\n|wa5| (C) Drink beer @ home\n|z63| (C) 13 + 29 = 42\n|mfg| (D) Bar @Context1 +Project2\n")
         self.assertEquals(self.errors, "")
 
     def test_list17(self):
