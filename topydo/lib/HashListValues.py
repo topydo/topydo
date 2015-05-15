@@ -68,7 +68,7 @@ def hash_list_values(p_list, p_key=lambda i: i):
 
         # hash
         hasher = sha1()
-        hasher.update(raw_value)
+        hasher.update(raw_value.encode('utf-8'))
         hash_value = int(hasher.hexdigest(), 16) % size
 
         # resolve possible collisions
