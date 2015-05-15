@@ -66,7 +66,7 @@ class _Config:
 
         self.config = {}
 
-        self.cp = configparser.SafeConfigParser(self.defaults)
+        self.cp = configparser.ConfigParser(self.defaults)
 
         files = [
             "/etc/topydo.conf",
