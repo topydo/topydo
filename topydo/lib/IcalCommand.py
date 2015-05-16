@@ -60,11 +60,13 @@ For the supported options, please refer to the help text of 'ls'
 While specifying the sort order is supported (-s flag), like in 'ls', this is
 not meaningful in the context of an iCalendar file.
 
-Note: be aware that this is not necessarily a read-only operation. This
+Note 1 : be aware that this is not necessarily a read-only operation. This
 subcommand may add ical tags to the printed todo items containing a unique ID.
 Completed todo items may be archived.
 
-Note: topydo does not support reading iCal files, this is merely a dump.
+Note 2: topydo does not support reading iCal files, this is merely a dump.
 Changes made with other iCalendar enabled applications will not be processed.
 Suggested usage is to use the output as a read-only calendar.
+
+Note 3: The ical subcommand only works for Python 2.7 and 3.3+.
 """

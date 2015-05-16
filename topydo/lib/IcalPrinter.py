@@ -22,7 +22,10 @@ file according to RFC 2445.
 try:
     import icalendar as ical
     ICAL_PRESENT = True
-except ImportError:
+except (SyntaxError, ImportError):
+    # icalendar does not support Python 3.2 resulting in a SyntaxError. Since
+    # this is an optional dependency, dropping Python 3.2 support altogether is
+    # too much. Therefore just disable the iCalendar functionality
     ICAL_PRESENT = False
 
 from datetime import datetime, time
