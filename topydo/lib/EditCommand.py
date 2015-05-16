@@ -57,7 +57,7 @@ class EditCommand(MultiCommand, ListCommand):
 
     def _todos_from_temp(self, p_temp_file):
         p_temp_file.seek(0)
-        todos = p_temp_file.read().splitlines()
+        todos = p_temp_file.read().decode('utf-8').splitlines()
 
         todo_objs = []
         for todo in todos:
