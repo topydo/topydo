@@ -105,7 +105,7 @@ class IcalPrinter(Printer):
                 """
                 return ''.join(
                     random.choice(string.ascii_letters + string.digits)
-                        for i in xrange(p_length))
+                        for i in range(p_length))
 
             uid = p_todo.tag_value('ical')
             if not uid:
