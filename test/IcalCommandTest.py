@@ -23,12 +23,14 @@ from test.CommandTest import CommandTest
 from topydo.lib.IcalCommand import IcalCommand
 from test.TestFacilities import load_file_to_todolist
 
+IS_PYTHON_32 = (sys.version_info.major, sys.version_info.minor) == (3, 2)
+
 class IcalCommandTest(CommandTest):
     def setUp(self):
         super(IcalCommandTest, self).setUp()
         self.todolist = load_file_to_todolist("test/data/ListCommandTest.txt")
 
-    @unittest.skipIf((sys.version_info.major, sys.version_info.minor) == (3, 2), "icalendar is not supported for Python 3.2")
+    @unittest.skipIf(IS_PYTHON_32, "icalendar is not supported for Python 3.2")
     def test_ical(self):
         def replace_ical_tags(p_text):
             # replace identifiers with dots, since they're random.
@@ -49,7 +51,7 @@ class IcalCommandTest(CommandTest):
         self.assertEqual(replace_ical_tags(self.output), replace_ical_tags(icaltext))
         self.assertEqual(self.errors, "")
 
-    @unittest.skipUnless((sys.version_info.major, sys.version_info.minor) == (3,2), "icalendar is not supported for Python 3.2")
+    @unittest.skipUnless(IS_PYTHON_32, "icalendar is not supported for Python 3.2")
     def test_ical_python32(self):
         """
         Test case for Python 3.2 where icalendar is not supported.
@@ -61,12 +63,21 @@ class IcalCommandTest(CommandTest):
         self.assertEqual(self.output, '')
         self.assertEqual(self.errors, "icalendar is not supported in this Python version.\n")
 
+    @unittest.skipIf(IS_PYTHON_32, "icalendar is not supported for Python 3.2")
     def test_help(self):
         command = IcalCommand(["help"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors, command.usage() + "\n\n" + command.help() + "\n")
+
+    @unittest.skipUnless(IS_PYTHON_32, "icalendar is not supported for Python 3.2")
+    def test_help_python32(self):
+        command = IcalCommand(["help"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEqual(self.output, "")
+        self.assertEqual(self.errors, "icalendar is not supported in this Python version.\n")
 
 if __name__ == '__main__':
     unittest.main()
