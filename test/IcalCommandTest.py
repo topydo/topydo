@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import codecs
 import re
 import unittest
 
@@ -41,8 +42,8 @@ class IcalCommandTest(CommandTest):
         self.assertTrue(self.todolist.is_dirty())
 
         icaltext = ""
-        with open('test/data/ListCommandTest.ics', 'r') as ical:
-            icaltext = "".join(ical.readlines())
+        with codecs.open('test/data/ListCommandTest.ics', 'r', encoding='utf-8') as ical:
+            icaltext = ical.read()
 
         self.assertEqual(replace_ical_tags(self.output), replace_ical_tags(icaltext))
         self.assertEqual(self.errors, "")

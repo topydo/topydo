@@ -86,7 +86,7 @@ class IcalPrinter(Printer):
             for todo in p_todos:
                 cal.add_component(self._convert_todo(todo))
 
-            result = cal.to_ical()
+            result = cal.to_ical().decode('utf-8')
 
         return result
 
