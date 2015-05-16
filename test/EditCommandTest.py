@@ -17,12 +17,12 @@
 import unittest
 import mock
 
-import CommandTest
 from topydo.commands.EditCommand import EditCommand
+from test.CommandTest import CommandTest
 from topydo.lib.TodoList import TodoList
 from topydo.lib.Todo import Todo
 
-class EditCommandTest(CommandTest.CommandTest):
+class EditCommandTest(CommandTest):
     def setUp(self):
         super(EditCommandTest, self).setUp()
         todos = [
@@ -43,8 +43,8 @@ class EditCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEquals(self.errors, "")
-        self.assertEquals(str(self.todolist), "Bar p:1 @test\nBaz @test\nFoo id:1")
+        self.assertEqual(self.errors, "")
+        self.assertEqual(str(self.todolist), "Bar p:1 @test\nBaz @test\nFoo id:1")
 
     @mock.patch('topydo.commands.EditCommand.EditCommand._todos_from_temp')
     @mock.patch('topydo.commands.EditCommand.EditCommand._open_in_editor')
@@ -57,8 +57,8 @@ class EditCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEquals(self.errors, "")
-        self.assertEquals(str(self.todolist), "Foo id:1\nBaz @test\nLazy Cat")
+        self.assertEqual(self.errors, "")
+        self.assertEqual(str(self.todolist), "Foo id:1\nBaz @test\nLazy Cat")
 
     def test_edit3(self):
         """ Throw an error after invalid todo number given as argument. """
@@ -66,15 +66,15 @@ class EditCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
-        self.assertEquals(self.errors, "Invalid todo number given.\n")
+        self.assertEqual(self.errors, "Invalid todo number given.\n")
 
     def test_edit4(self):
         """ Throw an error with pointing invalid argument. """
-        command = EditCommand(["Bar","4"], self.todolist, self.out, self.error, None)
+        command = EditCommand(["Bar", "4"], self.todolist, self.out, self.error, None)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
-        self.assertEquals(self.errors, "Invalid todo number given: 4.\n")
+        self.assertEqual(self.errors, "Invalid todo number given: 4.\n")
 
     @mock.patch('topydo.commands.EditCommand.EditCommand._todos_from_temp')
     @mock.patch('topydo.commands.EditCommand.EditCommand._open_in_editor')
@@ -83,12 +83,12 @@ class EditCommandTest(CommandTest.CommandTest):
         mock_open_in_editor.return_value = 0
         mock_todos_from_temp.return_value = [Todo('Only one line')]
 
-        command = EditCommand(["1","Bar"], self.todolist, self.out, self.error, None)
+        command = EditCommand(["1", "Bar"], self.todolist, self.out, self.error, None)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
-        self.assertEquals(self.errors, "Number of edited todos is not equal to number of supplied todo IDs.\n")
-        self.assertEquals(str(self.todolist), "Foo id:1\nBar p:1 @test\nBaz @test")
+        self.assertEqual(self.errors, "Number of edited todos is not equal to number of supplied todo IDs.\n")
+        self.assertEqual(str(self.todolist), "Foo id:1\nBar p:1 @test\nBaz @test")
 
     @mock.patch('topydo.commands.EditCommand.EditCommand._todos_from_temp')
     @mock.patch('topydo.commands.EditCommand.EditCommand._open_in_editor')
@@ -97,12 +97,12 @@ class EditCommandTest(CommandTest.CommandTest):
         mock_open_in_editor.return_value = 0
         mock_todos_from_temp.return_value = [Todo('Lazy Cat'), Todo('Lazy Dog')]
 
-        command = EditCommand(["-e","@test"], self.todolist, self.out, self.error, None)
+        command = EditCommand(["-e", "@test"], self.todolist, self.out, self.error, None)
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEquals(self.errors, "")
-        self.assertEquals(str(self.todolist), "Foo id:1\nLazy Cat\nLazy Dog")
+        self.assertEqual(self.errors, "")
+        self.assertEqual(str(self.todolist), "Foo id:1\nLazy Cat\nLazy Dog")
 
 if __name__ == '__main__':
     unittest.main()

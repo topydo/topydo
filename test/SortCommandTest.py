@@ -16,46 +16,46 @@
 
 import unittest
 
-import CommandTest
 from topydo.lib.Config import config
 from topydo.commands.SortCommand import SortCommand
-import TestFacilities
+from test.CommandTest import CommandTest
+from test.TestFacilities import load_file_to_todolist
 
-class SortCommandTest(CommandTest.CommandTest):
+class SortCommandTest(CommandTest):
     def setUp(self):
         super(SortCommandTest, self).setUp()
-        self.todolist = TestFacilities.load_file_to_todolist("test/data/SorterTest1.txt")
+        self.todolist = load_file_to_todolist("test/data/SorterTest1.txt")
 
     def test_sort1(self):
         """ Alphabetically sorted """
         command = SortCommand(["text"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEquals(str(self.todolist), "First\n(A) Foo\n2014-06-14 Last")
+        self.assertEqual(str(self.todolist), "First\n(A) Foo\n2014-06-14 Last")
 
     def test_sort2(self):
         command = SortCommand([], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEquals(str(self.todolist), "(A) Foo\n2014-06-14 Last\nFirst")
+        self.assertEqual(str(self.todolist), "(A) Foo\n2014-06-14 Last\nFirst")
 
     def test_sort3(self):
         """ Check that order does not influence the UID of a todo. """
         config("test/data/todolist-uid.conf")
 
-        todo1 = self.todolist.todo('tpi')
+        todo1 = self.todolist.todo('7ui')
         command = SortCommand(["text"], self.todolist, self.out, self.error)
         command.execute()
-        todo2 = self.todolist.todo('tpi')
+        todo2 = self.todolist.todo('7ui')
 
-        self.assertEquals(todo1.source(), todo2.source())
+        self.assertEqual(todo1.source(), todo2.source())
 
     def test_help(self):
         command = SortCommand(["help"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEquals(self.output, "")
-        self.assertEquals(self.errors, command.usage() + "\n\n" + command.help() + "\n")
+        self.assertEqual(self.output, "")
+        self.assertEqual(self.errors, command.usage() + "\n\n" + command.help() + "\n")
 
 if __name__ == '__main__':
     unittest.main()

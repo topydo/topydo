@@ -8,6 +8,9 @@ setup(
     author = "Bram Schoenmakers",
     author_email = "me@bramschoenmakers.nl",
     url = "https://github.com/bram85/topydo",
+    install_requires = [
+        'six',
+    ],
     extras_require = {
         'ical': ['icalendar'],
         'prompt-toolkit': ['prompt-toolkit >= 0.37'],
@@ -22,7 +25,10 @@ setup(
         "Intended Audience :: End Users/Desktop",
         "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
         "Natural Language :: English",
-        "Programming Language :: Python :: 2",
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.2",
+        "Programming Language :: Python :: 3.3",
+        "Programming Language :: Python :: 3.4",
         "Topic :: Utilities",
     ],
     long_description = """\

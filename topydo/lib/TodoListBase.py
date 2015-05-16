@@ -249,7 +249,7 @@ class TodoListBase(object):
         self._todo_id_map = {}
         self._id_todo_map = {}
 
-        uids = hash_list_values(self._todos, lambda t: hash(t.text()))
+        uids = hash_list_values(self._todos, lambda t: t.text())
 
         for (todo, uid) in uids:
             self._todo_id_map[todo] = uid

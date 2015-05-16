@@ -50,14 +50,14 @@ class EditCommand(MultiCommand, ListCommand):
     def _todos_to_temp(self):
         f = tempfile.NamedTemporaryFile()
         for todo in self.todos:
-            f.write("%s\n" % todo.__str__())
+            f.write((str(todo) + "\n").encode('utf-8'))
         f.seek(0)
 
         return f
 
-    def _todos_from_temp(self, temp_file):
-        temp_file.seek(0)
-        todos = temp_file.read().splitlines()
+    def _todos_from_temp(self, p_temp_file):
+        p_temp_file.seek(0)
+        todos = p_temp_file.read().decode('utf-8').splitlines()
 
         todo_objs = []
         for todo in todos:
@@ -65,10 +65,10 @@ class EditCommand(MultiCommand, ListCommand):
 
         return todo_objs
 
-    def _open_in_editor(self, temp_file, editor):
+    def _open_in_editor(self, p_temp_file, p_editor):
         try:
-            return check_call([editor, temp_file.name])
-        except(CalledProcessError):
+            return check_call([p_editor, p_temp_file.name])
+        except CalledProcessError:
             self.error('Something went wrong in the editor...')
             return 1
 

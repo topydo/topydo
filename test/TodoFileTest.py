@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from six import u
 import unittest
 
 from test.TestFacilities import load_file
@@ -23,7 +24,12 @@ class TodoFileTest(TopydoTest):
     def test_empty_file(self):
         todofile = load_file('test/data/TodoFileTest1.txt')
 
-        self.assertEquals(len(todofile), 0)
+        self.assertEqual(len(todofile), 0)
+
+    def test_utf_8(self):
+        todofile = load_file('test/data/utf-8.txt')
+
+        self.assertEqual(todofile[0].source(), u('(C) \u25ba UTF-8 test \u25c4'))
 
 if __name__ == '__main__':
     unittest.main()

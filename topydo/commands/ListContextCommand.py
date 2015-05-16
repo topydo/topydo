@@ -28,7 +28,7 @@ class ListContextCommand(Command):
         if not super(ListContextCommand, self).execute():
             return False
 
-        for context in sorted(self.todolist.contexts(), key=str.lower):
+        for context in sorted(self.todolist.contexts(), key=lambda s: s.lower()):
             self.out(context)
 
     def usage(self):

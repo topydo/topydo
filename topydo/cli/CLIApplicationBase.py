@@ -18,8 +18,12 @@
 
 import getopt
 import sys
+from six.moves import input
 
-USAGE = """\
+def usage():
+    """ Prints the command-line usage of topydo. """
+
+    print("""\
 Synopsis: topydo [-c <config>] [-d <archive>] [-t <todo.txt>] subcommand [help|args]
           topydo -h
           topydo -v
@@ -49,7 +53,7 @@ Available commands:
 * tag
 
 Run `topydo help <subcommand>` for command-specific help.
-"""
+""")
 
 def write(p_file, p_string):
     """
@@ -71,8 +75,8 @@ def error(p_string):
 def version():
     """ Print the current version and exit. """
     from topydo.lib.Version import VERSION, LICENSE
-    print "topydo {}\n".format(VERSION)
-    print LICENSE
+    print("topydo {}\n".format(VERSION))
+    print(LICENSE)
     sys.exit(0)
 
 from topydo.lib.Config import config, ConfigError
