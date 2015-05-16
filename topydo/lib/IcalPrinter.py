@@ -22,7 +22,10 @@ file according to RFC 2445.
 try:
     import icalendar as ical
     ICAL_PRESENT = True
-except ImportError:
+except (SyntaxError, ImportError):
+    # icalendar does not support Python 3.2 resulting in a SyntaxError. Since
+    # this is an optional dependency, dropping Python 3.2 support altogether is
+    # too much. Therefore just disable the iCalendar functionality
     ICAL_PRESENT = False
 
 from datetime import datetime, time
@@ -86,7 +89,7 @@ class IcalPrinter(Printer):
             for todo in p_todos:
                 cal.add_component(self._convert_todo(todo))
 
-            result = cal.to_ical()
+            result = cal.to_ical().decode('utf-8')
 
         return result
 
@@ -105,7 +108,7 @@ class IcalPrinter(Printer):
                 """
                 return ''.join(
                     random.choice(string.ascii_letters + string.digits)
-                        for i in xrange(p_length))
+                        for i in range(p_length))
 
             uid = p_todo.tag_value('ical')
             if not uid:

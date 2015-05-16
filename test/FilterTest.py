@@ -30,7 +30,7 @@ class FilterTest(TopydoTest):
         relevance = Filter.RelevanceFilter()
         result = relevance.filter([todo])
 
-        self.assertEquals(result, [todo])
+        self.assertEqual(result, [todo])
 
     def test_filter4(self):
         """ Test case insensitive match. """
@@ -40,7 +40,7 @@ class FilterTest(TopydoTest):
         filtered_todos = grep.filter(todos)
         reference = load_file('test/data/FilterTest1a-result.txt')
 
-        self.assertEquals(todolist_to_string(filtered_todos), \
+        self.assertEqual(todolist_to_string(filtered_todos), \
             todolist_to_string(reference))
 
     def test_filter5(self):
@@ -51,7 +51,7 @@ class FilterTest(TopydoTest):
         filtered_todos = grep.filter(todos)
         reference = load_file('test/data/FilterTest1b-result.txt')
 
-        self.assertEquals(todolist_to_string(filtered_todos), \
+        self.assertEqual(todolist_to_string(filtered_todos), \
             todolist_to_string(reference))
 
     def test_filter6(self):
@@ -62,7 +62,7 @@ class FilterTest(TopydoTest):
         filtered_todos = grep.filter(todos)
         reference = load_file('test/data/FilterTest1c-result.txt')
 
-        self.assertEquals(todolist_to_string(filtered_todos), \
+        self.assertEqual(todolist_to_string(filtered_todos), \
             todolist_to_string(reference))
 
     def test_filter7(self):
@@ -73,7 +73,7 @@ class FilterTest(TopydoTest):
         filtered_todos = depfilter.filter(todolist.todos())
         reference = load_file('test/data/FilterTest2-result.txt')
 
-        self.assertEquals(todolist_to_string(filtered_todos), \
+        self.assertEqual(todolist_to_string(filtered_todos), \
             todolist_to_string(reference))
 
     def test_filter8(self):
@@ -84,7 +84,7 @@ class FilterTest(TopydoTest):
         filtered_todos = grep.filter(todos)
         reference = load_file('test/data/FilterTest1a-result.txt')
 
-        self.assertEquals(todolist_to_string(filtered_todos), \
+        self.assertEqual(todolist_to_string(filtered_todos), \
             todolist_to_string(reference))
 
     def test_filter9(self):
@@ -94,7 +94,7 @@ class FilterTest(TopydoTest):
 
         filtered_todos = instance_filter.filter(todos)
 
-        self.assertEquals(todos[2:], filtered_todos)
+        self.assertEqual(todos[2:], filtered_todos)
 
     def test_filter10(self):
         """ Test instance filter """
@@ -103,7 +103,7 @@ class FilterTest(TopydoTest):
 
         filtered_todos = instance_filter.filter(todos)
 
-        self.assertEquals([], filtered_todos)
+        self.assertEqual([], filtered_todos)
 
     def test_filter11(self):
         """ Test instance filter """
@@ -112,7 +112,7 @@ class FilterTest(TopydoTest):
 
         filtered_todos = instance_filter.filter([])
 
-        self.assertEquals([], filtered_todos)
+        self.assertEqual([], filtered_todos)
 
     def test_filter12(self):
         """ Test limit filter. """
@@ -121,7 +121,7 @@ class FilterTest(TopydoTest):
 
         filtered_todos = limit_filter.filter(todos)
 
-        self.assertEquals([], filtered_todos)
+        self.assertEqual([], filtered_todos)
 
     def test_filter13(self):
         """ Test limit filter. """
@@ -130,8 +130,8 @@ class FilterTest(TopydoTest):
 
         filtered_todos = limit_filter.filter(todos)
 
-        self.assertEquals(len(filtered_todos), 1)
-        self.assertEquals(filtered_todos[0].source(), '(C) This is part of some +Project')
+        self.assertEqual(len(filtered_todos), 1)
+        self.assertEqual(filtered_todos[0].source(), '(C) This is part of some +Project')
 
     def test_filter14(self):
         """ Test limit filter. """
@@ -140,7 +140,7 @@ class FilterTest(TopydoTest):
 
         filtered_todos = limit_filter.filter(todos)
 
-        self.assertEquals(todos, filtered_todos)
+        self.assertEqual(todos, filtered_todos)
 
     def test_filter15(self):
         """ Test limit filter. """
@@ -149,7 +149,7 @@ class FilterTest(TopydoTest):
 
         filtered_todos = limit_filter.filter(todos)
 
-        self.assertEquals(len(filtered_todos), 4)
+        self.assertEqual(len(filtered_todos), 4)
 
     def test_filter16(self):
         todos = load_file('test/data/FilterTest1.txt')
@@ -158,7 +158,7 @@ class FilterTest(TopydoTest):
         filtered_todos = grep.filter(todos)
         reference = load_file('test/data/FilterTest3-result.txt')
 
-        self.assertEquals(todolist_to_string(filtered_todos), \
+        self.assertEqual(todolist_to_string(filtered_todos), \
             todolist_to_string(reference))
 
     def test_filter17(self):
@@ -170,7 +170,7 @@ class FilterTest(TopydoTest):
         filtered_todos = andfilter.filter(todos)
         reference = load_file('test/data/FilterTest4-result.txt')
 
-        self.assertEquals(todolist_to_string(filtered_todos), \
+        self.assertEqual(todolist_to_string(filtered_todos), \
             todolist_to_string(reference))
 
     def test_filter18(self):
@@ -182,7 +182,7 @@ class FilterTest(TopydoTest):
         filtered_todos = grep.filter(todos)
         reference = load_file('test/data/FilterTest5-result.txt')
 
-        self.assertEquals(todolist_to_string(filtered_todos), \
+        self.assertEqual(todolist_to_string(filtered_todos), \
             todolist_to_string(reference))
 
     def test_filter19(self):
@@ -190,7 +190,7 @@ class FilterTest(TopydoTest):
         grep = Filter.GrepFilter(1)
         filtered_todos = grep.filter(todos)
 
-        self.assertEquals(filtered_todos, [])
+        self.assertEqual(filtered_todos, [])
 
     def test_filter20(self):
         todos = load_file('test/data/FilterTest3.txt')
@@ -199,7 +199,7 @@ class FilterTest(TopydoTest):
         filtered_todos = otf.filter(todos)
         reference = load_file('test/data/FilterTest6-result.txt')
 
-        self.assertEquals(todolist_to_string(filtered_todos), \
+        self.assertEqual(todolist_to_string(filtered_todos), \
             todolist_to_string(reference))
 
     def test_filter21(self):
@@ -208,7 +208,7 @@ class FilterTest(TopydoTest):
 
         filtered_todos = otf.filter(todos)
 
-        self.assertEquals(todolist_to_string(filtered_todos), "")
+        self.assertEqual(todolist_to_string(filtered_todos), "")
 
     def test_filter22(self):
         todos = load_file('test/data/FilterTest3.txt')
@@ -216,7 +216,7 @@ class FilterTest(TopydoTest):
 
         filtered_todos = otf.filter(todos)
 
-        self.assertEquals(todolist_to_string(filtered_todos), "")
+        self.assertEqual(todolist_to_string(filtered_todos), "")
 
     def test_filter23(self):
         todos = load_file('test/data/FilterTest3.txt')
@@ -224,7 +224,7 @@ class FilterTest(TopydoTest):
 
         filtered_todos = otf.filter(todos)
 
-        self.assertEquals(todolist_to_string(filtered_todos), "")
+        self.assertEqual(todolist_to_string(filtered_todos), "")
 
     def test_filter24(self):
         todos = load_file('test/data/FilterTest3.txt')
@@ -232,7 +232,7 @@ class FilterTest(TopydoTest):
 
         filtered_todos = otf.filter(todos)
 
-        self.assertEquals(todolist_to_string(filtered_todos), "")
+        self.assertEqual(todolist_to_string(filtered_todos), "")
 
     def test_filter25(self):
         todos = load_file('test/data/FilterTest3.txt')
@@ -241,7 +241,7 @@ class FilterTest(TopydoTest):
         filtered_todos = otf.filter(todos)
         reference = load_file('test/data/FilterTest8-result.txt')
 
-        self.assertEquals(todolist_to_string(filtered_todos),
+        self.assertEqual(todolist_to_string(filtered_todos),
             todolist_to_string(reference))
 
     def test_filter26(self):
@@ -251,7 +251,7 @@ class FilterTest(TopydoTest):
         filtered_todos = otf.filter(todos)
         reference = load_file('test/data/FilterTest9-result.txt')
 
-        self.assertEquals(todolist_to_string(filtered_todos),
+        self.assertEqual(todolist_to_string(filtered_todos),
             todolist_to_string(reference))
 
     def test_filter27(self):
@@ -261,7 +261,7 @@ class FilterTest(TopydoTest):
         filtered_todos = otf.filter(todos)
         reference = load_file('test/data/FilterTest10-result.txt')
 
-        self.assertEquals(todolist_to_string(filtered_todos),
+        self.assertEqual(todolist_to_string(filtered_todos),
             todolist_to_string(reference))
 
     def test_filter28(self):
@@ -270,7 +270,7 @@ class FilterTest(TopydoTest):
 
         filtered_todos = otf.filter(todos)
 
-        self.assertEquals(todolist_to_string(filtered_todos), "")
+        self.assertEqual(todolist_to_string(filtered_todos), "")
 
     def test_filter29(self):
         todos = load_file('test/data/FilterTest3.txt')
@@ -279,7 +279,7 @@ class FilterTest(TopydoTest):
         filtered_todos = otf.filter(todos)
         reference = load_file('test/data/FilterTest11-result.txt')
 
-        self.assertEquals(todolist_to_string(filtered_todos),
+        self.assertEqual(todolist_to_string(filtered_todos),
             todolist_to_string(reference))
 
     def test_filter30(self):
@@ -289,7 +289,7 @@ class FilterTest(TopydoTest):
         filtered_todos = otf.filter(todos)
         reference = load_file('test/data/FilterTest12-result.txt')
 
-        self.assertEquals(todolist_to_string(filtered_todos),
+        self.assertEqual(todolist_to_string(filtered_todos),
             todolist_to_string(reference))
 
     def test_filter31(self):
@@ -299,7 +299,7 @@ class FilterTest(TopydoTest):
         filtered_todos = otf.filter(todos)
         reference = load_file('test/data/FilterTest13-result.txt')
 
-        self.assertEquals(todolist_to_string(filtered_todos),
+        self.assertEqual(todolist_to_string(filtered_todos),
             todolist_to_string(reference))
 
 class OrdinalTagFilterTest(TopydoTest):
@@ -329,41 +329,41 @@ class OrdinalTagFilterTest(TopydoTest):
 
         result = otf.filter(self.todos)
 
-        self.assertEquals(len(result), 1)
-        self.assertEquals(str(result[0]), self.todo1)
+        self.assertEqual(len(result), 1)
+        self.assertEqual(str(result[0]), self.todo1)
 
     def test_filter2(self):
         otf = Filter.OrdinalTagFilter('due:=today')
 
         result = otf.filter(self.todos)
 
-        self.assertEquals(len(result), 1)
-        self.assertEquals(str(result[0]), self.todo1)
+        self.assertEqual(len(result), 1)
+        self.assertEqual(str(result[0]), self.todo1)
 
     def test_filter3(self):
         otf = Filter.OrdinalTagFilter('due:>today')
 
         result = otf.filter(self.todos)
 
-        self.assertEquals(len(result), 1)
-        self.assertEquals(str(result[0]), self.todo2)
+        self.assertEqual(len(result), 1)
+        self.assertEqual(str(result[0]), self.todo2)
 
     def test_filter4(self):
         otf = Filter.OrdinalTagFilter('due:<1w')
 
         result = otf.filter(self.todos)
 
-        self.assertEquals(len(result), 2)
-        self.assertEquals(str(result[0]), self.todo1)
-        self.assertEquals(str(result[1]), self.todo2)
+        self.assertEqual(len(result), 2)
+        self.assertEqual(str(result[0]), self.todo1)
+        self.assertEqual(str(result[1]), self.todo2)
 
     def test_filter5(self):
         otf = Filter.OrdinalTagFilter('due:!today')
 
         result = otf.filter(self.todos)
 
-        self.assertEquals(len(result), 1)
-        self.assertEquals(str(result[0]), self.todo2)
+        self.assertEqual(len(result), 1)
+        self.assertEqual(str(result[0]), self.todo2)
 
 if __name__ == '__main__':
     unittest.main()

@@ -34,7 +34,7 @@ class ViewTest(TopydoTest):
         todofilter = Filter.GrepFilter('+Project')
         view = todolist.view(sorter, [todofilter])
 
-        self.assertEquals(str(view), todolist_to_string(ref))
+        self.assertEqual(str(view), todolist_to_string(ref))
 
 if __name__ == '__main__':
     unittest.main()

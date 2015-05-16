@@ -17,10 +17,10 @@
 import unittest
 
 from topydo.lib.AppendCommand import AppendCommand
-import CommandTest
+from test.CommandTest import CommandTest
 from topydo.lib.TodoList import TodoList
 
-class AppendCommandTest(CommandTest.CommandTest):
+class AppendCommandTest(CommandTest):
     def setUp(self):
         super(AppendCommandTest, self).setUp()
         self.todolist = TodoList([])
@@ -79,8 +79,8 @@ class AppendCommandTest(CommandTest.CommandTest):
         command = AppendCommand(["help"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEquals(self.output, "")
-        self.assertEquals(self.errors, command.usage() + "\n\n" + command.help() + "\n")
+        self.assertEqual(self.output, "")
+        self.assertEqual(self.errors, command.usage() + "\n\n" + command.help() + "\n")
 
 if __name__ == '__main__':
     unittest.main()

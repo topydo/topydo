@@ -17,13 +17,13 @@
 import unittest
 
 from topydo.lib.ArchiveCommand import ArchiveCommand
-import CommandTest
-import TestFacilities
+from test.CommandTest import CommandTest
+from test.TestFacilities import load_file_to_todolist
 from topydo.lib.TodoList import TodoList
 
-class ArchiveCommandTest(CommandTest.CommandTest):
+class ArchiveCommandTest(CommandTest):
     def test_archive(self):
-        todolist = TestFacilities.load_file_to_todolist("test/data/ArchiveCommandTest.txt")
+        todolist = load_file_to_todolist("test/data/ArchiveCommandTest.txt")
         archive = TodoList([])
 
         command = ArchiveCommand(todolist, archive)
@@ -31,8 +31,8 @@ class ArchiveCommandTest(CommandTest.CommandTest):
 
         self.assertTrue(todolist.is_dirty())
         self.assertTrue(archive.is_dirty())
-        self.assertEquals(str(todolist), "x Not complete\n(C) Active")
-        self.assertEquals(str(archive), "x 2014-10-19 Complete\nx 2014-10-20 Another one complete")
+        self.assertEqual(str(todolist), "x Not complete\n(C) Active")
+        self.assertEqual(str(archive), "x 2014-10-19 Complete\nx 2014-10-20 Another one complete")
 
 if __name__ == '__main__':
     unittest.main()

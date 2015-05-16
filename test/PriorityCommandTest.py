@@ -16,11 +16,11 @@
 
 import unittest
 
-import CommandTest
+from test.CommandTest import CommandTest
 from topydo.lib.PriorityCommand import PriorityCommand
 from topydo.lib.TodoList import TodoList
 
-class PriorityCommandTest(CommandTest.CommandTest):
+class PriorityCommandTest(CommandTest):
     def setUp(self):
         super(PriorityCommandTest, self).setUp()
         todos = [
@@ -35,40 +35,40 @@ class PriorityCommandTest(CommandTest.CommandTest):
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEquals(self.output, "Priority changed from A to B\n|  1| (B) Foo\n")
-        self.assertEquals(self.errors, "")
+        self.assertEqual(self.output, "Priority changed from A to B\n|  1| (B) Foo\n")
+        self.assertEqual(self.errors, "")
 
     def test_set_prio2(self):
         command = PriorityCommand(["2", "Z"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEquals(self.output, "Priority set to Z.\n|  2| (Z) Bar\n")
-        self.assertEquals(self.errors, "")
+        self.assertEqual(self.output, "Priority set to Z.\n|  2| (Z) Bar\n")
+        self.assertEqual(self.errors, "")
 
     def test_set_prio3(self):
         command = PriorityCommand(["Foo", "B"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEquals(self.output, "Priority changed from A to B\n|  1| (B) Foo\n")
-        self.assertEquals(self.errors, "")
+        self.assertEqual(self.output, "Priority changed from A to B\n|  1| (B) Foo\n")
+        self.assertEqual(self.errors, "")
 
     def test_set_prio4(self):
         command = PriorityCommand(["1", "A"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
-        self.assertEquals(self.output, "|  1| (A) Foo\n")
-        self.assertEquals(self.errors, "")
+        self.assertEqual(self.output, "|  1| (A) Foo\n")
+        self.assertEqual(self.errors, "")
 
     def test_set_prio5(self):
         command = PriorityCommand(["Foo", "2", "C"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEquals(self.output, "Priority changed from A to C\n|  1| (C) Foo\nPriority set to C.\n|  2| (C) Bar\n")
-        self.assertEquals(self.errors, "")
+        self.assertEqual(self.output, "Priority changed from A to C\n|  1| (C) Foo\nPriority set to C.\n|  2| (C) Bar\n")
+        self.assertEqual(self.errors, "")
 
     def test_invalid1(self):
         command = PriorityCommand(["99", "A"], self.todolist, self.out, self.error)
@@ -76,7 +76,7 @@ class PriorityCommandTest(CommandTest.CommandTest):
 
         self.assertFalse(self.todolist.is_dirty())
         self.assertFalse(self.output)
-        self.assertEquals(self.errors, "Invalid todo number given.\n")
+        self.assertEqual(self.errors, "Invalid todo number given.\n")
 
     def test_invalid2(self):
         command = PriorityCommand(["1", "99", "A"], self.todolist, self.out, self.error)
@@ -84,7 +84,7 @@ class PriorityCommandTest(CommandTest.CommandTest):
 
         self.assertFalse(self.todolist.is_dirty())
         self.assertFalse(self.output)
-        self.assertEquals(self.errors, "Invalid todo number given: 99.\n")
+        self.assertEqual(self.errors, "Invalid todo number given: 99.\n")
 
     def test_invalid3(self):
         command = PriorityCommand(["98", "99", "A"], self.todolist, self.out, self.error)
@@ -92,7 +92,7 @@ class PriorityCommandTest(CommandTest.CommandTest):
 
         self.assertFalse(self.todolist.is_dirty())
         self.assertFalse(self.output)
-        self.assertEquals(self.errors, "Invalid todo number given: 98.\nInvalid todo number given: 99.\n")
+        self.assertEqual(self.errors, "Invalid todo number given: 98.\nInvalid todo number given: 99.\n")
 
     def test_invalid4(self):
         command = PriorityCommand(["1", "ZZ"], self.todolist, self.out, self.error)
@@ -100,7 +100,7 @@ class PriorityCommandTest(CommandTest.CommandTest):
 
         self.assertFalse(self.todolist.is_dirty())
         self.assertFalse(self.output)
-        self.assertEquals(self.errors, "Invalid priority given.\n")
+        self.assertEqual(self.errors, "Invalid priority given.\n")
 
     def test_invalid5(self):
         command = PriorityCommand(["A"], self.todolist, self.out, self.error)
@@ -108,7 +108,7 @@ class PriorityCommandTest(CommandTest.CommandTest):
 
         self.assertFalse(self.todolist.is_dirty())
         self.assertFalse(self.output)
-        self.assertEquals(self.errors, command.usage() + "\n")
+        self.assertEqual(self.errors, command.usage() + "\n")
 
     def test_invalid6(self):
         command = PriorityCommand(["1"], self.todolist, self.out, self.error)
@@ -116,7 +116,7 @@ class PriorityCommandTest(CommandTest.CommandTest):
 
         self.assertFalse(self.todolist.is_dirty())
         self.assertFalse(self.output)
-        self.assertEquals(self.errors, command.usage() + "\n")
+        self.assertEqual(self.errors, command.usage() + "\n")
 
     def test_empty(self):
         command = PriorityCommand([], self.todolist, self.out, self.error)
@@ -124,14 +124,14 @@ class PriorityCommandTest(CommandTest.CommandTest):
 
         self.assertFalse(self.todolist.is_dirty())
         self.assertFalse(self.output)
-        self.assertEquals(self.errors, command.usage() + "\n")
+        self.assertEqual(self.errors, command.usage() + "\n")
 
     def test_help(self):
         command = PriorityCommand(["help"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEquals(self.output, "")
-        self.assertEquals(self.errors, command.usage() + "\n\n" + command.help() + "\n")
+        self.assertEqual(self.output, "")
+        self.assertEqual(self.errors, command.usage() + "\n\n" + command.help() + "\n")
 
 if __name__ == '__main__':
     unittest.main()

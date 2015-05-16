@@ -28,7 +28,7 @@ class ListProjectCommand(Command):
         if not super(ListProjectCommand, self).execute():
             return False
 
-        for project in sorted(self.todolist.projects(), key=str.lower):
+        for project in sorted(self.todolist.projects(), key=lambda s: s.lower()):
             self.out(project)
 
     def usage(self):
