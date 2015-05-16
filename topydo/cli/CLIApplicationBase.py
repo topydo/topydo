@@ -171,7 +171,7 @@ class CLIApplicationBase(object):
         """
         Returns a function that retrieves user input.
         """
-        return raw_input
+        return input
 
     def _execute(self, p_command, p_args):
         """
