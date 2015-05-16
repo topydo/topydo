@@ -16,9 +16,9 @@
 
 import codecs
 import re
+import sys
 import unittest
 
-from topydo.lib.Config import config
 from test.CommandTest import CommandTest
 from topydo.lib.IcalCommand import IcalCommand
 from test.TestFacilities import load_file_to_todolist
@@ -28,6 +28,7 @@ class IcalCommandTest(CommandTest):
         super(IcalCommandTest, self).setUp()
         self.todolist = load_file_to_todolist("test/data/ListCommandTest.txt")
 
+    @unittest.skipIf((sys.version_info.major, sys.version_info.minor) == (3, 2), "icalendar is not supported for Python 3.2")
     def test_ical(self):
         def replace_ical_tags(p_text):
             # replace identifiers with dots, since they're random.
@@ -47,6 +48,18 @@ class IcalCommandTest(CommandTest):
 
         self.assertEqual(replace_ical_tags(self.output), replace_ical_tags(icaltext))
         self.assertEqual(self.errors, "")
+
+    @unittest.skipUnless((sys.version_info.major, sys.version_info.minor) == (3,2), "icalendar is not supported for Python 3.2")
+    def test_ical_python32(self):
+        """
+        Test case for Python 3.2 where icalendar is not supported.
+        """
+        command = IcalCommand([""], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+        self.assertEqual(self.output, '')
+        self.assertEqual(self.errors, "icalendar is not supported in this Python version.\n")
 
     def test_help(self):
         command = IcalCommand(["help"], self.todolist, self.out, self.error)

@@ -40,6 +40,9 @@ class IcalCommand(ListCommand):
         except ImportError:
             self.error("icalendar package is not installed.")
             return False
+        except SyntaxError:
+            self.error("icalendar is not supported in this Python version.")
+            return False
 
         return super(IcalCommand, self).execute()
 
