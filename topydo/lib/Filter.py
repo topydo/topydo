@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import re
+from six import text_type
 
 from topydo.lib.Config import config
 from topydo.lib.RelativeDate import relative_date_to_date
@@ -63,7 +64,7 @@ class GrepFilter(Filter):
         super(GrepFilter, self).__init__()
 
         # convert to string in case we receive integers
-        self.expression = str(p_expression)
+        self.expression = text_type(p_expression)
 
         if p_case_sensitive != None:
             self.case_sensitive = p_case_sensitive

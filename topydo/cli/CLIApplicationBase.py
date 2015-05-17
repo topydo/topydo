@@ -18,6 +18,7 @@
 
 import getopt
 import sys
+from six import PY2
 from six.moves import input
 
 def usage():
@@ -113,12 +114,17 @@ class CLIApplicationBase(object):
         self.todofile = None
 
     def _usage(self):
-        print USAGE
+        usage()
         sys.exit(0)
 
     def _process_flags(self):
+        args = sys.argv[1:]
+
+        if PY2:
+            args = [arg.decode('utf-8') for arg in args]
+
         try:
-            opts, args = getopt.getopt(sys.argv[1:], "c:d:ht:v")
+            opts, args = getopt.getopt(args, "c:d:ht:v")
         except getopt.GetoptError as e:
             error(str(e))
             sys.exit(1)
