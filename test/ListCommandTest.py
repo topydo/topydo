@@ -14,12 +14,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from six import u, PY2
+from six import u
 import unittest
 
 from topydo.lib.Config import config
 from topydo.commands.ListCommand import ListCommand
-from test.CommandTest import CommandTest
+from test.CommandTest import CommandTest, utf8
 from test.TestFacilities import load_file_to_todolist
 
 class ListCommandTest(CommandTest):
@@ -188,13 +188,6 @@ class ListCommandTest(CommandTest):
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors, command.usage() + "\n\n" + command.help() + "\n")
 
-def _utf8(p_string):
-    """ Converts a Unicode string to UTF-8 in case of Python 2. """
-    if PY2:
-        p_string = p_string.encode('utf-8')
-
-    return p_string
-
 class ListCommandUnicodeTest(CommandTest):
     def setUp(self):
         super(ListCommandUnicodeTest, self).setUp()
@@ -207,7 +200,7 @@ class ListCommandUnicodeTest(CommandTest):
 
         self.assertFalse(self.todolist.is_dirty())
 
-        expected = _utf8(u("|  1| (C) And some sp\u00e9cial tag:\u25c4\n"))
+        expected = utf8(u("|  1| (C) And some sp\u00e9cial tag:\u25c4\n"))
 
         self.assertEqual(self.output, expected)
 
