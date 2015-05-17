@@ -9,7 +9,7 @@ setup(
     author_email = "me@bramschoenmakers.nl",
     url = "https://github.com/bram85/topydo",
     install_requires = [
-        'six',
+        'six >= 1.9.0',
     ],
     extras_require = {
         'ical': ['icalendar'],
