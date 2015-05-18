@@ -18,7 +18,7 @@ import os
 from subprocess import call, check_call, CalledProcessError
 import tempfile
 
-from six import u
+from six import text_type, u
 
 from topydo.commands.ListCommand import ListCommand
 from topydo.lib.MultiCommand import MultiCommand
@@ -52,7 +52,7 @@ class EditCommand(MultiCommand, ListCommand):
     def _todos_to_temp(self):
         f = tempfile.NamedTemporaryFile()
         for todo in self.todos:
-            f.write((str(todo) + "\n").encode('utf-8'))
+            f.write((text_type(todo) + "\n").encode('utf-8'))
         f.seek(0)
 
         return f
