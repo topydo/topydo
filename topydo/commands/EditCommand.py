@@ -18,6 +18,8 @@ import os
 from subprocess import call, check_call, CalledProcessError
 import tempfile
 
+from six import u
+
 from topydo.commands.ListCommand import ListCommand
 from topydo.lib.MultiCommand import MultiCommand
 from topydo.lib.Config import config
@@ -77,7 +79,7 @@ class EditCommand(MultiCommand, ListCommand):
 
         if len(self.invalid_numbers) > 1 or len(self.invalid_numbers) > 0 and len(self.todos) > 0:
             for number in self.invalid_numbers:
-                errors.append("Invalid todo number given: {}.".format(number))
+                errors.append(u("Invalid todo number given: {}.").format(number))
         elif len(self.invalid_numbers) == 1 and len(self.todos) == 0:
             errors.append("Invalid todo number given.")
 
