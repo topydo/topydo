@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
+from six import u
 
 from topydo.commands.PriorityCommand import PriorityCommand
 from test.CommandTest import CommandTest
@@ -117,6 +118,15 @@ class PriorityCommandTest(CommandTest):
         self.assertFalse(self.todolist.is_dirty())
         self.assertFalse(self.output)
         self.assertEqual(self.errors, command.usage() + "\n")
+
+    def test_invalid7(self):
+        """ Throw an error with invalid argument containing special characters. """
+        command = PriorityCommand([u("Fo\u00d3B\u0105r"), "Bar", "C"], self.todolist, self.out, self.error, None)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+        self.assertEqual(self.output, "")
+        self.assertEqual(self.errors, u("Invalid todo number given: Fo\u00d3B\u0105r.\n"))
 
     def test_empty(self):
         command = PriorityCommand([], self.todolist, self.out, self.error)
