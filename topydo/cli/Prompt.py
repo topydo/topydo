@@ -21,6 +21,7 @@ import sys
 from topydo.cli.CLIApplicationBase import CLIApplicationBase, error
 from topydo.cli.TopydoCompleter import TopydoCompleter
 from prompt_toolkit.shortcuts import get_input
+from prompt_toolkit.history import History
 
 from topydo.lib.Config import config, ConfigError
 
@@ -55,10 +56,11 @@ class PromptApplication(CLIApplicationBase):
         self.todolist = TodoList.TodoList(self.todofile.read())
 
         completer = TopydoCompleter(self.todolist)
+        history = History()
 
         while True:
             try:
-                user_input = get_input(u'topydo> ', completer=completer).split()
+                user_input = get_input(u'topydo> ', history=history, completer=completer).split()
             except (EOFError, KeyboardInterrupt):
                 sys.exit(0)
 
