@@ -223,7 +223,7 @@ class TodoListTester(TopydoTest):
         todo = self.todolist.todo('t5c')
         self.todolist.append(todo, "A")
 
-        self.assertNotEquals(self.todolist.number(todo), 't5c')
+        self.assertNotEqual(self.todolist.number(todo), 't5c')
 
 class TodoListDependencyTester(TopydoTest):
     def setUp(self):
