@@ -24,7 +24,7 @@ class ConfigTest(TopydoTest):
         self.assertEqual(config("test/data/config1").default_command(), 'do')
 
     def test_config2(self):
-        self.assertNotEquals(config("").default_command(), 'do')
+        self.assertNotEqual(config("").default_command(), 'do')
 
     def test_config3(self):
         self.assertTrue(config("test/data/config2").ignore_weekends())
