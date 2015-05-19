@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
+from six import u
 
 from test.CommandTest import CommandTest
 from topydo.lib.Config import config
@@ -149,6 +150,15 @@ class DeleteCommandTest(CommandTest):
         self.assertFalse(self.todolist.is_dirty())
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors, "Invalid todo number given: 99.\nInvalid todo number given: A.\n")
+
+    def test_multi_del5(self):
+        """ Throw an error with invalid argument containing special characters. """
+        command = DeleteCommand([u("Fo\u00d3B\u0105r"), "Bar"], self.todolist, self.out, self.error, None)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+        self.assertEqual(self.output, "")
+        self.assertEqual(self.errors, u("Invalid todo number given: Fo\u00d3B\u0105r.\n"))
 
     def test_empty(self):
         command = DeleteCommand([], self.todolist, self.out, self.error)
