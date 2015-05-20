@@ -18,7 +18,7 @@
 
 import sys
 
-from topydo.cli.CLIApplicationBase import CLIApplicationBase, error
+from topydo.cli.CLIApplicationBase import CLIApplicationBase, error, usage
 from topydo.cli.TopydoCompleter import TopydoCompleter
 from prompt_toolkit.shortcuts import get_input
 from prompt_toolkit.history import History
@@ -66,14 +66,17 @@ class PromptApplication(CLIApplicationBase):
 
             (subcommand, args) = get_subcommand(user_input)
 
-            if self._execute(subcommand, args) != False:
-                if self.todolist.is_dirty():
-                    self._archive()
+            try:
+                if self._execute(subcommand, args) != False:
+                    if self.todolist.is_dirty():
+                        self._archive()
 
-                    if config().keep_sorted():
-                        self._execute(SortCommand, [])
+                        if config().keep_sorted():
+                            self._execute(SortCommand, [])
 
-                    self.todofile.write(str(self.todolist))
+                        self.todofile.write(str(self.todolist))
+            except TypeError:
+                usage()
 
 def main():
     """ Main entry point of the CLI. """
