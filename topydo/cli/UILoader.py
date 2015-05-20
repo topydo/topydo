@@ -17,13 +17,22 @@
 """ Entry file for the Python todo.txt CLI. """
 
 import sys
+import getopt
 from topydo.cli.CLI import CLIApplication
 from topydo.cli.Prompt import PromptApplication
 
 def main():
     """ Main entry point of the CLI. """
     try:
-        if sys.argv[1] == 'prompt':
+        args = sys.argv[1:]
+
+        try:
+            opts, args = getopt.getopt(args, "c:d:ht:v")
+        except getopt.GetoptError as e:
+            error(str(e))
+            sys.exit(1)
+
+        if args[0] == 'prompt':
             PromptApplication().run()
         else:
             CLIApplication().run()
