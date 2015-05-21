@@ -21,6 +21,8 @@ import sys
 from six import PY2
 from six.moves import input
 
+MAIN_OPTS = "c:d:ht:v"
+
 def usage():
     """ Prints the command-line usage of topydo. """
 
@@ -124,7 +126,7 @@ class CLIApplicationBase(object):
             args = [arg.decode('utf-8') for arg in args]
 
         try:
-            opts, args = getopt.getopt(args, "c:d:ht:v")
+            opts, args = getopt.getopt(args, MAIN_OPTS)
         except getopt.GetoptError as e:
             error(str(e))
             sys.exit(1)

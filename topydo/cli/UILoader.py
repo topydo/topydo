@@ -18,6 +18,7 @@
 
 import sys
 import getopt
+from topydo.cli.CLIApplicationBase import MAIN_OPTS
 from topydo.cli.CLI import CLIApplication
 from topydo.cli.Prompt import PromptApplication
 
@@ -27,7 +28,7 @@ def main():
         args = sys.argv[1:]
 
         try:
-            opts, args = getopt.getopt(args, "c:d:ht:v")
+            opts, args = getopt.getopt(args, MAIN_OPTS)
         except getopt.GetoptError as e:
             error(str(e))
             sys.exit(1)
