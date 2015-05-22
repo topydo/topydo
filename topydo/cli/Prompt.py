@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-""" Entry file for the Python todo.txt CLI. """
+""" Entry file for the topydo Prompt interface (CLI). """
 
 import sys
 
@@ -41,9 +41,8 @@ from topydo.lib import TodoList
 
 class PromptApplication(CLIApplicationBase):
     """
-    Class that represents the Command Line Interface of Topydo.
-
-    Handles input/output of the various subcommand.
+    This class implements a variant of topydo's CLI showing a shell and
+    offering auto-completion thanks to the prompt toolkit.
     """
     def __init__(self):
         super(PromptApplication, self).__init__()

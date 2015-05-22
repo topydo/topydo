@@ -14,7 +14,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-""" Entry file for the Python todo.txt CLI. """
+"""
+Contains a base class for a CLI implementation of topydo and functions for the
+I/O on the command-line.
+"""
 
 import getopt
 import sys
@@ -102,7 +105,8 @@ from topydo.lib.Utils import escape_ansi
 
 class CLIApplicationBase(object):
     """
-    Base class for Command Line Interfaces (CLI) for topydo.
+    Base class for a Command Line Interfaces (CLI) for topydo. Examples are the
+    original CLI and the Prompt interface.
 
     Handles input/output of the various subcommands.
     """
