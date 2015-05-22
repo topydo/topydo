@@ -4,7 +4,8 @@ python:
 install:
   - "pip install ."
   - "pip install icalendar"
-script: python setup.py test
+  - "pip install pylint"
+script: "python setup.py test && pylint --errors-only topydo test"
 notifications:
   webhooks:
     urls:
