@@ -19,8 +19,9 @@ import re
 import sys
 import unittest
 
+from topydo.lib.Config import config
+from topydo.commands.IcalCommand import IcalCommand
 from test.CommandTest import CommandTest
-from topydo.lib.IcalCommand import IcalCommand
 from test.TestFacilities import load_file_to_todolist
 
 IS_PYTHON_32 = (sys.version_info.major, sys.version_info.minor) == (3, 2)

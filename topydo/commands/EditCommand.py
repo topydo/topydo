@@ -18,7 +18,9 @@ import os
 from subprocess import call, check_call, CalledProcessError
 import tempfile
 
-from topydo.lib.ListCommand import ListCommand
+from six import text_type, u
+
+from topydo.commands.ListCommand import ListCommand
 from topydo.lib.MultiCommand import MultiCommand
 from topydo.lib.Config import config
 from topydo.lib.Todo import Todo
@@ -54,7 +56,7 @@ class EditCommand(MultiCommand, ListCommand):
     def _todos_to_temp(self):
         f = tempfile.NamedTemporaryFile()
         for todo in self.todos:
-            f.write((str(todo) + "\n").encode('utf-8'))
+            f.write((text_type(todo) + "\n").encode('utf-8'))
         f.seek(0)
 
         return f
@@ -81,7 +83,7 @@ class EditCommand(MultiCommand, ListCommand):
 
         if len(self.invalid_numbers) > 1 or len(self.invalid_numbers) > 0 and len(self.todos) > 0:
             for number in self.invalid_numbers:
-                errors.append("Invalid todo number given: {}.".format(number))
+                errors.append(u("Invalid todo number given: {}.").format(number))
         elif len(self.invalid_numbers) == 1 and len(self.todos) == 0:
             errors.append("Invalid todo number given.")
 

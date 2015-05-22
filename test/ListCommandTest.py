@@ -14,11 +14,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from six import u
 import unittest
 
 from topydo.lib.Config import config
-from test.CommandTest import CommandTest
-from topydo.lib.ListCommand import ListCommand
+from topydo.commands.ListCommand import ListCommand
+from test.CommandTest import CommandTest, utf8
 from test.TestFacilities import load_file_to_todolist
 
 class ListCommandTest(CommandTest):
@@ -186,6 +187,22 @@ class ListCommandTest(CommandTest):
 
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors, command.usage() + "\n\n" + command.help() + "\n")
+
+class ListCommandUnicodeTest(CommandTest):
+    def setUp(self):
+        super(ListCommandUnicodeTest, self).setUp()
+        self.todolist = load_file_to_todolist("test/data/ListCommandUnicodeTest.txt")
+
+    def test_list_unicode1(self):
+        """ Unicode filters """
+        command = ListCommand([u("\u25c4")], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+
+        expected = utf8(u("|  1| (C) And some sp\u00e9cial tag:\u25c4\n"))
+
+        self.assertEqual(self.output, expected)
 
 if __name__ == '__main__':
     unittest.main()

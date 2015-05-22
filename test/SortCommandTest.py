@@ -16,9 +16,9 @@
 
 import unittest
 
-from test.CommandTest import CommandTest
 from topydo.lib.Config import config
-from topydo.lib.SortCommand import SortCommand
+from topydo.commands.SortCommand import SortCommand
+from test.CommandTest import CommandTest
 from test.TestFacilities import load_file_to_todolist
 
 class SortCommandTest(CommandTest):

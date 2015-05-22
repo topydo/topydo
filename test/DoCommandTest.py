@@ -16,9 +16,10 @@
 
 from datetime import date, timedelta
 import unittest
+from six import u
 
+from topydo.commands.DoCommand import DoCommand
 from test.CommandTest import CommandTest
-from topydo.lib.DoCommand import DoCommand
 from topydo.lib.TodoList import TodoList
 
 def _yes_prompt(self):
@@ -323,6 +324,14 @@ class DoCommandTest(CommandTest):
         command.execute()
 
         self.assertEqual(self.errors, "Invalid todo number given: 99.\nInvalid todo number given: 10.\n")
+
+    def test_multi_do6(self):
+        """ Throw an error with invalid argument containing special characters. """
+        command = DoCommand([u("Fo\u00d3B\u0105r"), "Bar"], self.todolist, self.out, self.error, None)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+        self.assertEqual(self.errors, u("Invalid todo number given: Fo\u00d3B\u0105r.\n"))
 
     def test_invalid_recurrence(self):
         """ Show error message when an item has an invalid recurrence pattern. """

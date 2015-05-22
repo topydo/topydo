@@ -16,10 +16,11 @@
 
 from datetime import date
 import unittest
+from six import u
 
-from topydo.lib import AddCommand
-from topydo.lib import ListCommand
-from test.CommandTest import CommandTest
+from topydo.commands import AddCommand
+from topydo.commands import ListCommand
+from test.CommandTest import CommandTest, utf8
 from topydo.lib.Config import config
 from topydo.lib import TodoList
 
@@ -233,6 +234,13 @@ class AddCommandTest(CommandTest):
 
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors, command.usage() + "\n")
+
+    def test_add_unicode(self):
+        command = AddCommand.AddCommand([u("Special \u25c4")], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEqual(self.output, utf8(u("|  1| {} Special \u25c4\n").format(self.today)))
+        self.assertEqual(self.errors, "")
 
     def test_help(self):
         command = AddCommand.AddCommand(["help"], self.todolist, self.out, self.error)

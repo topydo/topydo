@@ -1,5 +1,5 @@
 # Topydo - A todo.txt client written in Python.
-# Copyright (C) 2014 - 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
+# Copyright (C) 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,11 +14,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-""" Entry file for the Python todo.txt CLI. """
+"""
+Contains a base class for a CLI implementation of topydo and functions for the
+I/O on the command-line.
+"""
 
 import getopt
 import sys
+from six import PY2
 from six.moves import input
+
+MAIN_OPTS = "c:d:ht:v"
 
 def usage():
     """ Prints the command-line usage of topydo. """
@@ -55,8 +61,6 @@ Available commands:
 Run `topydo help <subcommand>` for command-specific help.
 """)
 
-    sys.exit(0)
-
 def write(p_file, p_string):
     """
     Write p_string to file p_file, trailed by a newline character.
@@ -92,19 +96,19 @@ except ConfigError as config_error:
     error(str(config_error))
     sys.exit(1)
 
-from topydo.lib.Commands import get_subcommand
-from topydo.lib.ArchiveCommand import ArchiveCommand
-from topydo.lib.SortCommand import SortCommand
+from topydo.commands.ArchiveCommand import ArchiveCommand
+from topydo.commands.SortCommand import SortCommand
 from topydo.lib import TodoFile
 from topydo.lib import TodoList
 from topydo.lib import TodoListBase
 from topydo.lib.Utils import escape_ansi
 
-class CLIApplication(object):
+class CLIApplicationBase(object):
     """
-    Class that represents the Command Line Interface of Topydo.
+    Base class for a Command Line Interfaces (CLI) for topydo. Examples are the
+    original CLI and the Prompt interface.
 
-    Handles input/output of the various subcommand.
+    Handles input/output of the various subcommands.
     """
     def __init__(self):
         self.todolist = TodoList.TodoList([])
@@ -113,9 +117,20 @@ class CLIApplication(object):
         self.path = self.config.todotxt()
         self.archive_path = self.config.archive()
 
+        self.todofile = None
+
+    def _usage(self):
+        usage()
+        sys.exit(0)
+
     def _process_flags(self):
+        args = sys.argv[1:]
+
+        if PY2:
+            args = [arg.decode('utf-8') for arg in args]
+
         try:
-            opts, args = getopt.getopt(sys.argv[1:], "c:d:ht:v")
+            opts, args = getopt.getopt(args, MAIN_OPTS)
         except getopt.GetoptError as e:
             error(str(e))
             sys.exit(1)
@@ -133,7 +148,7 @@ class CLIApplication(object):
             elif opt == "-v":
                 version()
             else:
-                usage()
+                self._usage()
 
         self.path = alt_path if alt_path else self.config.todotxt()
         self.archive_path = alt_archive \
@@ -164,6 +179,12 @@ class CLIApplication(object):
         else:
             pass # TODO
 
+    def _input(self):
+        """
+        Returns a function that retrieves user input.
+        """
+        return input
+
     def _execute(self, p_command, p_args):
         """
         Execute a subcommand with arguments. p_command is a class (not an
@@ -174,36 +195,23 @@ class CLIApplication(object):
             self.todolist,
             lambda o: write(sys.stdout, o),
             error,
-            input)
+            self._input())
 
-        return False if command.execute() == False else True
+        if command.execute() != False:
+            self._post_execute()
+            return True
 
-    def run(self):
-        """ Main entry function. """
-        args = self._process_flags()
+        return False
 
-        todofile = TodoFile.TodoFile(self.path)
-        self.todolist = TodoList.TodoList(todofile.read())
-
-        (subcommand, args) = get_subcommand(args)
-
-        if subcommand == None:
-            usage()
-
-        if self._execute(subcommand, args) == False:
-            sys.exit(1)
-
+    def _post_execute(self):
         if self.todolist.is_dirty():
             self._archive()
 
             if config().keep_sorted():
                 self._execute(SortCommand, [])
 
-            todofile.write(str(self.todolist))
+            self.todofile.write(str(self.todolist))
 
-def main():
-    """ Main entry point of the CLI. """
-    CLIApplication().run()
+    def run(self):
+        raise NotImplementedError
 
-if __name__ == '__main__':
-    main()

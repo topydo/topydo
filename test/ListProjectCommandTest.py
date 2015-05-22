@@ -16,9 +16,9 @@
 
 import unittest
 
+from topydo.commands.ListProjectCommand import ListProjectCommand
 from test.CommandTest import CommandTest
 from test.TestFacilities import load_file_to_todolist
-from topydo.lib.ListProjectCommand import ListProjectCommand
 
 class ListProjectCommandTest(CommandTest):
     def test_projects1(self):
