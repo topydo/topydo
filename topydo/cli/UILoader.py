@@ -18,7 +18,7 @@
 
 import sys
 import getopt
-from topydo.cli.CLIApplicationBase import MAIN_OPTS
+from topydo.cli.CLIApplicationBase import MAIN_OPTS, error
 from topydo.cli.CLI import CLIApplication
 from topydo.cli.Prompt import PromptApplication
 
