@@ -26,6 +26,10 @@ from topydo.lib.TodoListBase import InvalidTodoException
 from topydo.lib.TodoList import TodoList
 from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
 
+# Access the base class of the TodoList instance kept inside EditCommand. We
+# cannot use super() inside the class itself
+BASE_TODOLIST = lambda tl: super(TodoList, tl)
+
 class EditCommand(MultiCommand, ListCommand):
     def __init__(self, p_args, p_todolist, p_output, p_error, p_input):
         super(EditCommand, self).__init__(p_args, p_todolist, p_output,
@@ -87,7 +91,7 @@ class EditCommand(MultiCommand, ListCommand):
             return None
 
     def execute(self):
-        if not super(ListCommand, self).execute():
+        if not super(EditCommand, self).execute():
             return False
 
         self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
@@ -123,7 +127,7 @@ class EditCommand(MultiCommand, ListCommand):
                         new_todos = self._todos_from_temp(temp_todos)
                         if len(new_todos) == len(self.todos):
                             for todo in self.todos:
-                                super(TodoList, self.todolist).delete(todo)
+                                BASE_TODOLIST(self.todolist).delete(todo)
 
                             for todo in new_todos:
                                 self.todolist.add_todo(todo)

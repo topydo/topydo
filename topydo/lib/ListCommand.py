@@ -102,6 +102,8 @@ class ListCommand(Command):
         self._process_flags()
         self._print()
 
+        return True
+
     def usage(self):
         return """Synopsis: ls [-x] [-s <sort_expression>] [expression]"""
 
