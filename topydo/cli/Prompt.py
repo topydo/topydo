@@ -54,6 +54,8 @@ class PromptApplication(CLIApplicationBase):
         self.todofile = TodoFile.TodoFile(self.path)
         self.todolist = TodoList.TodoList(self.todofile.read())
 
+        # suppress upstream issue with Python 2.7
+        # pylint: disable=no-value-for-parameter
         completer = TopydoCompleter(self.todolist)
         history = History()
 
