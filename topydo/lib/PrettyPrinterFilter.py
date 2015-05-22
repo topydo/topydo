@@ -19,6 +19,7 @@
 import re
 
 from topydo.lib.Config import config
+from topydo.lib.Colors import Colors, NEUTRAL_COLOR
 
 class PrettyPrinterFilter(object):
     """
@@ -31,18 +32,6 @@ class PrettyPrinterFilter(object):
         """ Default implementation returns an unmodified todo string. """
         return p_todo_str
 
-PRIORITY_COLORS = {
-    'A': '\033[0;36m', # cyan
-    'B': '\033[0;33m', # yellow
-    'C': '\033[0;34m'  # blue
-}
-
-PROJECT_COLOR  = '\033[1;31m' # color for + keyword  : red
-CONTEXT_COLOR  = '\033[1;35m' # color for @ keyword  : magenta
-METADATA_COLOR = '\033[1;32m' # color for foo:bar metadata : green
-LINK_COLOR     = '\033[4;36m' # color for foo://bar.baz links : cyan/underline
-NEUTRAL_COLOR  = '\033[0m'
-
 class PrettyPrinterColorFilter(PrettyPrinterFilter):
     """
     Adds colors to the todo string by inserting ANSI codes.
@@ -53,10 +42,17 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
     def filter(self, p_todo_str, p_todo):
         """ Applies the colors. """
 
+        colorscheme = Colors()
+        priority_colors = colorscheme.get_priority_colors()
+        project_color  = colorscheme.get_project_color()
+        context_color  = colorscheme.get_context_color()
+        metadata_color = colorscheme.get_metadata_color()
+        link_color     = colorscheme.get_link_color()
+
         if config().colors():
             color = NEUTRAL_COLOR
             try:
-                color = PRIORITY_COLORS[p_todo.priority()]
+                color = priority_colors[p_todo.priority()]
             except KeyError:
                 pass
 
@@ -65,12 +61,12 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
                 p_todo_str = re.sub(
                     r'\B(\+|@)(\S*\w)',
                     lambda m: (
-                        CONTEXT_COLOR if m.group(0)[0] == "+"
-                        else PROJECT_COLOR)+m.group(0)+color,
+                        context_color if m.group(0)[0] == "+"
+                        else project_color)+m.group(0)+color,
                     p_todo_str)
-                p_todo_str = re.sub(r'\b\S+:[^/\s]\S+\b',METADATA_COLOR+r'\g<0>'+color,p_todo_str)
-            # add LINK_COLOR to any valid URL specified outside of the tag.
-            p_todo_str = re.sub(r'(^|\s)(\w+:){1}(//\S+)',' '+LINK_COLOR+r'\2\3'+color,p_todo_str)
+                p_todo_str = re.sub(r'\b\S+:[^/\s]\S+\b',metadata_color+r'\g<0>'+color,p_todo_str)
+            # add link_color to any valid URL specified outside of the tag.
+            p_todo_str = re.sub(r'(^|\s)(\w+:){1}(//\S+)',' '+link_color+r'\2\3'+color,p_todo_str)
         p_todo_str += NEUTRAL_COLOR
         # chnge any group of reduntant multiple NEUTRAL_GROUP occurrence to only one
         p_todo_str = re.sub(r'('+re.escape(NEUTRAL_COLOR)+')+',NEUTRAL_COLOR,p_todo_str)
