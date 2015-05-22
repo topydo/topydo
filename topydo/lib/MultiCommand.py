@@ -81,3 +81,5 @@ class MultiCommand(Command):
         else:
             for error in todo_errors:
                 self.error(error)
+
+        return True
