@@ -88,6 +88,7 @@ class PostponeCommandTest(CommandTest):
         start = self.start + timedelta(7)
 
         self.assertTrue(self.todolist.is_dirty())
+        # pylint: disable=E1103
         self.assertEqual(self.output, "|  3| Baz due:{} t:{}\n".format(due.isoformat(), start.isoformat()))
         self.assertEqual(self.errors, "")
 
@@ -108,6 +109,7 @@ class PostponeCommandTest(CommandTest):
         due = self.future + timedelta(7)
 
         self.assertTrue(self.todolist.is_dirty())
+        # pylint: disable=E1103
         self.assertEqual(self.output, "|  5| Future due:{} t:{}\n".format(due.isoformat(), self.future_start.isoformat()))
         self.assertEqual(self.errors, "")
 
@@ -119,6 +121,7 @@ class PostponeCommandTest(CommandTest):
         start = self.future_start + timedelta(7)
 
         self.assertTrue(self.todolist.is_dirty())
+        # pylint: disable=E1103
         self.assertEqual(self.output, "|  5| Future due:{} t:{}\n".format(due.isoformat(), start.isoformat()))
         self.assertEqual(self.errors, "")
 
@@ -192,6 +195,7 @@ class PostponeCommandTest(CommandTest):
         start = self.start + timedelta(7)
 
         self.assertTrue(self.todolist.is_dirty())
+        # pylint: disable=E1103
         self.assertEqual(self.output, "|  2| Bar due:{}\n|  3| Baz due:{} t:{}\n".format(due.isoformat(), due.isoformat(), start.isoformat()))
         self.assertEqual(self.errors, "")
 

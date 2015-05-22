@@ -117,6 +117,7 @@ class RecurrenceTest(TopydoTest):
         due = date.today() - timedelta(1)
         self.todo.set_tag(config().tag_due(), date.today().isoformat())
         yesterday = due - timedelta(1)
+        # pylint: disable=E1103
         self.todo.set_tag(config().tag_start(), yesterday.isoformat())
 
         new_start = date.today() + timedelta(5)
