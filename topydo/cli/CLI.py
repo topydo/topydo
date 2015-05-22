@@ -36,9 +36,7 @@ from topydo.lib import TodoList
 
 class CLIApplication(CLIApplicationBase):
     """
-    Class that represents the Command Line Interface of Topydo.
-
-    Handles input/output of the various subcommands.
+    Class that represents the (original) Command Line Interface of Topydo.
     """
     def __init__(self):
         super(CLIApplication, self).__init__()

@@ -14,12 +14,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-""" Entry file for the Python todo.txt CLI. """
+"""
+Contains a base class for a CLI implementation of topydo and functions for the
+I/O on the command-line.
+"""
 
 import getopt
 import sys
 from six import PY2
 from six.moves import input
+
+MAIN_OPTS = "c:d:ht:v"
 
 def usage():
     """ Prints the command-line usage of topydo. """
@@ -100,7 +105,8 @@ from topydo.lib.Utils import escape_ansi
 
 class CLIApplicationBase(object):
     """
-    Base class for Command Line Interfaces (CLI) for topydo.
+    Base class for a Command Line Interfaces (CLI) for topydo. Examples are the
+    original CLI and the Prompt interface.
 
     Handles input/output of the various subcommands.
     """
@@ -124,7 +130,7 @@ class CLIApplicationBase(object):
             args = [arg.decode('utf-8') for arg in args]
 
         try:
-            opts, args = getopt.getopt(args, "c:d:ht:v")
+            opts, args = getopt.getopt(args, MAIN_OPTS)
         except getopt.GetoptError as e:
             error(str(e))
             sys.exit(1)

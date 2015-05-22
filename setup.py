@@ -17,7 +17,7 @@ setup(
         'edit-cmd-tests': ['mock'],
     },
     entry_points= {
-        'console_scripts': ['topydo = topydo.cli.CLI:main'],
+        'console_scripts': ['topydo = topydo.cli.UILoader:main'],
     },
     classifiers = [
         "Development Status :: 4 - Beta",
