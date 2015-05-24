@@ -16,11 +16,13 @@
 
 import unittest
 import mock
+import os
 
 import CommandTest
 from topydo.lib.EditCommand import EditCommand
 from topydo.lib.TodoList import TodoList
 from topydo.lib.Todo import Todo
+from topydo.lib.Config import config
 
 class EditCommandTest(CommandTest.CommandTest):
     def setUp(self):
@@ -32,7 +34,6 @@ class EditCommandTest(CommandTest.CommandTest):
         ]
 
         self.todolist = TodoList(todos)
-
 
     @mock.patch('topydo.lib.EditCommand.EditCommand._open_in_editor')
     def test_edit1(self, mock_open_in_editor):
@@ -100,9 +101,26 @@ class EditCommandTest(CommandTest.CommandTest):
         command = EditCommand(["-e","@test"], self.todolist, self.out, self.error, None)
         command.execute()
 
+        expected = "|  2| Lazy Cat\n|  3| Lazy Dog\n"
+
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEquals(self.errors, "")
-        self.assertEquals(str(self.todolist), "Foo id:1\nLazy Cat\nLazy Dog")
+        self.assertEqual(self.errors, "")
+        self.assertEqual(self.output, expected)
+
+    @mock.patch('topydo.lib.EditCommand.call')
+    def test_edit_archive(self, mock_call):
+        """ Edit archive file. """
+        mock_call.return_value = 0
+
+        editor = 'vi'
+        os.environ['EDITOR'] = editor
+        archive = config().archive()
+
+        command = EditCommand(["-d"], self.todolist, self.out, self.error, None)
+        command.execute()
+
+        self.assertEqual(self.errors, "")
+        mock_call.assert_called_once_with([editor, archive])
 
 if __name__ == '__main__':
     unittest.main()
