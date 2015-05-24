@@ -16,7 +16,7 @@
 
 import re
 
-from topydo.lib.Command import Command
+from topydo.lib.ExpressionCommand import ExpressionCommand
 from topydo.lib.Config import config
 from topydo.lib import Filter
 from topydo.lib.PrettyPrinterFilter import (
@@ -26,7 +26,7 @@ from topydo.lib.PrettyPrinterFilter import (
 from topydo.lib.Sorter import Sorter
 from topydo.lib.View import View
 
-class ListCommand(Command):
+class ListCommand(ExpressionCommand):
     def __init__(self, p_args, p_todolist,
                  p_out=lambda a: None,
                  p_err=lambda a: None,
@@ -47,42 +47,6 @@ class ListCommand(Command):
                 self.sort_expression = value
 
         self.args = args
-
-    def _filters(self):
-        filters = []
-
-        def arg_filters():
-            result = []
-            for arg in self.args:
-                if re.match(Filter.ORDINAL_TAG_MATCH, arg):
-                    argfilter = Filter.OrdinalTagFilter(arg)
-                elif len(arg) > 1 and arg[0] == '-':
-                    # when a word starts with -, exclude it
-                    argfilter = Filter.GrepFilter(arg[1:])
-                    argfilter = Filter.NegationFilter(argfilter)
-                else:
-                    argfilter = Filter.GrepFilter(arg)
-
-                result.append(argfilter)
-
-            return result
-
-        if not self.show_all:
-            filters.append(Filter.DependencyFilter(self.todolist))
-            filters.append(Filter.RelevanceFilter())
-
-        filters += arg_filters()
-
-        if not self.show_all:
-            filters.append(Filter.LimitFilter(config().list_limit()))
-
-        return filters
-
-    def _view(self):
-        sorter = Sorter(self.sort_expression)
-        filters = self._filters()
-
-        return View(sorter, filters, self.todolist, self.printer)
 
     def _print(self):
         """ Prints the todos. """

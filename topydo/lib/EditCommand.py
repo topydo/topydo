@@ -18,7 +18,7 @@ import os
 from subprocess import call, check_call, CalledProcessError
 import tempfile
 
-from topydo.lib.ListCommand import ListCommand
+from topydo.lib.ExpressionCommand import ExpressionCommand
 from topydo.lib.MultiCommand import MultiCommand
 from topydo.lib.Config import config
 from topydo.lib.Todo import Todo
@@ -30,7 +30,7 @@ from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
 # cannot use super() inside the class itself
 BASE_TODOLIST = lambda tl: super(TodoList, tl)
 
-class EditCommand(MultiCommand, ListCommand):
+class EditCommand(MultiCommand, ExpressionCommand):
     def __init__(self, p_args, p_todolist, p_output, p_error, p_input):
         super(EditCommand, self).__init__(p_args, p_todolist, p_output,
             p_error, p_input)
