@@ -19,6 +19,7 @@
 from datetime import date
 import re
 from sys import stdin
+import codecs
 
 from topydo.lib.Config import config
 from topydo.lib.Command import Command
@@ -100,9 +101,9 @@ class AddCommand(Command):
         if self.from_file == '-':
             f = stdin
         else:
-            f = open(self.from_file, 'r')
+            f = codecs.open(self.from_file, 'r', encoding='utf-8')
 
-        todos = f.read().decode('utf-8').splitlines()
+        todos = f.read().splitlines()
 
         return todos
 
