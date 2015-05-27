@@ -134,7 +134,10 @@ class AddCommand(Command):
                 self.error(self.usage())
 
     def usage(self):
-        return """Synopsis: add <text>"""
+        return """Synopsis:
+  add <text>
+  add -f <file>
+  add -f -"""
 
     def help(self):
         return """\
@@ -149,4 +152,6 @@ This subcommand automatically adds the creation date to the added item.
   todo number (not the dependency number).
 
   Example: add "Subtask partof:1"
+
+-f : Add todo items from specified <file> or from standard input.
 """
