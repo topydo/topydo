@@ -1,3 +1,14 @@
+0.3.2
+-----
+
+* Fix home directory lookup on Windows.
+* Minor fixes.
+
+0.3.1
+-----
+
+* Released just for repackaging topydo.
+
 0.3
 ---
 
