@@ -18,6 +18,7 @@
 
 from datetime import date
 import re
+from sys import stdin
 
 from topydo.lib.Config import config
 from topydo.lib.Command import Command
@@ -34,14 +35,14 @@ class AddCommand(Command):
             p_args, p_todolist, p_out, p_err, p_prompt)
         self.text = ' '.join(p_args)
         self.todo = None
-        self.from_file = False
+        self.from_file = None
 
     def _process_flags(self):
-        opts, args = self.getopt('f')
+        opts, args = self.getopt('f:')
 
         for opt, value in opts:
             if opt == '-f':
-                self.from_file = True
+                self.from_file = value
 
         self.args = args
 
@@ -95,8 +96,12 @@ class AddCommand(Command):
 
         self.todo.set_creation_date(date.today())
 
-    def get_todos_from_file(self, p_filename):
-        f = open(p_filename, 'r')
+    def get_todos_from_file(self):
+        if self.from_file == '-':
+            f = stdin
+        else:
+            f = open(self.from_file, 'r')
+
         todos = f.read().decode('utf-8').splitlines()
 
         return todos
@@ -117,7 +122,7 @@ class AddCommand(Command):
         self._process_flags()
 
         if self.from_file:
-            new_todos = self.get_todos_from_file(self.args[0])
+            new_todos = self.get_todos_from_file()
 
             for todo in new_todos:
                 self._add_todo(todo)
