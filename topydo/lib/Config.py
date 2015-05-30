@@ -108,10 +108,10 @@ class _Config:
             return self.defaults['highlight_projects_contexts'] == '1'
 
     def todotxt(self):
-        return self.cp.get('topydo', 'filename')
+        return os.path.expanduser(self.cp.get('topydo', 'filename'))
 
     def archive(self):
-        return self.cp.get('topydo', 'archive_filename')
+        return os.path.expanduser(self.cp.get('topydo', 'archive_filename'))
 
     def identifiers(self):
         return self.cp.get('topydo', 'identifiers')
