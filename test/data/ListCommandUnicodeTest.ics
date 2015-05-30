@@ -1,0 +1,11 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//bramschoenmakers.nl//topydo//
+BEGIN:VTODO
+DESCRIPTION:(C) And some spécial tag:◄ ical:cUZp
+PRIORITY:6
+SUMMARY:And some spécial
+UID:cUZp
+END:VTODO
+END:VCALENDAR
+
