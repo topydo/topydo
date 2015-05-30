@@ -16,12 +16,15 @@
 
 """ A view is a list of todos, sorted and filtered. """
 
+from six import python_2_unicode_compatible
+
 from topydo.lib.PrettyPrinterFilter import (
     PrettyPrinterColorFilter,
     PrettyPrinterNumbers
 )
 from topydo.lib.PrettyPrinter import PrettyPrinter
 
+@python_2_unicode_compatible
 class View(object):
     """
     A view is instantiated by a todo list, usually obtained from a todo.txt

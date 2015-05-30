@@ -26,6 +26,14 @@ from test.TestFacilities import load_file_to_todolist
 
 IS_PYTHON_32 = (sys.version_info.major, sys.version_info.minor) == (3, 2)
 
+def replace_ical_tags(p_text):
+    # replace identifiers with dots, since they're random.
+    result = re.sub(r'\bical:....\b', 'ical:....', p_text)
+    result = re.sub(r'\bUID:....\b', 'UID:....', result)
+
+    return result
+
+
 class IcalCommandTest(CommandTest):
     def setUp(self):
         super(IcalCommandTest, self).setUp()
@@ -33,13 +41,6 @@ class IcalCommandTest(CommandTest):
 
     @unittest.skipIf(IS_PYTHON_32, "icalendar is not supported for Python 3.2")
     def test_ical(self):
-        def replace_ical_tags(p_text):
-            # replace identifiers with dots, since they're random.
-            result = re.sub(r'\bical:....\b', 'ical:....', p_text)
-            result = re.sub(r'\bUID:....\b', 'UID:....', result)
-
-            return result
-
         command = IcalCommand([""], self.todolist, self.out, self.error)
         command.execute()
 
@@ -87,17 +88,10 @@ class IcalCommandUnicodeTest(CommandTest):
 
     @unittest.skipIf(IS_PYTHON_32, "icalendar is not supported for Python 3.2")
     def test_ical_unicode(self):
-        def replace_ical_tags(p_text):
-            # replace identifiers with dots, since they're random.
-            result = re.sub(r'\bical:....\b', 'ical:....', p_text)
-            result = re.sub(r'\bUID:....\b', 'UID:....', result)
-
-            return result
-
         command = IcalCommand([""], self.todolist, self.out, self.error)
         command.execute()
 
-#        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.is_dirty())
 
         icaltext = ""
         with codecs.open('test/data/ListCommandUnicodeTest.ics', 'r', encoding='utf-8') as ical:
