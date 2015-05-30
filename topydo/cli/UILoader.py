@@ -20,7 +20,6 @@ import sys
 import getopt
 from topydo.cli.CLIApplicationBase import MAIN_OPTS, error
 from topydo.cli.CLI import CLIApplication
-from topydo.cli.Prompt import PromptApplication
 
 def main():
     """ Main entry point of the CLI. """
@@ -34,7 +33,11 @@ def main():
             sys.exit(1)
 
         if args[0] == 'prompt':
-            PromptApplication().run()
+            try:
+                from topydo.cli.Prompt import PromptApplication
+                PromptApplication().run()
+            except ImportError:
+                error("You have to install prompt-toolkit to run prompt mode.")
         else:
             CLIApplication().run()
     except IndexError:
