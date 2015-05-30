@@ -19,51 +19,36 @@ This module is aware of all supported submodules and hands out a Command
 instance based on an argument list.
 """
 
+import sys
+
 from topydo.lib.Config import config
 
-from topydo.commands.AddCommand import AddCommand
-from topydo.commands.AppendCommand import AppendCommand
-from topydo.commands.DeleteCommand import DeleteCommand
-from topydo.commands.DepCommand import DepCommand
-from topydo.commands.DepriCommand import DepriCommand
-from topydo.commands.DoCommand import DoCommand
-from topydo.commands.EditCommand import EditCommand
-from topydo.commands.ExitCommand import ExitCommand
-from topydo.commands.IcalCommand import IcalCommand
-from topydo.commands.ListCommand import ListCommand
-from topydo.commands.ListContextCommand import ListContextCommand
-from topydo.commands.ListProjectCommand import ListProjectCommand
-from topydo.commands.PostponeCommand import PostponeCommand
-from topydo.commands.PriorityCommand import PriorityCommand
-from topydo.commands.SortCommand import SortCommand
-from topydo.commands.TagCommand import TagCommand
-
 _SUBCOMMAND_MAP = {
-    'add': AddCommand,
-    'app': AppendCommand,
-    'append': AppendCommand,
-    'del': DeleteCommand,
-    'dep': DepCommand,
-    'depri': DepriCommand,
-    'do': DoCommand,
-    'edit': EditCommand,
-    'exit': ExitCommand, # used for the prompt
-    'ical': IcalCommand,
-    'ls': ListCommand,
-    'lscon': ListContextCommand,
-    'listcon': ListContextCommand,
-    'lsprj': ListProjectCommand,
-    'lsproj': ListProjectCommand,
-    'listprj': ListProjectCommand,
-    'listproj': ListProjectCommand,
-    'listproject': ListProjectCommand,
-    'listprojects': ListProjectCommand,
-    'postpone': PostponeCommand,
-    'pri': PriorityCommand,
-    'quit': ExitCommand,
-    'rm': DeleteCommand,
-    'sort': SortCommand,
-    'tag': TagCommand,
+    'add': 'AddCommand',
+    'app': 'AppendCommand',
+    'append': 'AppendCommand',
+    'del': 'DeleteCommand',
+    'dep': 'DepCommand',
+    'depri': 'DepriCommand',
+    'do': 'DoCommand',
+    'edit': 'EditCommand',
+    'exit': 'ExitCommand', # used for the prompt
+    'ical': 'IcalCommand',
+    'ls': 'ListCommand',
+    'lscon': 'ListContextCommand',
+    'listcon': 'ListContextCommand',
+    'lsprj': 'ListProjectCommand',
+    'lsproj': 'ListProjectCommand',
+    'listprj': 'ListProjectCommand',
+    'listproj': 'ListProjectCommand',
+    'listproject': 'ListProjectCommand',
+    'listprojects': 'ListProjectCommand',
+    'postpone': 'PostponeCommand',
+    'pri': 'PriorityCommand',
+    'quit': 'ExitCommand',
+    'rm': 'DeleteCommand',
+    'sort': 'SortCommand',
+    'tag': 'TagCommand',
 }
 
 def get_subcommand(p_args):
@@ -81,6 +66,18 @@ def get_subcommand(p_args):
     If no valid command could be found, the subcommand part of the tuple
     is None.
     """
+    def import_subcommand(p_subcommand):
+        """
+        Returns the class of the requested subcommand. An invalid p_subcommand
+        will result in an ImportError, since this is a programming mistake
+        (most likely an error in the _SUBCOMMAND_MAP).
+        """
+        classname = _SUBCOMMAND_MAP[p_subcommand]
+        modulename = 'topydo.commands.{}'.format(classname)
+
+        __import__(modulename, globals(), locals(), [classname], -1)
+        return getattr(sys.modules[modulename], classname)
+
     result = None
     args = p_args
 
@@ -88,7 +85,7 @@ def get_subcommand(p_args):
         subcommand = p_args[0]
 
         if subcommand in _SUBCOMMAND_MAP:
-            result = _SUBCOMMAND_MAP[subcommand]
+            result = import_subcommand(subcommand)
             args = args[1:]
         elif subcommand == 'help':
             try:
@@ -103,12 +100,12 @@ def get_subcommand(p_args):
         else:
             p_command = config().default_command()
             if p_command in _SUBCOMMAND_MAP:
-                result = _SUBCOMMAND_MAP[p_command]
+                result = import_subcommand(p_command)
                 # leave args unchanged
     except IndexError:
         p_command = config().default_command()
         if p_command in _SUBCOMMAND_MAP:
-            result = _SUBCOMMAND_MAP[p_command]
+            result = import_subcommand(p_command)
 
     return (result, args)
 
