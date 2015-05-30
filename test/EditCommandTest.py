@@ -15,7 +15,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
-import mock
+
+# We're searching for 'mock'
+# pylint: disable=no-name-in-module 
+try:
+    from unittest import mock
+except ImportError:
+    import mock
+
 from six import u
 import os
 
