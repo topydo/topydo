@@ -45,7 +45,7 @@ class CLIApplication(CLIApplicationBase):
         """ Main entry function. """
         args = self._process_flags()
 
-        self.todofile = TodoFile.TodoFile(self.path)
+        self.todofile = TodoFile.TodoFile(config().todotxt())
         self.todolist = TodoList.TodoList(self.todofile.read())
 
         (subcommand, args) = get_subcommand(args)

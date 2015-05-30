@@ -26,12 +26,17 @@ class ConfigError(Exception):
         return self.text
 
 class _Config:
-    def __init__(self, p_path=None):
+    def __init__(self, p_path=None, p_overrides=None):
         """
         Constructor.
 
         If p_path is given, that is the only configuration file that will be
         read.
+
+        If p_overrides is given, some options are ultimately overridden. This
+        is for some command line options which override any configuration file
+        (such as todo.txt location passed with -t). The key is a tuple of
+        (section, option), the value is the option's value.
         """
         self.sections = ['topydo', 'tags', 'sort', 'ls', 'dep']
 
@@ -83,6 +88,10 @@ class _Config:
         self.cp.read(files)
 
         self._supplement_sections()
+
+        if p_overrides:
+            for (section, option), value in p_overrides.items():
+                self.cp.set(section, option, value)
 
     def _supplement_sections(self):
         for section in self.sections:
@@ -177,17 +186,21 @@ class _Config:
         hidden_tags = self.cp.get('ls', 'hide_tags')
         return [] if hidden_tags == '' else hidden_tags.split(',')
 
-def config(p_path=None):
+def config(p_path=None, p_overrides=None):
     """
     Retrieve the config instance.
 
     If a path is given, the instance is overwritten by the one that supplies an
     additional filename (for testability). Moreover, no other configuration
     files will be read when a path is given.
+
+    Overrides will discard a setting in any configuration file and use the
+    passed value instead. Structure: (section, option) => value
+    The previous configuration instance will be discarded.
     """
-    if not config.instance or p_path != None:
+    if not config.instance or p_path != None or p_overrides != None:
         try:
-            config.instance = _Config(p_path)
+            config.instance = _Config(p_path, p_overrides)
         except configparser.ParsingError as perr:
             raise ConfigError(str(perr))
 

@@ -112,11 +112,6 @@ class CLIApplicationBase(object):
     """
     def __init__(self):
         self.todolist = TodoList.TodoList([])
-
-        self.config = config()
-        self.path = self.config.todotxt()
-        self.archive_path = self.config.archive()
-
         self.todofile = None
 
     def _usage(self):
@@ -135,24 +130,25 @@ class CLIApplicationBase(object):
             error(str(e))
             sys.exit(1)
 
-        alt_path = None
-        alt_archive = None
+        alt_config_path = None
+        overrides = {}
 
         for opt, value in opts:
             if opt == "-c":
-                self.config = config(value)
+                alt_config_path = value
             elif opt == "-t":
-                alt_path = value
+                overrides[('topydo', 'filename')] = value
             elif opt == "-d":
-                alt_archive = value
+                overrides[('topydo', 'archive_filename')] = value
             elif opt == "-v":
                 version()
             else:
                 self._usage()
 
-        self.path = alt_path if alt_path else self.config.todotxt()
-        self.archive_path = alt_archive \
-            if alt_archive else self.config.archive()
+        if alt_config_path:
+            config(alt_config_path, overrides)
+        elif len(overrides):
+            config(p_overrides=overrides)
 
         return args
 
@@ -163,7 +159,7 @@ class CLIApplicationBase(object):
         This means that all completed tasks are moved to the archive file
         (defaults to done.txt).
         """
-        archive_file = TodoFile.TodoFile(self.archive_path)
+        archive_file = TodoFile.TodoFile(config().archive())
         archive = TodoListBase.TodoListBase(archive_file.read())
 
         if archive:

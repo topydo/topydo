@@ -29,5 +29,13 @@ class ConfigTest(TopydoTest):
     def test_config3(self):
         self.assertTrue(config("test/data/config2").ignore_weekends())
 
+    def test_config4(self):
+        """ Test that value in file is overridden by parameter. """
+        overrides = {
+            ('topydo', 'default_command'): 'edit'
+        }
+
+        self.assertEqual(config("test/data/config1", p_overrides=overrides).default_command(), 'edit')
+
 if __name__ == '__main__':
     unittest.main()

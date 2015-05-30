@@ -51,7 +51,7 @@ class PromptApplication(CLIApplicationBase):
         """ Main entry function. """
         args = self._process_flags()
 
-        self.todofile = TodoFile.TodoFile(self.path)
+        self.todofile = TodoFile.TodoFile(config().todotxt())
         self.todolist = TodoList.TodoList(self.todofile.read())
 
         # suppress upstream issue with Python 2.7
