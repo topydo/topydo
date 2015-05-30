@@ -16,6 +16,8 @@
 
 import unittest
 
+# We're searching for 'mock'
+# pylint: disable=no-name-in-module 
 try:
     from unittest import mock
 except ImportError:
