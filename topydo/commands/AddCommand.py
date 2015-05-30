@@ -20,6 +20,7 @@ from datetime import date
 import re
 from sys import stdin
 import codecs
+from os.path import expanduser
 
 from topydo.lib.Config import config
 from topydo.lib.Command import Command
@@ -43,7 +44,7 @@ class AddCommand(Command):
 
         for opt, value in opts:
             if opt == '-f':
-                self.from_file = value
+                self.from_file = expanduser(value)
 
         self.args = args
 
