@@ -24,7 +24,6 @@ from topydo.lib.ExpressionCommand import ExpressionCommand
 from topydo.lib.MultiCommand import MultiCommand
 from topydo.lib.Config import config
 from topydo.lib.Todo import Todo
-from topydo.lib.TodoListBase import InvalidTodoException
 from topydo.lib.TodoList import TodoList
 from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
 
