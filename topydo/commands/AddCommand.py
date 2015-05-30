@@ -18,6 +18,9 @@
 
 from datetime import date
 import re
+from sys import stdin
+import codecs
+from os.path import expanduser
 
 from topydo.lib.Config import config
 from topydo.lib.Command import Command
@@ -33,73 +36,109 @@ class AddCommand(Command):
         super(AddCommand, self).__init__(
             p_args, p_todolist, p_out, p_err, p_prompt)
         self.text = ' '.join(p_args)
-        self.todo = None
+        self.from_file = None
 
-    def _preprocess_input_todo(self):
-        """
-        Preprocesses user input when adding a task.
+    def _process_flags(self):
+        opts, args = self.getopt('f:')
 
-        It detects a priority mid-sentence and puts it at the start.
-        """
-        self.text = re.sub(r'^(.+) (\([A-Z]\))(.*)$', r'\2 \1\3', self.text)
+        for opt, value in opts:
+            if opt == '-f':
+                self.from_file = expanduser(value)
 
-    def _postprocess_input_todo(self):
-        """
-        Post-processes a parsed todo when adding it to the list.
+        self.args = args
 
-        * It converts relative dates to absolute ones.
-        * Automatically inserts a creation date if not present.
-        * Handles more user-friendly dependencies with before:, partof: and
-          after: tags
-        """
-        def convert_date(p_tag):
-            value = self.todo.tag_value(p_tag)
 
-            if value:
-                dateobj = relative_date_to_date(value)
-                if dateobj:
-                    self.todo.set_tag(p_tag, dateobj.isoformat())
+    def get_todos_from_file(self):
+        if self.from_file == '-':
+            f = stdin
+        else:
+            f = codecs.open(self.from_file, 'r', encoding='utf-8')
 
-        def add_dependencies(p_tag):
-            for value in self.todo.tag_values(p_tag):
-                try:
-                    dep = self.todolist.todo(value)
+        todos = f.read().splitlines()
 
-                    if p_tag == 'after':
-                        self.todolist.add_dependency(self.todo, dep)
-                    elif p_tag == 'before' or p_tag == 'partof':
-                        self.todolist.add_dependency(dep, self.todo)
-                except InvalidTodoException:
-                    pass
+        return todos
 
-                self.todo.remove_tag(p_tag, value)
+    def _add_todo(self, p_todo_text):
+        def _preprocess_input_todo(p_todo_text):
+            """
+            Preprocesses user input when adding a task.
 
-        convert_date(config().tag_start())
-        convert_date(config().tag_due())
+            It detects a priority mid-sentence and puts it at the start.
+            """
+            todo_text = re.sub(r'^(.+) (\([A-Z]\))(.*)$', r'\2 \1\3', p_todo_text)
 
-        add_dependencies('partof')
-        add_dependencies('before')
-        add_dependencies('after')
+            return todo_text
 
-        self.todo.set_creation_date(date.today())
+        def _postprocess_input_todo(p_todo):
+            """
+            Post-processes a parsed todo when adding it to the list.
+
+            * It converts relative dates to absolute ones.
+            * Automatically inserts a creation date if not present.
+            * Handles more user-friendly dependencies with before:, partof: and
+            after: tags
+            """
+            def convert_date(p_tag):
+                value = p_todo.tag_value(p_tag)
+
+                if value:
+                    dateobj = relative_date_to_date(value)
+                    if dateobj:
+                        p_todo.set_tag(p_tag, dateobj.isoformat())
+
+            def add_dependencies(p_tag):
+                for value in p_todo.tag_values(p_tag):
+                    try:
+                        dep = self.todolist.todo(value)
+
+                        if p_tag == 'after':
+                            self.todolist.add_dependency(p_todo, dep)
+                        elif p_tag == 'before' or p_tag == 'partof':
+                            self.todolist.add_dependency(dep, p_todo)
+                    except InvalidTodoException:
+                        pass
+
+                    p_todo.remove_tag(p_tag, value)
+
+            convert_date(config().tag_start())
+            convert_date(config().tag_due())
+
+            add_dependencies('partof')
+            add_dependencies('before')
+            add_dependencies('after')
+
+            p_todo.set_creation_date(date.today())
+
+        todo_text = _preprocess_input_todo(p_todo_text)
+        todo = self.todolist.add(todo_text)
+        _postprocess_input_todo(todo)
+
+        self.out(self.printer.print_todo(todo))
 
     def execute(self):
         """ Adds a todo item to the list. """
         if not super(AddCommand, self).execute():
             return False
 
-        if self.text:
-            self._preprocess_input_todo()
-            self.todo = self.todolist.add(self.text)
-            self._postprocess_input_todo()
+        self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
+        self._process_flags()
 
-            self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
-            self.out(self.printer.print_todo(self.todo))
+        if self.from_file:
+            new_todos = self.get_todos_from_file()
+
+            for todo in new_todos:
+                self._add_todo(todo)
         else:
-            self.error(self.usage())
+            if self.text:
+                self._add_todo(self.text)
+            else:
+                self.error(self.usage())
 
     def usage(self):
-        return """Synopsis: add <text>"""
+        return """Synopsis:
+  add <text>
+  add -f <file>
+  add -f -"""
 
     def help(self):
         return """\
@@ -114,4 +153,6 @@ This subcommand automatically adds the creation date to the added item.
   todo number (not the dependency number).
 
   Example: add "Subtask partof:1"
+
+-f : Add todo items from specified <file> or from standard input.
 """

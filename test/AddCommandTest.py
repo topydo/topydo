@@ -16,7 +16,16 @@
 
 from datetime import date
 import unittest
+
+# We're searching for 'mock'
+# pylint: disable=no-name-in-module
+try:
+    from unittest import mock
+except ImportError:
+    import mock
+
 from six import u
+from io import StringIO
 
 from topydo.commands import AddCommand
 from topydo.commands import ListCommand
@@ -240,6 +249,21 @@ class AddCommandTest(CommandTest):
         command.execute()
 
         self.assertEqual(self.output, utf8(u("|  1| {} Special \u25c4\n").format(self.today)))
+        self.assertEqual(self.errors, "")
+
+    @mock.patch("topydo.commands.AddCommand.stdin", StringIO(u("Fo\u00f3 due:tod id:1\nB\u0105r before:1")))
+    def test_add_from_stdin(self):
+        command = AddCommand.AddCommand(["-f", "-"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEqual(self.output, utf8(u("|  1| {tod} Fo\u00f3 due:{tod} id:1\n|  2| {tod} B\u0105r p:1\n".format(tod=self.today))))
+        self.assertEqual(self.errors, "")
+
+    def test_add_from_file(self):
+        command = AddCommand.AddCommand(["-f", "test/data/AddCommandTest-from_file.txt"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEqual(self.output, utf8(u("|  1| {tod} Foo @fo\u00f3b\u0105r due:{tod} id:1\n|  2| {tod} Bar +baz t:{tod} p:1\n".format(tod=self.today))))
         self.assertEqual(self.errors, "")
 
     def test_help(self):
