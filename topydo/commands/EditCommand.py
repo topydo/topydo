@@ -28,6 +28,9 @@ from topydo.lib.TodoListBase import InvalidTodoException
 from topydo.lib.TodoList import TodoList
 from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
 
+# the true and only editor
+DEFAULT_EDITOR = 'vi'
+
 # Access the base class of the TodoList instance kept inside EditCommand. We
 # cannot use super() inside the class itself
 BASE_TODOLIST = lambda tl: super(TodoList, tl)
@@ -98,9 +101,9 @@ class EditCommand(MultiCommand, ExpressionCommand):
 
         self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
         try:
-            editor = os.environ['EDITOR'] or 'vi'
+            editor = os.environ['EDITOR'] or DEFAULT_EDITOR
         except(KeyError):
-            editor =  'vi'
+            editor = DEFAULT_EDITOR
 
         try:
             if len(self.args) < 1:
