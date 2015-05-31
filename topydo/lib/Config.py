@@ -77,7 +77,8 @@ class _Config:
             "/etc/topydo.conf",
             self._home_config_path(),
             ".topydo",
-            "topydo.conf"
+            "topydo.conf",
+            "topydo.ini",
         ]
 
         # when a path is given, *only* use the values in that file, or the
