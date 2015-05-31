@@ -76,7 +76,7 @@ def get_subcommand(p_args):
         classname = _SUBCOMMAND_MAP[p_subcommand]
         modulename = 'topydo.commands.{}'.format(classname)
 
-        __import__(modulename, globals(), locals(), [classname], -1)
+        __import__(modulename, globals(), locals(), [classname], 0)
         return getattr(sys.modules[modulename], classname)
 
     result = None
