@@ -130,6 +130,13 @@ class TodoBase(object):
         value = p_value if p_value != "" else r'\S+'
         self.src = re.sub(r'\s?\b' + p_key + ':' + value + r'\b', '', self.src)
 
+    def tags(self):
+        """
+        Returns a list of tuples with key-value pairs representing tags in
+        this todo item.
+        """
+        return self.fields['tags']
+
     def set_priority(self, p_priority):
         """
         Sets the priority of the todo. Must be a single capital letter [A-Z],

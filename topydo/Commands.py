@@ -34,6 +34,7 @@ _SUBCOMMAND_MAP = {
     'edit': 'EditCommand',
     'exit': 'ExitCommand', # used for the prompt
     'ical': 'IcalCommand',
+    'json': 'JsonCommand',
     'ls': 'ListCommand',
     'lscon': 'ListContextCommand',
     'listcon': 'ListContextCommand',
