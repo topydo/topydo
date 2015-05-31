@@ -10,8 +10,12 @@
   read from standard input) (Jacek Sowiński - @mruwek)
 * Customizable colors + additional highlighting of tags and URLs (Jacek
   Sowiński (@mruwek) and @kidpixo).
-* `json` subcommand introduced which dumps the todo items in JSON format.
 * Make sure that the `edit` subcommand always uses the correct todo.txt file.
+* `ls` subcommand has the `-f` flag to specify the output format. Currently,
+  three formats are supported:
+  * `text` - The default plain text format.
+  * `ical` - iCalendar (WARNING: this deprecates the `ical` subcommand)
+  * `json` - Javascript Object Notation (JSON)
 * Resolve `~` to home directory if used in a configuration file
   (@robertvanbregt).
 * Various minor fixes.

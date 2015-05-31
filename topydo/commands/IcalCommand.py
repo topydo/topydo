@@ -15,13 +15,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-Implements a subcommand that outputs an iCalendar file.
+Stub for the former 'ical' subcommand, now replaced with 'ls -f ical'.
+
+To be removed.
 """
 
-from topydo.lib.IcalPrinter import IcalPrinter
-from topydo.commands.ListCommand import ListCommand
+from topydo.lib.Command import Command
 
-class IcalCommand(ListCommand):
+class IcalCommand(Command):
     def __init__(self, p_args, p_todolist,
                  p_out=lambda a: None,
                  p_err=lambda a: None,
@@ -29,47 +30,14 @@ class IcalCommand(ListCommand):
         super(IcalCommand, self).__init__(
             p_args, p_todolist, p_out, p_err, p_prompt)
 
-        self.printer = IcalPrinter(p_todolist)
-
-    def _print(self):
-        self.out(str(self._view()))
-
     def execute(self):
-        try:
-            import icalendar as _
-        except ImportError:
-            self.error("icalendar package is not installed.")
-            return False
-        except SyntaxError:
-            self.error("icalendar is not supported in this Python version.")
-            return False
-
-        return super(IcalCommand, self).execute()
+        self.error("The 'ical' subcommand is deprecated, please use 'ls -f ical' instead.")
+        return False
 
     def usage(self):
-        return """Synopsis: ical [-x] [expression]"""
+        return """Synopsis: ical"""
 
     def help(self):
         return """\
-Similar to the 'ls' subcommand, except that the todos are printed in iCalendar
-format (RFC 2445) that can be imported by other calendar applications.
-
-By default prints the active todo items, possibly filtered by the given
-expression.
-
-For the supported options, please refer to the help text of 'ls'
-(topydo help ls).
-
-While specifying the sort order is supported (-s flag), like in 'ls', this is
-not meaningful in the context of an iCalendar file.
-
-Note 1 : be aware that this is not necessarily a read-only operation. This
-subcommand may add ical tags to the printed todo items containing a unique ID.
-Completed todo items may be archived.
-
-Note 2: topydo does not support reading iCal files, this is merely a dump.
-Changes made with other iCalendar enabled applications will not be processed.
-Suggested usage is to use the output as a read-only calendar.
-
-Note 3: The ical subcommand only works for Python 2.7 and 3.3+.
+Deprecated. Use 'ls -f ical' instead.
 """
