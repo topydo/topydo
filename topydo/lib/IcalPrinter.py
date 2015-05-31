@@ -19,15 +19,6 @@ Provides a printer that transforms a list of Todo items to an iCalendar
 file according to RFC 2445.
 """
 
-try:
-    import icalendar as ical
-    ICAL_PRESENT = True
-except (SyntaxError, ImportError):
-    # icalendar does not support Python 3.2 resulting in a SyntaxError. Since
-    # this is an optional dependency, dropping Python 3.2 support altogether is
-    # too much. Therefore just disable the iCalendar functionality
-    ICAL_PRESENT = False
-
 from datetime import datetime, time
 import random
 import string
@@ -75,14 +66,23 @@ class IcalPrinter(Printer):
         super(IcalPrinter, self).__init__()
         self.todolist = p_todolist
 
+        try:
+            import icalendar
+            self.icalendar = icalendar
+        except (SyntaxError, ImportError):
+            # icalendar does not support Python 3.2 resulting in a SyntaxError. Since
+            # this is an optional dependency, dropping Python 3.2 support altogether is
+            # too much. Therefore just disable the iCalendar functionality
+            self.icalendar = None
+
     def print_todo(self, p_todo):
-        return self._convert_todo(p_todo).to_ical() if ICAL_PRESENT else ""
+        return self._convert_todo(p_todo).to_ical() if self.icalendar else ""
 
     def print_list(self, p_todos):
         result = ""
 
-        if ICAL_PRESENT:
-            cal = ical.Calendar()
+        if self.icalendar:
+            cal = self.icalendar.Calendar()
             cal.add('prodid', '-//bramschoenmakers.nl//topydo//')
             cal.add('version', '2.0')
 
@@ -108,7 +108,7 @@ class IcalPrinter(Printer):
                 """
                 return ''.join(
                     random.choice(string.ascii_letters + string.digits)
-                        for i in range(p_length))
+                    for i in range(p_length))
 
             uid = p_todo.tag_value('ical')
             if not uid:
@@ -118,14 +118,14 @@ class IcalPrinter(Printer):
 
             return uid
 
-        result = ical.Todo()
+        result = self.icalendar.Todo()
 
         # this should be called first, it may set the ical: tag and therefore
         # change the source() output.
         result['uid'] = _get_uid(p_todo)
 
-        result['summary'] = ical.vText(p_todo.text())
-        result['description'] = ical.vText(p_todo.source())
+        result['summary'] = self.icalendar.vText(p_todo.text())
+        result['description'] = self.icalendar.vText(p_todo.source())
         result.add('priority', _convert_priority(p_todo.priority()))
 
         start = p_todo.start_date()
