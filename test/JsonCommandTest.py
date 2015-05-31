@@ -15,11 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import codecs
-import re
-import sys
 import unittest
 
-from topydo.lib.Config import config
 from topydo.commands.JsonCommand import JsonCommand
 from test.CommandTest import CommandTest, utf8
 from test.TestFacilities import load_file_to_todolist
