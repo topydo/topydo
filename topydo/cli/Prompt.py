@@ -16,6 +16,7 @@
 
 """ Entry file for the topydo Prompt interface (CLI). """
 
+import os.path
 import sys
 
 from topydo.cli.CLIApplicationBase import CLIApplicationBase, error, usage
@@ -39,6 +40,12 @@ from topydo.commands.SortCommand import SortCommand
 from topydo.lib import TodoFile
 from topydo.lib import TodoList
 
+def _todotxt_mtime():
+    """
+    Returns the mtime for the configured todo.txt file.
+    """
+    return os.path.getmtime(config().todotxt())
+
 class PromptApplication(CLIApplicationBase):
     """
     This class implements a variant of topydo's CLI showing a shell and
@@ -47,23 +54,49 @@ class PromptApplication(CLIApplicationBase):
     def __init__(self):
         super(PromptApplication, self).__init__()
 
+        self._process_flags()
+        self.mtime = None
+
+    def _load_file(self):
+        """
+        Reads the configured todo.txt file and loads it into the todo list
+        instance.
+
+        If the modification time of the todo.txt file is equal to the last time
+        it was checked, nothing will be done.
+        """
+
+        current_mtime = _todotxt_mtime()
+
+        if self.mtime != current_mtime:
+            self.todofile = TodoFile.TodoFile(config().todotxt())
+            self.todolist = TodoList.TodoList(self.todofile.read())
+            self.mtime = current_mtime
+
     def run(self):
         """ Main entry function. """
-        args = self._process_flags()
-
-        self.todofile = TodoFile.TodoFile(config().todotxt())
-        self.todolist = TodoList.TodoList(self.todofile.read())
-
         # suppress upstream issue with Python 2.7
         # pylint: disable=no-value-for-parameter
         completer = TopydoCompleter(self.todolist)
         history = History()
 
         while True:
+            # (re)load the todo.txt file (only if it has been modified)
+            self._load_file()
+
             try:
-                user_input = get_input(u'topydo> ', history=history, completer=completer).split()
+                user_input = get_input(u'topydo> ', history=history,
+                                       completer=completer).split()
             except (EOFError, KeyboardInterrupt):
                 sys.exit(0)
+
+            mtime_after = _todotxt_mtime()
+
+            if self.mtime != mtime_after:
+                # refuse to perform operations such as 'del' and 'do' if the
+                # todo.txt file has been changed in the background.
+                error("WARNING: todo.txt file was modified by another application.\nTo prevent unintended changes, this operation was not executed.")
+                continue
 
             (subcommand, args) = get_subcommand(user_input)
 
@@ -80,8 +113,9 @@ class PromptApplication(CLIApplicationBase):
                 usage()
 
 def main():
-    """ Main entry point of the CLI. """
+    """ Main entry point of the prompt interface. """
     PromptApplication().run()
 
 if __name__ == '__main__':
     main()
+
