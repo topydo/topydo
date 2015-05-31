@@ -38,16 +38,18 @@ class ListCommand(ExpressionCommand):
     def _poke_icalendar(self):
         """
         Attempts to import the icalendar package. Returns True if it
-        succeeds, otherwise False
+        succeeds, otherwise False.
+
+        Raises a SyntaxError when icalendar couldn't be imported (most likely
+        under Python 3.2.
         """
         try:
             import icalendar as _
         except ImportError:
             self.error("icalendar package is not installed.")
             return False
-        except SyntaxError:
-            self.error("icalendar is not supported in this Python version.")
-            return False
+
+        # may also raise SyntaxError, but we'll deal with that in execute()
 
         return True
 
@@ -103,9 +105,14 @@ class ListCommand(ExpressionCommand):
         if not super(ListCommand, self).execute():
             return False
 
-        self._process_flags()
-        self._print()
+        try:
+            self._process_flags()
+        except SyntaxError:
+            # importing icalendar failed, most likely due to Python 3.2
+            self.error("icalendar is not supported in this Python version.")
+            return False
 
+        self._print()
         return True
 
     def usage(self):
