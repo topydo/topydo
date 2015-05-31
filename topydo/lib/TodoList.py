@@ -44,6 +44,7 @@ class TodoList(TodoListBase):
 
         self.add_list(p_todostrings)
         self.dirty = False
+        self.obsolete = False
 
     def todo_by_dep_id(self, p_dep_id):
         """

@@ -102,6 +102,9 @@ class PromptApplication(CLIApplicationBase):
 
             try:
                 if self._execute(subcommand, args) != False:
+                    if self.todolist.is_obsolete():
+                        self.todolist = TodoList.TodoList(self.todofile.read())
+
                     if self.todolist.is_dirty():
                         self._archive()
 

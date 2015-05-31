@@ -107,6 +107,7 @@ class EditCommand(MultiCommand, ExpressionCommand):
         try:
             if len(self.args) < 1:
                 todo = config().todotxt()
+                self.todolist.set_obsolete()
 
                 return call([editor, todo]) == 0
             else:

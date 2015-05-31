@@ -51,6 +51,7 @@ class TodoListBase(object):
 
         self.add_list(p_todostrings)
         self.dirty = False
+        self.obsolete = False
 
     def todo(self, p_identifier):
         """
@@ -216,6 +217,12 @@ class TodoListBase(object):
 
     def set_dirty(self):
         self.dirty = True
+
+    def is_obsolete(self):
+        return self.obsolete
+
+    def set_obsolete(self):
+        self.obsolete = True
 
     def todos(self):
         return self._todos
