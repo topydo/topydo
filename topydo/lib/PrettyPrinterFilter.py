@@ -61,7 +61,7 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
                 p_todo_str = re.sub(
                     r'\B(\+|@)(\S*\w)',
                     lambda m: (
-                        context_color if m.group(0)[0] == "+"
+                        context_color if m.group(0)[0] == "@"
                         else project_color)+m.group(0)+color,
                     p_todo_str)
                 p_todo_str = re.sub(r'\b\S+:[^/\s]\S+\b',metadata_color+r'\g<0>'+color,p_todo_str)
