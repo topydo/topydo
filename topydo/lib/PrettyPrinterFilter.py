@@ -65,12 +65,22 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
                         else project_color)+m.group(0)+color,
                     p_todo_str)
 
-            p_todo_str = re.sub(r'\b\S+:[^/\s]\S+\b',metadata_color+r'\g<0>'+color,p_todo_str)
+            # tags
+            p_todo_str = re.sub(r'\b\S+:[^/\s]\S+\b',
+                                metadata_color + r'\g<0>' + color,
+                                p_todo_str)
+
             # add link_color to any valid URL specified outside of the tag.
-            p_todo_str = re.sub(r'(^|\s)(\w+:){1}(//\S+)',' '+link_color+r'\2\3'+color,p_todo_str)
+            p_todo_str = re.sub(r'(^|\s)(\w+:){1}(//\S+)',
+                                ' ' + link_color + r'\2\3' + color,
+                                p_todo_str)
+
         p_todo_str += NEUTRAL_COLOR
-        # change any group of reduntant multiple NEUTRAL_GROUP occurrence to only one
-        p_todo_str = re.sub(r'('+re.escape(NEUTRAL_COLOR)+')+',NEUTRAL_COLOR,p_todo_str)
+
+        # change any group of reduntant multiple NEUTRAL_GROUP occurrence to
+        # only one
+        p_todo_str = re.sub(r'(' + re.escape(NEUTRAL_COLOR) + ')+',
+                            NEUTRAL_COLOR, p_todo_str)
 
         return p_todo_str
 
