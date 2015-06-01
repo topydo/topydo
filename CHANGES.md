@@ -3,7 +3,7 @@
 
 * A new prompt mode with autocompletion. To enable, run `pip install
   prompt-toolkit`, then `topydo prompt`.
-* Support for Python 3.2, 3.3 and 3.4 (note that the `ical` subcommand does not
+* Support for Python 3.2, 3.3 and 3.4 (note that iCalendar output does not
   work in Python 3.2)
 * Better Unicode support.
 * `add` command has the `-f` flag to add todo items from a file (or use `-` to
