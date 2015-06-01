@@ -59,7 +59,7 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
             p_todo_str = color + p_todo_str + NEUTRAL_COLOR
             if config().highlight_projects_contexts():
                 p_todo_str = re.sub(
-                    r'\B(\+|@)(\S*\w)',
+                    r'\B(\+|@)([^\033]*\w)',
                     lambda m: (
                         context_color if m.group(0)[0] == "@"
                         else project_color)+m.group(0)+color,
