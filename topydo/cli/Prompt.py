@@ -56,6 +56,7 @@ class PromptApplication(CLIApplicationBase):
 
         self._process_flags()
         self.mtime = None
+        self.completer = None
 
     def _load_file(self):
         """
@@ -73,11 +74,12 @@ class PromptApplication(CLIApplicationBase):
             self.todolist = TodoList.TodoList(self.todofile.read())
             self.mtime = current_mtime
 
+            # suppress upstream issue with Python 2.7
+            # pylint: disable=no-value-for-parameter
+            self.completer = TopydoCompleter(self.todolist)
+
     def run(self):
         """ Main entry function. """
-        # suppress upstream issue with Python 2.7
-        # pylint: disable=no-value-for-parameter
-        completer = TopydoCompleter(self.todolist)
         history = History()
 
         while True:
@@ -86,7 +88,7 @@ class PromptApplication(CLIApplicationBase):
 
             try:
                 user_input = get_input(u'topydo> ', history=history,
-                                       completer=completer).split()
+                                       completer=self.completer).split()
             except (EOFError, KeyboardInterrupt):
                 sys.exit(0)
 
