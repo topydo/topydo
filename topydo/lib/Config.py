@@ -38,7 +38,7 @@ class _Config:
         (such as todo.txt location passed with -t). The key is a tuple of
         (section, option), the value is the option's value.
         """
-        self.sections = ['topydo', 'tags', 'sort', 'ls', 'dep']
+        self.sections = ['topydo', 'tags', 'sort', 'ls', 'dep', 'colorscheme']
 
         self.defaults = {
             # topydo
@@ -67,6 +67,13 @@ class _Config:
             # dep
             'append_parent_projects': '0',
             'append_parent_contexts': '0',
+
+            # colorscheme
+            'project_color': '1',
+            'context_color': '5',
+            'metadata_color': '2',
+            'link_color': '6',
+            'priority_colors': 'A:6,B:3,C:4',
         }
 
         self.config = {}
@@ -186,6 +193,52 @@ class _Config:
         """ Returns a list of tags to be hidden from the 'ls' output. """
         hidden_tags = self.cp.get('ls', 'hide_tags')
         return [] if hidden_tags == '' else hidden_tags.split(',')
+
+    def priority_colors(self):
+        """ Returns a dict with priorities as keys and color numbers as value. """
+        pri_colors_str = self.cp.get('colorscheme', 'priority_colors')
+
+        def _str_to_dict(p_string):
+            pri_colors_dict = dict()
+            for pri_color in p_string.split(','):
+                pri, color = pri_color.split(':')
+                pri_colors_dict[pri] = color
+
+            return pri_colors_dict
+
+        try:
+            if pri_colors_str == '':
+                pri_colors_dict = {'A':'', 'B': '', 'C': ''}
+            else:
+                pri_colors_dict = _str_to_dict(pri_colors_str)
+        except ValueError:
+            pri_colors_dict = _str_to_dict(self.defaults['priority_colors'])
+
+        return pri_colors_dict
+
+    def project_color(self):
+        try:
+            return self.cp.get('colorscheme', 'project_color')
+        except ValueError:
+            return int(self.defaults['project_color'])
+
+    def context_color(self):
+        try:
+            return self.cp.get('colorscheme', 'context_color')
+        except ValueError:
+            return int(self.defaults['context_color'])
+
+    def metadata_color(self):
+        try:
+            return self.cp.get('colorscheme', 'metadata_color')
+        except ValueError:
+            return int(self.defaults['metadata_color'])
+
+    def link_color(self):
+        try:
+            return self.cp.get('colorscheme', 'link_color')
+        except ValueError:
+            return int(self.defaults['link_color'])
 
 def config(p_path=None, p_overrides=None):
     """
