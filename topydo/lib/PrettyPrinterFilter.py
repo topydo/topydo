@@ -56,13 +56,13 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
             except KeyError:
                 pass
 
-            p_todo_str = color + p_todo_str + NEUTRAL_COLOR
+            p_todo_str = color + p_todo_str
             if config().highlight_projects_contexts():
                 p_todo_str = re.sub(
-                    r'\B(\+|@)([^\033]*\w)',
+                    r'\B(\+|@)(\S*\w)',
                     lambda m: (
                         context_color if m.group(0)[0] == "@"
-                        else project_color)+m.group(0)+color,
+                        else project_color) + m.group(0) + color,
                     p_todo_str)
 
             # tags
@@ -76,11 +76,6 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
                                 p_todo_str)
 
         p_todo_str += NEUTRAL_COLOR
-
-        # change any group of reduntant multiple NEUTRAL_GROUP occurrence to
-        # only one
-        p_todo_str = re.sub(r'(' + re.escape(NEUTRAL_COLOR) + ')+',
-                            NEUTRAL_COLOR, p_todo_str)
 
         return p_todo_str
 
