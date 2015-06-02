@@ -28,11 +28,13 @@ class Colors(object):
         self.metadata_color = config().metadata_color()
         self.link_color = config().link_color()
 
-    def _int_to_ansi(self, p_int, p_decorator='normal'):
+    def _int_to_ansi(self, p_int, p_decorator='normal', p_safe=True):
         """
         Returns ansi code for color based on xterm color id (0-255) and
         decoration, where decoration can be one of: normal, bold, faint,
-        italic, or underline.
+        italic, or underline. When p_safe is True, resulting ansi code is
+        constructed in most compatible way, but with support for only base 16
+        colors.
         """
         decoration_dict = {
                 'normal': '0',
@@ -45,11 +47,13 @@ class Colors(object):
         decoration = decoration_dict[p_decorator]
 
         try:
-            if 8 > int(p_int) >=0:
-                return '\033[{};3{}m'.format(decoration, str(p_int))
-            elif 16 > int(p_int):
-                p_int = int(p_int) - 8
-                return '\033[{};9{}m'.format(decoration, str(p_int))
+            if p_safe:
+                if 8 > int(p_int) >=0:
+                    return '\033[{};3{}m'.format(decoration, str(p_int))
+                elif 16 > int(p_int):
+                    p_int = int(p_int) - 8
+                    return '\033[{};1;3{}m'.format(decoration, str(p_int))
+
             if 256 > int(p_int) >=0:
                 return '\033[{};38;5;{}m'.format(decoration, str(p_int))
             else:
@@ -94,7 +98,7 @@ class Colors(object):
         if p_color == '':
             ansi = ''
         else:
-            ansi = self._int_to_ansi(p_color, p_decorator)
+            ansi = self._int_to_ansi(p_color, p_decorator, False)
 
             if not ansi:
                 ansi = self._name_to_ansi(p_color, p_decorator)

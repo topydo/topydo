@@ -38,7 +38,7 @@ class ColorsTest(TopydoTest):
         config(p_overrides={('colorscheme', 'project_color'): 'yellow'})
         color = Colors().get_project_color()
 
-        self.assertEqual(color, '\033[1;38;5;3m')
+        self.assertEqual(color, '\033[1;33m')
 
     def test_project_color4(self):
         config(p_overrides={('colorscheme', 'project_color'): '686'})
@@ -62,7 +62,7 @@ class ColorsTest(TopydoTest):
         config(p_overrides={('colorscheme', 'context_color'): 'magenta'})
         color = Colors().get_context_color()
 
-        self.assertEqual(color, '\033[1;38;5;5m')
+        self.assertEqual(color, '\033[1;35m')
 
     def test_context_color4(self):
         config(p_overrides={('colorscheme', 'context_color'): '392'})
@@ -86,7 +86,7 @@ class ColorsTest(TopydoTest):
         config(p_overrides={('colorscheme', 'metadata_color'): 'light-red'})
         color = Colors().get_metadata_color()
 
-        self.assertEqual(color, '\033[1;38;5;9m')
+        self.assertEqual(color, '\033[1;1;31m')
 
     def test_metadata_color4(self):
         config(p_overrides={('colorscheme', 'metadata_color'): '777'})
@@ -110,7 +110,7 @@ class ColorsTest(TopydoTest):
         config(p_overrides={('colorscheme', 'link_color'): 'red'})
         color = Colors().get_link_color()
 
-        self.assertEqual(color, '\033[4;38;5;1m')
+        self.assertEqual(color, '\033[4;31m')
 
     def test_link_color4(self):
         config(p_overrides={('colorscheme', 'link_color'): '777'})
@@ -130,16 +130,18 @@ class ColorsTest(TopydoTest):
         config("test/data/ColorsTest2.conf")
         color = Colors().get_priority_colors()
 
-        self.assertEqual(color['A'], '\033[0;38;5;5m')
-        self.assertEqual(color['B'], '\033[0;38;5;6m')
-        self.assertEqual(color['C'], '\033[0;38;5;7m')
+        self.assertEqual(color['A'], '\033[0;35m')
+        self.assertEqual(color['B'], '\033[0;1;36m')
+        self.assertEqual(color['C'], '\033[0;37m')
 
     def test_priority_color3(self):
         config("test/data/ColorsTest3.conf")
         color = Colors().get_priority_colors()
 
+        self.assertEqual(color['A'], '\033[0;35m')
+        self.assertEqual(color['B'], '\033[0;1;36m')
         self.assertEqual(color['Z'], NEUTRAL_COLOR)
-        self.assertEqual(color['D'], '\033[0;38;5;1m')
+        self.assertEqual(color['D'], '\033[0;31m')
         self.assertEqual(color['C'], '\033[0;38;5;7m')
 
     def test_priority_color4(self):
@@ -174,10 +176,10 @@ class ColorsTest(TopydoTest):
         link_color = Colors().get_link_color()
         metadata_color = Colors().get_metadata_color()
 
-        self.assertEqual(pri_color['A'], '\033[0;38;5;6m')
-        self.assertEqual(pri_color['B'], '\033[0;38;5;3m')
-        self.assertEqual(pri_color['C'], '\033[0;38;5;4m')
-        self.assertEqual(project_color, '\033[1;38;5;1m')
-        self.assertEqual(context_color, '\033[1;38;5;5m')
-        self.assertEqual(link_color, '\033[4;38;5;6m')
-        self.assertEqual(metadata_color, '\033[1;38;5;2m')
+        self.assertEqual(pri_color['A'], '\033[0;36m')
+        self.assertEqual(pri_color['B'], '\033[0;33m')
+        self.assertEqual(pri_color['C'], '\033[0;34m')
+        self.assertEqual(project_color, '\033[1;31m')
+        self.assertEqual(context_color, '\033[1;35m')
+        self.assertEqual(link_color, '\033[4;36m')
+        self.assertEqual(metadata_color, '\033[1;32m')
