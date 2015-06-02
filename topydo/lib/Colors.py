@@ -45,6 +45,11 @@ class Colors(object):
         decoration = decoration_dict[p_decorator]
 
         try:
+            if 8 > int(p_int) >=0:
+                return '\033[{};3{}m'.format(decoration, str(p_int))
+            elif 16 > int(p_int):
+                p_int = int(p_int) - 8
+                return '\033[{};9{}m'.format(decoration, str(p_int))
             if 256 > int(p_int) >=0:
                 return '\033[{};38;5;{}m'.format(decoration, str(p_int))
             else:
