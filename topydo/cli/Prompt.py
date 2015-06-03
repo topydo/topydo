@@ -43,7 +43,11 @@ def _todotxt_mtime():
     """
     Returns the mtime for the configured todo.txt file.
     """
-    return os.path.getmtime(config().todotxt())
+    try:
+        return os.path.getmtime(config().todotxt())
+    except os.error:
+        # file not found
+        return None
 
 class PromptApplication(CLIApplicationBase):
     """
@@ -68,7 +72,7 @@ class PromptApplication(CLIApplicationBase):
 
         current_mtime = _todotxt_mtime()
 
-        if self.mtime != current_mtime:
+        if not self.todofile or self.mtime != current_mtime:
             self.todofile = TodoFile.TodoFile(config().todotxt())
             self.todolist = TodoList.TodoList(self.todofile.read())
             self.mtime = current_mtime
