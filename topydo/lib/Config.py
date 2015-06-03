@@ -69,11 +69,11 @@ class _Config:
             'append_parent_contexts': '0',
 
             # colorscheme
-            'project_color': '1',
-            'context_color': '5',
-            'metadata_color': '2',
-            'link_color': '6',
-            'priority_colors': 'A:6,B:3,C:4',
+            'project_color': 'red',
+            'context_color': 'magenta',
+            'metadata_color': 'green',
+            'link_color': 'cyan',
+            'priority_colors': 'A:cyan,B:yellow,C:blue',
         }
 
         self.config = {}
