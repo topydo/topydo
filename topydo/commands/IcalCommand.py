@@ -1,5 +1,5 @@
 # Topydo - A todo.txt client written in Python.
-# Copyright (C) 2014 - 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
+# Copyright (C) 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,32 +14,30 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from topydo.lib.DCommand import DCommand
+"""
+Stub for the former 'ical' subcommand, now replaced with 'ls -f ical'.
 
-class DeleteCommand(DCommand):
+To be removed.
+"""
+
+from topydo.lib.Command import Command
+
+class IcalCommand(Command):
     def __init__(self, p_args, p_todolist,
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
-        super(DeleteCommand, self).__init__(
+        super(IcalCommand, self).__init__(
             p_args, p_todolist, p_out, p_err, p_prompt)
 
-    def prompt_text(self):
-        return "Also remove subtasks? [y/N] "
-
-    def prefix(self):
-        return "Removed: "
-
-    def execute_specific_core(self, p_todo):
-        self.todolist.delete(p_todo)
-
-    def execute_specific(self, p_todo):
-        self.out(self.prefix() + self.printer.print_todo(p_todo))
-        self.execute_specific_core(p_todo)
+    def execute(self):
+        self.error("The 'ical' subcommand is deprecated, please use 'ls -f ical' instead.")
+        return False
 
     def usage(self):
-        return """Synopsis: del [-f] <NUMBER1> [<NUMBER2> ...]"""
+        return """Synopsis: ical"""
 
     def help(self):
         return """\
-Deletes the todo item(s) with the given number(s) from the list."""
+Deprecated. Use 'ls -f ical' instead.
+"""

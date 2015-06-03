@@ -20,10 +20,12 @@ This module contains the class that represents a single todo item.
 
 from datetime import date
 import re
+from six import python_2_unicode_compatible, u
 
 from topydo.lib.TodoParser import parse_line
 from topydo.lib.Utils import is_valid_priority
 
+@python_2_unicode_compatible
 class TodoBase(object):
     """
     This class represents a single todo item in a todo.txt file. It maintains
@@ -128,6 +130,13 @@ class TodoBase(object):
         value = p_value if p_value != "" else r'\S+'
         self.src = re.sub(r'\s?\b' + p_key + ':' + value + r'\b', '', self.src)
 
+    def tags(self):
+        """
+        Returns a list of tuples with key-value pairs representing tags in
+        this todo item.
+        """
+        return self.fields['tags']
+
     def set_priority(self, p_priority):
         """
         Sets the priority of the todo. Must be a single capital letter [A-Z],
@@ -211,7 +220,7 @@ class TodoBase(object):
         self.src = re.sub(
             r'^(x \d{4}-\d{2}-\d{2} |\([A-Z]\) )?(\d{4}-\d{2}-\d{2} )?(.*)$',
             lambda m: \
-            "{}{} {}".format(m.group(1) or '', p_date.isoformat(), m.group(3)),
+            u("{}{} {}").format(m.group(1) or '', p_date.isoformat(), m.group(3)),
             self.src)
 
     def creation_date(self):

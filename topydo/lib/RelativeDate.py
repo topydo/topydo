@@ -29,7 +29,7 @@ def _add_months(p_sourcedate, p_months):
     https://stackoverflow.com/questions/4130922/how-to-increment-datetime-month-in-python
     """
     month = p_sourcedate.month - 1 + p_months
-    year = p_sourcedate.year + month / 12
+    year = p_sourcedate.year + month // 12
     month = month % 12 + 1
     day = min(p_sourcedate.day, calendar.monthrange(year, month)[1])
 

@@ -35,7 +35,7 @@ class RecurrenceTest(TopydoTest):
         self.todo.set_tag(config().tag_due(), future.isoformat())
         new_todo = advance_recurring_todo(self.todo)
 
-        self.assertEquals(new_todo.due_date(), new_due)
+        self.assertEqual(new_todo.due_date(), new_due)
 
     def test_duedate2(self):
         """ Where due date is today. """
@@ -45,7 +45,7 @@ class RecurrenceTest(TopydoTest):
         self.todo.set_tag(config().tag_due(), today.isoformat())
         new_todo = advance_recurring_todo(self.todo)
 
-        self.assertEquals(new_todo.due_date(), new_due)
+        self.assertEqual(new_todo.due_date(), new_due)
 
     def test_duedate3(self):
         """ Where due date is in the past. """
@@ -55,7 +55,7 @@ class RecurrenceTest(TopydoTest):
         self.todo.set_tag(config().tag_due(), past.isoformat())
         new_todo = advance_recurring_todo(self.todo)
 
-        self.assertEquals(new_todo.due_date(), new_due)
+        self.assertEqual(new_todo.due_date(), new_due)
 
     def test_duedate4(self):
         """ Where due date is in the past. """
@@ -65,7 +65,7 @@ class RecurrenceTest(TopydoTest):
         self.todo.set_tag(config().tag_due(), past.isoformat())
         new_todo = strict_advance_recurring_todo(self.todo)
 
-        self.assertEquals(new_todo.due_date(), new_due)
+        self.assertEqual(new_todo.due_date(), new_due)
 
     def test_duedate5(self):
         """ Where due date is in the future. """
@@ -75,7 +75,7 @@ class RecurrenceTest(TopydoTest):
         self.todo.set_tag(config().tag_due(), future.isoformat())
         new_todo = strict_advance_recurring_todo(self.todo)
 
-        self.assertEquals(new_todo.due_date(), new_due)
+        self.assertEqual(new_todo.due_date(), new_due)
 
     def test_duedate6(self):
         """ Where due date is today. """
@@ -85,21 +85,21 @@ class RecurrenceTest(TopydoTest):
         self.todo.set_tag(config().tag_due(), today.isoformat())
         new_todo = strict_advance_recurring_todo(self.todo)
 
-        self.assertEquals(new_todo.due_date(), new_due)
+        self.assertEqual(new_todo.due_date(), new_due)
 
     def test_noduedate1(self):
         new_due = date.today() + timedelta(7)
         new_todo = advance_recurring_todo(self.todo)
 
         self.assertTrue(new_todo.has_tag(config().tag_due()))
-        self.assertEquals(new_todo.due_date(), new_due)
+        self.assertEqual(new_todo.due_date(), new_due)
 
     def test_noduedate2(self):
         new_due = date.today() + timedelta(7)
         new_todo = strict_advance_recurring_todo(self.todo)
 
         self.assertTrue(new_todo.has_tag(config().tag_due()))
-        self.assertEquals(new_todo.due_date(), new_due)
+        self.assertEqual(new_todo.due_date(), new_due)
 
     def test_startdate1(self):
         """ Start date is before due date. """
@@ -110,19 +110,20 @@ class RecurrenceTest(TopydoTest):
         new_start = date.today() + timedelta(6)
         new_todo = advance_recurring_todo(self.todo)
 
-        self.assertEquals(new_todo.start_date(), new_start)
+        self.assertEqual(new_todo.start_date(), new_start)
 
     def test_startdate2(self):
         """ Strict recurrence. Start date is before due date. """
         due = date.today() - timedelta(1)
         self.todo.set_tag(config().tag_due(), date.today().isoformat())
         yesterday = due - timedelta(1)
+        # pylint: disable=E1103
         self.todo.set_tag(config().tag_start(), yesterday.isoformat())
 
         new_start = date.today() + timedelta(5)
         new_todo = strict_advance_recurring_todo(self.todo)
 
-        self.assertEquals(new_todo.start_date(), new_start)
+        self.assertEqual(new_todo.start_date(), new_start)
 
     def test_startdate3(self):
         """ Start date equals due date. """
@@ -132,7 +133,7 @@ class RecurrenceTest(TopydoTest):
         new_start = date.today() + timedelta(7)
         new_todo = advance_recurring_todo(self.todo)
 
-        self.assertEquals(new_todo.start_date(), new_start)
+        self.assertEqual(new_todo.start_date(), new_start)
 
     def test_no_recurrence(self):
         self.todo.remove_tag('rec')

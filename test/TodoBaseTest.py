@@ -48,7 +48,7 @@ class TodoBaseTester(TopydoTest):
         todo = TodoBase("(C) Foo id:1")
         todo.add_tag('id', '2')
 
-        self.assertEquals(todo.source(), '(C) Foo id:1 id:2')
+        self.assertEqual(todo.source(), '(C) Foo id:1 id:2')
 
     def test_set_tag1(self):
         todo = TodoBase("(C) Foo foo:bar")
@@ -146,7 +146,7 @@ class TodoBaseTester(TopydoTest):
         todo = TodoBase("(A) Foo")
         todo.set_priority('B')
 
-        self.assertEquals(todo.priority(), 'B')
+        self.assertEqual(todo.priority(), 'B')
         self.assertTrue(re.match(r'^\(B\) Foo$', todo.src))
 
     def test_set_priority2(self):
@@ -154,7 +154,7 @@ class TodoBaseTester(TopydoTest):
         todo = TodoBase("Foo")
         todo.set_priority('B')
 
-        self.assertEquals(todo.priority(), 'B')
+        self.assertEqual(todo.priority(), 'B')
         self.assertTrue(re.match(r'^\(B\) Foo$', todo.src))
 
     def test_set_priority3(self):
@@ -162,7 +162,7 @@ class TodoBaseTester(TopydoTest):
         todo = TodoBase("(A) Foo")
         todo.set_priority('AB')
 
-        self.assertEquals(todo.priority(), 'A')
+        self.assertEqual(todo.priority(), 'A')
         self.assertTrue(re.match(r'^\(A\) Foo$', todo.src))
 
     def test_set_priority4(self):
@@ -173,7 +173,7 @@ class TodoBaseTester(TopydoTest):
 
         todo.set_priority('B')
 
-        self.assertEquals(todo.priority(), 'B')
+        self.assertEqual(todo.priority(), 'B')
         self.assertTrue(re.match(r'^\(B\) \(A\)Foo$', todo.src))
 
     def test_set_priority5(self):
@@ -181,7 +181,7 @@ class TodoBaseTester(TopydoTest):
         todo = TodoBase("(A) Foo")
         todo.set_priority(None)
 
-        self.assertEquals(todo.priority(), None)
+        self.assertEqual(todo.priority(), None)
         self.assertTrue(re.match(r'^Foo$', todo.src))
 
     def test_set_priority6(self):
@@ -190,32 +190,32 @@ class TodoBaseTester(TopydoTest):
         todo.set_priority('A')
 
         self.assertFalse(todo.priority())
-        self.assertEquals(todo.src, "x 2014-06-13 Foo")
+        self.assertEqual(todo.src, "x 2014-06-13 Foo")
 
     def test_project1(self):
         todo = TodoBase("(C) Foo +Bar +Baz +Bar:")
 
-        self.assertEquals(len(todo.projects()), 2)
+        self.assertEqual(len(todo.projects()), 2)
         self.assertIn('Bar', todo.projects())
         self.assertIn('Baz', todo.projects())
 
     def test_project2(self):
         todo = TodoBase("(C) Foo +Bar+Baz")
 
-        self.assertEquals(len(todo.projects()), 1)
+        self.assertEqual(len(todo.projects()), 1)
         self.assertIn('Bar+Baz', todo.projects())
 
     def test_context1(self):
         todo = TodoBase("(C) Foo @Bar @Baz @Bar:")
 
-        self.assertEquals(len(todo.contexts()), 2)
+        self.assertEqual(len(todo.contexts()), 2)
         self.assertIn('Bar', todo.contexts())
         self.assertIn('Baz', todo.contexts())
 
     def test_context2(self):
         todo = TodoBase("(C) Foo @Bar+Baz")
 
-        self.assertEquals(len(todo.contexts()), 1)
+        self.assertEqual(len(todo.contexts()), 1)
         self.assertIn('Bar+Baz', todo.contexts())
 
     def test_completion1(self):
@@ -248,7 +248,7 @@ class TodoBaseTester(TopydoTest):
         today_str = today.isoformat()
 
         self.assertFalse(todo.priority())
-        self.assertEquals(todo.fields['completionDate'], today)
+        self.assertEqual(todo.fields['completionDate'], today)
         self.assertTrue(re.match('^x ' + today_str + ' Foo', todo.src))
 
     def test_set_complete2(self):
@@ -258,7 +258,7 @@ class TodoBaseTester(TopydoTest):
         today = date.today()
         today_str = today.isoformat()
 
-        self.assertEquals(todo.fields['completionDate'], today)
+        self.assertEqual(todo.fields['completionDate'], today)
         self.assertTrue(re.match('^x ' + today_str + ' 2014-06-12 Foo', \
             todo.src))
 
@@ -269,7 +269,7 @@ class TodoBaseTester(TopydoTest):
         today = date.today()
         today_str = today.isoformat()
 
-        self.assertEquals(todo.fields['completionDate'], today)
+        self.assertEqual(todo.fields['completionDate'], today)
         self.assertTrue(re.match('^x ' + today_str + ' Foo', todo.src))
 
     def test_set_complete4(self):
@@ -279,21 +279,21 @@ class TodoBaseTester(TopydoTest):
         today = date.today()
         today_str = today.isoformat()
 
-        self.assertEquals(todo.fields['completionDate'], today)
+        self.assertEqual(todo.fields['completionDate'], today)
         self.assertTrue(re.match('^x ' + today_str + ' 2014-06-12 Foo', todo.src))
 
     def test_set_complete5(self):
         todo = TodoBase("x 2014-06-13 Foo")
         todo.set_completed()
 
-        self.assertEquals(todo.src, "x 2014-06-13 Foo")
+        self.assertEqual(todo.src, "x 2014-06-13 Foo")
 
     def test_set_complete6(self):
         todo = TodoBase("Foo")
         yesterday = date.today() - timedelta(1)
         todo.set_completed(yesterday)
 
-        self.assertEquals(todo.src, "x {} Foo".format(yesterday.isoformat()))
+        self.assertEqual(todo.src, "x {} Foo".format(yesterday.isoformat()))
 
     def test_set_source_text(self):
         todo = TodoBase("(B) Foo")
@@ -301,8 +301,8 @@ class TodoBaseTester(TopydoTest):
         new_text = "(C) Foo"
         todo.set_source_text(new_text)
 
-        self.assertEquals(todo.src, new_text)
-        self.assertEquals(todo.priority(),'C')
+        self.assertEqual(todo.src, new_text)
+        self.assertEqual(todo.priority(),'C')
 
     def test_set_creation_date1(self):
         todo = TodoBase("Foo")
@@ -310,8 +310,8 @@ class TodoBaseTester(TopydoTest):
 
         todo.set_creation_date(creation_date)
 
-        self.assertEquals(todo.creation_date(), creation_date)
-        self.assertEquals(todo.src, "2014-07-24 Foo")
+        self.assertEqual(todo.creation_date(), creation_date)
+        self.assertEqual(todo.src, "2014-07-24 Foo")
 
     def test_set_creation_date2(self):
         todo = TodoBase("(A) Foo")
@@ -319,8 +319,8 @@ class TodoBaseTester(TopydoTest):
 
         todo.set_creation_date(creation_date)
 
-        self.assertEquals(todo.creation_date(), creation_date)
-        self.assertEquals(todo.src, "(A) 2014-07-24 Foo")
+        self.assertEqual(todo.creation_date(), creation_date)
+        self.assertEqual(todo.src, "(A) 2014-07-24 Foo")
 
     def test_set_creation_date3(self):
         todo = TodoBase("(A) 2014-07-23 Foo")
@@ -328,8 +328,8 @@ class TodoBaseTester(TopydoTest):
 
         todo.set_creation_date(creation_date)
 
-        self.assertEquals(todo.creation_date(), creation_date)
-        self.assertEquals(todo.src, "(A) 2014-07-24 Foo")
+        self.assertEqual(todo.creation_date(), creation_date)
+        self.assertEqual(todo.src, "(A) 2014-07-24 Foo")
 
     def test_set_creation_date4(self):
         todo = TodoBase("2014-07-23 Foo")
@@ -337,8 +337,8 @@ class TodoBaseTester(TopydoTest):
 
         todo.set_creation_date(creation_date)
 
-        self.assertEquals(todo.creation_date(), creation_date)
-        self.assertEquals(todo.src, "2014-07-24 Foo")
+        self.assertEqual(todo.creation_date(), creation_date)
+        self.assertEqual(todo.src, "2014-07-24 Foo")
 
     def test_set_creation_date5(self):
         todo = TodoBase("x 2014-07-25 2014-07-23 Foo")
@@ -346,8 +346,8 @@ class TodoBaseTester(TopydoTest):
 
         todo.set_creation_date(creation_date)
 
-        self.assertEquals(todo.creation_date(), creation_date)
-        self.assertEquals(todo.src, "x 2014-07-25 2014-07-24 Foo")
+        self.assertEqual(todo.creation_date(), creation_date)
+        self.assertEqual(todo.src, "x 2014-07-25 2014-07-24 Foo")
 
 if __name__ == '__main__':
     unittest.main()

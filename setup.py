@@ -1,19 +1,23 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name = "topydo",
-    packages = ["topydo", "topydo.lib", "topydo.cli"],
-    version = "0.3.2",
+    packages = find_packages(exclude=["test"]),
+    version = "0.4",
     description = "A command-line todo list application using the todo.txt format.",
     author = "Bram Schoenmakers",
     author_email = "me@bramschoenmakers.nl",
     url = "https://github.com/bram85/topydo",
+    install_requires = [
+        'six >= 1.9.0',
+    ],
     extras_require = {
         'ical': ['icalendar'],
+        'prompt-toolkit': ['prompt-toolkit >= 0.37'],
         'edit-cmd-tests': ['mock'],
     },
     entry_points= {
-        'console_scripts': ['topydo = topydo.cli.Main:main'],
+        'console_scripts': ['topydo = topydo.cli.UILoader:main'],
     },
     classifiers = [
         "Development Status :: 4 - Beta",
@@ -22,6 +26,9 @@ setup(
         "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
         "Natural Language :: English",
         "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.2",
+        "Programming Language :: Python :: 3.3",
+        "Programming Language :: Python :: 3.4",
         "Topic :: Utilities",
     ],
     long_description = """\

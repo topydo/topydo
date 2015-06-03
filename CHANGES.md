@@ -1,3 +1,28 @@
+0.4
+---
+
+* A new prompt mode with autocompletion. To enable, run `pip install
+  prompt-toolkit`, then `topydo prompt`.
+* Support for Python 3.2, 3.3 and 3.4 (note that iCalendar output does not
+  work in Python 3.2)
+* Better Unicode support.
+* `add` command has the `-f` flag to add todo items from a file (or use `-` to
+  read from standard input) (Jacek Sowiński - @mruwek)
+* Customizable colors + additional highlighting of tags and URLs (Jacek
+  Sowiński (@mruwek) and @kidpixo).
+* Make sure that the `edit` subcommand always uses the correct todo.txt file.
+* `ls` subcommand has the `-f` flag to specify the output format. Currently,
+  three formats are supported:
+  * `text` - The default plain text format.
+  * `ical` - iCalendar (WARNING: this deprecates the `ical` subcommand)
+  * `json` - Javascript Object Notation (JSON)
+* Resolve `~` to home directory if used in a configuration file
+  (@robertvanbregt).
+* Various minor fixes.
+
+Again, I'd like to thank Jacek (@mruwek) for his assistance and contributions
+in this release.
+
 0.3.2
 -----
 
@@ -27,7 +52,7 @@
 * Fix assignment of dependency IDs: in some cases two distinct todos get the
   same dependency ID.
 
-Big thanks to Jacek for his contributions in this release.
+Big thanks to Jacek (@mruwek) for his contributions in this release.
 
 0.2
 ---

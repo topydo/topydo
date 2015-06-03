@@ -68,8 +68,10 @@ class PostponeCommand(MultiCommand):
                     if self.move_start_date and todo.has_tag(config().tag_start()):
                         length = todo.length()
                         new_start = new_due - timedelta(length)
+                        # pylint: disable=E1103
                         todo.set_tag(config().tag_start(), new_start.isoformat())
 
+                    # pylint: disable=E1103
                     todo.set_tag(config().tag_due(), new_due.isoformat())
 
                     self.todolist.set_dirty()

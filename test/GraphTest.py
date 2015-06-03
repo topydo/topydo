@@ -51,34 +51,34 @@ class GraphTest(TopydoTest):
         self.assertFalse(self.graph.has_edge_id("1"))
 
     def test_incoming_neighbors1(self):
-        self.assertEquals(self.graph.incoming_neighbors(1), set())
+        self.assertEqual(self.graph.incoming_neighbors(1), set())
 
     def test_edge_id_of_nonexistent_edge(self):
         self.assertFalse(self.graph.edge_id(1, 6))
 
     def test_incoming_neighbors2(self):
-        self.assertEquals(self.graph.incoming_neighbors(2), set([1, 6]))
+        self.assertEqual(self.graph.incoming_neighbors(2), set([1, 6]))
 
     def test_incoming_neighbors3(self):
-        self.assertEquals(self.graph.incoming_neighbors(1, True), set())
+        self.assertEqual(self.graph.incoming_neighbors(1, True), set())
 
     def test_incoming_neighbors4(self):
-        self.assertEquals(self.graph.incoming_neighbors(5, True), set([1, 2, 3, 4, 6]))
+        self.assertEqual(self.graph.incoming_neighbors(5, True), set([1, 2, 3, 4, 6]))
 
     def test_outgoing_neighbors1(self):
-        self.assertEquals(self.graph.outgoing_neighbors(1), set([2, 3]))
+        self.assertEqual(self.graph.outgoing_neighbors(1), set([2, 3]))
 
     def test_outgoing_neighbors2(self):
-        self.assertEquals(self.graph.outgoing_neighbors(2), set([4]))
+        self.assertEqual(self.graph.outgoing_neighbors(2), set([4]))
 
     def test_outgoing_neighbors3(self):
-        self.assertEquals(self.graph.outgoing_neighbors(1, True), set([2, 3, 4, 5, 6]))
+        self.assertEqual(self.graph.outgoing_neighbors(1, True), set([2, 3, 4, 5, 6]))
 
     def test_outgoing_neighbors4(self):
-        self.assertEquals(self.graph.outgoing_neighbors(3), set([5]))
+        self.assertEqual(self.graph.outgoing_neighbors(3), set([5]))
 
     def test_outgoing_neighbors5(self):
-        self.assertEquals(self.graph.outgoing_neighbors(5), set([]))
+        self.assertEqual(self.graph.outgoing_neighbors(5), set([]))
 
     def test_remove_edge1(self):
         self.graph.remove_edge(1, 2)
@@ -165,11 +165,11 @@ class GraphTest(TopydoTest):
 
     def test_str_output(self):
         out = 'digraph g {\n  1\n  1 -> 2 [label="1"]\n  1 -> 3\n  2\n  2 -> 4 [label="Test"]\n  3\n  3 -> 5\n  4\n  4 -> 3\n  4 -> 6\n  5\n  6\n  6 -> 2\n}\n'
-        self.assertEquals(str(self.graph), out)
+        self.assertEqual(str(self.graph), out)
 
     def test_dot_output_without_labels(self):
         out = 'digraph g {\n  1\n  1 -> 2\n  1 -> 3\n  2\n  2 -> 4\n  3\n  3 -> 5\n  4\n  4 -> 3\n  4 -> 6\n  5\n  6\n  6 -> 2\n}\n'
-        self.assertEquals(self.graph.dot(False), out)
+        self.assertEqual(self.graph.dot(False), out)
 
 if __name__ == '__main__':
     unittest.main()

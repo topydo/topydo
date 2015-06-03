@@ -47,6 +47,7 @@ def _advance_recurring_todo_helper(p_todo, p_offset):
     if not new_due:
         raise NoRecurrenceException()
 
+    # pylint: disable=E1103
     todo.set_tag(config().tag_due(), new_due.isoformat())
 
     if todo.start_date():

@@ -18,6 +18,8 @@
 This module deals with todo.txt files.
 """
 
+import codecs
+
 class TodoFile(object):
     """
     This class represents a todo.txt file, which can be read from or written
@@ -31,7 +33,7 @@ class TodoFile(object):
         """ Reads the todo.txt file and returns a list of todo items. """
         todos = []
         try:
-            todofile = open(self.path, 'r')
+            todofile = codecs.open(self.path, 'r', encoding="utf-8")
             todos = todofile.readlines()
             todofile.close()
         except IOError:

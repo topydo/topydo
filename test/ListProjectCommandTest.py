@@ -16,33 +16,33 @@
 
 import unittest
 
-import CommandTest
-import TestFacilities
-from topydo.lib.ListProjectCommand import ListProjectCommand
+from topydo.commands.ListProjectCommand import ListProjectCommand
+from test.CommandTest import CommandTest
+from test.TestFacilities import load_file_to_todolist
 
-class ListProjectCommandTest(CommandTest.CommandTest):
+class ListProjectCommandTest(CommandTest):
     def test_projects1(self):
-        todolist = TestFacilities.load_file_to_todolist("test/data/TodoListTest.txt")
+        todolist = load_file_to_todolist("test/data/TodoListTest.txt")
         command = ListProjectCommand([""], todolist, self.out, self.error)
         command.execute()
 
-        self.assertEquals(self.output,"Project1\nProject2\n")
+        self.assertEqual(self.output, "Project1\nProject2\n")
         self.assertFalse(self.errors)
 
     def test_projects2(self):
-        todolist = TestFacilities.load_file_to_todolist("test/data/TodoListTest.txt")
+        todolist = load_file_to_todolist("test/data/TodoListTest.txt")
         command = ListProjectCommand(["aaa"], todolist, self.out, self.error)
         command.execute()
 
-        self.assertEquals(self.output,"Project1\nProject2\n")
+        self.assertEqual(self.output, "Project1\nProject2\n")
         self.assertFalse(self.errors)
 
     def test_help(self):
         command = ListProjectCommand(["help"], None, self.out, self.error)
         command.execute()
 
-        self.assertEquals(self.output, "")
-        self.assertEquals(self.errors, command.usage() + "\n\n" + command.help() + "\n")
+        self.assertEqual(self.output, "")
+        self.assertEqual(self.errors, command.usage() + "\n\n" + command.help() + "\n")
 
 if __name__ == '__main__':
     unittest.main()

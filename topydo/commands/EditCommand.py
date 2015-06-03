@@ -18,13 +18,17 @@ import os
 from subprocess import call, check_call, CalledProcessError
 import tempfile
 
+from six import text_type, u
+
 from topydo.lib.ExpressionCommand import ExpressionCommand
 from topydo.lib.MultiCommand import MultiCommand
 from topydo.lib.Config import config
 from topydo.lib.Todo import Todo
-from topydo.lib.TodoListBase import InvalidTodoException
 from topydo.lib.TodoList import TodoList
 from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
+
+# the true and only editor
+DEFAULT_EDITOR = 'vi'
 
 # Access the base class of the TodoList instance kept inside EditCommand. We
 # cannot use super() inside the class itself
@@ -54,14 +58,14 @@ class EditCommand(MultiCommand, ExpressionCommand):
     def _todos_to_temp(self):
         f = tempfile.NamedTemporaryFile()
         for todo in self.todos:
-            f.write("%s\n" % todo.__str__())
+            f.write((text_type(todo) + "\n").encode('utf-8'))
         f.seek(0)
 
         return f
 
-    def _todos_from_temp(self, temp_file):
-        temp_file.seek(0)
-        todos = temp_file.read().splitlines()
+    def _todos_from_temp(self, p_temp_file):
+        p_temp_file.seek(0)
+        todos = p_temp_file.read().decode('utf-8').splitlines()
 
         todo_objs = []
         for todo in todos:
@@ -69,10 +73,10 @@ class EditCommand(MultiCommand, ExpressionCommand):
 
         return todo_objs
 
-    def _open_in_editor(self, temp_file, editor):
+    def _open_in_editor(self, p_temp_file, p_editor):
         try:
-            return check_call([editor, temp_file.name])
-        except(CalledProcessError):
+            return check_call([p_editor, p_temp_file.name])
+        except CalledProcessError:
             self.error('Something went wrong in the editor...')
             return 1
 
@@ -81,7 +85,7 @@ class EditCommand(MultiCommand, ExpressionCommand):
 
         if len(self.invalid_numbers) > 1 or len(self.invalid_numbers) > 0 and len(self.todos) > 0:
             for number in self.invalid_numbers:
-                errors.append("Invalid todo number given: {}.".format(number))
+                errors.append(u("Invalid todo number given: {}.").format(number))
         elif len(self.invalid_numbers) == 1 and len(self.todos) == 0:
             errors.append("Invalid todo number given.")
 
@@ -96,9 +100,9 @@ class EditCommand(MultiCommand, ExpressionCommand):
 
         self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
         try:
-            editor = os.environ['EDITOR'] or 'vi'
+            editor = os.environ['EDITOR'] or DEFAULT_EDITOR
         except(KeyError):
-            editor =  'vi'
+            editor = DEFAULT_EDITOR
 
         try:
             if len(self.args) < 1:
