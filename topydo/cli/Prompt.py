@@ -104,13 +104,7 @@ class PromptApplication(CLIApplicationBase):
 
             try:
                 if self._execute(subcommand, args) != False:
-                    if self.todolist.is_dirty():
-                        self._archive()
-
-                        if config().keep_sorted():
-                            self._execute(SortCommand, [])
-
-                        self.todofile.write(str(self.todolist))
+                    self._post_execute()
             except TypeError:
                 usage()
 
