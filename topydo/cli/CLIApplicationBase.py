@@ -49,7 +49,6 @@ Available commands:
 * depri
 * do
 * edit
-* ical
 * ls
 * listcon (lscon)
 * listprojects (lsprj)
