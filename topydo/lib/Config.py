@@ -44,7 +44,6 @@ class _Config:
             # topydo
             'default_command': 'ls',
             'colors': '1',
-            'highlight_projects_contexts': '1',
             'filename' : 'todo.txt',
             'archive_filename' : 'done.txt',
             'identifiers': 'linenumber',
@@ -117,12 +116,6 @@ class _Config:
             return self.cp.getboolean('topydo', 'colors')
         except ValueError:
             return self.defaults['colors'] == '1'
-
-    def highlight_projects_contexts(self):
-        try:
-            return self.cp.getboolean('topydo', 'highlight_projects_contexts')
-        except ValueError:
-            return self.defaults['highlight_projects_contexts'] == '1'
 
     def todotxt(self):
         return os.path.expanduser(self.cp.get('topydo', 'filename'))

@@ -44,10 +44,10 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
 
         colorscheme = Colors()
         priority_colors = colorscheme.get_priority_colors()
-        project_color  = colorscheme.get_project_color()
-        context_color  = colorscheme.get_context_color()
+        project_color = colorscheme.get_project_color()
+        context_color = colorscheme.get_context_color()
         metadata_color = colorscheme.get_metadata_color()
-        link_color     = colorscheme.get_link_color()
+        link_color = colorscheme.get_link_color()
 
         if config().colors():
             color = NEUTRAL_COLOR
@@ -56,14 +56,16 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
             except KeyError:
                 pass
 
+            # color by priority
             p_todo_str = color + p_todo_str
-            if config().highlight_projects_contexts():
-                p_todo_str = re.sub(
-                    r'\B(\+|@)(\S*\w)',
-                    lambda m: (
-                        context_color if m.group(0)[0] == "@"
-                        else project_color) + m.group(0) + color,
-                    p_todo_str)
+
+            # color projects / contexts
+            p_todo_str = re.sub(
+                r'\B(\+|@)(\S*\w)',
+                lambda m: (
+                    context_color if m.group(0)[0] == "@"
+                    else project_color) + m.group(0) + color,
+                p_todo_str)
 
             # tags
             p_todo_str = re.sub(r'\b\S+:[^/\s]\S+\b',
