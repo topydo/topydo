@@ -13,7 +13,7 @@ setup(
     ],
     extras_require = {
         'ical': ['icalendar'],
-        'prompt-toolkit': ['prompt-toolkit >= 0.37'],
+        'prompt-toolkit': ['prompt-toolkit >= 0.39'],
         'edit-cmd-tests': ['mock'],
     },
     entry_points= {
