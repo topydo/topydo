@@ -27,7 +27,7 @@ def main():
         args = sys.argv[1:]
 
         try:
-            opts, args = getopt.getopt(args, MAIN_OPTS)
+            _, args = getopt.getopt(args, MAIN_OPTS)
         except getopt.GetoptError as e:
             error(str(e))
             sys.exit(1)

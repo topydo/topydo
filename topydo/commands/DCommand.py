@@ -19,7 +19,6 @@ import re
 from topydo.lib.MultiCommand import MultiCommand
 from topydo.lib.PrettyPrinter import PrettyPrinter
 from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
-from topydo.lib.TodoListBase import InvalidTodoException
 
 class DCommand(MultiCommand):
     """
@@ -110,7 +109,7 @@ class DCommand(MultiCommand):
         return [todo for todo in self.todolist.todos()[:self.length]
             if not self._uncompleted_children(todo) and todo.is_active()]
 
-    def condition(self, p_todo):
+    def condition(self, _):
         """
         An additional condition whether execute_specific should be executed.
         """

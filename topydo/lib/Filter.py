@@ -16,7 +16,6 @@
 
 import re
 
-from topydo.lib.Config import config
 from topydo.lib.RelativeDate import relative_date_to_date
 from topydo.lib.Utils import date_string_to_date
 
@@ -29,7 +28,7 @@ class Filter(object):
 
         return [t for t in p_todos if self.match(t)]
 
-    def match(self, p_todo):
+    def match(self, _):
         """ Default match value. """
         return True
 

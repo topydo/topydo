@@ -21,7 +21,6 @@ from topydo.lib.Command import InvalidCommandArgument
 from topydo.lib.Config import config
 from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
 from topydo.lib.RelativeDate import relative_date_to_date
-from topydo.lib.TodoListBase import InvalidTodoException
 from topydo.lib.Utils import date_string_to_date
 
 class PostponeCommand(MultiCommand):
