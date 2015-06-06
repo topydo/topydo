@@ -224,7 +224,6 @@ class ListCommandUnicodeTest(CommandTest):
         self.assertEqual(self.output, expected)
 
 class ListCommandJsonTest(CommandTest):
-
     def test_json(self):
         todolist = load_file_to_todolist("test/data/ListCommandTest.txt")
 
