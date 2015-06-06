@@ -73,5 +73,9 @@ class View(object):
 
         return printer.print_list(self._viewdata)
 
+    def todos(self):
+        """ Returns a sorted and filtered list of todos in this view. """
+        return self._viewdata
+
     def __str__(self):
         return self._printer.print_list(self._viewdata)

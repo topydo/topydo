@@ -118,7 +118,7 @@ class EditCommand(MultiCommand, ExpressionCommand):
                     return call([editor, archive]) == 0
 
                 if self.is_expression:
-                    self.todos = self._view()._viewdata
+                    self.todos = self._view().todos()
                 else:
                     self.get_todos(self.args)
 
