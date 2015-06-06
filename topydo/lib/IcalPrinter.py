@@ -75,9 +75,6 @@ class IcalPrinter(Printer):
             # too much. Therefore just disable the iCalendar functionality
             self.icalendar = None
 
-    def print_todo(self, p_todo):
-        return self._convert_todo(p_todo).to_ical() if self.icalendar else ""
-
     def print_list(self, p_todos):
         result = ""
 
