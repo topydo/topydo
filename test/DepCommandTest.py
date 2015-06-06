@@ -211,6 +211,14 @@ class DepCommandTest(CommandTest):
         self.assertFalse(self.output)
         self.assertEqual(self.errors, command.usage() + "\n")
 
+    def test_ls7(self):
+        command = DepCommand(["ls", "top", "99"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+        self.assertEqual(self.output, "")
+        self.assertEqual(self.errors, command.usage() + "\n")
+
     def gc_helper(self, p_subcommand):
         command = DepCommand([p_subcommand], self.todolist, self.out, self.error)
         command.execute()
