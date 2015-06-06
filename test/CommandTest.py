@@ -15,7 +15,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
-from six import PY2
 
 from topydo.lib.Utils import escape_ansi
 from test.TopydoTest import TopydoTest
@@ -33,14 +32,6 @@ class CommandTest(TopydoTest):
     def error(self, p_error):
         if p_error:
             self.errors += escape_ansi(p_error + "\n")
-
-# utility for several commands
-def utf8(p_string):
-    """ Converts a Unicode string to UTF-8 in case of Python 2. """
-    if PY2:
-        p_string = p_string.encode('utf-8')
-
-    return p_string
 
 if __name__ == '__main__':
     unittest.main()

@@ -70,4 +70,4 @@ class ExpressionCommand(Command):
         sorter = Sorter(self.sort_expression)
         filters = self._filters()
 
-        return View(sorter, filters, self.todolist, self.printer)
+        return View(sorter, filters, self.todolist)

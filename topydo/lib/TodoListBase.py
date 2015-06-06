@@ -255,7 +255,10 @@ class TodoListBase(object):
             self._todo_id_map[todo] = uid
             self._id_todo_map[uid] = todo
 
-    def __str__(self):
+    def print_todos(self):
+        """
+        Returns a pretty-printed string (without colors) of the todo items in
+        this list.
+        """
         printer = PrettyPrinter()
         return printer.print_list(self._todos)
-

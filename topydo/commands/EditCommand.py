@@ -18,7 +18,7 @@ import os
 from subprocess import call, check_call, CalledProcessError
 import tempfile
 
-from six import text_type, u
+from six import u
 
 from topydo.lib.ExpressionCommand import ExpressionCommand
 from topydo.lib.MultiCommand import MultiCommand
@@ -58,7 +58,7 @@ class EditCommand(MultiCommand, ExpressionCommand):
     def _todos_to_temp(self):
         f = tempfile.NamedTemporaryFile()
         for todo in self.todos:
-            f.write((text_type(todo) + "\n").encode('utf-8'))
+            f.write((todo.source() + "\n").encode('utf-8'))
         f.seek(0)
 
         return f
@@ -118,7 +118,7 @@ class EditCommand(MultiCommand, ExpressionCommand):
                     return call([editor, archive]) == 0
 
                 if self.is_expression:
-                    self.todos = self._view().todos()
+                    self.todos = self._view().todos
                 else:
                     self.get_todos(self.args)
 

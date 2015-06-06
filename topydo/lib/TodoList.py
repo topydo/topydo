@@ -20,6 +20,7 @@ A list of todo items.
 
 from topydo.lib.Config import config
 from topydo.lib.Graph import DirectedGraph
+from topydo.lib.PrettyPrinter import PrettyPrinter
 from topydo.lib.TodoListBase import TodoListBase
 
 class TodoList(TodoListBase):
@@ -231,4 +232,3 @@ class TodoList(TodoListBase):
 
         for todo in self._todos:
             todo.attributes['parents'] = self.parents(todo)
-

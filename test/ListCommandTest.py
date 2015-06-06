@@ -22,7 +22,7 @@ import unittest
 
 from topydo.lib.Config import config
 from topydo.commands.ListCommand import ListCommand
-from test.CommandTest import CommandTest, utf8
+from test.CommandTest import CommandTest
 from test.TestFacilities import load_file_to_todolist
 
 class ListCommandTest(CommandTest):
@@ -219,7 +219,7 @@ class ListCommandUnicodeTest(CommandTest):
 
         self.assertFalse(self.todolist.is_dirty())
 
-        expected = utf8(u("|  1| (C) And some sp\u00e9cial tag:\u25c4\n"))
+        expected = u("|  1| (C) And some sp\u00e9cial tag:\u25c4\n")
 
         self.assertEqual(self.output, expected)
 
@@ -252,7 +252,7 @@ class ListCommandJsonTest(CommandTest):
         with codecs.open('test/data/ListCommandUnicodeTest.json', 'r', encoding='utf-8') as json:
             jsontext = json.read()
 
-        self.assertEqual(self.output, utf8(jsontext))
+        self.assertEqual(self.output, jsontext)
         self.assertEqual(self.errors, "")
 
 def replace_ical_tags(p_text):
@@ -308,7 +308,7 @@ class ListCommandIcalTest(CommandTest):
         with codecs.open('test/data/ListCommandUnicodeTest.ics', 'r', encoding='utf-8') as ical:
             icaltext = ical.read()
 
-        self.assertEqual(replace_ical_tags(self.output), utf8(replace_ical_tags(icaltext)))
+        self.assertEqual(replace_ical_tags(self.output), replace_ical_tags(icaltext))
         self.assertEqual(self.errors, "")
 
 if __name__ == '__main__':

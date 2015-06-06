@@ -18,7 +18,7 @@ import unittest
 
 from topydo.lib import Filter
 from topydo.lib.Sorter import Sorter
-from test.TestFacilities import load_file, todolist_to_string
+from test.TestFacilities import load_file, todolist_to_string, print_view
 from topydo.lib.TodoFile import TodoFile
 from topydo.lib.TodoList import TodoList
 from test.TopydoTest import TopydoTest
@@ -34,7 +34,7 @@ class ViewTest(TopydoTest):
         todofilter = Filter.GrepFilter('+Project')
         view = todolist.view(sorter, [todofilter])
 
-        self.assertEqual(str(view), todolist_to_string(ref))
+        self.assertEqual(print_view(view), todolist_to_string(ref))
 
 if __name__ == '__main__':
     unittest.main()

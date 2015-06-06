@@ -166,7 +166,7 @@ class CLIApplicationBase(object):
             command.execute()
 
             if archive.is_dirty():
-                archive_file.write(str(archive))
+                archive_file.write(archive.print_todos())
 
     def _help(self, args):
         if args == None:
@@ -205,7 +205,7 @@ class CLIApplicationBase(object):
             if config().keep_sorted():
                 self._execute(SortCommand, [])
 
-            self.todofile.write(str(self.todolist))
+            self.todofile.write(self.todolist.print_todos())
 
     def run(self):
         raise NotImplementedError

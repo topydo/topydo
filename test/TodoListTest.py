@@ -133,11 +133,6 @@ class TodoListTester(TopydoTest):
         self.assertRaises(InvalidTodoException, self.todolist.todo, count + 100)
         self.assertFalse(self.todolist.is_dirty())
 
-    def test_string(self):
-        # readlines() always ends a string with \n, but join() in str(todolist)
-        # doesn't necessarily.
-        self.assertEqual(str(self.todolist) + '\n', self.text)
-
     def test_count(self):
         """ Test that empty lines are not counted. """
         self.assertEqual(self.todolist.count(), 5)

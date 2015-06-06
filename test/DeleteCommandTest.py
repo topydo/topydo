@@ -116,7 +116,7 @@ class DeleteCommandTest(CommandTest):
         command = DeleteCommand(["8to"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEqual(str(self.todolist), "Foo")
+        self.assertEqual(self.todolist.print_todos(), "Foo")
         self.assertRaises(InvalidTodoException, self.todolist.todo, 'b0n')
 
     def test_multi_del1(self):
