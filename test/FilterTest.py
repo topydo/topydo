@@ -185,13 +185,6 @@ class FilterTest(TopydoTest):
         self.assertEqual(todolist_to_string(filtered_todos), \
             todolist_to_string(reference))
 
-    def test_filter19(self):
-        todos = load_file('test/data/FilterTest1.txt')
-        grep = Filter.GrepFilter(1)
-        filtered_todos = grep.filter(todos)
-
-        self.assertEqual(filtered_todos, [])
-
     def test_filter20(self):
         todos = load_file('test/data/FilterTest3.txt')
         otf = Filter.OrdinalTagFilter('due:<2014-11-10')
