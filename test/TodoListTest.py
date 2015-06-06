@@ -24,6 +24,7 @@ from topydo.lib.Todo import Todo
 from topydo.lib.TodoFile import TodoFile
 from topydo.lib.TodoListBase import InvalidTodoException
 from topydo.lib.TodoList import TodoList
+from topydo.lib.TodoListBase import TodoListBase
 from test.TopydoTest import TopydoTest
 
 class TodoListTester(TopydoTest):
@@ -34,7 +35,7 @@ class TodoListTester(TopydoTest):
         lines = [line for line in self.todofile.read() \
                        if re.search(r'\S', line)]
         self.text = ''.join(lines)
-        self.todolist = TodoList(lines)
+        self.todolist = TodoListBase(lines)
 
     def test_contexts(self):
         self.assertEqual(set(['Context1', 'Context2']), \
@@ -101,6 +102,16 @@ class TodoListTester(TopydoTest):
         self.assertTrue(self.todolist.is_dirty())
         self.assertRaises(InvalidTodoException, self.todolist.number, todo)
 
+    def test_delete2(self):
+        """ Try to remove a todo item that does not exist. """
+        count = self.todolist.count()
+
+        todo = Todo('Not in the list')
+        self.todolist.delete(todo)
+
+        self.assertEqual(self.todolist.count(), count)
+        self.assertFalse(self.todolist.is_dirty())
+
     def test_append1(self):
         todo = self.todolist.todo(3)
         self.todolist.append(todo, "@Context3")
@@ -136,13 +147,6 @@ class TodoListTester(TopydoTest):
     def test_count(self):
         """ Test that empty lines are not counted. """
         self.assertEqual(self.todolist.count(), 5)
-
-    def test_todo_by_dep_id(self):
-        """ Tests that todos can be retrieved by their id tag. """
-        self.todolist.add("(C) Foo id:1")
-
-        self.assertTrue(self.todolist.todo_by_dep_id('1'))
-        self.assertFalse(self.todolist.todo_by_dep_id('2'))
 
     def test_todo_number1(self):
         todo = Todo("No number")
@@ -348,6 +352,14 @@ class TodoListDependencyTester(TopydoTest):
 
         self.assertEqual(todo1.source(), 'Foo id:1')
         self.assertEqual(todo2.source(), 'Bar p:1')
+
+    def test_todo_by_dep_id(self):
+        """ Tests that todos can be retrieved by their id tag. """
+        todolist = TodoList([])
+        todolist.add("(C) Foo id:1")
+
+        self.assertTrue(todolist.todo_by_dep_id('1'))
+        self.assertFalse(todolist.todo_by_dep_id('2'))
 
 class TodoListCleanDependencyTester(TopydoTest):
     def setUp(self):
