@@ -55,6 +55,8 @@ class CLIApplication(CLIApplicationBase):
 
         if self._execute(subcommand, args) == False:
             sys.exit(1)
+        else:
+            self._post_execute()
 
 def main():
     """ Main entry point of the CLI. """
