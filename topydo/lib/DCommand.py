@@ -48,8 +48,8 @@ class DCommand(MultiCommand):
         pass
 
     def process_flags(self):
-        opts, args = self.get_flags()
-        opts, args = self.getopt("f" + opts, ["force"] + args)
+        opts, long_opts = self.get_flags()
+        opts, args = self.getopt("f" + opts, ["force"] + long_opts)
 
         for opt, value in opts:
             if opt == "-f" or opt == "--force":
