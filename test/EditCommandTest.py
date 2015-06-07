@@ -139,7 +139,7 @@ class EditCommandTest(CommandTest):
         self.assertEqual(self.output, expected)
         self.assertEqual(self.todolist.print_todos(), u("Foo id:1\nFo\u00f3B\u0105\u017a\nLazy Cat\nLazy Dog"))
 
-    @mock.patch('topydo.commands.EditCommand.call')
+    @mock.patch('topydo.commands.EditCommand.check_call')
     def test_edit_archive(self, mock_call):
         """ Edit archive file. """
         mock_call.return_value = 0

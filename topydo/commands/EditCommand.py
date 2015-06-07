@@ -73,12 +73,20 @@ class EditCommand(MultiCommand, ExpressionCommand):
 
         return todo_objs
 
-    def _open_in_editor(self, p_temp_file, p_editor):
+    def _open_in_editor(self, p_file):
         try:
-            return check_call([p_editor, p_temp_file.name])
+            editor = os.environ['EDITOR'] or DEFAULT_EDITOR
+        except(KeyError):
+            editor = DEFAULT_EDITOR
+
+        try:
+            return check_call([editor, p_file])
         except CalledProcessError:
             self.error('Something went wrong in the editor...')
             return 1
+        except(OSError):
+            self.error('There is no such editor as: ' + editor + '. '
+                        'Check your $EDITOR and/or $PATH')
 
     def _catch_todo_errors(self):
         errors = []
@@ -99,54 +107,46 @@ class EditCommand(MultiCommand, ExpressionCommand):
             return False
 
         self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
-        try:
-            editor = os.environ['EDITOR'] or DEFAULT_EDITOR
-        except(KeyError):
-            editor = DEFAULT_EDITOR
 
-        try:
-            if len(self.args) < 1:
-                todo = config().todotxt()
+        if len(self.args) < 1:
+            todo = config().todotxt()
 
-                return call([editor, todo]) == 0
+            return self._open_in_editor(todo) == 0
+        else:
+            self._process_flags()
+
+            if self.edit_archive:
+                archive = config().archive()
+
+                return self._open_in_editor(archive) == 0
+
+            if self.is_expression:
+                self.todos = self._view().todos
             else:
-                self._process_flags()
+                self.get_todos(self.args)
 
-                if self.edit_archive:
-                    archive = config().archive()
+            todo_errors = self._catch_todo_errors()
 
-                    return call([editor, archive]) == 0
+            if not todo_errors:
+                temp_todos = self._todos_to_temp()
 
-                if self.is_expression:
-                    self.todos = self._view().todos
-                else:
-                    self.get_todos(self.args)
+                if not self._open_in_editor(temp_todos):
+                    new_todos = self._todos_from_temp(temp_todos)
+                    if len(new_todos) == len(self.todos):
+                        for todo in self.todos:
+                            BASE_TODOLIST(self.todolist).delete(todo)
 
-                todo_errors = self._catch_todo_errors()
-
-                if not todo_errors:
-                    temp_todos = self._todos_to_temp()
-
-                    if not self._open_in_editor(temp_todos, editor):
-                        new_todos = self._todos_from_temp(temp_todos)
-                        if len(new_todos) == len(self.todos):
-                            for todo in self.todos:
-                                BASE_TODOLIST(self.todolist).delete(todo)
-
-                            for todo in new_todos:
-                                self.todolist.add_todo(todo)
-                                self.out(self.printer.print_todo(todo))
-                        else:
-                            self.error('Number of edited todos is not equal to '
-                                        'number of supplied todo IDs.')
+                        for todo in new_todos:
+                            self.todolist.add_todo(todo)
+                            self.out(self.printer.print_todo(todo))
                     else:
-                        self.error(self.usage())
+                        self.error('Number of edited todos is not equal to '
+                                    'number of supplied todo IDs.')
                 else:
-                    for error in todo_errors:
-                        self.error(error)
-        except(OSError):
-            self.error('There is no such editor as: ' + editor + '. '
-                        'Check your $EDITOR and/or $PATH')
+                    self.error(self.usage())
+            else:
+                for error in todo_errors:
+                    self.error(error)
 
     def usage(self):
         return """Synopsis:
