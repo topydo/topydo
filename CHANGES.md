@@ -1,3 +1,10 @@
+0.4.1
+-----
+
+* Fix infinite loop when `keep_sorted` is enabled in the configuration.
+* Depend on prompt-toolkit >= 0.39, which fixes the history functionality in
+  prompt mode (up/down keys).
+
 0.4
 ---
 
