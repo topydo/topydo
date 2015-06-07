@@ -194,12 +194,16 @@ class CLIApplicationBase(object):
             self._input())
 
         if command.execute() != False:
-            self._post_execute()
             return True
 
         return False
 
     def _post_execute(self):
+        """
+        Should be called when executing the user requested command has been
+        completed. It will do some maintenance and write out the final result
+        to the todo.txt file.
+        """
         if self.todolist.is_dirty():
             self._archive()
 
