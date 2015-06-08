@@ -27,6 +27,9 @@ class PriorityCommandTest(CommandTest):
         todos = [
             "(A) Foo",
             "Bar",
+            "(B) a @test with due:2015-06-03",
+            "a @test with +project p:1",
+            "Baz id:1",
         ]
 
         self.todolist = TodoList(todos)
@@ -69,6 +72,49 @@ class PriorityCommandTest(CommandTest):
 
         self.assertTrue(self.todolist.is_dirty())
         self.assertEqual(self.output, "Priority changed from A to C\n|  1| (C) Foo\nPriority set to C.\n|  2| (C) Bar\n")
+        self.assertEqual(self.errors, "")
+
+    def test_expr_prio1(self):
+        command = PriorityCommand(["-e", "@test", "C"], self.todolist, self.out, self.error, None)
+        command.execute()
+
+
+        result = "Priority changed from B to C\n|  3| (C) a @test with due:2015-06-03\nPriority set to C.\n|  4| (C) a @test with +project p:1\n"
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEqual(self.output, result)
+        self.assertEqual(self.errors, "")
+
+    def test_expr_prio2(self):
+        command = PriorityCommand(["-e", "@test", "due:2015-06-03", "C"], self.todolist, self.out, self.error, None)
+        command.execute()
+
+        result = "Priority changed from B to C\n|  3| (C) a @test with due:2015-06-03\n"
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEqual(self.output, result)
+        self.assertEqual(self.errors, "")
+
+    def test_expr_prio3(self):
+        command = PriorityCommand(["-e", "@test", "due:2015-06-03", "+project", "C"], self.todolist, self.out, self.error, None)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+
+    def test_expr_prio4(self):
+        """ Don't prioritize unrelevant todo items. """
+        command = PriorityCommand(["-e", "Baz", "C"], self.todolist, self.out, self.error, None)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+
+    def test_expr_prio5(self):
+        """ Force prioritizing unrelevant items with additional -x flag. """
+        command = PriorityCommand(["-xe", "Baz", "D"], self.todolist, self.out, self.error, None)
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEqual(self.output, "Priority set to D.\n|  5| (D) Baz id:1\n")
         self.assertEqual(self.errors, "")
 
     def test_invalid1(self):
