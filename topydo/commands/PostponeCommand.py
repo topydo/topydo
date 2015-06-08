@@ -17,7 +17,6 @@
 from datetime import date, timedelta
 
 from topydo.lib.MultiCommand import MultiCommand
-from topydo.lib.Command import InvalidCommandArgument
 from topydo.lib.Config import config
 from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
 from topydo.lib.RelativeDate import relative_date_to_date
@@ -52,31 +51,28 @@ class PostponeCommand(MultiCommand):
 
             return offset_date
 
-        try:
-            pattern = self.args[-1]
-            self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
+        pattern = self.args[-1]
+        self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
 
-            for todo in self.todos:
-                offset = _get_offset(todo)
-                new_due = relative_date_to_date(pattern, offset)
+        for todo in self.todos:
+            offset = _get_offset(todo)
+            new_due = relative_date_to_date(pattern, offset)
 
-                if new_due:
-                    if self.move_start_date and todo.has_tag(config().tag_start()):
-                        length = todo.length()
-                        new_start = new_due - timedelta(length)
-                        # pylint: disable=E1103
-                        todo.set_tag(config().tag_start(), new_start.isoformat())
-
+            if new_due:
+                if self.move_start_date and todo.has_tag(config().tag_start()):
+                    length = todo.length()
+                    new_start = new_due - timedelta(length)
                     # pylint: disable=E1103
-                    todo.set_tag(config().tag_due(), new_due.isoformat())
+                    todo.set_tag(config().tag_start(), new_start.isoformat())
 
-                    self.todolist.set_dirty()
-                    self.out(self.printer.print_todo(todo))
-                else:
-                    self.error("Invalid date pattern given.")
-                    break
-        except (InvalidCommandArgument, IndexError):
-            self.error(self.usage())
+                # pylint: disable=E1103
+                todo.set_tag(config().tag_due(), new_due.isoformat())
+
+                self.todolist.set_dirty()
+                self.out(self.printer.print_todo(todo))
+            else:
+                self.error("Invalid date pattern given.")
+                break
 
     def usage(self):
         return "Synopsis: postpone [-s] <NUMBER> [<NUMBER2> ...] <PATTERN>"

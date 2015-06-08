@@ -26,17 +26,13 @@ class DepriCommand(MultiCommand):
             p_args, p_todolist, p_out, p_err, p_prompt)
 
     def execute_multi_specific(self):
-        try:
-            self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
+        self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
 
-            for todo in self.todos:
-                if todo.priority() != None:
-                    self.todolist.set_priority(todo, None)
-                    self.out("Priority removed.")
-                    self.out(self.printer.print_todo(todo))
-
-        except IndexError:
-            self.error(self.usage())
+        for todo in self.todos:
+            if todo.priority() != None:
+                self.todolist.set_priority(todo, None)
+                self.out("Priority removed.")
+                self.out(self.printer.print_todo(todo))
 
     def usage(self):
         return """Synopsis: depri <NUMBER1> [<NUMBER2> ...]"""
