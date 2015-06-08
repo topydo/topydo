@@ -28,7 +28,7 @@ class PriorityCommand(MultiCommand):
 
         self.last_argument = True
 
-    def execute_multi_specific(self):
+    def _execute_multi_specific(self):
         priority = None
 
         priority = self.args[-1]

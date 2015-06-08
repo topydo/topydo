@@ -113,7 +113,7 @@ class DCommand(MultiCommand):
         """
         pass
 
-    def execute_multi_specific(self):
+    def _execute_multi_specific(self):
         old_active = self._active_todos()
 
         for todo in self.todos:

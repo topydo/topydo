@@ -25,7 +25,7 @@ class DepriCommand(MultiCommand):
         super(DepriCommand, self).__init__(
             p_args, p_todolist, p_out, p_err, p_prompt)
 
-    def execute_multi_specific(self):
+    def _execute_multi_specific(self):
         self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
 
         for todo in self.todos:

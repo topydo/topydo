@@ -101,7 +101,7 @@ class EditCommand(MultiCommand):
         else:
             return None
 
-    def execute_multi_specific(self):
+    def _execute_multi_specific(self):
         self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
 
         temp_todos = self._todos_to_temp()
@@ -121,7 +121,7 @@ class EditCommand(MultiCommand):
         else:
             self.error(self.usage())
 
-    def execute_not_multi(self):
+    def _execute_not_multi(self):
         if self.edit_archive:
             archive = config().archive()
 

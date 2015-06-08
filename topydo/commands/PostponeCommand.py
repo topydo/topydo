@@ -40,7 +40,7 @@ class PostponeCommand(MultiCommand):
         if p_opt == '-s':
             self.move_start_date = True
 
-    def execute_multi_specific(self):
+    def _execute_multi_specific(self):
         def _get_offset(p_todo):
             offset = p_todo.tag_value(
                 config().tag_due(), date.today().isoformat())

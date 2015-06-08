@@ -100,14 +100,14 @@ class MultiCommand(ExpressionCommand):
         else:
             return None
 
-    def execute_multi_specific(self):
+    def _execute_multi_specific(self):
         """
         Operations specific for particular command dealing with multiple todo
         IDs.
         """
         pass
 
-    def execute_not_multi(self):
+    def _execute_not_multi(self):
         """
         Some commands can do something else besides operating on multiple todo
         IDs. This method is a wrapper for those other operations.
@@ -121,13 +121,13 @@ class MultiCommand(ExpressionCommand):
         self._process_flags()
 
         if not self.multi_mode:
-            self.execute_not_multi()
+            self._execute_not_multi()
         else:
             self.get_todos()
             todo_errors = self._catch_todo_errors()
 
             if not todo_errors:
-                self.execute_multi_specific()
+                self._execute_multi_specific()
             else:
                 for error in todo_errors:
                     self.error(error)
