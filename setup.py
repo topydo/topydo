@@ -14,6 +14,7 @@ setup(
     extras_require = {
         'ical': ['icalendar'],
         'prompt-toolkit': ['prompt-toolkit >= 0.39'],
+        'urwid': ['urwid >= 1.3.0'],
         'edit-cmd-tests': ['mock'],
     },
     entry_points= {
