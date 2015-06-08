@@ -26,7 +26,7 @@ class PriorityCommand(MultiCommand):
         super(PriorityCommand, self).__init__(
             p_args, p_todolist, p_out, p_err, p_prompt)
 
-        self.get_todos(self.args[:-1])
+        self.last_argument = True
 
     def execute_multi_specific(self):
         priority = None

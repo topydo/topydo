@@ -16,10 +16,10 @@
 
 from six import u
 
-from topydo.lib.Command import Command
+from topydo.lib.ExpressionCommand import ExpressionCommand
 from topydo.lib.TodoListBase import InvalidTodoException
 
-class MultiCommand(Command):
+class MultiCommand(ExpressionCommand):
     """
     A common class for operations that can work with multiple todo IDs.
     """
@@ -33,14 +33,49 @@ class MultiCommand(Command):
 
         self.todos = []
         self.invalid_numbers = []
+        self.is_expression = False
+        self.multi_mode = True
 
-    def get_todos(self, p_numbers):
+    def get_flags(self):
+        """ Default implementation of getting specific flags. """
+        return ("", [])
+
+    def process_flag(self, p_option, p_value):
+        """ Default implementation of processing specific flags. """
+        pass
+
+    def _process_flags(self):
+        opts, long_opts = self.get_flags()
+        opts, args = self.getopt("xe" + opts, long_opts)
+
+        for opt, value in opts:
+            if opt == '-x':
+                self.show_all = True
+            elif opt == '-e':
+                self.is_expression = True
+            else:
+                self.process_flag(opt, value)
+
+        self.args = args
+
+    def get_todos_from_expr(self):
+        self.todos = self._view().todos
+
+    def get_todos(self):
         """ Gets todo objects from supplied todo IDs """
-        for number in p_numbers:
-            try:
-                self.todos.append(self.todolist.todo(number))
-            except InvalidTodoException:
-                self.invalid_numbers.append(number)
+        if self.is_expression:
+            self.get_todos_from_expr()
+        else:
+            if self.last_argument:
+                numbers = self.args[:-1]
+            else:
+                numbers = self.args
+
+            for number in numbers:
+                try:
+                    self.todos.append(self.todolist.todo(number))
+                except InvalidTodoException:
+                    self.invalid_numbers.append(number)
 
     def _catch_todo_errors(self):
         """
@@ -72,16 +107,29 @@ class MultiCommand(Command):
         """
         pass
 
+    def execute_not_multi(self):
+        """
+        Some commands can do something else besides operating on multiple todo
+        IDs. This method is a wrapper for those other operations.
+        """
+        pass
+
     def execute(self):
         if not super(MultiCommand, self).execute():
             return False
 
-        todo_errors = self._catch_todo_errors()
+        self._process_flags()
 
-        if not todo_errors:
-            self.execute_multi_specific()
+        if not self.multi_mode:
+            self.execute_not_multi()
         else:
-            for error in todo_errors:
-                self.error(error)
+            self.get_todos()
+            todo_errors = self._catch_todo_errors()
+
+            if not todo_errors:
+                self.execute_multi_specific()
+            else:
+                for error in todo_errors:
+                    self.error(error)
 
         return True

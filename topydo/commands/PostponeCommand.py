@@ -32,17 +32,14 @@ class PostponeCommand(MultiCommand):
             p_args, p_todolist, p_out, p_err, p_prompt)
 
         self.move_start_date = False
-        self._process_flags()
-        self.get_todos(self.args[:-1])
+        self.last_argument = True
 
-    def _process_flags(self):
-        opts, args = self.getopt('s')
+    def get_flags(self):
+        return("s", [])
 
-        for opt, _ in opts:
-            if opt == '-s':
-                self.move_start_date = True
-
-        self.args = args
+    def process_flag(self, p_opt, p_value):
+        if p_opt == '-s':
+            self.move_start_date = True
 
     def execute_multi_specific(self):
         def _get_offset(p_todo):

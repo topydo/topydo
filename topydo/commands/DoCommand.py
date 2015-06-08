@@ -36,9 +36,13 @@ class DoCommand(DCommand):
 
     def get_flags(self):
         """ Additional flags. """
-        return ("d:s", ["date=", "strict"])
+        opts, long_opts = super(DoCommand, self).get_flags()
+
+        return ("d:s" + opts, ["date=", "strict"] + long_opts)
 
     def process_flag(self, p_opt, p_value):
+        super(DoCommand, self).process_flag(p_opt, p_value)
+
         if p_opt == "-s" or p_opt == "--strict":
             self.strict_recurrence = True
         elif p_opt == "-d" or p_opt == "--date":
