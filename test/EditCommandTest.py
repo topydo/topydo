@@ -148,11 +148,29 @@ class EditCommandTest(CommandTest):
         os.environ['EDITOR'] = editor
         archive = config().archive()
 
-        command = EditCommand([u("-d")], self.todolist, self.out, self.error, None)
+        command = EditCommand(["-d"], self.todolist, self.out, self.error, None)
         command.execute()
 
         self.assertEqual(self.errors, "")
         mock_call.assert_called_once_with([editor, archive])
+
+    @mock.patch('topydo.commands.EditCommand.check_call')
+    def test_edit_todotxt(self, mock_call):
+        """ Edit todo file. """
+        mock_call.return_value = 0
+
+        editor = 'vi'
+        os.environ['EDITOR'] = editor
+        todotxt = config().todotxt()
+
+        result = self.todolist.print_todos() # copy TodoList content *before* executing command
+
+        command = EditCommand([], self.todolist, self.out, self.error, None)
+        command.execute()
+
+        self.assertEqual(self.errors, "")
+        self.assertEqual(self.todolist.print_todos(), result)
+        mock_call.assert_called_once_with([editor, todotxt])
 
 if __name__ == '__main__':
     unittest.main()
