@@ -16,28 +16,27 @@
 
 import urwid
 
-from topydo.ui.TodoWidget import TodoWidget
+class TodoWidget(urwid.WidgetWrap):
+    def __init__(self, p_todo):
+        priority = p_todo.priority()
+        priority_text = u""
+        todo_text = p_todo.source()
 
-class TodoListWidget(urwid.WidgetWrap):
-    def __init__(self, p_view, p_title):
-        self.view = p_view
+        if priority:
+            priority_text = "({})".format(priority)
 
-        title_widget = urwid.Filler(urwid.Text(p_title, align='center'))
+            # strip the first characters off
+            todo_text = todo_text[4:]
 
-        todos = []
+        priority_widget = urwid.Text(priority_text)
+        text_widget = urwid.Text(todo_text)
 
-        for todo in self.view.todos:
-            todos.append(('pack', TodoWidget(todo)))
-            todos.append(urwid.Divider(u'-'))
+        columns = urwid.Columns(
+            [
+                (3, priority_widget),
+                ('weight', 1, text_widget),
+            ],
+            dividechars=1
+        )
 
-        todo_pile = urwid.Pile(todos)
-
-        pile = urwid.Pile([
-            (1, title_widget),
-            (1, urwid.Filler(urwid.Divider(u'\u2500'))),
-            ('weight', 1, urwid.Filler(todo_pile, valign='top')),
-        ])
-
-        widget = urwid.LineBox(pile)
-
-        super(TodoListWidget, self).__init__(widget)
+        super(TodoWidget, self).__init__(columns)
