@@ -58,10 +58,11 @@ def _advance_recurring_todo_helper(p_todo, p_offset):
 
     return todo
 
-def advance_recurring_todo(p_todo, p_offset=date.today()):
+def advance_recurring_todo(p_todo, p_offset=None):
+    p_offset = p_offset or date.today()
     return _advance_recurring_todo_helper(p_todo, p_offset)
 
-def strict_advance_recurring_todo(p_todo, p_offset=date.today()):
+def strict_advance_recurring_todo(p_todo, p_offset=None):
     """
     Given a Todo item, return a new instance of a Todo item with the dates
     shifted according to the recurrence rule.
@@ -74,5 +75,5 @@ def strict_advance_recurring_todo(p_todo, p_offset=date.today()):
 
     When no recurrence tag is present, an exception is raised.
     """
-    offset = p_todo.due_date() or p_offset
+    offset = p_todo.due_date() or p_offset or date.today()
     return _advance_recurring_todo_helper(p_todo, offset)
