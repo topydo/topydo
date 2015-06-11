@@ -17,7 +17,6 @@
 from datetime import date, timedelta
 
 from topydo.lib.MultiCommand import MultiCommand
-from topydo.lib.Command import InvalidCommandArgument
 from topydo.lib.Config import config
 from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
 from topydo.lib.RelativeDate import relative_date_to_date
@@ -32,19 +31,16 @@ class PostponeCommand(MultiCommand):
             p_args, p_todolist, p_out, p_err, p_prompt)
 
         self.move_start_date = False
-        self._process_flags()
-        self.get_todos(self.args[:-1])
+        self.last_argument = True
 
-    def _process_flags(self):
-        opts, args = self.getopt('s')
+    def get_flags(self):
+        return("s", [])
 
-        for opt, _ in opts:
-            if opt == '-s':
-                self.move_start_date = True
+    def process_flag(self, p_opt, p_value):
+        if p_opt == '-s':
+            self.move_start_date = True
 
-        self.args = args
-
-    def execute_multi_specific(self):
+    def _execute_multi_specific(self):
         def _get_offset(p_todo):
             offset = p_todo.tag_value(
                 config().tag_due(), date.today().isoformat())
@@ -55,31 +51,28 @@ class PostponeCommand(MultiCommand):
 
             return offset_date
 
-        try:
-            pattern = self.args[-1]
-            self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
+        pattern = self.args[-1]
+        self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
 
-            for todo in self.todos:
-                offset = _get_offset(todo)
-                new_due = relative_date_to_date(pattern, offset)
+        for todo in self.todos:
+            offset = _get_offset(todo)
+            new_due = relative_date_to_date(pattern, offset)
 
-                if new_due:
-                    if self.move_start_date and todo.has_tag(config().tag_start()):
-                        length = todo.length()
-                        new_start = new_due - timedelta(length)
-                        # pylint: disable=E1103
-                        todo.set_tag(config().tag_start(), new_start.isoformat())
-
+            if new_due:
+                if self.move_start_date and todo.has_tag(config().tag_start()):
+                    length = todo.length()
+                    new_start = new_due - timedelta(length)
                     # pylint: disable=E1103
-                    todo.set_tag(config().tag_due(), new_due.isoformat())
+                    todo.set_tag(config().tag_start(), new_start.isoformat())
 
-                    self.todolist.set_dirty()
-                    self.out(self.printer.print_todo(todo))
-                else:
-                    self.error("Invalid date pattern given.")
-                    break
-        except (InvalidCommandArgument, IndexError):
-            self.error(self.usage())
+                # pylint: disable=E1103
+                todo.set_tag(config().tag_due(), new_due.isoformat())
+
+                self.todolist.set_dirty()
+                self.out(self.printer.print_todo(todo))
+            else:
+                self.error("Invalid date pattern given.")
+                break
 
     def usage(self):
         return "Synopsis: postpone [-s] <NUMBER> [<NUMBER2> ...] <PATTERN>"

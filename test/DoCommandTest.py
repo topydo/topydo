@@ -41,6 +41,8 @@ class DoCommandTest(CommandTest):
             "Subtodo of inactive p:2",
             "Strict due:2014-01-01 rec:1d",
             "Invalid rec:1",
+            "a @test with due:2015-06-03",
+            "a @test with +project",
         ]
 
         self.todolist = TodoList(todos)
@@ -123,7 +125,7 @@ class DoCommandTest(CommandTest):
 
         self.assertTrue(self.todolist.is_dirty())
         self.assertEqual(self.errors, "")
-        self.assertEqual(self.todolist.count(), 10)
+        self.assertEqual(self.todolist.count(), 12)
 
     def test_recurrence(self):
         self.assertFalse(self.todolist.todo(4).has_tag('due'))
@@ -131,7 +133,7 @@ class DoCommandTest(CommandTest):
         self._recurrence_helper(["4"])
 
         self.assertTrue(self.todolist.todo(4).is_completed())
-        result = "| 10| {today} Recurring! rec:1d due:{tomorrow}\nCompleted: x {today} Recurring! rec:1d\n".format(today=self.today, tomorrow=self.tomorrow)
+        result = "| 12| {today} Recurring! rec:1d due:{tomorrow}\nCompleted: x {today} Recurring! rec:1d\n".format(today=self.today, tomorrow=self.tomorrow)
         self.assertEqual(self.output, result)
 
         todo = self.todolist.todo(10)
@@ -140,13 +142,13 @@ class DoCommandTest(CommandTest):
 
     def test_strict_recurrence1(self):
         self._recurrence_helper(["-s", "8"])
-        result = "| 10| {today} Strict due:2014-01-02 rec:1d\nCompleted: x {today} Strict due:2014-01-01 rec:1d\n".format(today=self.today)
+        result = "| 12| {today} Strict due:2014-01-02 rec:1d\nCompleted: x {today} Strict due:2014-01-01 rec:1d\n".format(today=self.today)
         self.assertEqual(self.output, result)
 
     def test_strict_recurrence2(self):
         self._recurrence_helper(["--strict", "8"])
 
-        result = "| 10| {today} Strict due:2014-01-02 rec:1d\nCompleted: x {today} Strict due:2014-01-01 rec:1d\n".format(today=self.today)
+        result = "| 12| {today} Strict due:2014-01-02 rec:1d\nCompleted: x {today} Strict due:2014-01-01 rec:1d\n".format(today=self.today)
         self.assertEqual(self.output, result)
 
     def test_invalid1(self):
@@ -254,7 +256,7 @@ class DoCommandTest(CommandTest):
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEqual(self.output, "| 10| {today} Recurring! rec:1d due:{today}\nCompleted: x {yesterday} Recurring! rec:1d\n".format(today=self.today, yesterday=self.yesterday))
+        self.assertEqual(self.output, "| 12| {today} Recurring! rec:1d due:{today}\nCompleted: x {yesterday} Recurring! rec:1d\n".format(today=self.today, yesterday=self.yesterday))
         self.assertEqual(self.errors, "")
 
     def test_do_custom_date6(self):
@@ -267,7 +269,7 @@ class DoCommandTest(CommandTest):
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEqual(self.output, "| 10| {today} Recurring! rec:1d due:{today}\nCompleted: x {yesterday} Recurring! rec:1d\n".format(today=self.today, yesterday=self.yesterday))
+        self.assertEqual(self.output, "| 12| {today} Recurring! rec:1d due:{today}\nCompleted: x {yesterday} Recurring! rec:1d\n".format(today=self.today, yesterday=self.yesterday))
         self.assertEqual(self.errors, "")
 
     def test_do_custom_date7(self):
@@ -279,7 +281,7 @@ class DoCommandTest(CommandTest):
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEqual(self.output, "| 10| {today} Strict due:2014-01-02 rec:1d\nCompleted: x {yesterday} Strict due:2014-01-01 rec:1d\n".format(today=self.today, yesterday=self.yesterday))
+        self.assertEqual(self.output, "| 12| {today} Strict due:2014-01-02 rec:1d\nCompleted: x {yesterday} Strict due:2014-01-01 rec:1d\n".format(today=self.today, yesterday=self.yesterday))
         self.assertEqual(self.errors, "")
 
     def test_multi_do1(self):
@@ -320,10 +322,10 @@ class DoCommandTest(CommandTest):
         """
         Check output when all supplied todo numbers are invalid.
         """
-        command = DoCommand(["99", "10"], self.todolist, self.out, self.error, _no_prompt)
+        command = DoCommand(["99", "15"], self.todolist, self.out, self.error, _no_prompt)
         command.execute()
 
-        self.assertEqual(self.errors, "Invalid todo number given: 99.\nInvalid todo number given: 10.\n")
+        self.assertEqual(self.errors, "Invalid todo number given: 99.\nInvalid todo number given: 15.\n")
 
     def test_multi_do6(self):
         """ Throw an error with invalid argument containing special characters. """
@@ -332,6 +334,46 @@ class DoCommandTest(CommandTest):
 
         self.assertFalse(self.todolist.is_dirty())
         self.assertEqual(self.errors, u("Invalid todo number given: Fo\u00d3B\u0105r.\n"))
+
+    def test_expr_do1(self):
+        command = DoCommand(["-e", "@test"], self.todolist, self.out, self.error, None)
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEqual(self.output, "Completed: x {t} a @test with due:2015-06-03\nCompleted: x {t} a @test with +project\n".format(t=self.today))
+        self.assertEqual(self.errors, "")
+
+    def test_expr_do2(self):
+        command = DoCommand(["-e", "@test", "due:2015-06-03"], self.todolist, self.out, self.error, None)
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEqual(self.output, "Completed: x {} a @test with due:2015-06-03\n".format(self.today))
+        self.assertEqual(self.errors, "")
+
+    def test_expr_do3(self):
+        command = DoCommand(["-e", "@test", "due:2015-06-03", "+project"], self.todolist, self.out, self.error, None)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+
+    def test_expr_do4(self):
+        """ Don't do anything with unrelevant todo items. """
+        command = DoCommand(["-e", "Foo"], self.todolist, self.out, self.error, None)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+
+    def test_expr_do5(self):
+        """ Force marking unrelevant items as done with additional -x flag. """
+        command = DoCommand(["-xe", "Foo"], self.todolist, self.out, self.error, _yes_prompt)
+        command.execute()
+
+        result = "|  2| Bar p:1\n|  3| Baz p:1\nCompleted: x {t} Bar p:1\nCompleted: x {t} Baz p:1\nCompleted: x {t} Foo id:1\n".format(t=self.today)
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEqual(self.output, result)
+        self.assertEqual(self.errors, "")
 
     def test_invalid_recurrence(self):
         """ Show error message when an item has an invalid recurrence pattern. """

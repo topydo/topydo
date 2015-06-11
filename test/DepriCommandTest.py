@@ -28,6 +28,9 @@ class DepriCommandTest(CommandTest):
             "(A) Foo",
             "Bar",
             "(B) Baz",
+            "(E) a @test with due:2015-06-03",
+            "(Z) a @test with +project p:1",
+            "(D) Bax id:1",
         ]
 
         self.todolist = TodoList(todos)
@@ -68,6 +71,50 @@ class DepriCommandTest(CommandTest):
         self.assertEqual(self.todolist.todo(3).priority(), None)
         self.assertEqual(self.output, "Priority removed.\n|  1| Foo\nPriority removed.\n|  3| Baz\n")
         self.assertEqual(self.errors, "")
+
+    def test_expr_depri1(self):
+        command = DepriCommand(["-e", "@test"], self.todolist, self.out, self.error, None)
+        command.execute()
+
+
+        result = "Priority removed.\n|  4| a @test with due:2015-06-03\nPriority removed.\n|  5| a @test with +project p:1\n"
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEqual(self.output, result)
+        self.assertEqual(self.errors, "")
+
+    def test_expr_depri2(self):
+        command = DepriCommand(["-e", "@test", "due:2015-06-03"], self.todolist, self.out, self.error, None)
+        command.execute()
+
+        result = "Priority removed.\n|  4| a @test with due:2015-06-03\n"
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEqual(self.output, result)
+        self.assertEqual(self.errors, "")
+
+    def test_expr_depri3(self):
+        command = DepriCommand(["-e", "@test", "due:2015-06-03", "+project"], self.todolist, self.out, self.error, None)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+
+    def test_expr_depri4(self):
+        """ Don't remove priority from unrelevant todo items. """
+        command = DepriCommand(["-e", "Bax"], self.todolist, self.out, self.error, None)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+
+    def test_expr_depri5(self):
+        """ Force unprioritizing unrelevant items with additional -x flag. """
+        command = DepriCommand(["-xe", "Bax"], self.todolist, self.out, self.error, None)
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEqual(self.output, "Priority removed.\n|  6| Bax id:1\n")
+        self.assertEqual(self.errors, "")
+
 
 
     def test_invalid1(self):
