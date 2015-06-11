@@ -56,11 +56,10 @@ class DCommand(MultiCommand):
         self.out(printer.print_list(p_todos))
 
     def prompt_text(self):
-        return "Yes or no? [y/N] "
+        raise NotImplementedError
 
     def prefix(self):
-        """ Prefix to use when printing a todo. """
-        return ""
+        raise NotImplementedError
 
     def _process_subtasks(self, p_todo):
         children = self._uncompleted_children(p_todo)
@@ -101,17 +100,17 @@ class DCommand(MultiCommand):
         return True
 
     def condition_failed_text(self):
-        return ""
+        raise NotImplementedError
 
     def execute_specific(self, _):
-        pass
+        raise NotImplementedError
 
     def execute_specific_core(self, p_todo):
         """
         The core operation on the todo itself. Also used to operate on
         child/parent tasks.
         """
-        pass
+        raise NotImplementedError
 
     def _execute_multi_specific(self):
         old_active = self._active_todos()

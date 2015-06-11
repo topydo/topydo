@@ -29,8 +29,7 @@ class Filter(object):
         return [t for t in p_todos if self.match(t)]
 
     def match(self, _):
-        """ Default match value. """
-        return True
+        raise NotImplementedError
 
 class NegationFilter(Filter):
     def __init__(self, p_filter):

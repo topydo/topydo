@@ -26,8 +26,7 @@ class Printer(object):
     Subclasses must at least implement the print_todo method.
     """
     def print_todo(self, p_todo):
-        """ Base implementation."""
-        return p_todo.source()
+        raise NotImplementedError
 
     def print_list(self, p_todos):
         """

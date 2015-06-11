@@ -30,8 +30,10 @@ class PrettyPrinterFilter(object):
     """
 
     def filter(self, p_todo_str, _):
-        """ Default implementation returns an unmodified todo string. """
-        return p_todo_str
+        """
+        Applies a filter to p_todo_str and returns a modified version of it.
+        """
+        raise NotImplementedError
 
 class PrettyPrinterColorFilter(PrettyPrinterFilter):
     """
