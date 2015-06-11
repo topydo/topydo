@@ -35,29 +35,14 @@ class DCommand(MultiCommand):
 
         self.force = False
 
-        self.process_flags()
         self.length = len(self.todolist.todos()) # to determine newly activated todos
-        self.get_todos(self.args)
 
     def get_flags(self):
-        """ Default implementation of getting specific flags. """
-        return ("", [])
+        return ("f", ["force"])
 
-    def process_flag(self, p_option, p_value):
-        """ Default implementation of processing specific flags. """
-        pass
-
-    def process_flags(self):
-        opts, args = self.get_flags()
-        opts, args = self.getopt("f" + opts, ["force"] + args)
-
-        for opt, value in opts:
-            if opt == "-f" or opt == "--force":
-                self.force = True
-            else:
-                self.process_flag(opt, value)
-
-        self.args = args
+    def process_flag(self, p_opt, p_value):
+        if p_opt == "-f" or p_opt == "--force":
+            self.force = True
 
     def _uncompleted_children(self, p_todo):
         return sorted(
@@ -128,7 +113,7 @@ class DCommand(MultiCommand):
         """
         pass
 
-    def execute_multi_specific(self):
+    def _execute_multi_specific(self):
         old_active = self._active_todos()
 
         for todo in self.todos:
