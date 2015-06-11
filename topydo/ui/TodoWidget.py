@@ -29,14 +29,18 @@ class TodoWidget(urwid.WidgetWrap):
             todo_text = todo_text[4:]
 
         priority_widget = urwid.Text(priority_text)
-        text_widget = urwid.Text(todo_text)
+        self.text_widget = urwid.Text(todo_text)
 
-        columns = urwid.Columns(
+        self.columns = urwid.Columns(
             [
                 (3, priority_widget),
-                ('weight', 1, text_widget),
+                ('weight', 1, self.text_widget),
             ],
             dividechars=1
         )
 
-        super(TodoWidget, self).__init__(columns)
+        attr = urwid.AttrSpec('black', 'light gray', 16)
+        self.widget = urwid.AttrMap(self.columns, {}, attr)
+
+        super(TodoWidget, self).__init__(self.widget)
+

@@ -102,6 +102,7 @@ class UIApplication(CLIApplicationBase):
 
         item = (todolist, options)
         self.columns.contents.append(item)
+        self.columns.focus_position = len(self.columns.contents) - 1
 
     def run(self):
         self.todofile = TodoFile.TodoFile(config().todotxt())

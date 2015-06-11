@@ -18,7 +18,7 @@ import urwid
 
 from topydo.ui.TodoWidget import TodoWidget
 
-class TodoListWidget(urwid.WidgetWrap):
+class TodoListWidget(urwid.LineBox):
     def __init__(self, p_view, p_title):
         self.view = p_view
 
@@ -27,17 +27,39 @@ class TodoListWidget(urwid.WidgetWrap):
         todos = []
 
         for todo in self.view.todos:
-            todos.append(('pack', TodoWidget(todo)))
+            todowidget = TodoWidget(todo)
+
+            todos.append(('pack', todowidget))
             todos.append(urwid.Divider(u'-'))
 
-        todo_pile = urwid.Pile(todos)
+        self.todo_pile = urwid.Pile(todos)
 
         pile = urwid.Pile([
             (1, title_widget),
             (1, urwid.Filler(urwid.Divider(u'\u2500'))),
-            ('weight', 1, urwid.Filler(todo_pile, valign='top')),
+            ('weight', 1, urwid.Filler(self.todo_pile, valign='top')),
         ])
 
-        widget = urwid.LineBox(pile)
+        pile.focus_position = 2
 
-        super(TodoListWidget, self).__init__(widget)
+        super(TodoListWidget, self).__init__(pile)
+
+    def _focus_down(self):
+        size = len(self.todo_pile.contents)
+        if self.todo_pile.focus_position < size - 2:
+            self.todo_pile.focus_position += 2
+
+    def _focus_up(self):
+        if self.todo_pile.focus_position > 1:
+            self.todo_pile.focus_position -= 2
+
+    def keypress(self, p_size, p_key):
+        if p_key == 'j' or p_key == 'down':
+            self._focus_down()
+        elif p_key == 'k' or p_key == 'up':
+            self._focus_up()
+        else:
+            return super(TodoListWidget, self).keypress(p_size, p_key)
+
+    def selectable(self):
+        return True
