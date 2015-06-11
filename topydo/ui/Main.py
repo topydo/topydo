@@ -80,9 +80,22 @@ class UIApplication(CLIApplicationBase):
     def _blur_commandline(self):
         self.mainwindow.focus_item = 0
 
+    def _focus_next_column(self):
+        size = len(self.columns.contents)
+        if self.columns.focus_position < size -1:
+            self.columns.focus_position += 1
+
+    def _focus_previous_column(self):
+        if self.columns.focus_position > 1:
+            self.columns.focus_position -= 1
+
     def _handle_input(self, p_input):
         dispatch = {
             ':': self._focus_commandline,
+            'left': self._focus_previous_column,
+            'h': self._focus_previous_column,
+            'right': self._focus_next_column,
+            'l': self._focus_next_column,
         }
 
         try:
