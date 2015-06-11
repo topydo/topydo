@@ -86,7 +86,7 @@ class UIApplication(CLIApplicationBase):
             self.columns.focus_position += 1
 
     def _focus_previous_column(self):
-        if self.columns.focus_position > 1:
+        if self.columns.focus_position > 0:
             self.columns.focus_position -= 1
 
     def _handle_input(self, p_input):
