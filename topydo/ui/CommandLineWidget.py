@@ -17,20 +17,19 @@
 import urwid
 
 class CommandLineWidget(urwid.Edit):
-    signals = [
-        'blur',
-        'execute_command',
-    ]
+    def __init__(self, *args, **kwargs):
+        super(CommandLineWidget, self).__init__(*args, **kwargs)
+        urwid.register_signal(CommandLineWidget, ['blur', 'execute_command'])
 
     def clear(self):
         self.set_edit_text(u"")
 
     def _blur(self):
         self.clear()
-        self._emit('blur')
+        urwid.emit_signal(self, 'blur')
 
     def _emit_command(self):
-        self._emit('execute_command', self.edit_text)
+        urwid.emit_signal(self, 'execute_command', self.edit_text)
         self.clear()
 
     def keypress(self, p_size, p_key):

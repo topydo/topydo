@@ -34,7 +34,7 @@ class UIApplication(CLIApplicationBase):
         self.columns = urwid.Columns([], dividechars=0, min_width=COLUMN_WIDTH)
         self.commandline = CommandLineWidget('topydo> ')
         urwid.connect_signal(self.commandline, 'blur',
-                             lambda _: self._blur_commandline())
+                             self._blur_commandline)
         urwid.connect_signal(self.commandline, 'execute_command',
                              self._execute_input)
 
@@ -52,7 +52,7 @@ class UIApplication(CLIApplicationBase):
             pop_ups=True
         )
 
-    def _execute_input(self, _, p_command):
+    def _execute_input(self, p_command):
         """
         Callback for executing a command that was entered on the command line box.
         """
