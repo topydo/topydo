@@ -203,7 +203,10 @@ class CLIApplicationBase(object):
         completed. It will do some maintenance and write out the final result
         to the todo.txt file.
         """
-        if self.todolist.is_dirty():
+
+        # do not archive when the value of the filename is an empty string
+        # (i.e. explicitly left empty in the configuration
+        if self.todolist.is_dirty() and config().archive():
             self._archive()
 
             if config().keep_sorted():
