@@ -19,6 +19,7 @@ import urwid
 from topydo.cli.CLIApplicationBase import CLIApplicationBase
 from topydo.Commands import get_subcommand
 from topydo.ui.CommandLineWidget import CommandLineWidget
+from topydo.ui.ConsoleWidget import ConsoleWidget
 from topydo.ui.TodoListWidget import TodoListWidget
 from topydo.lib.Config import config
 from topydo.lib.Sorter import Sorter
@@ -33,10 +34,13 @@ class UIApplication(CLIApplicationBase):
 
         self.columns = urwid.Columns([], dividechars=0, min_width=COLUMN_WIDTH)
         self.commandline = CommandLineWidget('topydo> ')
+        self.console = ConsoleWidget()
+
         urwid.connect_signal(self.commandline, 'blur',
                              self._blur_commandline)
         urwid.connect_signal(self.commandline, 'execute_command',
                              self._execute_input)
+        urwid.connect_signal(self.console, 'close', self._hide_console)
 
         self.mainwindow = urwid.Pile([
             ('weight', 1, self.columns),
@@ -62,8 +66,8 @@ class UIApplication(CLIApplicationBase):
             command = subcommand(
                 args,
                 self.todolist,
-                lambda _: None, # TODO output
-                lambda _: None, # TODO error
+                self._output,
+                self._output,
                 lambda _: None, # TODO input
             )
 
@@ -116,6 +120,27 @@ class UIApplication(CLIApplicationBase):
         item = (todolist, options)
         self.columns.contents.append(item)
         self.columns.focus_position = len(self.columns.contents) - 1
+
+    def _show_console(self):
+        self.mainwindow.contents.append((self.console, ('pack', None)))
+        self.mainwindow.focus_position = 2
+
+    def _hide_console(self):
+        if self._console_is_visible():
+            self.console.clear()
+            del self.mainwindow.contents[2]
+
+    def _console_is_visible(self):
+        return len(self.mainwindow.contents) == 3
+
+    def _print_to_console(self, p_text):
+        if not self._console_is_visible():
+            self._show_console()
+
+        self.console.print_text(p_text)
+
+    def _output(self, p_text):
+        self._print_to_console(p_text + "\n")
 
     def run(self):
         self.todofile = TodoFile.TodoFile(config().todotxt())
