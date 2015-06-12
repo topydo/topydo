@@ -39,9 +39,7 @@ class SortCommand(Command):
         sorted_todos = sorter.sort(self.todolist.todos())
 
         self.todolist.erase()
-
-        for todo in sorted_todos:
-            self.todolist.add_todo(todo)
+        self.todolist.add_todos(sorted_todos)
 
     def usage(self):
         return """Synopsis: sort [expression]"""
