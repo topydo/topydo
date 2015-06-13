@@ -24,15 +24,8 @@ class TodoListWidget(urwid.LineBox):
 
         title_widget = urwid.Filler(urwid.Text(p_title, align='center'))
 
-        todos = []
-
-        for todo in self.view.todos:
-            todowidget = TodoWidget(todo)
-
-            todos.append(('pack', todowidget))
-            todos.append(urwid.Divider(u'-'))
-
-        self.todo_pile = urwid.Pile(todos)
+        self.todo_pile = urwid.Pile([])
+        self.update()
 
         pile = urwid.Pile([
             (1, title_widget),
@@ -43,6 +36,26 @@ class TodoListWidget(urwid.LineBox):
         pile.focus_position = 2
 
         super(TodoListWidget, self).__init__(pile)
+
+    def update(self):
+        """
+        Updates the todo list according to the todos in the view associated
+        with this list.
+        """
+        try:
+            old_focus_position = self.todo_pile.focus_position
+        except IndexError:
+            old_focus_position = 0
+
+        items = []
+
+        for todo in self.view.todos:
+            todowidget = TodoWidget(todo)
+            items.append((todowidget, ('pack', None)))
+            items.append((urwid.Divider(u'-'), ('weight', 1)))
+
+        self.todo_pile.contents = items
+        self.todo_pile.focus_position = min(old_focus_position, len(items) - 1)
 
     def _focus_down(self):
         size = len(self.todo_pile.contents)
