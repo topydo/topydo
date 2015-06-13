@@ -56,17 +56,21 @@ class UIApplication(CLIApplicationBase):
             pop_ups=True
         )
 
-    def _execute_handler(self, p_command):
+    def _output(self, p_text):
+        self._print_to_console(p_text + "\n")
+
+    def _execute_handler(self, p_command, p_output=None):
         """
         Executes a command, given as a string.
         """
+        p_output = p_output or self._output
         (subcommand, args) = get_subcommand(p_command.split())
 
         try:
             command = subcommand(
                 args,
                 self.todolist,
-                self._output,
+                p_output,
                 self._output,
                 lambda _: None, # TODO input
             )
@@ -116,7 +120,9 @@ class UIApplication(CLIApplicationBase):
 
     def _add_column(self, p_view, p_title):
         todolist = TodoListWidget(p_view, p_title)
-        urwid.connect_signal(todolist, 'execute_command', self._execute_handler)
+        no_output = lambda _: None
+        urwid.connect_signal(todolist, 'execute_command',
+                             lambda cmd: self._execute_handler(cmd, no_output))
 
         options = self.columns.options(
             width_type='given',
@@ -145,9 +151,6 @@ class UIApplication(CLIApplicationBase):
             self._show_console()
 
         self.console.print_text(p_text)
-
-    def _output(self, p_text):
-        self._print_to_console(p_text + "\n")
 
     def run(self):
         self.todofile = TodoFile.TodoFile(config().todotxt())
