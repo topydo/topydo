@@ -39,7 +39,7 @@ class UIApplication(CLIApplicationBase):
         urwid.connect_signal(self.commandline, 'blur',
                              self._blur_commandline)
         urwid.connect_signal(self.commandline, 'execute_command',
-                             self._execute_input)
+                             self._execute_handler)
         urwid.connect_signal(self.console, 'close', self._hide_console)
 
         self.mainwindow = urwid.Pile([
@@ -56,9 +56,9 @@ class UIApplication(CLIApplicationBase):
             pop_ups=True
         )
 
-    def _execute_input(self, p_command):
+    def _execute_handler(self, p_command):
         """
-        Callback for executing a command that was entered on the command line box.
+        Executes a command, given as a string.
         """
         (subcommand, args) = get_subcommand(p_command.split())
 
@@ -110,6 +110,7 @@ class UIApplication(CLIApplicationBase):
 
     def _add_column(self, p_view, p_title):
         todolist = TodoListWidget(p_view, p_title)
+        urwid.connect_signal(todolist, 'execute_command', self._execute_handler)
 
         options = self.columns.options(
             width_type='given',
