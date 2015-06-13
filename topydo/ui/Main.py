@@ -78,6 +78,12 @@ class UIApplication(CLIApplicationBase):
             # TODO: show error message
             pass
 
+    def _post_execute(self):
+        super(UIApplication, self)._post_execute()
+
+        for column, _ in self.columns.contents:
+            column.update()
+
     def _focus_commandline(self):
         self.mainwindow.focus_item = 1
 
