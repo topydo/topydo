@@ -18,9 +18,11 @@ import urwid
 
 class TodoWidget(urwid.WidgetWrap):
     def __init__(self, p_todo):
-        priority = p_todo.priority()
+        self.todo = p_todo
+
+        priority = self.todo.priority()
         priority_text = u""
-        todo_text = p_todo.source()
+        todo_text = self.todo.source()
 
         if priority:
             priority_text = "({})".format(priority)
