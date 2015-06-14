@@ -53,7 +53,7 @@ class TodoListWidget(urwid.LineBox):
         items = []
 
         for todo in self.view.todos:
-            todowidget = TodoWidget(todo)
+            todowidget = TodoWidget(todo, self.view.todolist.number(todo))
             items.append((todowidget, ('pack', None)))
             items.append((urwid.Divider(u'-'), ('weight', 1)))
 

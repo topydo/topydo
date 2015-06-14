@@ -14,10 +14,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from six import text_type
+
 import urwid
 
 class TodoWidget(urwid.WidgetWrap):
-    def __init__(self, p_todo):
+    def __init__(self, p_todo, p_number):
         self.todo = p_todo
 
         priority = self.todo.priority()
@@ -31,10 +33,12 @@ class TodoWidget(urwid.WidgetWrap):
             todo_text = todo_text[4:]
 
         priority_widget = urwid.Text(priority_text)
+        id_widget = urwid.Text(text_type(p_number), align='right')
         self.text_widget = urwid.Text(todo_text)
 
         self.columns = urwid.Columns(
             [
+                (4, id_widget),
                 (3, priority_widget),
                 ('weight', 1, self.text_widget),
             ],
