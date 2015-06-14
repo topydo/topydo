@@ -72,7 +72,7 @@ class UIApplication(CLIApplicationBase):
                 self.todolist,
                 p_output,
                 self._output,
-                lambda _: None, # TODO input
+                self._input,
             )
 
             if command.execute() != False:
@@ -151,6 +151,19 @@ class UIApplication(CLIApplicationBase):
             self._show_console()
 
         self.console.print_text(p_text)
+
+    def _input(self, p_question):
+        self._print_to_console(p_question)
+
+        # don't wait for the event loop to enter idle, there is a command
+        # waiting for input right now, so already go ahead and draw the
+        # question on screen.
+        self.mainloop.draw_screen()
+
+        user_input = self.mainloop.screen.get_input()
+        self._hide_console()
+
+        return user_input[0]
 
     def run(self):
         self.todofile = TodoFile.TodoFile(config().todotxt())
