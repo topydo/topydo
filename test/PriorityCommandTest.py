@@ -74,6 +74,15 @@ class PriorityCommandTest(CommandTest):
         self.assertEqual(self.output, "Priority changed from A to C\n|  1| (C) Foo\nPriority set to C.\n|  2| (C) Bar\n")
         self.assertEqual(self.errors, "")
 
+    def test_set_prio6(self):
+        """ Allow priority to be set including parentheses. """
+        command = PriorityCommand(["Foo", "2", "(C)"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEqual(self.output, "Priority changed from A to C\n|  1| (C) Foo\nPriority set to C.\n|  2| (C) Bar\n")
+        self.assertEqual(self.errors, "")
+
     def test_expr_prio1(self):
         command = PriorityCommand(["-e", "@test", "C"], self.todolist, self.out, self.error, None)
         command.execute()
@@ -174,6 +183,29 @@ class PriorityCommandTest(CommandTest):
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors, u("Invalid todo number given: Fo\u00d3B\u0105r.\n"))
 
+    def test_invalid8(self):
+        """
+        Test that there's only one capital surrounded by non-word
+        characters that makes up a priority.
+        """
+        command = PriorityCommand(["2", "(Aa)"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+        self.assertEqual(self.output, "")
+        self.assertEqual(self.errors, "Invalid priority given.\n")
+
+    def test_invalid9(self):
+        """
+        Test that there's only one capital surrounded by non-word
+        characters that makes up a priority.
+        """
+        command = PriorityCommand(["2", "Aa"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+        self.assertEqual(self.output, "")
+        self.assertEqual(self.errors, "Invalid priority given.\n")
     def test_empty(self):
         command = PriorityCommand([], self.todolist, self.out, self.error)
         command.execute()

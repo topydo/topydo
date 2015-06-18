@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import re
+
 from topydo.lib.MultiCommand import MultiCommand
 from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
 from topydo.lib.Utils import is_valid_priority
@@ -29,9 +31,11 @@ class PriorityCommand(MultiCommand):
         self.last_argument = True
 
     def _execute_multi_specific(self):
-        priority = None
+        def normalize_priority(p_priority):
+            match = re.search(r'\b([A-Z])\b', p_priority)
+            return match.group(1) if match else p_priority
 
-        priority = self.args[-1]
+        priority = normalize_priority(self.args[-1])
         self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
 
         if is_valid_priority(priority):
