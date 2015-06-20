@@ -23,6 +23,9 @@ class TodoListWidget(urwid.LineBox):
     def __init__(self, p_view, p_title):
         self.view = p_view
 
+        # store a state for multi-key shortcuts (e.g. 'gg')
+        self.keystate = None
+
         title_widget = urwid.Filler(urwid.Text(p_title, align='center'))
 
         self.todolist = urwid.SimpleFocusListWalker([])
@@ -75,6 +78,15 @@ class TodoListWidget(urwid.LineBox):
         self.listbox.calculate_visible(p_size)
 
     def keypress(self, p_size, p_key):
+        # first check whether 'g' was pressed previously
+        if self.keystate == 'g':
+            if p_key == 'g':
+                self._scroll_to_top(p_size)
+
+            # make sure to accept normal shortcuts again
+            self.keystate = None
+            return
+
         if p_key == 'x':
             self._complete_selected_item()
         elif p_key == 'j':
@@ -85,6 +97,8 @@ class TodoListWidget(urwid.LineBox):
             self._scroll_to_top(p_size)
         elif p_key == 'G' or p_key == 'end':
             self._scroll_to_bottom(p_size)
+        elif p_key == 'g':
+            self.keystate = 'g'
         else:
             if self.listbox.keypress(p_size, p_key):
                 return super(TodoListWidget, self).keypress(p_size, p_key)
