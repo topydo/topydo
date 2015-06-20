@@ -36,6 +36,8 @@ _SUBCOMMAND_MAP = {
     'ls': 'ListCommand',
     'lscon': 'ListContextCommand',
     'listcon': 'ListContextCommand',
+    'listcontext': 'ListContextCommand',
+    'listcontexts': 'ListContextCommand',
     'lsprj': 'ListProjectCommand',
     'lsproj': 'ListProjectCommand',
     'listprj': 'ListProjectCommand',
