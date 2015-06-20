@@ -58,6 +58,22 @@ class TodoListWidget(urwid.LineBox):
         if old_focus_position:
             self.todolist.set_focus(old_focus_position)
 
+    def _scroll_to_top(self, p_size):
+        self.listbox.set_focus(0)
+
+        # see comment at _scroll_to_bottom
+        self.listbox.calculate_visible(p_size)
+
+    def _scroll_to_bottom(self, p_size):
+        # -2 because the last Divider shouldn't be focused.
+        end_pos = len(self.listbox.body) - 2
+        self.listbox.set_focus(end_pos)
+
+        # for some reason, set_focus doesn't rerender the list.
+        # calculate_visible is the only public method (besides keypress) that
+        # deals with pending focus changes.
+        self.listbox.calculate_visible(p_size)
+
     def keypress(self, p_size, p_key):
         if p_key == 'x':
             self._complete_selected_item()
@@ -65,6 +81,10 @@ class TodoListWidget(urwid.LineBox):
             self.listbox.keypress(p_size, 'down')
         elif p_key == 'k':
             self.listbox.keypress(p_size, 'up')
+        elif p_key == 'home':
+            self._scroll_to_top(p_size)
+        elif p_key == 'G' or p_key == 'end':
+            self._scroll_to_bottom(p_size)
         else:
             if self.listbox.keypress(p_size, p_key):
                 return super(TodoListWidget, self).keypress(p_size, p_key)
