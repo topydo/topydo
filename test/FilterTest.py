@@ -314,7 +314,7 @@ class OrdinalTagFilterTest(TopydoTest):
 
         self.todo1 = "Foo due:{}".format(self.today)
         self.todo2 = "Bar due:{}".format(self.tomorrow)
-        self.todo3 = "Baz due:nonsense"
+        self.todo3 = "Baz due:Nonsense"
         self.todo4 = "Fnord due:2014-10-32"
 
         self.todos = [
@@ -364,6 +364,22 @@ class OrdinalTagFilterTest(TopydoTest):
 
         self.assertEqual(len(result), 1)
         self.assertEqual(str(result[0]), self.todo2)
+
+    def test_filter6(self):
+        otf = Filter.OrdinalTagFilter('due:non')
+
+        result = otf.filter(self.todos)
+
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0].source(), self.todo3)
+
+    def test_filter7(self):
+        otf = Filter.OrdinalTagFilter('due:Non')
+
+        result = otf.filter(self.todos)
+
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0].source(), self.todo3)
 
 if __name__ == '__main__':
     unittest.main()
