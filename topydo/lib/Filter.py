@@ -156,13 +156,28 @@ ORDINAL_TAG_MATCH = r"(?P<key>[^:]*):(?P<operator><=?|=|>=?|!)?(?P<value>\S+)"
 class OrdinalTagFilter(Filter):
     def __init__(self, p_expression):
         super(OrdinalTagFilter, self).__init__()
-        match = re.match(ORDINAL_TAG_MATCH, p_expression)
+
+        self.expression = p_expression
+
+        match = re.match(ORDINAL_TAG_MATCH, self.expression)
         if match:
             self.key = match.group('key')
             self.operator = match.group('operator') or '='
             self.value = match.group('value')
 
     def match(self, p_todo):
+        """
+        Performs a match on a key:value tag in the todo.
+
+        First it tries to convert the value and the user-entered expression to
+        a date and makes a comparison if it succeeds, based on the given
+        operator (default ==).
+        Upon failure, it falls back to converting value and user-entered
+        expression to an integer and makes a numerical comparison based on the
+        given operator (default ==)
+        As a last resort, it falls back to using a Grep filter to see if the
+        user given expression is contained in the todo text.
+        """
         if not self.key or not p_todo.has_tag(self.key):
             return False
 
@@ -174,11 +189,15 @@ class OrdinalTagFilter(Filter):
                 operand2 = date_string_to_date(self.value)
 
         except ValueError:
+            operand1 = p_todo.tag_value(self.key)
+            operand2 = self.value
+
             try:
-                operand1 = int(p_todo.tag_value(self.key))
-                operand2 = int(self.value)
+                operand1 = int(operand1)
+                operand2 = int(operand2)
             except ValueError:
-                return False
+                grep = GrepFilter(self.expression)
+                return grep.match(p_todo)
 
         if self.operator == '<':
             return operand1 < operand2
