@@ -22,9 +22,16 @@ use topydo.
 Install
 -------
 
-Install simply with:
+Simply install with:
 
     pip install topydo
+
+### Optional dependencies
+
+* icalendar      : To print your todo.txt file as an iCalendar file
+                   (not supported for Python 3.2).
+* prompt-toolkit : For topydo's _prompt_ mode, which offers a shell-like
+                   interface with auto-completion.
 
 Demo
 ----
