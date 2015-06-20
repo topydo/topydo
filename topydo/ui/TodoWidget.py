@@ -50,3 +50,13 @@ class TodoWidget(urwid.WidgetWrap):
 
         super(TodoWidget, self).__init__(self.widget)
 
+    def keypress(self, p_size, p_key):
+        """
+        Override keypress to prevent the wrapped Columns widget to
+        receive any key.
+        """
+        return p_key
+
+    def selectable(self):
+        # make sure that ListBox will highlight this widget
+        return True

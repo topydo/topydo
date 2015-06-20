@@ -25,13 +25,14 @@ class TodoListWidget(urwid.LineBox):
 
         title_widget = urwid.Filler(urwid.Text(p_title, align='center'))
 
-        self.todo_pile = urwid.Pile([])
+        self.todolist = urwid.SimpleFocusListWalker([])
+        self.listbox = urwid.ListBox(self.todolist)
         self.update()
 
         pile = urwid.Pile([
             (1, title_widget),
             (1, urwid.Filler(urwid.Divider(u'\u2500'))),
-            ('weight', 1, urwid.Filler(self.todo_pile, valign='top')),
+            ('weight', 1, self.listbox),
         ])
 
         pile.focus_position = 2
@@ -45,50 +46,42 @@ class TodoListWidget(urwid.LineBox):
         Updates the todo list according to the todos in the view associated
         with this list.
         """
-        try:
-            old_focus_position = self.todo_pile.focus_position
-        except IndexError:
-            old_focus_position = 0
+        old_focus_position = self.todolist.focus
 
-        items = []
+        del self.todolist[:]
 
         for todo in self.view.todos:
             todowidget = TodoWidget(todo, self.view.todolist.number(todo))
-            items.append((todowidget, ('pack', None)))
-            items.append((urwid.Divider(u'-'), ('weight', 1)))
+            self.todolist.append(todowidget)
+            self.todolist.append(urwid.Divider(u'-'))
 
-        self.todo_pile.contents = items
-        self.todo_pile.focus_position = min(old_focus_position, len(items) - 1)
-
-    def _focus_down(self):
-        size = len(self.todo_pile.contents)
-        if self.todo_pile.focus_position < size - 2:
-            self.todo_pile.focus_position += 2
-
-    def _focus_up(self):
-        if self.todo_pile.focus_position > 1:
-            self.todo_pile.focus_position -= 2
+        if old_focus_position:
+            self.todolist.set_focus(old_focus_position)
 
     def keypress(self, p_size, p_key):
-        dispatch = {
-            'j': self._focus_down,
-            'down': self._focus_down,
-            'k': self._focus_up,
-            'up': self._focus_up,
-            'x': self._complete_selected_item,
-        }
-
-        try:
-            dispatch[p_key]()
-        except KeyError:
-            return super(TodoListWidget, self).keypress(p_size, p_key)
+        if p_key == 'x':
+            self._complete_selected_item()
+        elif p_key == 'j':
+            self.listbox.keypress(p_size, 'down')
+        elif p_key == 'k':
+            self.listbox.keypress(p_size, 'up')
+        else:
+            if self.listbox.keypress(p_size, p_key):
+                return super(TodoListWidget, self).keypress(p_size, p_key)
 
     def selectable(self):
         return True
 
     def _complete_selected_item(self):
-        todo = self.todo_pile.focus.todo
-        self.view.todolist.number(todo)
+        """
+        Marks the highlighted todo item as complete.
+        """
+        try:
+            todo = self.listbox.focus.todo
+            self.view.todolist.number(todo)
 
-        urwid.emit_signal(self, 'execute_command', "do {}".format(
-            text_type(self.view.todolist.number(todo))))
+            urwid.emit_signal(self, 'execute_command', "do {}".format(
+                text_type(self.view.todolist.number(todo))))
+        except AttributeError:
+            # No todo item selected
+            pass
