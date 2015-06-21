@@ -140,15 +140,15 @@ class UIApplication(CLIApplicationBase):
         if self.columns.focus_position > 0:
             self.columns.focus_position -= 1
 
-    def _new_view(self):
+    def _new_column(self):
         self.viewwidget.reset()
         self._viewwidget_visible = True
 
-    def _edit_view(self):
+    def _edit_column(self):
         self.viewwidget.data = self.columns.focus.view.data
         self._viewwidget_visible = True
 
-    def _delete_view(self):
+    def _delete_column(self):
         try:
             focus = self.columns.focus_position
             del self.columns.contents[focus]
@@ -170,9 +170,9 @@ class UIApplication(CLIApplicationBase):
             'h': self._focus_previous_column,
             'right': self._focus_next_column,
             'l': self._focus_next_column,
-            'C': self._new_view,
-            'E': self._edit_view,
-            'D': self._delete_view,
+            'N': self._new_column,
+            'E': self._edit_column,
+            'D': self._delete_column,
         }
 
         try:
