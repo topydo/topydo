@@ -25,6 +25,8 @@ from topydo.ui.TodoListWidget import TodoListWidget
 from topydo.ui.ViewWidget import ViewWidget
 from topydo.lib.Config import config
 from topydo.lib.Sorter import Sorter
+from topydo.lib.Filter import get_filter_list, RelevanceFilter, DependencyFilter
+from topydo.lib.View import View
 from topydo.lib import TodoFile
 from topydo.lib import TodoList
 
@@ -54,7 +56,8 @@ class UIApplication(CLIApplicationBase):
         # view widget
         self.viewwidget = ViewWidget(self.todolist)
 
-        urwid.connect_signal(self.viewwidget, 'save', self._create_view)
+        urwid.connect_signal(self.viewwidget, 'save',
+                             lambda: self._create_view(self.viewwidget.data))
 
         def hide_viewwidget():
             self._viewwidget_visible = False
@@ -168,8 +171,26 @@ class UIApplication(CLIApplicationBase):
             # the key is unknown, ignore
             pass
 
-    def _create_view(self):
-        self._add_column(self.viewwidget.view, self.viewwidget.title)
+    def _viewdata_to_view(self, p_data):
+        """
+        Converts a dictionary describing a view to an actual View instance.
+        """
+        sorter = Sorter(p_data['sortexpr'])
+        filters = []
+
+        if not p_data['show_all']:
+            filters.append(DependencyFilter(self.todolist))
+            filters.append(RelevanceFilter())
+
+        filters += get_filter_list(p_data['filterexpr'])
+
+        return View(sorter, filters, self.todolist)
+
+    def _create_view(self, p_data):
+        """ Creates a view from the data entered in the view widget. """
+        view = self._viewdata_to_view(p_data)
+
+        self._add_column(view, p_data['title'])
         self._viewwidget_visible = False
 
     def _add_column(self, p_view, p_title):

@@ -17,9 +17,6 @@
 import urwid
 from six import u
 
-from topydo.lib.Filter import get_filter_list, DependencyFilter, RelevanceFilter
-from topydo.lib.Sorter import Sorter
-
 class ViewWidget(urwid.LineBox):
     def __init__(self, p_todolist):
         self._todolist = p_todolist
@@ -49,30 +46,21 @@ class ViewWidget(urwid.LineBox):
         urwid.register_signal(ViewWidget, ['save', 'close'])
 
     @property
-    def view(self):
-        """ Returns a tuple (title, view). """
-        sorter = Sorter(self.sortedit.edit_text)
-        filters = []
+    def data(self):
+        return {
+            'title': self.titleedit.edit_text,
+            'sortexpr': self.sortedit.edit_text,
+            'filterexpr': self.filteredit.edit_text,
+            'show_all': self.allradio.state,
+        }
 
-        if self.relevantradio.state == True:
-            filters.append(DependencyFilter(self._todolist))
-            filters.append(RelevanceFilter())
-
-        filters += get_filter_list(self.filteredit.edit_text.split())
-
-        return self._todolist.view(sorter, filters)
-
-    @view.setter
-    def view(self, p_view):
-        pass # TODO
-
-    @property
-    def title(self):
-        return self.titleedit.edit_text
-
-    @title.setter
-    def title(self, p_title):
-        self.titleedit.edit_text = p_title
+    @data.setter
+    def data(self, p_data):
+        self.titleedit.edit_text = p_data['title']
+        self.sortedit.edit_text = p_data['sortexpr']
+        self.filteredit.edit_text = p_data['filterexpr']
+        self.relevantradio.set_state(not p_data['show_all'])
+        self.allradio.set_state(p_data['show_all'])
 
     def reset(self):
         """ Resets the form. """
