@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import urwid
+from six import u
 
 from topydo.cli.CLIApplicationBase import CLIApplicationBase
 from topydo.Commands import get_subcommand
@@ -33,7 +34,7 @@ class UIApplication(CLIApplicationBase):
         super(UIApplication, self).__init__()
 
         self.columns = urwid.Columns([], dividechars=0, min_width=COLUMN_WIDTH)
-        self.commandline = CommandLineWidget('topydo> ')
+        self.commandline = CommandLineWidget(u('topydo> '))
         self.console = ConsoleWidget()
 
         urwid.connect_signal(self.commandline, 'blur',

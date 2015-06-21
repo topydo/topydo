@@ -15,9 +15,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import urwid
+from six import u
 
 class ConsoleWidget(urwid.LineBox):
-    def __init__(self, p_text=""):
+    def __init__(self, p_text=u("")):
         urwid.register_signal(ConsoleWidget, ['close'])
 
         self.text = urwid.Text(p_text)
@@ -36,4 +37,4 @@ class ConsoleWidget(urwid.LineBox):
         self.text.set_text(self.text.text + p_text)
 
     def clear(self):
-        self.text.set_text("")
+        self.text.set_text(u(""))

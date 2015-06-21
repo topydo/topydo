@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from six import text_type
+from six import text_type, u
 
 import urwid
 
@@ -23,7 +23,7 @@ class TodoWidget(urwid.WidgetWrap):
         self.todo = p_todo
 
         priority = self.todo.priority()
-        priority_text = u""
+        priority_text = u("")
         todo_text = self.todo.source()
 
         if priority:
