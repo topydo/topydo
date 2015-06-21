@@ -43,6 +43,7 @@ class UIView(View):
 
 _NEW_COLUMN = 1
 _EDIT_COLUMN = 2
+_COPY_COLUMN = 3
 
 class UIApplication(CLIApplicationBase):
     def __init__(self):
@@ -168,6 +169,11 @@ class UIApplication(CLIApplicationBase):
             # no columns
             pass
 
+    def _copy_column(self):
+        self.viewwidget.data = self.columns.focus.view.data
+        self.column_mode = _COPY_COLUMN
+        self._viewwidget_visible = True
+
     def _handle_input(self, p_input):
         dispatch = {
             ':': self._focus_commandline,
@@ -180,6 +186,7 @@ class UIApplication(CLIApplicationBase):
             'N': self._new_column,
             'E': self._edit_column,
             'D': self._delete_column,
+            'Y': self._copy_column,
         }
 
         try:
@@ -207,7 +214,7 @@ class UIApplication(CLIApplicationBase):
         """ Creates a view from the data entered in the view widget. """
         view = self._viewdata_to_view(p_data)
 
-        if self.column_mode == _NEW_COLUMN:
+        if self.column_mode == _NEW_COLUMN or self.column_mode == _COPY_COLUMN:
             self._add_column(view)
         elif self.column_mode == _EDIT_COLUMN:
             current_column = self.columns.focus
