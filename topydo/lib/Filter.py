@@ -196,3 +196,24 @@ class OrdinalTagFilter(Filter):
 
         return False
 
+def get_filter_list(p_expression):
+    """
+    Returns a list of GrepFilters, OrdinalTagFilters or NegationFilters based
+    on the given filter expression.
+
+    The filter expression is a list of strings.
+    """
+    result = []
+    for arg in p_expression:
+        if re.match(ORDINAL_TAG_MATCH, arg):
+            argfilter = OrdinalTagFilter(arg)
+        elif len(arg) > 1 and arg[0] == '-':
+            # when a word starts with -, exclude it
+            argfilter = GrepFilter(arg[1:])
+            argfilter = NegationFilter(argfilter)
+        else:
+            argfilter = GrepFilter(arg)
+
+        result.append(argfilter)
+
+    return result

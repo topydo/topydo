@@ -39,27 +39,11 @@ class ExpressionCommand(Command):
     def _filters(self):
         filters = []
 
-        def arg_filters():
-            result = []
-            for arg in self.args:
-                if re.match(Filter.ORDINAL_TAG_MATCH, arg):
-                    argfilter = Filter.OrdinalTagFilter(arg)
-                elif len(arg) > 1 and arg[0] == '-':
-                    # when a word starts with -, exclude it
-                    argfilter = Filter.GrepFilter(arg[1:])
-                    argfilter = Filter.NegationFilter(argfilter)
-                else:
-                    argfilter = Filter.GrepFilter(arg)
-
-                result.append(argfilter)
-
-            return result
-
         if not self.show_all:
             filters.append(Filter.DependencyFilter(self.todolist))
             filters.append(Filter.RelevanceFilter())
 
-        filters += arg_filters()
+        filters += Filter.get_filter_list(self.args)
 
         if not self.show_all:
             filters.append(Filter.LimitFilter(config().list_limit()))
