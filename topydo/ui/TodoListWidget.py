@@ -21,7 +21,7 @@ from topydo.ui.TodoWidget import TodoWidget
 
 class TodoListWidget(urwid.LineBox):
     def __init__(self, p_view, p_title):
-        self.view = p_view
+        self._view = None
 
         # store a state for multi-key shortcuts (e.g. 'gg')
         self.keystate = None
@@ -30,7 +30,7 @@ class TodoListWidget(urwid.LineBox):
 
         self.todolist = urwid.SimpleFocusListWalker([])
         self.listbox = urwid.ListBox(self.todolist)
-        self.update()
+        self.view = p_view
 
         pile = urwid.Pile([
             (1, title_widget),
@@ -43,6 +43,15 @@ class TodoListWidget(urwid.LineBox):
         super(TodoListWidget, self).__init__(pile)
 
         urwid.register_signal(TodoListWidget, ['execute_command'])
+
+    @property
+    def view(self):
+        return self._view
+
+    @view.setter
+    def view(self, p_view):
+        self._view = p_view
+        self.update()
 
     def update(self):
         """
