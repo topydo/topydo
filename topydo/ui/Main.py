@@ -41,6 +41,9 @@ class UIView(View):
         super(UIView, self).__init__(p_sorter, p_filter, p_todolist)
         self.data = p_data
 
+_NEW_COLUMN = 1
+_EDIT_COLUMN = 2
+
 class UIApplication(CLIApplicationBase):
     def __init__(self):
         super(UIApplication, self).__init__()
@@ -66,7 +69,7 @@ class UIApplication(CLIApplicationBase):
         self.viewwidget = ViewWidget(self.todolist)
 
         urwid.connect_signal(self.viewwidget, 'save',
-                             lambda: self._create_view(self.viewwidget.data))
+                             lambda: self._update_view(self.viewwidget.data))
 
         def hide_viewwidget():
             self._viewwidget_visible = False
@@ -85,6 +88,8 @@ class UIApplication(CLIApplicationBase):
             unhandled_input=self._handle_input,
             pop_ups=True
         )
+
+        self.column_mode = _NEW_COLUMN
 
     def _output(self, p_text):
         self._print_to_console(p_text + "\n")
@@ -142,10 +147,12 @@ class UIApplication(CLIApplicationBase):
 
     def _new_column(self):
         self.viewwidget.reset()
+        self.column_mode = _NEW_COLUMN
         self._viewwidget_visible = True
 
     def _edit_column(self):
         self.viewwidget.data = self.columns.focus.view.data
+        self.column_mode = _EDIT_COLUMN
         self._viewwidget_visible = True
 
     def _delete_column(self):
@@ -196,11 +203,18 @@ class UIApplication(CLIApplicationBase):
 
         return UIView(sorter, filters, self.todolist, p_data)
 
-    def _create_view(self, p_data):
+    def _update_view(self, p_data):
         """ Creates a view from the data entered in the view widget. """
         view = self._viewdata_to_view(p_data)
 
-        self._add_column(view)
+        if self.column_mode == _NEW_COLUMN:
+            self._add_column(view)
+        elif self.column_mode == _EDIT_COLUMN:
+            current_column = self.columns.focus
+
+            current_column.title = p_data['title']
+            current_column.view = view
+
         self._viewwidget_visible = False
 
     def _add_column(self, p_view):

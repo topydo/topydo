@@ -26,14 +26,14 @@ class TodoListWidget(urwid.LineBox):
         # store a state for multi-key shortcuts (e.g. 'gg')
         self.keystate = None
 
-        title_widget = urwid.Filler(urwid.Text(p_title, align='center'))
+        self._title_widget = urwid.Text(p_title, align='center')
 
         self.todolist = urwid.SimpleFocusListWalker([])
         self.listbox = urwid.ListBox(self.todolist)
         self.view = p_view
 
         pile = urwid.Pile([
-            (1, title_widget),
+            (1, urwid.Filler(self._title_widget)),
             (1, urwid.Filler(urwid.Divider(u('\u2500')))),
             ('weight', 1, self.listbox),
         ])
@@ -52,6 +52,14 @@ class TodoListWidget(urwid.LineBox):
     def view(self, p_view):
         self._view = p_view
         self.update()
+
+    @property
+    def title(self):
+        return self._title_widget.text
+
+    @title.setter
+    def title(self, p_title):
+        self._title_widget.set_text(p_title)
 
     def update(self):
         """
