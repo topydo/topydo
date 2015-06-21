@@ -43,8 +43,7 @@ class UIApplication(CLIApplicationBase):
         # console widget
         self.console = ConsoleWidget()
 
-        urwid.connect_signal(self.commandline, 'blur',
-                             self._blur_commandline)
+        urwid.connect_signal(self.commandline, 'blur', self._blur_commandline)
         urwid.connect_signal(self.commandline, 'execute_command',
                              self._execute_handler)
 
@@ -107,11 +106,11 @@ class UIApplication(CLIApplicationBase):
         for column, _ in self.columns.contents:
             column.update()
 
-    def _focus_commandline(self):
-        self.mainwindow.focus_item = 1
-
     def _blur_commandline(self):
         self.mainwindow.focus_item = 0
+
+    def _focus_commandline(self):
+        self.mainwindow.focus_item = 1
 
     def _focus_first_column(self):
         self.columns.focus_position = 0
@@ -133,6 +132,22 @@ class UIApplication(CLIApplicationBase):
         self.viewwidget.reset()
         self._viewwidget_visible = True
 
+    def _edit_view(self):
+        pass
+
+    def _delete_view(self):
+        try:
+            focus = self.columns.focus_position
+            del self.columns.contents[focus]
+
+            if self.columns.contents:
+                self.columns.focus_position = focus
+            else:
+                self._focus_commandline()
+        except IndexError:
+            # no columns
+            pass
+
     def _handle_input(self, p_input):
         dispatch = {
             ':': self._focus_commandline,
@@ -143,6 +158,8 @@ class UIApplication(CLIApplicationBase):
             'right': self._focus_next_column,
             'l': self._focus_next_column,
             'C': self._new_view,
+            'E': self._edit_view,
+            'D': self._delete_view,
         }
 
         try:
@@ -170,6 +187,7 @@ class UIApplication(CLIApplicationBase):
         item = (todolist, options)
         self.columns.contents.append(item)
         self.columns.focus_position = len(self.columns.contents) - 1
+        self._blur_commandline()
 
     @property
     def _console_visible(self):
