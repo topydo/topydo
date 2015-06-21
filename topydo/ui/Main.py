@@ -22,6 +22,7 @@ from topydo.Commands import get_subcommand
 from topydo.ui.CommandLineWidget import CommandLineWidget
 from topydo.ui.ConsoleWidget import ConsoleWidget
 from topydo.ui.TodoListWidget import TodoListWidget
+from topydo.ui.ViewWidget import ViewWidget
 from topydo.lib.Config import config
 from topydo.lib.Sorter import Sorter
 from topydo.lib import TodoFile
@@ -33,15 +34,32 @@ class UIApplication(CLIApplicationBase):
     def __init__(self):
         super(UIApplication, self).__init__()
 
+        self.todofile = TodoFile.TodoFile(config().todotxt())
+        self.todolist = TodoList.TodoList(self.todofile.read())
+
         self.columns = urwid.Columns([], dividechars=0, min_width=COLUMN_WIDTH)
         self.commandline = CommandLineWidget(u('topydo> '))
+
+        # console widget
         self.console = ConsoleWidget()
 
         urwid.connect_signal(self.commandline, 'blur',
                              self._blur_commandline)
         urwid.connect_signal(self.commandline, 'execute_command',
                              self._execute_handler)
-        urwid.connect_signal(self.console, 'close', self._hide_console)
+
+        def hide_console():
+            self._console_visible = False
+        urwid.connect_signal(self.console, 'close', hide_console)
+
+        # view widget
+        self.viewwidget = ViewWidget(self.todolist)
+
+        urwid.connect_signal(self.viewwidget, 'save', self._create_view)
+
+        def hide_viewwidget():
+            self._viewwidget_visible = False
+        urwid.connect_signal(self.viewwidget, 'close', hide_viewwidget)
 
         self.mainwindow = urwid.Pile([
             ('weight', 1, self.columns),
@@ -111,6 +129,10 @@ class UIApplication(CLIApplicationBase):
         if self.columns.focus_position > 0:
             self.columns.focus_position -= 1
 
+    def _new_view(self):
+        self.viewwidget.reset()
+        self._viewwidget_visible = True
+
     def _handle_input(self, p_input):
         dispatch = {
             ':': self._focus_commandline,
@@ -120,6 +142,7 @@ class UIApplication(CLIApplicationBase):
             'h': self._focus_previous_column,
             'right': self._focus_next_column,
             'l': self._focus_next_column,
+            'C': self._new_view,
         }
 
         try:
@@ -127,6 +150,10 @@ class UIApplication(CLIApplicationBase):
         except KeyError:
             # the key is unknown, ignore
             pass
+
+    def _create_view(self):
+        self._add_column(self.viewwidget.view, self.viewwidget.title)
+        self._viewwidget_visible = False
 
     def _add_column(self, p_view, p_title):
         todolist = TodoListWidget(p_view, p_title)
@@ -144,22 +171,39 @@ class UIApplication(CLIApplicationBase):
         self.columns.contents.append(item)
         self.columns.focus_position = len(self.columns.contents) - 1
 
-    def _show_console(self):
-        self.mainwindow.contents.append((self.console, ('pack', None)))
-        self.mainwindow.focus_position = 2
+    @property
+    def _console_visible(self):
+        contents = self.mainwindow.contents
+        return len(contents) == 3 and isinstance(contents[2][0], ConsoleWidget)
 
-    def _hide_console(self):
-        if self._console_is_visible():
+    @_console_visible.setter
+    def _console_visible(self, p_enabled):
+        contents = self.mainwindow.contents
+
+        if p_enabled == True and len(contents) == 2:
+            contents.append((self.console, ('pack', None)))
+            self.mainwindow.focus_position = 2
+        elif p_enabled == False and self._console_visible:
             self.console.clear()
-            del self.mainwindow.contents[2]
+            del contents[2]
 
-    def _console_is_visible(self):
-        return len(self.mainwindow.contents) == 3
+    @property
+    def _viewwidget_visible(self):
+        contents = self.mainwindow.contents
+        return len(contents) == 3 and isinstance(contents[2][0], ViewWidget)
+
+    @_viewwidget_visible.setter
+    def _viewwidget_visible(self, p_enabled):
+        contents = self.mainwindow.contents
+
+        if p_enabled == True and len(contents) == 2:
+            contents.append((self.viewwidget, ('pack', None)))
+            self.mainwindow.focus_position = 2
+        elif p_enabled == False and self._viewwidget_visible:
+            del contents[2]
 
     def _print_to_console(self, p_text):
-        if not self._console_is_visible():
-            self._show_console()
-
+        self._console_visible = True
         self.console.print_text(p_text)
 
     def _input(self, p_question):
@@ -171,14 +215,11 @@ class UIApplication(CLIApplicationBase):
         self.mainloop.draw_screen()
 
         user_input = self.mainloop.screen.get_input()
-        self._hide_console()
+        self._console_visible = False
 
         return user_input[0]
 
     def run(self):
-        self.todofile = TodoFile.TodoFile(config().todotxt())
-        self.todolist = TodoList.TodoList(self.todofile.read())
-
         view1 = self.todolist.view(Sorter(), [])
         self._add_column(view1, "View 1")
 
