@@ -32,6 +32,15 @@ from topydo.lib import TodoList
 
 COLUMN_WIDTH = 40
 
+class UIView(View):
+    """
+    A subclass of view holding user input data that constructed the view (i.e.
+    the sort expression and the filter expression, etc.)
+    """
+    def __init__(self, p_sorter, p_filter, p_todolist, p_data):
+        super(UIView, self).__init__(p_sorter, p_filter, p_todolist)
+        self.data = p_data
+
 class UIApplication(CLIApplicationBase):
     def __init__(self):
         super(UIApplication, self).__init__()
@@ -136,7 +145,8 @@ class UIApplication(CLIApplicationBase):
         self._viewwidget_visible = True
 
     def _edit_view(self):
-        pass
+        self.viewwidget.data = self.columns.focus.view.data
+        self._viewwidget_visible = True
 
     def _delete_view(self):
         try:
@@ -173,7 +183,7 @@ class UIApplication(CLIApplicationBase):
 
     def _viewdata_to_view(self, p_data):
         """
-        Converts a dictionary describing a view to an actual View instance.
+        Converts a dictionary describing a view to an actual UIView instance.
         """
         sorter = Sorter(p_data['sortexpr'])
         filters = []
@@ -184,17 +194,20 @@ class UIApplication(CLIApplicationBase):
 
         filters += get_filter_list(p_data['filterexpr'])
 
-        return View(sorter, filters, self.todolist)
+        return UIView(sorter, filters, self.todolist, p_data)
 
     def _create_view(self, p_data):
         """ Creates a view from the data entered in the view widget. """
         view = self._viewdata_to_view(p_data)
 
-        self._add_column(view, p_data['title'])
+        self._add_column(view)
         self._viewwidget_visible = False
 
-    def _add_column(self, p_view, p_title):
-        todolist = TodoListWidget(p_view, p_title)
+    def _add_column(self, p_view):
+        """
+        Given an UIView, adds a new column widget with the todos in that view.
+        """
+        todolist = TodoListWidget(p_view, p_view.data['title'])
         no_output = lambda _: None
         urwid.connect_signal(todolist, 'execute_command',
                              lambda cmd: self._execute_handler(cmd, no_output))
@@ -259,8 +272,13 @@ class UIApplication(CLIApplicationBase):
         return user_input[0]
 
     def run(self):
-        view1 = self.todolist.view(Sorter(), [])
-        self._add_column(view1, "View 1")
+        dummy = {
+            "title": "View 1",
+            "sortexpr": "desc:prio",
+            "filterexpr": "",
+            "show_all": True,
+        }
+        self._add_column(self._viewdata_to_view(dummy))
 
         self.mainloop.run()
 
