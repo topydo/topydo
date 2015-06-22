@@ -87,7 +87,7 @@ class TopydoCompleter(Completer):
 
             yield Completion(reldate, -len(value), display_meta=to_absolute(reldate))
 
-    def get_completions(self, p_document, p_complete_event):
+    def get_completions(self, p_document, _):
         # include all characters except whitespaces (for + and @)
         word_before_cursor = p_document.get_word_before_cursor(True)
         is_first_word = not re.match(r'\s*\S+\s', p_document.current_line_before_cursor)

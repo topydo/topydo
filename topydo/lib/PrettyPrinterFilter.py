@@ -17,6 +17,7 @@
 """ Provides filters used for pretty printing. """
 
 import re
+from six import u
 
 from topydo.lib.Config import config
 from topydo.lib.Colors import Colors, NEUTRAL_COLOR
@@ -29,8 +30,10 @@ class PrettyPrinterFilter(object):
     """
 
     def filter(self, p_todo_str, _):
-        """ Default implementation returns an unmodified todo string. """
-        return p_todo_str
+        """
+        Applies a filter to p_todo_str and returns a modified version of it.
+        """
+        raise NotImplementedError
 
 class PrettyPrinterColorFilter(PrettyPrinterFilter):
     """
@@ -99,7 +102,7 @@ class PrettyPrinterNumbers(PrettyPrinterFilter):
 
     def filter(self, p_todo_str, p_todo):
         """ Prepends the number to the todo string. """
-        return "|{:>3}| {}".format(self.todolist.number(p_todo), p_todo_str)
+        return u("|{:>3}| {}").format(self.todolist.number(p_todo), p_todo_str)
 
 class PrettyPrinterHideTagFilter(PrettyPrinterFilter):
     """ Removes all occurences of the given tags from the text. """

@@ -29,7 +29,7 @@ from io import StringIO
 
 from topydo.commands import AddCommand
 from topydo.commands import ListCommand
-from test.CommandTest import CommandTest, utf8
+from test.CommandTest import CommandTest
 from topydo.lib.Config import config
 from topydo.lib import TodoList
 
@@ -127,7 +127,7 @@ class AddCommandTest(CommandTest):
 
         self.assertFalse(self.todolist.todo(1).has_tag("after"))
         self.assertEqual(self.todolist.todo(1).source(), self.today + " Foo")
-        self.assertEqual(self.output, "|  1| " + str(self.todolist.todo(1)) + "\n")
+        self.assertEqual(self.output, "|  1| " + self.todolist.todo(1).source() + "\n")
         self.assertEqual(self.errors, "")
 
     def test_add_dep5(self):
@@ -137,7 +137,7 @@ class AddCommandTest(CommandTest):
 
         self.assertFalse(self.todolist.todo(1).has_tag("after"))
         self.assertEqual(self.todolist.todo(1).source(), self.today + " Foo")
-        self.assertEqual(self.output, "|  1| " + str(self.todolist.todo(1)) + "\n")
+        self.assertEqual(self.output, "|  1| " + self.todolist.todo(1).source() + "\n")
         self.assertEqual(self.errors, "")
 
     def test_add_dep6(self):
@@ -248,7 +248,7 @@ class AddCommandTest(CommandTest):
         command = AddCommand.AddCommand([u("Special \u25c4")], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEqual(self.output, utf8(u("|  1| {} Special \u25c4\n").format(self.today)))
+        self.assertEqual(self.output, u("|  1| {} Special \u25c4\n").format(self.today))
         self.assertEqual(self.errors, "")
 
     @mock.patch("topydo.commands.AddCommand.stdin", StringIO(u("Fo\u00f3 due:tod id:1\nB\u0105r before:1")))
@@ -256,14 +256,14 @@ class AddCommandTest(CommandTest):
         command = AddCommand.AddCommand(["-f", "-"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEqual(self.output, utf8(u("|  1| {tod} Fo\u00f3 due:{tod} id:1\n|  2| {tod} B\u0105r p:1\n".format(tod=self.today))))
+        self.assertEqual(self.output, u("|  1| {tod} Fo\u00f3 due:{tod} id:1\n|  2| {tod} B\u0105r p:1\n".format(tod=self.today)))
         self.assertEqual(self.errors, "")
 
     def test_add_from_file(self):
         command = AddCommand.AddCommand(["-f", "test/data/AddCommandTest-from_file.txt"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEqual(self.output, utf8(u("|  1| {tod} Foo @fo\u00f3b\u0105r due:{tod} id:1\n|  2| {tod} Bar +baz t:{tod} p:1\n".format(tod=self.today))))
+        self.assertEqual(self.output, u("|  1| {tod} Foo @fo\u00f3b\u0105r due:{tod} id:1\n|  2| {tod} Bar +baz t:{tod} p:1\n".format(tod=self.today)))
         self.assertEqual(self.errors, "")
 
     def test_help(self):

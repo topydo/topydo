@@ -1,0 +1,7 @@
+(C) Foo @Context2 Not@Context +Project1 Not+Project
+(D) Bar @Context1 +Project2 p:1 due:2015-06-06
+(C) Baz @Context1 +Project1 key:value id:1
+(C) 2015-06-06 Drink beer @ home
+(G) 13 + 29 = 42
+(C) Only a start date t:2015-06-06
+x 2015-06-06 A completed item due:2015-05-05

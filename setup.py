@@ -20,7 +20,7 @@ setup(
         'console_scripts': ['topydo = topydo.cli.UILoader:main'],
     },
     classifiers = [
-        "Development Status :: 4 - Beta",
+        "Development Status :: 5 - Production/Stable",
         "Environment :: Console",
         "Intended Audience :: End Users/Desktop",
         "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",

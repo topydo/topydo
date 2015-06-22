@@ -16,6 +16,7 @@
 
 from topydo.lib.ExpressionCommand import ExpressionCommand
 from topydo.lib.Config import config
+from topydo.lib.PrettyPrinter import pretty_printer_factory
 from topydo.lib.PrettyPrinterFilter import (
     PrettyPrinterIndentFilter,
     PrettyPrinterHideTagFilter
@@ -45,7 +46,7 @@ class ListCommand(ExpressionCommand):
         """
         try:
             import icalendar as _
-        except ImportError:
+        except ImportError: # pragma: no cover
             self.error("icalendar package is not installed.")
             return False
 
@@ -81,10 +82,8 @@ class ListCommand(ExpressionCommand):
         sent to the output.
         """
 
-        def _print_text():
-            """
-            Outputs a pretty-printed text format of the todo list.
-            """
+        if self.printer == None:
+            # create a standard printer with some filters
             indent = config().list_indent()
             hidden_tags = config().hidden_tags()
 
@@ -92,14 +91,9 @@ class ListCommand(ExpressionCommand):
             filters.append(PrettyPrinterIndentFilter(indent))
             filters.append(PrettyPrinterHideTagFilter(hidden_tags))
 
-            self.out(self._view().pretty_print(filters))
+            self.printer = pretty_printer_factory(self.todolist, filters)
 
-        if self.printer == None:
-            _print_text()
-        else:
-            # we have set a special format, simply use the printer set in
-            # self.printer
-            self.out(str(self._view()))
+        self.out(self.printer.print_list(self._view().todos))
 
     def execute(self):
         if not super(ListCommand, self).execute():
@@ -107,7 +101,7 @@ class ListCommand(ExpressionCommand):
 
         try:
             self._process_flags()
-        except SyntaxError:
+        except SyntaxError: # pragma: no cover
             # importing icalendar failed, most likely due to Python 3.2
             self.error("icalendar is not supported in this Python version.")
             return False

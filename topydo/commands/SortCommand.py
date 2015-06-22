@@ -39,9 +39,7 @@ class SortCommand(Command):
         sorted_todos = sorter.sort(self.todolist.todos())
 
         self.todolist.erase()
-
-        for todo in sorted_todos:
-            self.todolist.add_todo(todo)
+        self.todolist.add_todos(sorted_todos)
 
     def usage(self):
         return """Synopsis: sort [expression]"""
@@ -51,8 +49,13 @@ class SortCommand(Command):
 Sorts the file according to the expression. If no expression is given, the
 expression in the configuration is used.
 
-The following sort properties are supported:
+The expression is a comma separated list of attributes to sort on. The list is
+evaluated in order, which means that the first attribute takes higher
+precedence, then the second, etc.
 
+The following sort attributes are supported:
+
+* priority       - Sort by priority
 * creation       - Sort by creation date
 * completed      - Sort by completion state
 * importance     - Sort by importance
@@ -60,6 +63,10 @@ The following sort properties are supported:
 * text           - Sort by text
 * <tag>          - Sort by values of the given tag
 
-Any property can be prefixed with 'asc:' and 'desc:' to specify the sort order.
-The default is ascending sort.
+Each item can optionally be prefixed with asc: and desc: to specify ascending
+or descending sort respectively. If not specified, ascending sort is assumed.
+
+Example:
+
+    desc:importance,due,desc:priority
 """

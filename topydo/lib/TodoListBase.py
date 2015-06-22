@@ -20,6 +20,7 @@ A list of todo items.
 
 from datetime import date
 import re
+from six import text_type
 
 from topydo.lib.Config import config
 from topydo.lib import Filter
@@ -124,7 +125,8 @@ class TodoListBase(object):
             result = todo_by_linenumber(p_identifier)
 
         if not result:
-            result = todo_by_regexp(p_identifier)
+            # convert integer to text so we pass on a valid regex
+            result = todo_by_regexp(text_type(p_identifier))
 
         return result
 
@@ -255,7 +257,10 @@ class TodoListBase(object):
             self._todo_id_map[todo] = uid
             self._id_todo_map[uid] = todo
 
-    def __str__(self):
+    def print_todos(self):
+        """
+        Returns a pretty-printed string (without colors) of the todo items in
+        this list.
+        """
         printer = PrettyPrinter()
         return printer.print_list(self._todos)
-

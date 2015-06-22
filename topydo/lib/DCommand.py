@@ -19,7 +19,6 @@ import re
 from topydo.lib.MultiCommand import MultiCommand
 from topydo.lib.PrettyPrinter import PrettyPrinter
 from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
-from topydo.lib.TodoListBase import InvalidTodoException
 
 class DCommand(MultiCommand):
     """
@@ -36,29 +35,14 @@ class DCommand(MultiCommand):
 
         self.force = False
 
-        self.process_flags()
         self.length = len(self.todolist.todos()) # to determine newly activated todos
-        self.get_todos(self.args)
 
     def get_flags(self):
-        """ Default implementation of getting specific flags. """
-        return ("", [])
+        return ("f", ["force"])
 
-    def process_flag(self, p_option, p_value):
-        """ Default implementation of processing specific flags. """
-        pass
-
-    def process_flags(self):
-        opts, args = self.get_flags()
-        opts, args = self.getopt("f" + opts, ["force"] + args)
-
-        for opt, value in opts:
-            if opt == "-f" or opt == "--force":
-                self.force = True
-            else:
-                self.process_flag(opt, value)
-
-        self.args = args
+    def process_flag(self, p_opt, p_value):
+        if p_opt == "-f" or p_opt == "--force":
+            self.force = True
 
     def _uncompleted_children(self, p_todo):
         return sorted(
@@ -72,11 +56,10 @@ class DCommand(MultiCommand):
         self.out(printer.print_list(p_todos))
 
     def prompt_text(self):
-        return "Yes or no? [y/N] "
+        raise NotImplementedError
 
     def prefix(self):
-        """ Prefix to use when printing a todo. """
-        return ""
+        raise NotImplementedError
 
     def _process_subtasks(self, p_todo):
         children = self._uncompleted_children(p_todo)
@@ -110,26 +93,26 @@ class DCommand(MultiCommand):
         return [todo for todo in self.todolist.todos()[:self.length]
             if not self._uncompleted_children(todo) and todo.is_active()]
 
-    def condition(self, p_todo):
+    def condition(self, _):
         """
         An additional condition whether execute_specific should be executed.
         """
         return True
 
     def condition_failed_text(self):
-        return ""
+        raise NotImplementedError
 
     def execute_specific(self, _):
-        pass
+        raise NotImplementedError
 
     def execute_specific_core(self, p_todo):
         """
         The core operation on the todo itself. Also used to operate on
         child/parent tasks.
         """
-        pass
+        raise NotImplementedError
 
-    def execute_multi_specific(self):
+    def _execute_multi_specific(self):
         old_active = self._active_todos()
 
         for todo in self.todos:

@@ -185,13 +185,6 @@ class FilterTest(TopydoTest):
         self.assertEqual(todolist_to_string(filtered_todos), \
             todolist_to_string(reference))
 
-    def test_filter19(self):
-        todos = load_file('test/data/FilterTest1.txt')
-        grep = Filter.GrepFilter(1)
-        filtered_todos = grep.filter(todos)
-
-        self.assertEqual(filtered_todos, [])
-
     def test_filter20(self):
         todos = load_file('test/data/FilterTest3.txt')
         otf = Filter.OrdinalTagFilter('due:<2014-11-10')
@@ -314,7 +307,7 @@ class OrdinalTagFilterTest(TopydoTest):
 
         self.todo1 = "Foo due:{}".format(self.today)
         self.todo2 = "Bar due:{}".format(self.tomorrow)
-        self.todo3 = "Baz due:nonsense"
+        self.todo3 = "Baz due:Nonsense"
         self.todo4 = "Fnord due:2014-10-32"
 
         self.todos = [
@@ -330,7 +323,7 @@ class OrdinalTagFilterTest(TopydoTest):
         result = otf.filter(self.todos)
 
         self.assertEqual(len(result), 1)
-        self.assertEqual(str(result[0]), self.todo1)
+        self.assertEqual(result[0].source(), self.todo1)
 
     def test_filter2(self):
         otf = Filter.OrdinalTagFilter('due:=today')
@@ -338,7 +331,7 @@ class OrdinalTagFilterTest(TopydoTest):
         result = otf.filter(self.todos)
 
         self.assertEqual(len(result), 1)
-        self.assertEqual(str(result[0]), self.todo1)
+        self.assertEqual(result[0].source(), self.todo1)
 
     def test_filter3(self):
         otf = Filter.OrdinalTagFilter('due:>today')
@@ -346,7 +339,7 @@ class OrdinalTagFilterTest(TopydoTest):
         result = otf.filter(self.todos)
 
         self.assertEqual(len(result), 1)
-        self.assertEqual(str(result[0]), self.todo2)
+        self.assertEqual(result[0].source(), self.todo2)
 
     def test_filter4(self):
         otf = Filter.OrdinalTagFilter('due:<1w')
@@ -354,8 +347,8 @@ class OrdinalTagFilterTest(TopydoTest):
         result = otf.filter(self.todos)
 
         self.assertEqual(len(result), 2)
-        self.assertEqual(str(result[0]), self.todo1)
-        self.assertEqual(str(result[1]), self.todo2)
+        self.assertEqual(result[0].source(), self.todo1)
+        self.assertEqual(result[1].source(), self.todo2)
 
     def test_filter5(self):
         otf = Filter.OrdinalTagFilter('due:!today')
@@ -363,7 +356,23 @@ class OrdinalTagFilterTest(TopydoTest):
         result = otf.filter(self.todos)
 
         self.assertEqual(len(result), 1)
-        self.assertEqual(str(result[0]), self.todo2)
+        self.assertEqual(result[0].source(), self.todo2)
+
+    def test_filter6(self):
+        otf = Filter.OrdinalTagFilter('due:non')
+
+        result = otf.filter(self.todos)
+
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0].source(), self.todo3)
+
+    def test_filter7(self):
+        otf = Filter.OrdinalTagFilter('due:Non')
+
+        result = otf.filter(self.todos)
+
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0].source(), self.todo3)
 
 if __name__ == '__main__':
     unittest.main()

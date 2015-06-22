@@ -1,0 +1,15 @@
+[run]
+source = topydo
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    raise AssertionError
+    raise NotImplementedError
+    if 0:
+    if __name__ == .__main__.:
+
+omit =
+    topydo/lib/ExitCommand.py
+    topydo/lib/Version.py

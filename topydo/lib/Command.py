@@ -84,8 +84,10 @@ class Command(object):
         return result
 
     def usage(self):
-        return "No usage text available for this command."
+        """ Returns a one-line synopsis for this command. """
+        raise NotImplementedError
 
     def help(self):
-        return "No help text available for this command."
+        """ Returns the help text for this command. """
+        raise NotImplementedError
 

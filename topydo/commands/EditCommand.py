@@ -18,7 +18,7 @@ import os
 from subprocess import call, check_call, CalledProcessError
 import tempfile
 
-from six import text_type, u
+from six import u
 
 from topydo.lib.ExpressionCommand import ExpressionCommand
 from topydo.lib.MultiCommand import MultiCommand
@@ -34,31 +34,30 @@ DEFAULT_EDITOR = 'vi'
 # cannot use super() inside the class itself
 BASE_TODOLIST = lambda tl: super(TodoList, tl)
 
-class EditCommand(MultiCommand, ExpressionCommand):
+class EditCommand(MultiCommand):
     def __init__(self, p_args, p_todolist, p_output, p_error, p_input):
         super(EditCommand, self).__init__(p_args, p_todolist, p_output,
             p_error, p_input)
 
+        if len(self.args) == 0:
+            self.multi_mode = False
+
         self.is_expression = False
         self.edit_archive = False
+        self.last_argument = False
 
-    def _process_flags(self):
-        opts, args = self.getopt('xed')
+    def get_flags(self):
+        return ("d", [])
 
-        for opt, value in opts:
-            if opt == '-d':
-                self.edit_archive = True
-            elif opt == '-x':
-                self.show_all = True
-            elif opt == '-e':
-                self.is_expression = True
-
-        self.args = args
+    def process_flag(self, p_opt, p_value):
+        if p_opt == '-d':
+            self.edit_archive = True
+            self.multi_mode = False
 
     def _todos_to_temp(self):
         f = tempfile.NamedTemporaryFile()
         for todo in self.todos:
-            f.write((text_type(todo) + "\n").encode('utf-8'))
+            f.write((todo.source() + "\n").encode('utf-8'))
         f.seek(0)
 
         return f
@@ -73,12 +72,20 @@ class EditCommand(MultiCommand, ExpressionCommand):
 
         return todo_objs
 
-    def _open_in_editor(self, p_temp_file, p_editor):
+    def _open_in_editor(self, p_file):
         try:
-            return check_call([p_editor, p_temp_file.name])
+            editor = os.environ['EDITOR'] or DEFAULT_EDITOR
+        except(KeyError):
+            editor = DEFAULT_EDITOR
+
+        try:
+            return check_call([editor, p_file])
         except CalledProcessError:
             self.error('Something went wrong in the editor...')
             return 1
+        except(OSError):
+            self.error('There is no such editor as: ' + editor + '. '
+                        'Check your $EDITOR and/or $PATH')
 
     def _catch_todo_errors(self):
         errors = []
@@ -94,59 +101,35 @@ class EditCommand(MultiCommand, ExpressionCommand):
         else:
             return None
 
-    def execute(self):
-        if not super(EditCommand, self).execute():
-            return False
-
+    def _execute_multi_specific(self):
         self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
-        try:
-            editor = os.environ['EDITOR'] or DEFAULT_EDITOR
-        except(KeyError):
-            editor = DEFAULT_EDITOR
 
-        try:
-            if len(self.args) < 1:
-                todo = config().todotxt()
+        temp_todos = self._todos_to_temp()
 
-                return call([editor, todo]) == 0
+        if not self._open_in_editor(temp_todos.name):
+            new_todos = self._todos_from_temp(temp_todos)
+            if len(new_todos) == len(self.todos):
+                for todo in self.todos:
+                    BASE_TODOLIST(self.todolist).delete(todo)
+
+                for todo in new_todos:
+                    self.todolist.add_todo(todo)
+                    self.out(self.printer.print_todo(todo))
             else:
-                self._process_flags()
+                self.error('Number of edited todos is not equal to '
+                            'number of supplied todo IDs.')
+        else:
+            self.error(self.usage())
 
-                if self.edit_archive:
-                    archive = config().archive()
+    def _execute_not_multi(self):
+        if self.edit_archive:
+            archive = config().archive()
 
-                    return call([editor, archive]) == 0
+            return self._open_in_editor(archive) == 0
+        else:
+            todo = config().todotxt()
 
-                if self.is_expression:
-                    self.todos = self._view()._viewdata
-                else:
-                    self.get_todos(self.args)
-
-                todo_errors = self._catch_todo_errors()
-
-                if not todo_errors:
-                    temp_todos = self._todos_to_temp()
-
-                    if not self._open_in_editor(temp_todos, editor):
-                        new_todos = self._todos_from_temp(temp_todos)
-                        if len(new_todos) == len(self.todos):
-                            for todo in self.todos:
-                                BASE_TODOLIST(self.todolist).delete(todo)
-
-                            for todo in new_todos:
-                                self.todolist.add_todo(todo)
-                                self.out(self.printer.print_todo(todo))
-                        else:
-                            self.error('Number of edited todos is not equal to '
-                                        'number of supplied todo IDs.')
-                    else:
-                        self.error(self.usage())
-                else:
-                    for error in todo_errors:
-                        self.error(error)
-        except(OSError):
-            self.error('There is no such editor as: ' + editor + '. '
-                        'Check your $EDITOR and/or $PATH')
+            return self._open_in_editor(todo) == 0
 
     def usage(self):
         return """Synopsis:
