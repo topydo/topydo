@@ -74,6 +74,8 @@ class UIApplication(CLIApplicationBase):
 
         def hide_viewwidget():
             self._viewwidget_visible = False
+            self._blur_commandline()
+
         urwid.connect_signal(self.viewwidget, 'close', hide_viewwidget)
 
         self.mainwindow = urwid.Pile([
