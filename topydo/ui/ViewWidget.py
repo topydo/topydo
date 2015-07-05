@@ -36,7 +36,7 @@ class ViewWidget(urwid.LineBox):
             self.relevantradio,
             self.allradio,
             urwid.Button(u("Save"), lambda _: urwid.emit_signal(self, 'save')),
-            urwid.Button(u("Cancel"), lambda _: urwid.emit_signal(self, 'close')),
+            urwid.Button(u("Cancel"), lambda _: self.close()),
         ])
 
         self.reset()
@@ -69,3 +69,12 @@ class ViewWidget(urwid.LineBox):
         self.filteredit.set_edit_text(u(""))
         self.relevantradio.set_state(True)
         self.pile.focus_item = 0
+
+    def close(self):
+        urwid.emit_signal(self, 'close')
+
+    def keypress(self, p_size, p_key):
+        if p_key == 'esc':
+            self.close()
+        else:
+            return super(ViewWidget, self).keypress(p_size, p_key)
