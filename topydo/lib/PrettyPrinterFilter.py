@@ -66,7 +66,7 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
                     p_todo_str)
 
             # tags
-            p_todo_str = re.sub(r'\b\S+:[^/\s]\S+\b',
+            p_todo_str = re.sub(r'\b\S+:[^/\s]\S*\b',
                                 metadata_color + r'\g<0>' + color,
                                 p_todo_str)
 
