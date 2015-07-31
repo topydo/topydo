@@ -196,6 +196,7 @@ class _Config:
     def hidden_tags(self):
         """ Returns a list of tags to be hidden from the 'ls' output. """
         hidden_tags = self.cp.get('ls', 'hide_tags')
+        # pylint: disable=no-member
         return [] if hidden_tags == '' else hidden_tags.split(',')
 
     def priority_colors(self):
