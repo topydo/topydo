@@ -37,8 +37,8 @@ def _add_months(p_sourcedate, p_months):
 
 def _convert_pattern(p_length, p_periodunit, p_offset=None):
     """
-    Converts a pattern in the form [0-9][dwmy] and returns a date from today
-    with the period of time added to it.
+    Converts a pattern in the form [0-9][dwmy] and returns a date from the
+    offset with the period of time added to it.
     """
     result = None
 

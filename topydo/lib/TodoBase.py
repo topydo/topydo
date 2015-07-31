@@ -20,12 +20,11 @@ This module contains the class that represents a single todo item.
 
 from datetime import date
 import re
-from six import python_2_unicode_compatible, u
+from six import u
 
 from topydo.lib.TodoParser import parse_line
 from topydo.lib.Utils import is_valid_priority
 
-@python_2_unicode_compatible
 class TodoBase(object):
     """
     This class represents a single todo item in a todo.txt file. It maintains
@@ -227,6 +226,3 @@ class TodoBase(object):
         """ Returns the creation date of a todo. """
         return self.fields['creationDate']
 
-    def __str__(self):
-        """ A printer for the todo item. """
-        return self.source()

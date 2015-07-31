@@ -22,7 +22,7 @@ import unittest
 
 from topydo.lib.Config import config
 from topydo.commands.ListCommand import ListCommand
-from test.CommandTest import CommandTest, utf8
+from test.CommandTest import CommandTest
 from test.TestFacilities import load_file_to_todolist
 
 class ListCommandTest(CommandTest):
@@ -219,12 +219,11 @@ class ListCommandUnicodeTest(CommandTest):
 
         self.assertFalse(self.todolist.is_dirty())
 
-        expected = utf8(u("|  1| (C) And some sp\u00e9cial tag:\u25c4\n"))
+        expected = u("|  1| (C) And some sp\u00e9cial tag:\u25c4\n")
 
         self.assertEqual(self.output, expected)
 
 class ListCommandJsonTest(CommandTest):
-
     def test_json(self):
         todolist = load_file_to_todolist("test/data/ListCommandTest.txt")
 
@@ -252,7 +251,7 @@ class ListCommandJsonTest(CommandTest):
         with codecs.open('test/data/ListCommandUnicodeTest.json', 'r', encoding='utf-8') as json:
             jsontext = json.read()
 
-        self.assertEqual(self.output, utf8(jsontext))
+        self.assertEqual(self.output, jsontext)
         self.assertEqual(self.errors, "")
 
 def replace_ical_tags(p_text):
@@ -265,11 +264,14 @@ def replace_ical_tags(p_text):
 IS_PYTHON_32 = (sys.version_info.major, sys.version_info.minor) == (3, 2)
 
 class ListCommandIcalTest(CommandTest):
+    def setUp(self):
+        self.maxDiff = None
+
     @unittest.skipIf(IS_PYTHON_32, "icalendar is not supported for Python 3.2")
     def test_ical(self):
-        todolist = load_file_to_todolist("test/data/ListCommandTest.txt")
+        todolist = load_file_to_todolist("test/data/ListCommandIcalTest.txt")
 
-        command = ListCommand(["-f", "ical"], todolist, self.out, self.error)
+        command = ListCommand(["-x", "-f", "ical"], todolist, self.out, self.error)
         command.execute()
 
         self.assertTrue(todolist.is_dirty())
@@ -308,7 +310,7 @@ class ListCommandIcalTest(CommandTest):
         with codecs.open('test/data/ListCommandUnicodeTest.ics', 'r', encoding='utf-8') as ical:
             icaltext = ical.read()
 
-        self.assertEqual(replace_ical_tags(self.output), utf8(replace_ical_tags(icaltext)))
+        self.assertEqual(replace_ical_tags(self.output), replace_ical_tags(icaltext))
         self.assertEqual(self.errors, "")
 
 if __name__ == '__main__':

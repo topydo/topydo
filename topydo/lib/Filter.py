@@ -15,9 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import re
-from six import text_type
 
-from topydo.lib.Config import config
 from topydo.lib.RelativeDate import relative_date_to_date
 from topydo.lib.Utils import date_string_to_date
 
@@ -30,9 +28,8 @@ class Filter(object):
 
         return [t for t in p_todos if self.match(t)]
 
-    def match(self, p_todo):
-        """ Default match value. """
-        return True
+    def match(self, _):
+        raise NotImplementedError
 
 class NegationFilter(Filter):
     def __init__(self, p_filter):
@@ -64,7 +61,7 @@ class GrepFilter(Filter):
         super(GrepFilter, self).__init__()
 
         # convert to string in case we receive integers
-        self.expression = text_type(p_expression)
+        self.expression = p_expression
 
         if p_case_sensitive != None:
             self.case_sensitive = p_case_sensitive

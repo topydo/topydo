@@ -17,6 +17,7 @@
 """ Provides filters used for pretty printing. """
 
 import re
+from six import u
 
 from topydo.lib.Config import config
 from topydo.lib.Colors import Colors, NEUTRAL_COLOR
@@ -29,8 +30,10 @@ class PrettyPrinterFilter(object):
     """
 
     def filter(self, p_todo_str, _):
-        """ Default implementation returns an unmodified todo string. """
-        return p_todo_str
+        """
+        Applies a filter to p_todo_str and returns a modified version of it.
+        """
+        raise NotImplementedError
 
 class PrettyPrinterColorFilter(PrettyPrinterFilter):
     """
@@ -44,10 +47,10 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
 
         colorscheme = Colors()
         priority_colors = colorscheme.get_priority_colors()
-        project_color  = colorscheme.get_project_color()
-        context_color  = colorscheme.get_context_color()
+        project_color = colorscheme.get_project_color()
+        context_color = colorscheme.get_context_color()
         metadata_color = colorscheme.get_metadata_color()
-        link_color     = colorscheme.get_link_color()
+        link_color = colorscheme.get_link_color()
 
         if config().colors():
             color = NEUTRAL_COLOR
@@ -56,14 +59,16 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
             except KeyError:
                 pass
 
+            # color by priority
             p_todo_str = color + p_todo_str
-            if config().highlight_projects_contexts():
-                p_todo_str = re.sub(
-                    r'\B(\+|@)(\S*\w)',
-                    lambda m: (
-                        context_color if m.group(0)[0] == "@"
-                        else project_color) + m.group(0) + color,
-                    p_todo_str)
+
+            # color projects / contexts
+            p_todo_str = re.sub(
+                r'\B(\+|@)(\S*\w)',
+                lambda m: (
+                    context_color if m.group(0)[0] == "@"
+                    else project_color) + m.group(0) + color,
+                p_todo_str)
 
             # tags
             p_todo_str = re.sub(r'\b\S+:[^/\s]\S*\b',
@@ -97,7 +102,7 @@ class PrettyPrinterNumbers(PrettyPrinterFilter):
 
     def filter(self, p_todo_str, p_todo):
         """ Prepends the number to the todo string. """
-        return "|{:>3}| {}".format(self.todolist.number(p_todo), p_todo_str)
+        return u("|{:>3}| {}").format(self.todolist.number(p_todo), p_todo_str)
 
 class PrettyPrinterHideTagFilter(PrettyPrinterFilter):
     """ Removes all occurences of the given tags from the text. """

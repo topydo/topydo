@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from topydo.lib.PrettyPrinter import PrettyPrinter
 from topydo.lib.Todo import Todo
 from topydo.lib.TodoFile import TodoFile
 from topydo.lib.TodoList import TodoList
@@ -42,4 +43,8 @@ def load_file_to_todolist(p_filename):
 
 def todolist_to_string(p_list):
     """ Converts a todo list to a single string. """
-    return '\n'.join([str(t) for t in p_list])
+    return '\n'.join([t.source() for t in p_list])
+
+def print_view(p_view):
+    printer = PrettyPrinter()
+    return printer.print_list(p_view.todos)

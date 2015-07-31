@@ -24,16 +24,17 @@ import sys
 from six import PY2
 from six.moves import input
 
-MAIN_OPTS = "c:d:ht:v"
+MAIN_OPTS = "ac:d:ht:v"
 
 def usage():
     """ Prints the command-line usage of topydo. """
 
     print("""\
-Synopsis: topydo [-c <config>] [-d <archive>] [-t <todo.txt>] subcommand [help|args]
+Synopsis: topydo [-a] [-c <config>] [-d <archive>] [-t <todo.txt>] subcommand [help|args]
           topydo -h
           topydo -v
 
+-a : Do not archive todo items on completion.
 -c : Specify an alternative configuration file.
 -d : Specify an alternative archive file (done.txt)
 -h : This help text
@@ -49,7 +50,6 @@ Available commands:
 * depri
 * do
 * edit
-* ical
 * ls
 * listcon (lscon)
 * listprojects (lsprj)
@@ -113,6 +113,7 @@ class CLIApplicationBase(object):
     def __init__(self):
         self.todolist = TodoList.TodoList([])
         self.todofile = None
+        self.do_archive = True
 
     def _usage(self):
         usage()
@@ -134,7 +135,9 @@ class CLIApplicationBase(object):
         overrides = {}
 
         for opt, value in opts:
-            if opt == "-c":
+            if opt == "-a":
+                self.do_archive = False
+            elif opt == "-c":
                 alt_config_path = value
             elif opt == "-t":
                 overrides[('topydo', 'filename')] = value
@@ -167,7 +170,7 @@ class CLIApplicationBase(object):
             command.execute()
 
             if archive.is_dirty():
-                archive_file.write(str(archive))
+                archive_file.write(archive.print_todos())
 
     def _help(self, args):
         if args == None:
@@ -204,13 +207,17 @@ class CLIApplicationBase(object):
         completed. It will do some maintenance and write out the final result
         to the todo.txt file.
         """
+
+        # do not archive when the value of the filename is an empty string
+        # (i.e. explicitly left empty in the configuration
         if self.todolist.is_dirty():
-            self._archive()
+            if self.do_archive and config().archive():
+                self._archive()
 
             if config().keep_sorted():
                 self._execute(SortCommand, [])
 
-            self.todofile.write(str(self.todolist))
+            self.todofile.write(self.todolist.print_todos())
 
     def run(self):
         raise NotImplementedError

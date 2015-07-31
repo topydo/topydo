@@ -49,7 +49,7 @@ class TodoFile(object):
         to the file.
         """
 
-        todofile = open(self.path, 'w')
+        todofile = codecs.open(self.path, 'w', encoding="utf-8")
 
         if p_todos is list:
             for todo in p_todos:

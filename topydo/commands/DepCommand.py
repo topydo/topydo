@@ -17,6 +17,7 @@
 from topydo.lib.Command import Command, InvalidCommandArgument
 from topydo.lib.Config import config
 from topydo.lib import Filter
+from topydo.lib.PrettyPrinter import pretty_printer_factory
 from topydo.lib.Sorter import Sorter
 from topydo.lib.TodoListBase import InvalidTodoException
 from topydo.lib.View import View
@@ -33,6 +34,8 @@ class DepCommand(Command):
             self.subsubcommand = self.argument(0)
         except InvalidCommandArgument:
             self.subsubcommand = None
+
+        self.printer = pretty_printer_factory(self.todolist)
 
     def _handle_add(self):
         (from_todo, to_todo) = self._get_todos()
@@ -97,9 +100,8 @@ class DepCommand(Command):
             if todos:
                 sorter = Sorter(config().sort_string())
                 instance_filter = Filter.InstanceFilter(todos)
-                view = View(sorter, [instance_filter], self.todolist,
-                    self.printer)
-                self.out(view.pretty_print())
+                view = View(sorter, [instance_filter], self.todolist)
+                self.out(self.printer.print_list(view.todos))
         except InvalidTodoException:
             self.error("Invalid todo number given.")
         except InvalidCommandArgument:

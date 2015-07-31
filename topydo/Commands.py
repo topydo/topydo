@@ -33,10 +33,11 @@ _SUBCOMMAND_MAP = {
     'do': 'DoCommand',
     'edit': 'EditCommand',
     'exit': 'ExitCommand', # used for the prompt
-    'ical': 'IcalCommand', # deprecated
     'ls': 'ListCommand',
     'lscon': 'ListContextCommand',
     'listcon': 'ListContextCommand',
+    'listcontext': 'ListContextCommand',
+    'listcontexts': 'ListContextCommand',
     'lsprj': 'ListProjectCommand',
     'lsproj': 'ListProjectCommand',
     'listprj': 'ListProjectCommand',

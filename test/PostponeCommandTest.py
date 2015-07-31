@@ -37,6 +37,7 @@ class PostponeCommandTest(CommandTest):
             "Baz due:{} t:{}".format(self.today.isoformat(), self.start.isoformat()),
             "Past due:{}".format(self.past.isoformat()),
             "Future due:{} t:{}".format(self.future.isoformat(), self.future_start.isoformat()),
+            "FutureStart t:{}".format(self.future.isoformat())
         ]
 
         self.todolist = TodoList(todos)
@@ -232,6 +233,55 @@ class PostponeCommandTest(CommandTest):
         self.assertFalse(self.todolist.is_dirty())
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors, u("Invalid todo number given: Fo\u00d3B\u0105r.\n"))
+
+    def test_expr_postpone1(self):
+        command = PostponeCommand(["-e", "due:tod", "2w"], self.todolist, self.out, self.error, None)
+        command.execute()
+
+        due = self.today + timedelta(14)
+        result = "|  2| Bar due:{d}\n|  3| Baz due:{d} t:{s}\n".format(d=due.isoformat(), s=self.start.isoformat())
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEqual(self.output, result)
+        self.assertEqual(self.errors, "")
+
+    def test_expr_postpone2(self):
+        cmd_args = ["-e", "t:{}".format(self.start.isoformat()), "due:tod", "1w"]
+        command = PostponeCommand(cmd_args, self.todolist, self.out, self.error, None)
+        command.execute()
+
+        due = self.today + timedelta(7)
+
+        result = "|  3| Baz due:{} t:{}\n".format(due.isoformat(), self.start.isoformat())
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEqual(self.output, result)
+        self.assertEqual(self.errors, "")
+
+    def test_expr_postpone3(self):
+        command = PostponeCommand(["-e", "@test", "due:tod", "+project", "C"], self.todolist, self.out, self.error, None)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+
+    def test_expr_postpone4(self):
+        """ Don't postpone unrelevant todo items. """
+        command = PostponeCommand(["-e", "FutureStart", "1w"], self.todolist, self.out, self.error, None)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+
+    def test_expr_postpone5(self):
+        """ Force postponing unrelevant items with additional -x flag. """
+        command = PostponeCommand(["-xe", "FutureStart", "1w"], self.todolist, self.out, self.error, None)
+        command.execute()
+
+        due = self.today + timedelta(7)
+        result = "|  6| FutureStart t:{} due:{}\n".format(self.future.isoformat(), due.isoformat())
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEqual(self.output, result)
+        self.assertEqual(self.errors, "")
 
     def test_help(self):
         command = PostponeCommand(["help"], self.todolist, self.out, self.error)

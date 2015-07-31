@@ -35,13 +35,22 @@ class ExpressionCommand(Command):
 
         self.sort_expression = config().sort_string()
         self.show_all = False
+        # Commands using last argument differently (i.e as something other than
+        # todo ID/expression) have to set attribute below to True.
+        self.last_argument = False
 
     def _filters(self):
         filters = []
 
         def arg_filters():
             result = []
-            for arg in self.args:
+
+            if self.last_argument:
+                args = self.args[:-1]
+            else:
+                args = self.args
+
+            for arg in args:
                 if re.match(Filter.ORDINAL_TAG_MATCH, arg):
                     argfilter = Filter.OrdinalTagFilter(arg)
                 elif len(arg) > 1 and arg[0] == '-':
@@ -70,4 +79,4 @@ class ExpressionCommand(Command):
         sorter = Sorter(self.sort_expression)
         filters = self._filters()
 
-        return View(sorter, filters, self.todolist, self.printer)
+        return View(sorter, filters, self.todolist)

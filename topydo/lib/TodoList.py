@@ -36,14 +36,11 @@ class TodoList(TodoListBase):
         Should be given a list of strings, each element a single todo string.
         The string will be parsed.
         """
-        self._todos = []
+        # initialize these first because the constructor calls add_list
         self._tododict = {} # hash(todo) to todo lookup
         self._depgraph = DirectedGraph()
-        self._todo_id_map = {}
-        self._id_todo_map = {}
 
-        self.add_list(p_todostrings)
-        self.dirty = False
+        super(TodoList, self).__init__(p_todostrings)
 
     def todo_by_dep_id(self, p_dep_id):
         """
@@ -231,4 +228,3 @@ class TodoList(TodoListBase):
 
         for todo in self._todos:
             todo.attributes['parents'] = self.parents(todo)
-

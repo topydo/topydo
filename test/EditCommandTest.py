@@ -17,7 +17,7 @@
 import unittest
 
 # We're searching for 'mock'
-# pylint: disable=no-name-in-module 
+# pylint: disable=no-name-in-module
 try:
     from unittest import mock
 except ImportError:
@@ -27,7 +27,7 @@ from six import u
 import os
 
 from topydo.commands.EditCommand import EditCommand
-from test.CommandTest import CommandTest, utf8
+from test.CommandTest import CommandTest
 from topydo.lib.TodoList import TodoList
 from topydo.lib.Todo import Todo
 from topydo.lib.Config import config
@@ -44,7 +44,6 @@ class EditCommandTest(CommandTest):
 
         self.todolist = TodoList(todos)
 
-
     @mock.patch('topydo.commands.EditCommand.EditCommand._open_in_editor')
     def test_edit1(self, mock_open_in_editor):
         """ Preserve dependencies after editing. """
@@ -55,7 +54,7 @@ class EditCommandTest(CommandTest):
 
         self.assertTrue(self.todolist.is_dirty())
         self.assertEqual(self.errors, "")
-        self.assertEqual(str(self.todolist), utf8(u("Bar p:1 @test\nBaz @test\nFo\u00f3B\u0105\u017a\nFoo id:1")))
+        self.assertEqual(self.todolist.print_todos(), u("Bar p:1 @test\nBaz @test\nFo\u00f3B\u0105\u017a\nFoo id:1"))
 
     @mock.patch('topydo.commands.EditCommand.EditCommand._todos_from_temp')
     @mock.patch('topydo.commands.EditCommand.EditCommand._open_in_editor')
@@ -69,7 +68,7 @@ class EditCommandTest(CommandTest):
 
         self.assertTrue(self.todolist.is_dirty())
         self.assertEqual(self.errors, "")
-        self.assertEqual(str(self.todolist), utf8(u("Foo id:1\nBaz @test\nFo\u00f3B\u0105\u017a\nLazy Cat")))
+        self.assertEqual(self.todolist.print_todos(), u("Foo id:1\nBaz @test\nFo\u00f3B\u0105\u017a\nLazy Cat"))
 
     def test_edit3(self):
         """ Throw an error after invalid todo number given as argument. """
@@ -99,7 +98,7 @@ class EditCommandTest(CommandTest):
 
         self.assertFalse(self.todolist.is_dirty())
         self.assertEqual(self.errors, "Number of edited todos is not equal to number of supplied todo IDs.\n")
-        self.assertEqual(str(self.todolist), utf8(u("Foo id:1\nBar p:1 @test\nBaz @test\nFo\u00f3B\u0105\u017a")))
+        self.assertEqual(self.todolist.print_todos(), u("Foo id:1\nBar p:1 @test\nBaz @test\nFo\u00f3B\u0105\u017a"))
 
     def test_edit6(self):
         """ Throw an error with invalid argument containing special characters. """
@@ -121,7 +120,7 @@ class EditCommandTest(CommandTest):
 
         self.assertTrue(self.todolist.is_dirty())
         self.assertEqual(self.errors, "")
-        self.assertEqual(str(self.todolist), utf8(u("Foo id:1\nBar p:1 @test\nBaz @test\nLazy Cat")))
+        self.assertEqual(self.todolist.print_todos(), u("Foo id:1\nBar p:1 @test\nBaz @test\nLazy Cat"))
 
     @mock.patch('topydo.commands.EditCommand.EditCommand._todos_from_temp')
     @mock.patch('topydo.commands.EditCommand.EditCommand._open_in_editor')
@@ -133,14 +132,14 @@ class EditCommandTest(CommandTest):
         command = EditCommand(["-e", "@test"], self.todolist, self.out, self.error, None)
         command.execute()
 
-        expected = utf8(u("|  3| Lazy Cat\n|  4| Lazy Dog\n"))
+        expected = u("|  3| Lazy Cat\n|  4| Lazy Dog\n")
 
         self.assertTrue(self.todolist.is_dirty())
         self.assertEqual(self.errors, "")
         self.assertEqual(self.output, expected)
-        self.assertEqual(str(self.todolist), utf8(u("Foo id:1\nFo\u00f3B\u0105\u017a\nLazy Cat\nLazy Dog")))
+        self.assertEqual(self.todolist.print_todos(), u("Foo id:1\nFo\u00f3B\u0105\u017a\nLazy Cat\nLazy Dog"))
 
-    @mock.patch('topydo.commands.EditCommand.call')
+    @mock.patch('topydo.commands.EditCommand.check_call')
     def test_edit_archive(self, mock_call):
         """ Edit archive file. """
         mock_call.return_value = 0
@@ -149,11 +148,29 @@ class EditCommandTest(CommandTest):
         os.environ['EDITOR'] = editor
         archive = config().archive()
 
-        command = EditCommand([u("-d")], self.todolist, self.out, self.error, None)
+        command = EditCommand(["-d"], self.todolist, self.out, self.error, None)
         command.execute()
 
         self.assertEqual(self.errors, "")
         mock_call.assert_called_once_with([editor, archive])
+
+    @mock.patch('topydo.commands.EditCommand.check_call')
+    def test_edit_todotxt(self, mock_call):
+        """ Edit todo file. """
+        mock_call.return_value = 0
+
+        editor = 'vi'
+        os.environ['EDITOR'] = editor
+        todotxt = config().todotxt()
+
+        result = self.todolist.print_todos() # copy TodoList content *before* executing command
+
+        command = EditCommand([], self.todolist, self.out, self.error, None)
+        command.execute()
+
+        self.assertEqual(self.errors, "")
+        self.assertEqual(self.todolist.print_todos(), result)
+        mock_call.assert_called_once_with([editor, todotxt])
 
 if __name__ == '__main__':
     unittest.main()

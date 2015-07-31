@@ -14,30 +14,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""
-Stub for the former 'ical' subcommand, now replaced with 'ls -f ical'.
+from topydo.lib.JsonPrinter import JsonPrinter
+from topydo.lib.Todo import Todo
+from test.TopydoTest import TopydoTest
 
-To be removed.
-"""
+class JsonPrinterTest(TopydoTest):
+    """
+    Tests the functionality of printing a single todo item. Printing a list is
+    already covered by the ListCommand tests.
+    """
+    def test_json(self):
+        """ Print a single todo item. """
+        printer = JsonPrinter()
+        todo = Todo('2015-06-06 Foo due:2015-05-32')
 
-from topydo.lib.Command import Command
+        result = printer.print_todo(todo)
 
-class IcalCommand(Command):
-    def __init__(self, p_args, p_todolist,
-                 p_out=lambda a: None,
-                 p_err=lambda a: None,
-                 p_prompt=lambda a: None):
-        super(IcalCommand, self).__init__(
-            p_args, p_todolist, p_out, p_err, p_prompt)
-
-    def execute(self):
-        self.error("The 'ical' subcommand is deprecated, please use 'ls -f ical' instead.")
-        return False
-
-    def usage(self):
-        return """Synopsis: ical"""
-
-    def help(self):
-        return """\
-Deprecated. Use 'ls -f ical' instead.
-"""
+        self.assertEqual(result, '{"completed": false, "completion_date": null, "contexts": [], "creation_date": "2015-06-06", "priority": null, "projects": [], "source": "2015-06-06 Foo due:2015-05-32", "tags": [["due", "2015-05-32"]], "text": "Foo"}')

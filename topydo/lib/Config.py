@@ -38,16 +38,26 @@ class _Config:
         (such as todo.txt location passed with -t). The key is a tuple of
         (section, option), the value is the option's value.
         """
-        self.sections = ['topydo', 'tags', 'sort', 'ls', 'dep', 'colorscheme']
+        self.sections = [
+            'add',
+            'colorscheme',
+            'dep',
+            'ls',
+            'sort',
+            'tags',
+            'topydo',
+        ]
 
         self.defaults = {
             # topydo
             'default_command': 'ls',
             'colors': '1',
-            'highlight_projects_contexts': '1',
             'filename' : 'todo.txt',
             'archive_filename' : 'done.txt',
             'identifiers': 'linenumber',
+
+            # add
+            'auto_creation_date': '1',
 
             # ls
             'hide_tags': 'id,p,ical',
@@ -117,12 +127,6 @@ class _Config:
             return self.cp.getboolean('topydo', 'colors')
         except ValueError:
             return self.defaults['colors'] == '1'
-
-    def highlight_projects_contexts(self):
-        try:
-            return self.cp.getboolean('topydo', 'highlight_projects_contexts')
-        except ValueError:
-            return self.defaults['highlight_projects_contexts'] == '1'
 
     def todotxt(self):
         return os.path.expanduser(self.cp.get('topydo', 'filename'))
@@ -239,6 +243,12 @@ class _Config:
             return self.cp.get('colorscheme', 'link_color')
         except ValueError:
             return int(self.defaults['link_color'])
+
+    def auto_creation_date(self):
+        try:
+            return self.cp.getboolean('add', 'auto_creation_date')
+        except ValueError:
+            return self.defaults['auto_creation_date'] == '1'
 
 def config(p_path=None, p_overrides=None):
     """
