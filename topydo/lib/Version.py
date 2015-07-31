@@ -1,6 +1,6 @@
 """ Version of Topydo. """
 
-VERSION = '0.4'
+VERSION = '0.5'
 
 LICENSE = """Copyright (C) 2014 Bram Schoenmakers
 License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
