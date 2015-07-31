@@ -266,6 +266,16 @@ class AddCommandTest(CommandTest):
         self.assertEqual(self.output, u("|  1| {tod} Foo @fo\u00f3b\u0105r due:{tod} id:1\n|  2| {tod} Bar +baz t:{tod} p:1\n".format(tod=self.today)))
         self.assertEqual(self.errors, "")
 
+    def test_add_task_without_date(self):
+        config(p_overrides={('add', 'auto_creation_date'): '0'})
+
+        args = ["New todo"]
+        command = AddCommand.AddCommand(args, self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEqual(self.todolist.todo(1).source(), "New todo")
+        self.assertEqual(self.errors, "")
+
     def test_help(self):
         command = AddCommand.AddCommand(["help"], self.todolist, self.out, self.error)
         command.execute()
