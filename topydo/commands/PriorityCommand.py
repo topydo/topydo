@@ -54,9 +54,16 @@ class PriorityCommand(MultiCommand):
             self.error("Invalid priority given.")
 
     def usage(self):
-        return """Synopsis: pri <NUMBER1> [<NUMBER2> ...] <PRIORITY>"""
+        return """\
+Synopsis: pri <NUMBER1> [<NUMBER2> ...] <PRIORITY>
+          pri [-x] -e <EXPRESSION>
+"""
 
     def help(self):
         return """\
 Sets the priority of todo(s) the given number(s) to the given priority.
+
+It is also possible to prioritize items as complete with an expression using
+the -e flag. Use -x to also process todo items that are normally invisible
+(with the 'ls' subcommand).
 """

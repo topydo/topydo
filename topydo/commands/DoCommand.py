@@ -99,10 +99,17 @@ class DoCommand(DCommand):
         self.todolist.set_todo_completed(p_todo, self.completion_date)
 
     def usage(self):
-        return """Synopsis: do [--date] [--force] [--strict] <NUMBER1> [<NUMBER2> ...]"""
+        return """\
+Synopsis: do [--date] [--force] [--strict] <NUMBER1> [<NUMBER2> ...]
+          do [-x] -e <EXPRESSION>
+"""
 
     def help(self):
         return """Marks the todo(s) with given number(s) as complete.
+
+It is also possible to mark todo items as complete with an expression using the
+-e flag. Use -x to also process todo items that are normally invisible (with
+the 'ls' subcommand).
 
 In case a todo has subitems, a question is asked whether the subitems should be
 marked as completed as well. When --force is given, no interaction is required
