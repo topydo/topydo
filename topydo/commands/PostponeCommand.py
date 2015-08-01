@@ -75,7 +75,10 @@ class PostponeCommand(MultiCommand):
                 break
 
     def usage(self):
-        return "Synopsis: postpone [-s] <NUMBER> [<NUMBER2> ...] <PATTERN>"
+        return """\
+Synopsis: postpone [-s] <NUMBER> [<NUMBER2> ...] <PATTERN>"
+          postpone [-x] -e <EXPRESSION>
+"""
 
     def help(self):
         return """\
@@ -83,6 +86,10 @@ Postpone the todo item(s) with the given number(s) and the given pattern.
 
 Postponing is done by adjusting the due date(s) of the todo(s), and if the -s flag is
 given, the start date accordingly.
+
+It is also possible to postpone items as complete with an expression using
+the -e flag. Use -x to also process todo items that are normally invisible
+(with the 'ls' subcommand).
 
 The pattern is a relative date, written in the format <COUNT><PERIOD> where
 count is a number and <PERIOD> is either 'd', 'w', 'm' or 'y', which stands for
