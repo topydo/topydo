@@ -1,3 +1,4 @@
+sudo: false  # run on new infrastructure
 language: python
 python:
   - "2.7"
@@ -9,6 +10,10 @@ install:
   - "pip install icalendar"
   - "pip install pylint"
 script: "./run-tests.sh"
+# Cache Dependencies
+cache:
+  directories:
+    - $HOME/travis/.cache/pip
 notifications:
   webhooks:
     urls:
