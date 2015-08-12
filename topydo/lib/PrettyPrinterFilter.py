@@ -80,7 +80,7 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
                                 ' ' + link_color + r'\2\3' + color,
                                 p_todo_str)
 
-        p_todo_str += NEUTRAL_COLOR
+            p_todo_str += NEUTRAL_COLOR
 
         return p_todo_str
 

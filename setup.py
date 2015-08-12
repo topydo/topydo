@@ -1,16 +1,42 @@
 from setuptools import setup, find_packages
+import os
+import re
+import codecs
+import sys
+
+here = os.path.abspath(os.path.dirname(__file__))
+
+
+def read(*parts):
+    # intentionally *not* adding an encoding option to open
+    return codecs.open(os.path.join(here, *parts), 'r').read()
+
+
+def find_version(*file_paths):
+    version_file = read(*file_paths)
+    version_match = re.search(r"^VERSION = ['\"]([^'\"]*)['\"]",
+                              version_file, re.M)
+    if version_match:
+        return version_match.group(1)
+    raise RuntimeError("Unable to find version string.")
+
+
+conditional_dependencies = {
+    "colorama>=0.2.5": "win32" in sys.platform,
+}
+
 
 setup(
     name = "topydo",
     packages = find_packages(exclude=["test"]),
-    version = "0.5",
+    version = find_version('topydo', 'lib', 'Version.py'),
     description = "A command-line todo list application using the todo.txt format.",
     author = "Bram Schoenmakers",
     author_email = "me@bramschoenmakers.nl",
     url = "https://github.com/bram85/topydo",
     install_requires = [
         'six >= 1.9.0',
-    ],
+    ] + [p for p, cond in conditional_dependencies.items() if cond],
     extras_require = {
         'ical': ['icalendar'],
         'prompt-toolkit': ['prompt-toolkit >= 0.39'],

@@ -78,7 +78,7 @@ class ListCommand(ExpressionCommand):
         Prints the todos in the right format.
 
         Defaults to normal text output (with possible colors and other pretty
-        printing. If a format was specified on the commandline, this format is
+        printing). If a format was specified on the commandline, this format is
         sent to the output.
         """
 
