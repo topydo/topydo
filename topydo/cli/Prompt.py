@@ -91,7 +91,8 @@ class PromptApplication(CLIApplicationBase):
 
             try:
                 user_input = get_input(u'topydo> ', history=history,
-                                       completer=self.completer).split()
+                                       completer=self.completer,
+                                       complete_while_typing=False).split()
             except (EOFError, KeyboardInterrupt):
                 sys.exit(0)
 
