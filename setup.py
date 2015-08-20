@@ -39,7 +39,7 @@ setup(
     ] + [p for p, cond in conditional_dependencies.items() if cond],
     extras_require = {
         'ical': ['icalendar'],
-        'prompt-toolkit': ['prompt-toolkit >= 0.42'],
+        'prompt-toolkit': ['prompt-toolkit >= 0.47'],
         'edit-cmd-tests': ['mock'],
     },
     entry_points= {
