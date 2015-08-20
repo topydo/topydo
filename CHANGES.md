@@ -1,3 +1,17 @@
+0.6
+---
+
+* Recurrence patterns can be prefixed with a `+` to indicate strict recurrence
+  (i.e. based on due date rather than completion date. This syntax is inspired
+  from the SimpleTask project by @mpcjansen.
+* Colors now work on the Windows commandline (thanks to @MinchinWeb). Requires
+  colorama to be installed.
+* Do not print spurious color codes when colors are disabled in the
+  configuration (thanks to @MinchinWeb).
+* In prompt mode, restore old auto-completion behavior: press Tab for
+  completion (instead of complete while typing).
+* Various other minor fixes (thanks to @MinchinWeb).
+
 0.5
 ---
 

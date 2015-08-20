@@ -19,7 +19,7 @@ from datetime import date
 from topydo.lib.DCommand import DCommand
 from topydo.lib.PrettyPrinter import PrettyPrinter
 from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
-from topydo.lib.Recurrence import advance_recurring_todo, strict_advance_recurring_todo, NoRecurrenceException
+from topydo.lib.Recurrence import advance_recurring_todo, NoRecurrenceException
 from topydo.lib.Utils import date_string_to_date
 
 class DoCommand(DCommand):
@@ -54,12 +54,11 @@ class DoCommand(DCommand):
     def _handle_recurrence(self, p_todo):
         if p_todo.has_tag('rec'):
             try:
-                if self.strict_recurrence:
-                    new_todo = strict_advance_recurring_todo(p_todo,
-                        self.completion_date)
-                else:
-                    new_todo = advance_recurring_todo(p_todo,
-                        self.completion_date)
+                new_todo = advance_recurring_todo(
+                    p_todo,
+                    p_offset=self.completion_date,
+                    p_strict=self.strict_recurrence
+                )
 
                 self.todolist.add_todo(new_todo)
 

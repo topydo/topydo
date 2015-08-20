@@ -25,24 +25,36 @@ from topydo.lib.Todo import Todo
 class NoRecurrenceException(Exception):
     pass
 
-def _advance_recurring_todo_helper(p_todo, p_offset):
+def advance_recurring_todo(p_todo, p_offset=None, p_strict=False):
     """
     Given a Todo item, return a new instance of a Todo item with the dates
     shifted according to the recurrence rule.
 
-    The new date is calculated from the given p_offset value.
+    Strict means that the real due date is taken as a offset, not today or a
+    future date to determine the offset.
+
+    When the todo item has no due date, then the date is used passed by the
+    caller (defaulting to today).
 
     When no recurrence tag is present, an exception is raised.
     """
-
     todo = Todo(p_todo.source())
     pattern = todo.tag_value('rec')
 
     if not pattern:
         raise NoRecurrenceException()
+    elif pattern.startswith('+'):
+        p_strict = True
+        # strip off the +
+        pattern = pattern[1:]
+
+    if p_strict:
+        offset = p_todo.due_date() or p_offset or date.today()
+    else:
+        offset = p_offset or date.today()
 
     length = todo.length()
-    new_due = relative_date_to_date(pattern, p_offset)
+    new_due = relative_date_to_date(pattern, offset)
 
     if not new_due:
         raise NoRecurrenceException()
@@ -57,23 +69,3 @@ def _advance_recurring_todo_helper(p_todo, p_offset):
     todo.set_creation_date(date.today())
 
     return todo
-
-def advance_recurring_todo(p_todo, p_offset=None):
-    p_offset = p_offset or date.today()
-    return _advance_recurring_todo_helper(p_todo, p_offset)
-
-def strict_advance_recurring_todo(p_todo, p_offset=None):
-    """
-    Given a Todo item, return a new instance of a Todo item with the dates
-    shifted according to the recurrence rule.
-
-    Strict means that the real due date is taken as a offset, not today or a
-    future date to determine the offset.
-
-    When the todo item has no due date, then the date is used passed by the
-    caller (defaulting to today).
-
-    When no recurrence tag is present, an exception is raised.
-    """
-    offset = p_todo.due_date() or p_offset or date.today()
-    return _advance_recurring_todo_helper(p_todo, offset)
