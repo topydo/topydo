@@ -3,7 +3,7 @@
 
 * Recurrence patterns can be prefixed with a `+` to indicate strict recurrence
   (i.e. based on due date rather than completion date. This syntax is inspired
-  from the SimpleTask project by @mpcjansen.
+  from the SimpleTask project by @mpcjanssen.
 * Colors now work on the Windows commandline (thanks to @MinchinWeb). Requires
   colorama to be installed.
 * Do not print spurious color codes when colors are disabled in the
