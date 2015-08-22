@@ -1,5 +1,24 @@
 *.pyc
 *.sw?
-build
-dist
 install
+.coverage
+
+# Distribution / packaging
+.Python
+env/
+env*/
+build/
+develop-eggs/
+dist/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Sublime Text
+*.sublime-*

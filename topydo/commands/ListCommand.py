@@ -46,7 +46,7 @@ class ListCommand(ExpressionCommand):
         """
         try:
             import icalendar as _
-        except ImportError:
+        except ImportError: # pragma: no cover
             self.error("icalendar package is not installed.")
             return False
 
@@ -78,7 +78,7 @@ class ListCommand(ExpressionCommand):
         Prints the todos in the right format.
 
         Defaults to normal text output (with possible colors and other pretty
-        printing. If a format was specified on the commandline, this format is
+        printing). If a format was specified on the commandline, this format is
         sent to the output.
         """
 
@@ -101,7 +101,7 @@ class ListCommand(ExpressionCommand):
 
         try:
             self._process_flags()
-        except SyntaxError:
+        except SyntaxError: # pragma: no cover
             # importing icalendar failed, most likely due to Python 3.2
             self.error("icalendar is not supported in this Python version.")
             return False

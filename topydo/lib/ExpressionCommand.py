@@ -35,6 +35,9 @@ class ExpressionCommand(Command):
 
         self.sort_expression = config().sort_string()
         self.show_all = False
+        # Commands using last argument differently (i.e as something other than
+        # todo ID/expression) have to set attribute below to True.
+        self.last_argument = False
 
     def _filters(self):
         filters = []
@@ -43,7 +46,8 @@ class ExpressionCommand(Command):
             filters.append(Filter.DependencyFilter(self.todolist))
             filters.append(Filter.RelevanceFilter())
 
-        filters += Filter.get_filter_list(self.args)
+        args = self.args[:-1] if self.last_argument else self.args
+        filters += Filter.get_filter_list(args)
 
         if not self.show_all:
             filters.append(Filter.LimitFilter(config().list_limit()))

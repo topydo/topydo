@@ -18,7 +18,7 @@ from datetime import date, timedelta
 import unittest
 
 from topydo.lib.Config import config
-from topydo.lib.Recurrence import advance_recurring_todo, strict_advance_recurring_todo, NoRecurrenceException
+from topydo.lib.Recurrence import advance_recurring_todo, NoRecurrenceException
 from topydo.lib.Todo import Todo
 from test.TopydoTest import TopydoTest
 
@@ -26,6 +26,7 @@ class RecurrenceTest(TopydoTest):
     def setUp(self):
         super(RecurrenceTest, self).setUp()
         self.todo = Todo("Test rec:1w")
+        self.stricttodo = Todo("Test rec:+1w")
 
     def test_duedate1(self):
         """ Where due date is in the future. """
@@ -63,7 +64,7 @@ class RecurrenceTest(TopydoTest):
         new_due = date.today() - timedelta(1)
 
         self.todo.set_tag(config().tag_due(), past.isoformat())
-        new_todo = strict_advance_recurring_todo(self.todo)
+        new_todo = advance_recurring_todo(self.todo, p_strict=True)
 
         self.assertEqual(new_todo.due_date(), new_due)
 
@@ -73,7 +74,7 @@ class RecurrenceTest(TopydoTest):
         new_due = date.today() + timedelta(8)
 
         self.todo.set_tag(config().tag_due(), future.isoformat())
-        new_todo = strict_advance_recurring_todo(self.todo)
+        new_todo = advance_recurring_todo(self.todo, p_strict=True)
 
         self.assertEqual(new_todo.due_date(), new_due)
 
@@ -83,7 +84,7 @@ class RecurrenceTest(TopydoTest):
         new_due = date.today() + timedelta(7)
 
         self.todo.set_tag(config().tag_due(), today.isoformat())
-        new_todo = strict_advance_recurring_todo(self.todo)
+        new_todo = advance_recurring_todo(self.todo, p_strict=True)
 
         self.assertEqual(new_todo.due_date(), new_due)
 
@@ -96,7 +97,7 @@ class RecurrenceTest(TopydoTest):
 
     def test_noduedate2(self):
         new_due = date.today() + timedelta(7)
-        new_todo = strict_advance_recurring_todo(self.todo)
+        new_todo = advance_recurring_todo(self.todo, p_strict=True)
 
         self.assertTrue(new_todo.has_tag(config().tag_due()))
         self.assertEqual(new_todo.due_date(), new_due)
@@ -121,7 +122,7 @@ class RecurrenceTest(TopydoTest):
         self.todo.set_tag(config().tag_start(), yesterday.isoformat())
 
         new_start = date.today() + timedelta(5)
-        new_todo = strict_advance_recurring_todo(self.todo)
+        new_todo = advance_recurring_todo(self.todo, p_strict=True)
 
         self.assertEqual(new_todo.start_date(), new_start)
 
@@ -134,6 +135,32 @@ class RecurrenceTest(TopydoTest):
         new_todo = advance_recurring_todo(self.todo)
 
         self.assertEqual(new_todo.start_date(), new_start)
+
+    def test_strict_recurrence1(self):
+        """
+        Strict recurrence where due date is in the past, using + notation in
+        expression.
+        """
+        past = date.today() - timedelta(8)
+        new_due = date.today() - timedelta(1)
+
+        self.stricttodo.set_tag(config().tag_due(), past.isoformat())
+        new_todo = advance_recurring_todo(self.stricttodo, p_strict=True)
+
+        self.assertEqual(new_todo.due_date(), new_due)
+
+    def test_strict_recurrence2(self):
+        """
+        Strict recurrence where due date is in the future, using + notation in
+        expression.
+        """
+        future = date.today() + timedelta(1)
+        new_due = date.today() + timedelta(8)
+
+        self.stricttodo.set_tag(config().tag_due(), future.isoformat())
+        new_todo = advance_recurring_todo(self.stricttodo, p_strict=True)
+
+        self.assertEqual(new_todo.due_date(), new_due)
 
     def test_no_recurrence(self):
         self.todo.remove_tag('rec')

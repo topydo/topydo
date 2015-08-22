@@ -47,7 +47,6 @@ class AddCommand(Command):
 
         self.args = args
 
-
     def get_todos_from_file(self):
         if self.from_file == '-':
             f = stdin
@@ -107,7 +106,8 @@ class AddCommand(Command):
             add_dependencies('before')
             add_dependencies('after')
 
-            p_todo.set_creation_date(date.today())
+            if config().auto_creation_date():
+                p_todo.set_creation_date(date.today())
 
         todo_text = _preprocess_input_todo(p_todo_text)
         todo = self.todolist.add(todo_text)

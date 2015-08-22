@@ -35,13 +35,14 @@ def _add_months(p_sourcedate, p_months):
 
     return date(year, month, day)
 
-def _convert_pattern(p_length, p_periodunit, p_offset=date.today()):
+def _convert_pattern(p_length, p_periodunit, p_offset=None):
     """
-    Converts a pattern in the form [0-9][dwmy] and returns a date from today
-    with the period of time added to it.
+    Converts a pattern in the form [0-9][dwmy] and returns a date from the
+    offset with the period of time added to it.
     """
     result = None
 
+    p_offset = p_offset or date.today()
     p_length = int(p_length)
 
     if p_periodunit == 'd':
@@ -80,7 +81,7 @@ def _convert_weekday_pattern(p_weekday):
     shift = (target_day - day) % 7
     return date.today() + timedelta(shift)
 
-def relative_date_to_date(p_date, p_offset=date.today()):
+def relative_date_to_date(p_date, p_offset=None):
     """
     Transforms a relative date into a date object.
 
@@ -93,6 +94,7 @@ def relative_date_to_date(p_date, p_offset=date.today()):
 
     result = None
     p_date = p_date.lower()
+    p_offset = p_offset or date.today()
 
     relative = re.match('(?P<length>-?[0-9]+)(?P<period>[dwmy])$', p_date, re.I)
 

@@ -25,23 +25,25 @@ class DepriCommand(MultiCommand):
         super(DepriCommand, self).__init__(
             p_args, p_todolist, p_out, p_err, p_prompt)
 
-        self.get_todos(self.args)
+    def _execute_multi_specific(self):
+        self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
 
-    def execute_multi_specific(self):
-        try:
-            self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
-
-            for todo in self.todos:
-                if todo.priority() != None:
-                    self.todolist.set_priority(todo, None)
-                    self.out("Priority removed.")
-                    self.out(self.printer.print_todo(todo))
-
-        except IndexError:
-            self.error(self.usage())
+        for todo in self.todos:
+            if todo.priority() != None:
+                self.todolist.set_priority(todo, None)
+                self.out("Priority removed.")
+                self.out(self.printer.print_todo(todo))
 
     def usage(self):
-        return """Synopsis: depri <NUMBER1> [<NUMBER2> ...]"""
+        return """\
+Synopsis: depri <NUMBER1> [<NUMBER2> ...]
+          depri [-x] -e <EXPRESSION>
+"""
 
     def help(self):
-        return """Removes the priority of the given todo item(s)."""
+        return """Removes the priority of the given todo item(s).
+
+It is also possible to deprioritize items as complete with an expression using
+the -e flag. Use -x to also process todo items that are normally invisible
+(with the 'ls' subcommand).
+"""

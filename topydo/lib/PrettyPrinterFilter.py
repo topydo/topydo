@@ -30,8 +30,10 @@ class PrettyPrinterFilter(object):
     """
 
     def filter(self, p_todo_str, _):
-        """ Default implementation returns an unmodified todo string. """
-        return p_todo_str
+        """
+        Applies a filter to p_todo_str and returns a modified version of it.
+        """
+        raise NotImplementedError
 
 class PrettyPrinterColorFilter(PrettyPrinterFilter):
     """
@@ -69,7 +71,7 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
                 p_todo_str)
 
             # tags
-            p_todo_str = re.sub(r'\b\S+:[^/\s]\S+\b',
+            p_todo_str = re.sub(r'\b\S+:[^/\s]\S*\b',
                                 metadata_color + r'\g<0>' + color,
                                 p_todo_str)
 
@@ -78,7 +80,7 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
                                 ' ' + link_color + r'\2\3' + color,
                                 p_todo_str)
 
-        p_todo_str += NEUTRAL_COLOR
+            p_todo_str += NEUTRAL_COLOR
 
         return p_todo_str
 

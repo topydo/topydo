@@ -16,10 +16,10 @@
 
 from datetime import date
 
-from topydo.commands.DCommand import DCommand
+from topydo.lib.DCommand import DCommand
 from topydo.lib.PrettyPrinter import PrettyPrinter
 from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
-from topydo.lib.Recurrence import advance_recurring_todo, strict_advance_recurring_todo, NoRecurrenceException
+from topydo.lib.Recurrence import advance_recurring_todo, NoRecurrenceException
 from topydo.lib.Utils import date_string_to_date
 
 class DoCommand(DCommand):
@@ -36,9 +36,13 @@ class DoCommand(DCommand):
 
     def get_flags(self):
         """ Additional flags. """
-        return ("d:s", ["date=", "strict"])
+        opts, long_opts = super(DoCommand, self).get_flags()
+
+        return ("d:s" + opts, ["date=", "strict"] + long_opts)
 
     def process_flag(self, p_opt, p_value):
+        super(DoCommand, self).process_flag(p_opt, p_value)
+
         if p_opt == "-s" or p_opt == "--strict":
             self.strict_recurrence = True
         elif p_opt == "-d" or p_opt == "--date":
@@ -50,12 +54,11 @@ class DoCommand(DCommand):
     def _handle_recurrence(self, p_todo):
         if p_todo.has_tag('rec'):
             try:
-                if self.strict_recurrence:
-                    new_todo = strict_advance_recurring_todo(p_todo,
-                        self.completion_date)
-                else:
-                    new_todo = advance_recurring_todo(p_todo,
-                        self.completion_date)
+                new_todo = advance_recurring_todo(
+                    p_todo,
+                    p_offset=self.completion_date,
+                    p_strict=self.strict_recurrence
+                )
 
                 self.todolist.add_todo(new_todo)
 
@@ -96,10 +99,17 @@ class DoCommand(DCommand):
         self.todolist.set_todo_completed(p_todo, self.completion_date)
 
     def usage(self):
-        return """Synopsis: do [--date] [--force] [--strict] <NUMBER1> [<NUMBER2> ...]"""
+        return """\
+Synopsis: do [--date] [--force] [--strict] <NUMBER1> [<NUMBER2> ...]
+          do [-x] -e <EXPRESSION>
+"""
 
     def help(self):
         return """Marks the todo(s) with given number(s) as complete.
+
+It is also possible to mark todo items as complete with an expression using the
+-e flag. Use -x to also process todo items that are normally invisible (with
+the 'ls' subcommand).
 
 In case a todo has subitems, a question is asked whether the subitems should be
 marked as completed as well. When --force is given, no interaction is required

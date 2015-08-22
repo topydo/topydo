@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from topydo.commands.DCommand import DCommand
+from topydo.lib.DCommand import DCommand
 
 class DeleteCommand(DCommand):
     def __init__(self, p_args, p_todolist,
@@ -38,8 +38,16 @@ class DeleteCommand(DCommand):
         self.execute_specific_core(p_todo)
 
     def usage(self):
-        return """Synopsis: del [-f] <NUMBER1> [<NUMBER2> ...]"""
+        return """\
+Synopsis: del [-f] <NUMBER1> [<NUMBER2> ...]
+          del [-x] -e <EXPRESSION>
+"""
 
     def help(self):
         return """\
-Deletes the todo item(s) with the given number(s) from the list."""
+Deletes the todo item(s) with the given number(s) from the list.
+
+It is also possible to delete items as complete with an expression using
+the -e flag. Use -x to also process todo items that are normally invisible
+(with the 'ls' subcommand).
+"""

@@ -22,7 +22,7 @@ import sys
 from topydo.cli.CLIApplicationBase import CLIApplicationBase, error, usage
 from topydo.cli.TopydoCompleter import TopydoCompleter
 from prompt_toolkit.shortcuts import get_input
-from prompt_toolkit.history import History
+from prompt_toolkit.history import InMemoryHistory
 
 from topydo.lib.Config import config, ConfigError
 
@@ -83,7 +83,7 @@ class PromptApplication(CLIApplicationBase):
 
     def run(self):
         """ Main entry function. """
-        history = History()
+        history = InMemoryHistory()
 
         while True:
             # (re)load the todo.txt file (only if it has been modified)
@@ -91,7 +91,8 @@ class PromptApplication(CLIApplicationBase):
 
             try:
                 user_input = get_input(u'topydo> ', history=history,
-                                       completer=self.completer).split()
+                                       completer=self.completer,
+                                       complete_while_typing=False).split()
             except (EOFError, KeyboardInterrupt):
                 sys.exit(0)
 

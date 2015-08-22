@@ -1,3 +1,45 @@
+0.6
+---
+
+* Recurrence patterns can be prefixed with a `+` to indicate strict recurrence
+  (i.e. based on due date rather than completion date. This syntax is inspired
+  from the SimpleTask project by @mpcjanssen.
+* Colors now work on the Windows commandline (thanks to @MinchinWeb). Requires
+  colorama to be installed.
+* Do not print spurious color codes when colors are disabled in the
+  configuration (thanks to @MinchinWeb).
+* In prompt mode, restore old auto-completion behavior: press Tab for
+  completion (instead of complete while typing).
+* Various other minor fixes (thanks to @MinchinWeb).
+
+0.5
+---
+
+* Remove 'ical' subcommand in favor of 'topydo ls -f ical'
+* Remove options highlight_projects_colors in favor of colorscheme options. In case you wish to disable the project/context colors, assign an empty value in the configuration file:
+
+      [colorscheme]
+      project_color =
+      context_color =
+* `del`, `depri`, `do`, `pri`, `postpone` now support now expression like `ls`
+  does, using the `-e` flag (Jacek Sowiński, @mruwek).
+* Fix `ls` when searching for a certain key:value where value is a string.
+* Disable auto archive when the option archive_filename is empty.
+* Add option auto_creation_date to enable/disable the creation date being added
+  to new todo items.
+* Calculate relative dates correctly in long-running `prompt` sessions.
+* `pri` also accepts priorities in the form (A), [A] or any other bracket.
+* Add `listcontext` and `listcontexts` as aliases of `lscon`.
+* Highlight tags when the value is one character long.
+* Cleanups
+
+0.4.1
+-----
+
+* Fix infinite loop when `keep_sorted` is enabled in the configuration.
+* Depend on prompt-toolkit >= 0.39, which fixes the history functionality in
+  prompt mode (up/down keys).
+
 0.4
 ---
 

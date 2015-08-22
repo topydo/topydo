@@ -224,7 +224,6 @@ class ListCommandUnicodeTest(CommandTest):
         self.assertEqual(self.output, expected)
 
 class ListCommandJsonTest(CommandTest):
-
     def test_json(self):
         todolist = load_file_to_todolist("test/data/ListCommandTest.txt")
 
@@ -265,11 +264,14 @@ def replace_ical_tags(p_text):
 IS_PYTHON_32 = (sys.version_info.major, sys.version_info.minor) == (3, 2)
 
 class ListCommandIcalTest(CommandTest):
+    def setUp(self):
+        self.maxDiff = None
+
     @unittest.skipIf(IS_PYTHON_32, "icalendar is not supported for Python 3.2")
     def test_ical(self):
-        todolist = load_file_to_todolist("test/data/ListCommandTest.txt")
+        todolist = load_file_to_todolist("test/data/ListCommandIcalTest.txt")
 
-        command = ListCommand(["-f", "ical"], todolist, self.out, self.error)
+        command = ListCommand(["-x", "-f", "ical"], todolist, self.out, self.error)
         command.execute()
 
         self.assertTrue(todolist.is_dirty())

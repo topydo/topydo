@@ -14,6 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+"""
+This module provides a completer class that can be used by get_input provided
+by the prompt toolkit.
+"""
+
 import datetime
 import re
 
@@ -23,69 +28,80 @@ from topydo.lib.Config import config
 from topydo.Commands import _SUBCOMMAND_MAP
 from topydo.lib.RelativeDate import relative_date_to_date
 
-def _date_suggestions():
-    """
-    Returns a list of relative date that is presented to the user as auto
-    complete suggestions.
-    """
-    # don't use strftime, prevent locales to kick in
-    days_of_week = {
-        0: "Monday",
-        1: "Tuesday",
-        2: "Wednesday",
-        3: "Thursday",
-        4: "Friday",
-        5: "Saturday",
-        6: "Sunday"
-    }
+def _subcommands(p_word_before_cursor):
+    """ Generator for subcommand name completion. """
+    subcommands = [sc for sc in sorted(_SUBCOMMAND_MAP.keys()) if
+                   sc.startswith(p_word_before_cursor)]
+    for command in subcommands:
+        yield Completion(command, -len(p_word_before_cursor))
 
-    dates = [
-        'today',
-        'tomorrow',
-    ]
+def _dates(p_word_before_cursor):
+    """ Generator for date completion. """
+    def _date_suggestions():
+        """
+        Returns a list of relative date that is presented to the user as auto
+        complete suggestions.
+        """
+        # don't use strftime, prevent locales to kick in
+        days_of_week = {
+            0: "Monday",
+            1: "Tuesday",
+            2: "Wednesday",
+            3: "Thursday",
+            4: "Friday",
+            5: "Saturday",
+            6: "Sunday"
+        }
 
-    # show days of week up to next week
-    dow = datetime.date.today().weekday()
-    for i in range(dow + 2 % 7, dow + 7):
-        dates.append(days_of_week[i % 7])
+        dates = [
+            'today',
+            'tomorrow',
+        ]
 
-    # and some more relative days starting from next week
-    dates += ["1w", "2w", "1m", "2m", "3m", "1y"]
+        # show days of week up to next week
+        dow = datetime.date.today().weekday()
+        for i in range(dow + 2 % 7, dow + 7):
+            dates.append(days_of_week[i % 7])
 
-    return dates
+        # and some more relative days starting from next week
+        dates += ["1w", "2w", "1m", "2m", "3m", "1y"]
+
+        return dates
+
+    to_absolute = lambda s: relative_date_to_date(s).isoformat()
+
+    start_value_pos = p_word_before_cursor.find(':') + 1
+    value = p_word_before_cursor[start_value_pos:]
+
+    for reldate in _date_suggestions():
+        if not reldate.startswith(value):
+            continue
+
+        yield Completion(reldate, -len(value), display_meta=to_absolute(reldate))
 
 class TopydoCompleter(Completer):
+    """
+    Completer class that completes projects, contexts, dates and
+    subcommands.
+    """
     def __init__(self, p_todolist):
         self.todolist = p_todolist
 
-    def _subcommands(self, p_word_before_cursor):
-        subcommands = [sc for sc in sorted(_SUBCOMMAND_MAP.keys()) if sc.startswith(p_word_before_cursor)]
-        for command in subcommands:
-            yield Completion(command, -len(p_word_before_cursor))
-
     def _projects(self, p_word_before_cursor):
-        projects = [p for p in self.todolist.projects() if p.startswith(p_word_before_cursor[1:])]
+        """ Generator for project completion. """
+        projects = [p for p in self.todolist.projects() if
+                    p.startswith(p_word_before_cursor[1:])]
 
         for project in projects:
             yield Completion("+" + project, -len(p_word_before_cursor))
 
     def _contexts(self, p_word_before_cursor):
-        contexts = [c for c in self.todolist.contexts() if c.startswith(p_word_before_cursor[1:])]
+        """ Generator for context completion. """
+        contexts = [c for c in self.todolist.contexts() if
+                    c.startswith(p_word_before_cursor[1:])]
 
         for context in contexts:
             yield Completion("@" + context, -len(p_word_before_cursor))
-
-    def _dates(self, p_word_before_cursor):
-        to_absolute = lambda s: relative_date_to_date(s).isoformat()
-
-        start_value_pos = p_word_before_cursor.find(':') + 1
-        value = p_word_before_cursor[start_value_pos:]
-
-        for reldate in _date_suggestions():
-            if not reldate.startswith(value):
-                continue
-
-            yield Completion(reldate, -len(value), display_meta=to_absolute(reldate))
 
     def get_completions(self, p_document, _):
         # include all characters except whitespaces (for + and @)
@@ -93,14 +109,14 @@ class TopydoCompleter(Completer):
         is_first_word = not re.match(r'\s*\S+\s', p_document.current_line_before_cursor)
 
         if is_first_word:
-            return self._subcommands(word_before_cursor)
+            return _subcommands(word_before_cursor)
         elif word_before_cursor.startswith('+'):
             return self._projects(word_before_cursor)
         elif word_before_cursor.startswith('@'):
             return self._contexts(word_before_cursor)
         elif word_before_cursor.startswith(config().tag_due() + ':'):
-            return self._dates(word_before_cursor)
+            return _dates(word_before_cursor)
         elif word_before_cursor.startswith(config().tag_start() + ':'):
-            return self._dates(word_before_cursor)
+            return _dates(word_before_cursor)
 
         return []

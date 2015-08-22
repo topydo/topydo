@@ -1,7 +1,7 @@
 topydo
 ======
 
-[![Build Status](https://travis-ci.org/bram85/topydo.svg?branch=master)](https://travis-ci.org/bram85/topydo) [![Join the chat at https://gitter.im/bram85/topydo](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/bram85/topydo?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Build Status](https://travis-ci.org/bram85/topydo.svg?branch=master)](https://travis-ci.org/bram85/topydo) [![Join the chat at https://gitter.im/bram85/topydo](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/bram85/topydo?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=bram85&url=https://github.com/bram85/topydo&title=topydo&language=&tags=github&category=software) 
 
 topydo is a todo list application using the [todo.txt format][1]. It is heavily
 inspired by the [todo.txt CLI][2] by Gina Trapani. This tool is actually a
@@ -22,9 +22,16 @@ use topydo.
 Install
 -------
 
-Install simply with:
+Simply install with:
 
     pip install topydo
+
+### Optional dependencies
+
+* icalendar      : To print your todo.txt file as an iCalendar file
+                   (not supported for Python 3.2).
+* prompt-toolkit : For topydo's _prompt_ mode, which offers a shell-like
+                   interface with auto-completion.
 
 Demo
 ----
