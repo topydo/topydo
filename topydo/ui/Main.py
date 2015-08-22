@@ -45,6 +45,26 @@ _NEW_COLUMN = 1
 _EDIT_COLUMN = 2
 _COPY_COLUMN = 3
 
+class MainPile(urwid.Pile):
+    """
+    This subclass of Pile doesn't change focus on cursor up/down events. The
+    implementation was taken from its base class.
+    """
+    def keypress(self, p_size, p_key):
+        if not self.contents:
+            return p_key
+
+        item_rows = None
+        if len(p_size) == 2:
+            item_rows = self.get_item_rows(p_size, focus=True)
+
+        i = self.focus_position
+        if self.selectable():
+            tsize = self.get_item_size(p_size, i, True, item_rows)
+            key = self.focus.keypress(tsize, p_key)
+            if self._command_map[key] not in ('cursor up', 'cursor down'):
+                return key
+
 class UIApplication(CLIApplicationBase):
     def __init__(self):
         super(UIApplication, self).__init__()
@@ -78,7 +98,7 @@ class UIApplication(CLIApplicationBase):
 
         urwid.connect_signal(self.viewwidget, 'close', hide_viewwidget)
 
-        self.mainwindow = urwid.Pile([
+        self.mainwindow = MainPile([
             ('weight', 1, self.columns),
             (1, urwid.Filler(self.commandline)),
         ])
