@@ -19,7 +19,8 @@ from topydo.lib.Config import config
 from topydo.lib.PrettyPrinter import pretty_printer_factory
 from topydo.lib.PrettyPrinterFilter import (
     PrettyPrinterIndentFilter,
-    PrettyPrinterHideTagFilter
+    PrettyPrinterHideTagFilter,
+    PrettyPrinterBasicPriorityFilter
 )
 from topydo.lib.IcalPrinter import IcalPrinter
 from topydo.lib.JsonPrinter import JsonPrinter
@@ -46,7 +47,7 @@ class ListCommand(ExpressionCommand):
         """
         try:
             import icalendar as _
-        except ImportError: # pragma: no cover
+        except ImportError:  # pragma: no cover
             self.error("icalendar package is not installed.")
             return False
 
@@ -88,6 +89,7 @@ class ListCommand(ExpressionCommand):
             hidden_tags = config().hidden_tags()
 
             filters = []
+            filters.append(PrettyPrinterBasicPriorityFilter())
             filters.append(PrettyPrinterIndentFilter(indent))
             filters.append(PrettyPrinterHideTagFilter(hidden_tags))
 
@@ -101,7 +103,7 @@ class ListCommand(ExpressionCommand):
 
         try:
             self._process_flags()
-        except SyntaxError: # pragma: no cover
+        except SyntaxError:  # pragma: no cover
             # importing icalendar failed, most likely due to Python 3.2
             self.error("icalendar is not supported in this Python version.")
             return False

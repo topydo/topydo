@@ -117,3 +117,35 @@ class PrettyPrinterHideTagFilter(PrettyPrinterFilter):
                 p_todo_str)
 
         return p_todo_str
+
+
+class PrettyPrinterBasicPriorityFilter(PrettyPrinterFilter):
+
+    """ Adds strips the bracked from the priority of the todo item. Add a
+        (blank) space if not priority is specified (to maintain printing
+        alignment)
+    """
+
+    def __init__(self, p_replacement=" "):
+        super(PrettyPrinterBasicPriorityFilter, self).__init__()
+        self.p_replacement = p_replacement
+
+    def filter(self, p_todo_str, _):
+        """ Find the priority """
+        matches = re.search('^(?P<id>\| *\w+\| )?(\((?P<pri>[A-Z])\) )?', p_todo_str)
+        if matches:
+            if matches.group('id'):
+                if matches.group('pri'):
+                    """ If we have a priority """
+                    return(matches.group('id') + matches.group('pri') + ' ' + p_todo_str[matches.span()[1]:])
+                else:
+                    return(matches.group('id') + self.p_replacement + ' ' + p_todo_str[matches.span()[1]:])
+            else:
+                if matches.group('pri'):
+                    """ If we have a priority """
+                    return(matches.group('pri') + ' ' + p_todo_str[matches.span()[1]:])
+                else:
+                    return(self.p_replacement + ' ' + p_todo_str[matches.span()[1]:])
+        else:
+            """ No match found """
+            return(self.p_replacement + ' ' + p_todo_str)
