@@ -18,6 +18,7 @@
 
 import re
 from six import u
+from datetime import date
 
 from topydo.lib.Config import config
 from topydo.lib.Colors import Colors, NEUTRAL_COLOR
@@ -149,3 +150,57 @@ class PrettyPrinterBasicPriorityFilter(PrettyPrinterFilter):
         else:
             """ No match found """
             return(self.p_replacement + ' ' + p_todo_str)
+
+
+class PrettyPrinterHumanDatesFilter(PrettyPrinterFilter):
+
+    """ Turns dates to human readable versions. """
+
+    def __init__(self):
+        super(PrettyPrinterHumanDatesFilter, self).__init__()
+
+    def filter(self, p_todo_str, _):
+
+        addingdates = False
+
+        """ First, the date added
+            This, per the spec, will be at the front of the line,
+            after the priority
+        """
+        line2 = p_todo_str
+        pattern2 = re.compile('^(?P<line_start>(\| *\w+\| )?(\(?[A-Z ]\)? )?)(?P<is_date>(?P<year>\d{4})-(?P<month>\d{1,2})-(?P<day>\d{1,2}) )')
+        matches2 = pattern2.match(line2)
+        if matches2:
+            linedate = date(int(matches2.group('year')), int(matches2.group('month')), int(matches2.group('day')))
+            datedelta = date.today() - linedate
+            if datedelta.days == 0:
+                adddelta = 'today'
+            elif datedelta.days < 0:
+                adddetla = 'in the future'
+
+            else:
+                # most common, and extected case
+                if datedelta.days < 45 + 7:
+                    adddelta = str(datedelta.days) + ' days ago'
+                elif datedelta.days < 365*2:
+                    adddelta = str(datedelta.days//30) + ' months ago'
+                else:
+                    adddelta = str(datedelta.days//365) + ' years ago'
+                    # TO-DO: strip 's' if singular
+            line3 = matches2.group('line_start') + pattern2.sub('', line2)
+            addingdates = True
+        else:
+            line3 = line2
+
+        """ Due dates """
+        line4 = line3
+        duedelta = ''
+
+        """ Threshold dates """
+
+        if addingdates is True:
+            line5 = line4.rstrip() + ' (' + adddelta + duedelta + ')'
+        else:
+            line5 = line4
+
+        return line5

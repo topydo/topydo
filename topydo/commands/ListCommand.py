@@ -20,7 +20,8 @@ from topydo.lib.PrettyPrinter import pretty_printer_factory
 from topydo.lib.PrettyPrinterFilter import (
     PrettyPrinterIndentFilter,
     PrettyPrinterHideTagFilter,
-    PrettyPrinterBasicPriorityFilter
+    PrettyPrinterBasicPriorityFilter,
+    PrettyPrinterHumanDatesFilter
 )
 from topydo.lib.IcalPrinter import IcalPrinter
 from topydo.lib.JsonPrinter import JsonPrinter
@@ -89,9 +90,10 @@ class ListCommand(ExpressionCommand):
             hidden_tags = config().hidden_tags()
 
             filters = []
-            filters.append(PrettyPrinterBasicPriorityFilter())
             filters.append(PrettyPrinterIndentFilter(indent))
             filters.append(PrettyPrinterHideTagFilter(hidden_tags))
+            filters.append(PrettyPrinterBasicPriorityFilter())
+            filters.append(PrettyPrinterHumanDatesFilter())
 
             self.printer = pretty_printer_factory(self.todolist, filters)
 
