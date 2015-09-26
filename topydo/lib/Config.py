@@ -52,9 +52,11 @@ class _Config:
             # topydo
             'default_command': 'ls',
             'colors': '1',
-            'filename' : 'todo.txt',
-            'archive_filename' : 'done.txt',
+            'filename': 'todo.txt',
+            'archive_filename': 'done.txt',
             'identifiers': 'linenumber',
+            'console_height': '25',
+            'console_width': '80',
 
             # add
             'auto_creation_date': '1',
@@ -100,7 +102,7 @@ class _Config:
 
         # when a path is given, *only* use the values in that file, or the
         # defaults listed above.
-        if p_path != None:
+        if p_path is not None:
             files = [p_path]
 
         self.cp.read(files)
@@ -136,6 +138,18 @@ class _Config:
 
     def identifiers(self):
         return self.cp.get('topydo', 'identifiers')
+
+    def console_height(self):
+        try:
+            return int(self.cp.get('topydo', 'console_height'))
+        except ValueError:
+            return int(self.defaults['console_height'])
+
+    def console_width(self):
+        try:
+            return int(self.cp.get('topydo', 'console_width'))
+        except ValueError:
+            return int(self.defaults['console_width'])
 
     def list_limit(self):
         try:
@@ -213,7 +227,7 @@ class _Config:
 
         try:
             if pri_colors_str == '':
-                pri_colors_dict = {'A':'', 'B': '', 'C': ''}
+                pri_colors_dict = {'A': '', 'B': '', 'C': ''}
             else:
                 pri_colors_dict = _str_to_dict(pri_colors_str)
         except ValueError:

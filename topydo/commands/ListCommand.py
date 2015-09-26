@@ -90,10 +90,11 @@ class ListCommand(ExpressionCommand):
             hidden_tags = config().hidden_tags()
 
             filters = []
-            filters.append(PrettyPrinterIndentFilter(indent))
             filters.append(PrettyPrinterHideTagFilter(hidden_tags))
             filters.append(PrettyPrinterBasicPriorityFilter())
             filters.append(PrettyPrinterHumanDatesFilter())
+            # run indent after rearranging the text, but before adding colours
+            filters.append(PrettyPrinterIndentFilter(indent))
 
             self.printer = pretty_printer_factory(self.todolist, filters)
 

@@ -19,6 +19,7 @@
 import re
 from six import u
 from datetime import date
+import textwrap
 
 from topydo.lib.Config import config
 from topydo.lib.Colors import Colors, NEUTRAL_COLOR
@@ -85,15 +86,27 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
 
         return p_todo_str
 
+
 class PrettyPrinterIndentFilter(PrettyPrinterFilter):
+
     """ Adds indentation to the todo item. """
-    def __init__(self, p_indent=0):
+
+    def __init__(self, p_indent=0, p_max_lines=None):
         super(PrettyPrinterIndentFilter, self).__init__()
         self.indent = p_indent
+        self.max_lines = p_max_lines
 
     def filter(self, p_todo_str, _):
         """ Applies the indentation. """
-        return ' ' * self.indent + p_todo_str
+        return(textwrap.fill(p_todo_str,
+                             initial_indent=' '*self.indent,
+                             subsequent_indent=' '*(10 + self.indent),
+                             width=config().console_width() - 1,
+                             break_long_words=True,
+                             max_lines=self.max_lines,
+                             placeholder=' ...'))
+
+
 
 class PrettyPrinterNumbers(PrettyPrinterFilter):
     """ Prepends the todo's number, retrieved from the todolist. """
@@ -104,6 +117,7 @@ class PrettyPrinterNumbers(PrettyPrinterFilter):
     def filter(self, p_todo_str, p_todo):
         """ Prepends the number to the todo string. """
         return u("|{:>3}| {}").format(self.todolist.number(p_todo), p_todo_str)
+
 
 class PrettyPrinterHideTagFilter(PrettyPrinterFilter):
     """ Removes all occurences of the given tags from the text. """
