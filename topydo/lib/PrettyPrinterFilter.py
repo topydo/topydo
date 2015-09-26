@@ -190,13 +190,43 @@ class PrettyPrinterHumanDatesFilter(PrettyPrinterFilter):
             line3 = matches2.group('line_start') + pattern2.sub('', line2)
             addingdates = True
         else:
+            adddelta = ''
             line3 = line2
 
         """ Due dates """
-        line4 = line3
-        duedelta = ''
+        pattern3 = re.compile('(?P<is_date> due:(?P<year>\d{4})-(?P<month>\d{1,2})-(?P<day>\d{1,2}) ?)')
+        matches3 = pattern3.search(line3)
+        if matches3:
+            linedate = date(int(matches3.group('year')), int(matches3.group('month')), int(matches3.group('day')))
+            datedelta = date.today() - linedate  # negative numbers means in the future (i.e. not due yet)
+            if datedelta.days == 0:
+                duedelta = 'due today'
+            elif datedelta.days > 0 and datedelta.days < (61):
+                duedelta = 'overdue by ' + str(datedelta.days) + ' days'
+            elif datedelta.days >= (45+7) and datedelta.days < (365*2):
+                duedelta = 'overdue by ' + str(datedelta.days//30) + ' months'
+            elif datedelta.days >= (365*2):
+                duedelta = 'overdue by ' + str(-1*datedelta.days//365) + ' years'
+            elif -1*datedelta.days > 0 and -1*datedelta.days < (61):
+                duedelta = 'due in ' + str(-1*datedelta.days) + ' days'
+            elif -1*datedelta.days >= (45+7) and -1*datedelta.days < (365*2):
+                duedelta = 'due in ' + str(-1*datedelta.days//30) + ' months'
+            elif -1*datedelta.days >= (365*2):
+                duedelta = 'due in ' + str(-1*datedelta.days//365) + ' years'
+            else:
+                # something broke
+                pass
+
+            if addingdates is True:
+                duedelta = ', ' + duedelta
+            addingdates = True
+            line4 = pattern3.sub(' ', line3)
+        else:
+            duedelta = ''
+            line4 = line3
 
         """ Threshold dates """
+        # To-do: implement this
 
         if addingdates is True:
             line5 = line4.rstrip() + ' (' + adddelta + duedelta + ')'
