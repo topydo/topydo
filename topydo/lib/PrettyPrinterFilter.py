@@ -194,7 +194,7 @@ class PrettyPrinterHumanDatesFilter(PrettyPrinterFilter):
             line3 = line2
 
         """ Due dates """
-        pattern3 = re.compile('(?P<is_date> due:(?P<year>\d{4})-(?P<month>\d{1,2})-(?P<day>\d{1,2}) ?)')
+        pattern3 = re.compile('(?P<is_date> ' + config().tag_due() + ':(?P<year>\d{4})-(?P<month>\d{1,2})-(?P<day>\d{1,2}) ?)')
         matches3 = pattern3.search(line3)
         if matches3:
             linedate = date(int(matches3.group('year')), int(matches3.group('month')), int(matches3.group('day')))
