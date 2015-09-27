@@ -42,7 +42,7 @@ class PostponeCommandTest(CommandTest):
 
         self.todolist = TodoList(todos)
 
-    def test_postpone1(self):
+    def test_postpone01(self):
         command = PostponeCommand(["1", "1w"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -52,7 +52,7 @@ class PostponeCommandTest(CommandTest):
         self.assertEqual(self.output, "|  1| Foo due:{}\n".format(due.isoformat()))
         self.assertEqual(self.errors, "")
 
-    def test_postpone2(self):
+    def test_postpone02(self):
         command = PostponeCommand(["2", "1w"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -62,7 +62,7 @@ class PostponeCommandTest(CommandTest):
         self.assertEqual(self.output, "|  2| Bar due:{}\n".format(due.isoformat()))
         self.assertEqual(self.errors, "")
 
-    def test_postpone3(self):
+    def test_postpone03(self):
         command = PostponeCommand(["-s", "2", "1w"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -72,7 +72,7 @@ class PostponeCommandTest(CommandTest):
         self.assertEqual(self.output, "|  2| Bar due:{}\n".format(due.isoformat()))
         self.assertEqual(self.errors, "")
 
-    def test_postpone4(self):
+    def test_postpone04(self):
         command = PostponeCommand(["3", "1w"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -82,7 +82,7 @@ class PostponeCommandTest(CommandTest):
         self.assertEqual(self.output, "|  3| Baz due:{} t:{}\n".format(due.isoformat(), self.start.isoformat()))
         self.assertEqual(self.errors, "")
 
-    def test_postpone5(self):
+    def test_postpone05(self):
         command = PostponeCommand(["-s", "3", "1w"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -94,7 +94,7 @@ class PostponeCommandTest(CommandTest):
         self.assertEqual(self.output, "|  3| Baz due:{} t:{}\n".format(due.isoformat(), start.isoformat()))
         self.assertEqual(self.errors, "")
 
-    def test_postpone6(self):
+    def test_postpone06(self):
         command = PostponeCommand(["4", "1w"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -104,7 +104,7 @@ class PostponeCommandTest(CommandTest):
         self.assertEqual(self.output, "|  4| Past due:{}\n".format(due.isoformat()))
         self.assertEqual(self.errors, "")
 
-    def test_postpone7(self):
+    def test_postpone07(self):
         command = PostponeCommand(["5", "1w"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -115,7 +115,7 @@ class PostponeCommandTest(CommandTest):
         self.assertEqual(self.output, "|  5| Future due:{} t:{}\n".format(due.isoformat(), self.future_start.isoformat()))
         self.assertEqual(self.errors, "")
 
-    def test_postpone8(self):
+    def test_postpone08(self):
         command = PostponeCommand(["-s", "5", "1w"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -127,7 +127,7 @@ class PostponeCommandTest(CommandTest):
         self.assertEqual(self.output, "|  5| Future due:{} t:{}\n".format(due.isoformat(), start.isoformat()))
         self.assertEqual(self.errors, "")
 
-    def test_postpone9(self):
+    def test_postpone09(self):
         command = PostponeCommand(["1", "foo"], self.todolist, self.out, self.error)
         command.execute()
 

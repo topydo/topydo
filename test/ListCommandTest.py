@@ -30,7 +30,7 @@ class ListCommandTest(CommandTest):
         super(ListCommandTest, self).setUp()
         self.todolist = load_file_to_todolist("test/data/ListCommandTest.txt")
 
-    def test_list1(self):
+    def test_list01(self):
         command = ListCommand([""], self.todolist, self.out, self.error)
         command.execute()
 
@@ -38,7 +38,7 @@ class ListCommandTest(CommandTest):
         self.assertEqual(self.output, "|  1| C Foo @Context2 Not@Context +Project1 Not+Project\n|  4| C Drink beer @ home\n|  5| C 13 + 29 = 42\n|  2| D Bar @Context1 +Project2\n")
         self.assertEqual(self.errors, "")
 
-    def test_list3(self):
+    def test_list03(self):
         command = ListCommand(["Context1"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -46,7 +46,7 @@ class ListCommandTest(CommandTest):
         self.assertEqual(self.output, "|  2| D Bar @Context1 +Project2\n")
         self.assertEqual(self.errors, "")
 
-    def test_list4(self):
+    def test_list04(self):
         command = ListCommand(["-x", "Context1"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -54,7 +54,7 @@ class ListCommandTest(CommandTest):
         self.assertEqual(self.output, "|  3| C Baz @Context1 +Project1 key:value\n|  2| D Bar @Context1 +Project2\n")
         self.assertEqual(self.errors, "")
 
-    def test_list5(self):
+    def test_list05(self):
         command = ListCommand(["-x"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -62,7 +62,7 @@ class ListCommandTest(CommandTest):
         self.assertEqual(self.output, "|  1| C Foo @Context2 Not@Context +Project1 Not+Project\n|  3| C Baz @Context1 +Project1 key:value\n|  4| C Drink beer @ home\n|  5| C 13 + 29 = 42\n|  2| D Bar @Context1 +Project2\n|  6|   x 2014-12-12 Completed but with date:2014-12-12\n")
         self.assertEqual(self.errors, "")
 
-    def test_list6(self):
+    def test_list06(self):
         command = ListCommand(["Project3"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -70,7 +70,7 @@ class ListCommandTest(CommandTest):
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors, "")
 
-    def test_list7(self):
+    def test_list07(self):
         command = ListCommand(["-s", "text", "-x", "Project1"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -78,7 +78,7 @@ class ListCommandTest(CommandTest):
         self.assertEqual(self.output, "|  3| C Baz @Context1 +Project1 key:value\n|  1| C Foo @Context2 Not@Context +Project1 Not+Project\n")
         self.assertEqual(self.errors, "")
 
-    def test_list8(self):
+    def test_list08(self):
         command = ListCommand(["--", "-project1"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -86,7 +86,7 @@ class ListCommandTest(CommandTest):
         self.assertEqual(self.output, "|  4| C Drink beer @ home\n|  5| C 13 + 29 = 42\n|  2| D Bar @Context1 +Project2\n")
         self.assertEqual(self.errors, "")
 
-    def test_list9(self):
+    def test_list09(self):
         command = ListCommand(["--", "-project1", "-Drink"], self.todolist, self.out, self.error)
         command.execute()
 

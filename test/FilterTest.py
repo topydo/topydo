@@ -25,14 +25,14 @@ from topydo.lib.Todo import Todo
 from test.TopydoTest import TopydoTest
 
 class FilterTest(TopydoTest):
-    def test_filter3(self):
+    def test_filter03(self):
         todo = Todo("(C) Relevant")
         relevance = Filter.RelevanceFilter()
         result = relevance.filter([todo])
 
         self.assertEqual(result, [todo])
 
-    def test_filter4(self):
+    def test_filter04(self):
         """ Test case insensitive match. """
         todos = load_file('test/data/FilterTest1.txt')
         grep = Filter.GrepFilter('+project')
@@ -43,7 +43,7 @@ class FilterTest(TopydoTest):
         self.assertEqual(todolist_to_string(filtered_todos), \
             todolist_to_string(reference))
 
-    def test_filter5(self):
+    def test_filter05(self):
         """ Test case sensitive match. """
         todos = load_file('test/data/FilterTest1.txt')
         grep = Filter.GrepFilter('+Project')
@@ -54,7 +54,7 @@ class FilterTest(TopydoTest):
         self.assertEqual(todolist_to_string(filtered_todos), \
             todolist_to_string(reference))
 
-    def test_filter6(self):
+    def test_filter06(self):
         """ Test case sensitive match (forced, with lowercase). """
         todos = load_file('test/data/FilterTest1.txt')
         grep = Filter.GrepFilter('+project', True)
@@ -65,7 +65,7 @@ class FilterTest(TopydoTest):
         self.assertEqual(todolist_to_string(filtered_todos), \
             todolist_to_string(reference))
 
-    def test_filter7(self):
+    def test_filter07(self):
         """ Tests the dependency filter. """
         todolist = load_file_to_todolist('test/data/FilterTest2.txt')
         depfilter = Filter.DependencyFilter(todolist)
@@ -76,7 +76,7 @@ class FilterTest(TopydoTest):
         self.assertEqual(todolist_to_string(filtered_todos), \
             todolist_to_string(reference))
 
-    def test_filter8(self):
+    def test_filter08(self):
         """ Test case sensitive match (forced, with lowercase). """
         todos = load_file('test/data/FilterTest1.txt')
         grep = Filter.GrepFilter('+Project', False)
@@ -87,7 +87,7 @@ class FilterTest(TopydoTest):
         self.assertEqual(todolist_to_string(filtered_todos), \
             todolist_to_string(reference))
 
-    def test_filter9(self):
+    def test_filter09(self):
         """ Test instance filter """
         todos = load_file('test/data/FilterTest1.txt')
         instance_filter = Filter.InstanceFilter(todos[2:])
