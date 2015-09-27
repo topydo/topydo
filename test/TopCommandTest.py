@@ -183,23 +183,7 @@ class TopCommandTest(CommandTest):
         self.assertEqual(self.output, "|  3| C Baz @Context1 +Project1 key:value id:1\n|  1| C Foo @Context2 Not@Context +Project1 Not+Project\n")
         self.assertEqual(self.errors, "")
 
-    def test_top20(self):
-        command = TopCommand(["-f text"], self.todolist, self.out, self.error)
-        command.execute()
-
-        self.assertFalse(self.todolist.is_dirty())
-        self.assertEqual(self.output, "|  1| C Foo @Context2 Not@Context +Project1 Not+Project\n|  4| C Drink beer @ home\n|  5| C 13 + 29 = 42\n|  2| D Bar @Context1 +Project2\n")
-        self.assertEqual(self.errors, "")
-
-    def test_top21(self):
-        command = TopCommand(["-f invalid"], self.todolist, self.out, self.error)
-        command.execute()
-
-        self.assertFalse(self.todolist.is_dirty())
-        self.assertEqual(self.output, "|  1| C Foo @Context2 Not@Context +Project1 Not+Project\n|  4| C Drink beer @ home\n|  5| C 13 + 29 = 42\n|  2| D Bar @Context1 +Project2\n")
-        self.assertEqual(self.errors, "")
-
-    # skip test_top22 through test_top29
+    # skip test_top20 through test_top29
 
     # To-Do: add tests with multiline todo items, add tests of human readable dates
 

@@ -23,10 +23,10 @@ from topydo.lib.PrettyPrinterFilter import (
     PrettyPrinterBasicPriorityFilter,
     PrettyPrinterHumanDatesFilter
 )
-from topydo.lib.IcalPrinter import IcalPrinter
-from topydo.lib.JsonPrinter import JsonPrinter
+
 
 class TopCommand(ExpressionCommand):
+
     def __init__(self, p_args, p_todolist,
                  p_out=lambda a: None,
                  p_err=lambda a: None,
@@ -39,7 +39,7 @@ class TopCommand(ExpressionCommand):
         self.show_all = False
 
     def _process_flags(self):
-        opts, args = self.getopt('f:s:x')
+        opts, args = self.getopt('s:x')
 
         for opt, value in opts:
             if opt == '-x':

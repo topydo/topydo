@@ -112,12 +112,10 @@ class PrettyPrinterIndentFilter(PrettyPrinterFilter):
                                    subsequent_indent=' '*(10 + self.indent),
                                    width=config().console_width() - 1,
                                    break_long_words=True)  # will break long URL's
-            if self.max_lines == 1:
-                return(output.splitlines()[:1])
-                #  To-Do: replace this with a general case
-                #  This provides one line, for use with the 'top' command, but
-                #  it doesn't give the ellipse (...) at the end of the line if
-                #  it continues on
+            if self.max_lines:
+                return('\n'.join(output.splitlines()[:self.max_lines]))
+                #  for use with the 'top' command, but it doesn't give the
+                #  ellipse (...) at the end of the line if it continues on
             else:
                 return(output)
 
