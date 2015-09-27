@@ -58,7 +58,7 @@ class ListCommand(ExpressionCommand):
         return True
 
     def _process_flags(self):
-        opts, args = self.getopt('f:s:x:r')
+        opts, args = self.getopt('f:s:rx')
 
         for opt, value in opts:
             if opt == '-x':

@@ -1,5 +1,5 @@
 # Topydo - A todo.txt client written in Python.
-# Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
+# Copyright (C) 2014 - 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -198,6 +198,74 @@ class ListCommandTest(CommandTest):
 
         self.assertFalse(self.todolist.is_dirty())
         self.assertEqual(self.output, "|  1| C Foo @Context2 Not@Context +Project1 Not+Project\n|  4| C Drink beer @ home\n|  5| C 13 + 29 = 42\n|  2| D Bar @Context1 +Project2\n")
+        self.assertEqual(self.errors, "")
+
+    def test_list22(self):
+        command = ListCommand(["-x", "-r", "Context1"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+        self.assertEqual(self.output, "|  3| C Baz @Context1 +Project1 key:value\n|  2| D Bar @Context1 +Project2\n")
+        self.assertEqual(self.errors, "")
+
+    def test_list23(self):
+        command = ListCommand(["-x", "-r"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+        self.assertEqual(self.output, "|  1| C Foo @Context2 Not@Context +Project1 Not+Project\n|  3| C Baz @Context1 +Project1 key:value\n|  4| C Drink beer @ home\n|  5| C 13 + 29 = 42\n|  2| D Bar @Context1 +Project2\n|  6|   x 2014-12-12 Completed but with date:2014-12-12\n")
+        self.assertEqual(self.errors, "")
+
+    def test_list24(self):
+        command = ListCommand(["-s", "text", "-x", "-r", "Project1"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+        self.assertEqual(self.output, "|  3| C Baz @Context1 +Project1 key:value\n|  1| C Foo @Context2 Not@Context +Project1 Not+Project\n")
+        self.assertEqual(self.errors, "")
+
+    def test_list25(self):
+        config("test/data/listcommand.conf")
+
+        command = ListCommand(["-x", "-r", "project"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+        self.assertEqual(self.output, "|  1| C Foo @Context2 Not@Context +Project1 Not+Project\n|  3| C Baz @Context1 +Project1 key:value\n|  2| D Bar @Context1 +Project2\n")
+        self.assertEqual(self.errors, "")
+
+    def test_list26(self):
+        command = ListCommand(["-r", "-x", "--", "-@Context1 +Project2"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+        self.assertEqual(self.output, "|  1| C Foo @Context2 Not@Context +Project1 Not+Project\n|  3| C Baz @Context1 +Project1 key:value\n|  4| C Drink beer @ home\n|  5| C 13 + 29 = 42\n|  6|   x 2014-12-12 Completed but with date:2014-12-12\n")
+        self.assertEqual(self.errors, "")
+
+    def test_list27(self):
+        command = ListCommand(["-x", "-r", "id:"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+        self.assertEqual(self.output, "|  3| C Baz @Context1 +Project1 key:value\n")
+        self.assertEqual(self.errors, "")
+
+    def test_list28(self):
+        command = ListCommand(["-x", "-r", "date:2014-12-12"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+        self.assertEqual(self.output, "|  6|   x 2014-12-12 Completed but with date:2014-12-12\n")
+
+    def test_list29(self):
+        """ Force showing all tags. """
+        config('test/data/listcommand-tags.conf')
+
+        command = ListCommand(["-s", "text", "-x", "-r", "Project1"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+        self.assertEqual(self.output, "|  3| C Baz @Context1 +Project1 key:value id:1\n|  1| C Foo @Context2 Not@Context +Project1 Not+Project\n")
         self.assertEqual(self.errors, "")
 
     def test_help(self):
