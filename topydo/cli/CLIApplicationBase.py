@@ -57,6 +57,7 @@ Available commands:
 * pri
 * sort
 * tag
+* top
 
 Run `topydo help <subcommand>` for command-specific help.
 """)
