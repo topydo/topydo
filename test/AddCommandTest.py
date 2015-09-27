@@ -87,7 +87,7 @@ class AddCommandTest(CommandTest):
         self.assertEqual(self.todolist.todo(1).source(), "(C) " + self.today + " Foo")
         self.assertEqual(self.errors, "")
 
-    def test_add_dep1(self):
+    def test_add_dep01(self):
         command = AddCommand.AddCommand(["Foo"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -98,7 +98,7 @@ class AddCommandTest(CommandTest):
         self.assertEqual(self.todolist.todo(2).source(), self.today + " Bar p:1")
         self.assertEqual(self.errors, "")
 
-    def test_add_dep2(self):
+    def test_add_dep02(self):
         command = AddCommand.AddCommand(["Foo"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -109,7 +109,7 @@ class AddCommandTest(CommandTest):
         self.assertEqual(self.todolist.todo(2).source(), self.today + " Bar p:1")
         self.assertEqual(self.errors, "")
 
-    def test_add_dep3(self):
+    def test_add_dep03(self):
         command = AddCommand.AddCommand(["Foo"], self.todolist)
         command.execute()
 
@@ -120,7 +120,7 @@ class AddCommandTest(CommandTest):
         self.assertEqual(self.todolist.todo(2).source(), self.today + " Bar id:1")
         self.assertEqual(self.errors, "")
 
-    def test_add_dep4(self):
+    def test_add_de04(self):
         """ Test for using an after: tag with non-existing value. """
         command = AddCommand.AddCommand(["Foo after:1"], self.todolist, self.out, self.error)
         command.execute()
@@ -130,7 +130,7 @@ class AddCommandTest(CommandTest):
         self.assertEqual(self.output, "|  1| " + self.todolist.todo(1).source() + "\n")
         self.assertEqual(self.errors, "")
 
-    def test_add_dep5(self):
+    def test_add_dep05(self):
         """ Test for using an after: tag with non-existing value. """
         command = AddCommand.AddCommand(["Foo after:2"], self.todolist, self.out, self.error)
         command.execute()
@@ -140,7 +140,7 @@ class AddCommandTest(CommandTest):
         self.assertEqual(self.output, "|  1| " + self.todolist.todo(1).source() + "\n")
         self.assertEqual(self.errors, "")
 
-    def test_add_dep6(self):
+    def test_add_dep06(self):
         command = AddCommand.AddCommand(["Foo"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -155,7 +155,7 @@ class AddCommandTest(CommandTest):
         self.assertEqual(self.todolist.todo(3).source(), self.today + " Baz p:1 p:2")
         self.assertEqual(self.errors, "")
 
-    def test_add_dep7(self):
+    def test_add_dep07(self):
         command = AddCommand.AddCommand(["Foo"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -170,7 +170,7 @@ class AddCommandTest(CommandTest):
         self.assertEqual(self.todolist.todo(3).source(), self.today + " Baz id:1")
         self.assertEqual(self.errors, "")
 
-    def test_add_dep8(self):
+    def test_add_dep08(self):
         config("test/data/todolist-uid.conf")
 
         command = AddCommand.AddCommand(["Foo"], self.todolist, self.out, self.error)
@@ -182,7 +182,7 @@ class AddCommandTest(CommandTest):
         self.assertEqual(self.todolist.todo('7ui').source(), "{} Foo p:1".format(self.today))
         self.assertEqual(self.todolist.todo('8to').source(), "{} Bar id:1".format(self.today))
 
-    def test_add_dep9(self):
+    def test_add_dep09(self):
         """
         The text ID shown after adding and after an 'ls' must be equal."
         By appending the parent's projects, the textual ID may change.
