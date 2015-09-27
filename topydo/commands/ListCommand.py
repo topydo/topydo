@@ -133,13 +133,13 @@ When an expression is given, only the todos matching that expression are shown.
 
 -f : Specify the output format, being 'text' (default), 'ical' or 'json'.
 
-     * 'text' - Text output with colors and identation if applicable.
+     * 'text' - Text output with colors and indentation if applicable.
      * 'ical' - iCalendar (RFC 2445). Is not supported in Python 3.2. Be aware
                 that this is not a read-only operation, todo items may obtain
                 an 'ical' tag with a unique ID. Completed todo items may be
                 archived.
      * 'json' - Javascript Object Notation (JSON)
--r : Displays dates in a realive, human-readable format
+-r : Displays dates in a relative, human-readable format
 -s : Sort the list according to a sort expression. Defaults to the expression
      in the configuration.
 -x : Show all todos (i.e. do not filter on dependencies or relevance).

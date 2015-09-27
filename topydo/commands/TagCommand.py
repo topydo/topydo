@@ -103,7 +103,7 @@ class TagCommand(Command):
             if answer == "all":
                 for value in self.current_values:
                     self._set_helper(value)
-            elif answer != None and self.value != self.current_values[answer]:
+            elif answer is not None and self.value != self.current_values[answer]:
                 self._set_helper(self.current_values[answer])
 
         else:

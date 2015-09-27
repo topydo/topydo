@@ -32,4 +32,3 @@ class ExitCommand(Command):
             return False
 
         sys.exit(0)
-
