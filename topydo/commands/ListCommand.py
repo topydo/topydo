@@ -37,6 +37,7 @@ class ListCommand(ExpressionCommand):
         self.printer = None
         self.sort_expression = config().sort_string()
         self.show_all = False
+        self.human_dates = False
 
     def _poke_icalendar(self):
         """
@@ -57,7 +58,7 @@ class ListCommand(ExpressionCommand):
         return True
 
     def _process_flags(self):
-        opts, args = self.getopt('f:s:x')
+        opts, args = self.getopt('f:s:x:r')
 
         for opt, value in opts:
             if opt == '-x':
@@ -72,6 +73,8 @@ class ListCommand(ExpressionCommand):
                         self.printer = IcalPrinter(self.todolist)
                 else:
                     self.printer = None
+            elif opt == '-r':
+                self.human_dates = True
 
         self.args = args
 
@@ -92,7 +95,8 @@ class ListCommand(ExpressionCommand):
             filters = []
             filters.append(PrettyPrinterHideTagFilter(hidden_tags))
             filters.append(PrettyPrinterBasicPriorityFilter())
-            filters.append(PrettyPrinterHumanDatesFilter())
+            if self.human_dates:
+                filters.append(PrettyPrinterHumanDatesFilter())
             # run indent after rearranging the text, but before adding colours
             filters.append(PrettyPrinterIndentFilter(indent))
 
@@ -115,7 +119,7 @@ class ListCommand(ExpressionCommand):
         return True
 
     def usage(self):
-        return """ Synopsis: ls [-x] [-s <sort_expression>] [-f <format>] [expression]"""
+        return """ Synopsis: ls [-x] [-r] [-s <sort_expression>] [-f <format>] [expression]"""
 
     def help(self):
         return """\
@@ -135,6 +139,7 @@ When an expression is given, only the todos matching that expression are shown.
                 an 'ical' tag with a unique ID. Completed todo items may be
                 archived.
      * 'json' - Javascript Object Notation (JSON)
+-r : Displays dates in a realive, human-readable format
 -s : Sort the list according to a sort expression. Defaults to the expression
      in the configuration.
 -x : Show all todos (i.e. do not filter on dependencies or relevance).
