@@ -89,7 +89,7 @@ class EditCommandTest(CommandTest):
     @mock.patch('topydo.commands.EditCommand.EditCommand._todos_from_temp')
     @mock.patch('topydo.commands.EditCommand.EditCommand._open_in_editor')
     def test_edit5(self, mock_open_in_editor, mock_todos_from_temp):
-        """ Don't let to delete todos acidentally while editing. """
+        """ Don't let to delete todos accidentally while editing. """
         mock_open_in_editor.return_value = 0
         mock_todos_from_temp.return_value = [Todo('Only one line')]
 
@@ -163,7 +163,7 @@ class EditCommandTest(CommandTest):
         os.environ['EDITOR'] = editor
         todotxt = config().todotxt()
 
-        result = self.todolist.print_todos() # copy TodoList content *before* executing command
+        result = self.todolist.print_todos()  # copy TodoList content *before* executing command
 
         command = EditCommand([], self.todolist, self.out, self.error, None)
         command.execute()

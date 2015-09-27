@@ -79,4 +79,3 @@ def hash_list_values(p_list, p_key=lambda i: i):
         result.append((item, _to_base36(hash_value)))
 
     return result
-

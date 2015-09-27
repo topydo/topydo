@@ -63,7 +63,7 @@ class DepriCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_depri4(self):
-        command = DepriCommand(["1","Baz"], self.todolist, self.out, self.error)
+        command = DepriCommand(["1", "Baz"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
@@ -75,7 +75,6 @@ class DepriCommandTest(CommandTest):
     def test_expr_depri1(self):
         command = DepriCommand(["-e", "@test"], self.todolist, self.out, self.error, None)
         command.execute()
-
 
         result = "Priority removed.\n|  4| a @test with due:2015-06-03\nPriority removed.\n|  5| a @test with +project p:1\n"
 
@@ -114,8 +113,6 @@ class DepriCommandTest(CommandTest):
         self.assertTrue(self.todolist.is_dirty())
         self.assertEqual(self.output, "Priority removed.\n|  6| Bax id:1\n")
         self.assertEqual(self.errors, "")
-
-
 
     def test_invalid1(self):
         command = DepriCommand(["99"], self.todolist, self.out, self.error)

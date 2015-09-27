@@ -37,7 +37,7 @@ class TodoTest(TopydoTest):
 
     def test_false_date(self):
         todo = Todo("(C) Foo due:2014-04-31")
-        self.assertEqual( todo.due_date(), None )
+        self.assertEqual(todo.due_date(), None)
 
     def test_active1(self):
         todo = Todo("(C) Foo due:2014-01-01")

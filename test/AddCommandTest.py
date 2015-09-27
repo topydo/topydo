@@ -76,7 +76,7 @@ class AddCommandTest(CommandTest):
         command.execute()
 
         self.assertEqual(self.todolist.todo(1).priority(), None)
-        self.assertEqual(self.todolist.todo(1).source(), self.today + " Fo(C)o" )
+        self.assertEqual(self.todolist.todo(1).source(), self.today + " Fo(C)o")
         self.assertEqual(self.errors, "")
 
     def test_add_priority4(self):
@@ -200,7 +200,7 @@ class AddCommandTest(CommandTest):
         command = ListCommand.ListCommand(["Bar"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEqual(self.output, "|kbn| {today} Bar p:1 +Project\n|kbn| {today} Bar +Project\n".format(today=self.today))
+        self.assertEqual(self.output, "|kbn| {today} Bar p:1 +Project\n|kbn|   Bar +Project (today)\n".format(today=self.today))
 
     def test_add_dep10(self):
         """
@@ -220,7 +220,7 @@ class AddCommandTest(CommandTest):
         command = ListCommand.ListCommand(["Bar"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEqual(self.output, "|wb3| {today} Bar p:1 @Context\n|wb3| {today} Bar @Context\n".format(today=self.today))
+        self.assertEqual(self.output, "|wb3| {today} Bar p:1 @Context\n|wb3|   Bar @Context (today)\n".format(today=self.today))
 
     def test_add_reldate1(self):
         command = AddCommand.AddCommand(["Foo due:today"], self.todolist, self.out, self.error)

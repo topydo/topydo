@@ -102,7 +102,7 @@ class PrettyPrinterIndentFilter(PrettyPrinterFilter):
                              initial_indent=' '*self.indent,
                              subsequent_indent=' '*(10 + self.indent),
                              width=config().console_width() - 1,
-                             break_long_words=True,
+                             break_long_words=True,  # will break long URL's
                              max_lines=self.max_lines,
                              placeholder=' ...'))
 

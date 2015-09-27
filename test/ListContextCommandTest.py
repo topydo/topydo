@@ -26,7 +26,7 @@ class ListContextCommandTest(CommandTest):
         command = ListContextCommand([""], todolist, self.out, self.error)
         command.execute()
 
-        self.assertEqual(self.output,"Context1\nContext2\n")
+        self.assertEqual(self.output, "Context1\nContext2\n")
         self.assertFalse(self.errors)
 
     def test_contexts2(self):
@@ -34,7 +34,7 @@ class ListContextCommandTest(CommandTest):
         command = ListContextCommand(["aaa"], todolist, self.out, self.error)
         command.execute()
 
-        self.assertEqual(self.output,"Context1\nContext2\n")
+        self.assertEqual(self.output, "Context1\nContext2\n")
         self.assertFalse(self.errors)
 
     def test_help(self):

@@ -69,7 +69,7 @@ class ColorsTest(TopydoTest):
         color = Colors().get_context_color()
 
         self.assertEqual(color, NEUTRAL_COLOR)
-    
+
     def test_metadata_color1(self):
         config(p_overrides={('colorscheme', 'metadata_color'): '128'})
         color = Colors().get_metadata_color()
@@ -150,7 +150,7 @@ class ColorsTest(TopydoTest):
 
         self.assertEqual(color['A'], NEUTRAL_COLOR)
         self.assertEqual(color['B'], NEUTRAL_COLOR)
-        self.assertEqual(color['C'], NEUTRAL_COLOR) 
+        self.assertEqual(color['C'], NEUTRAL_COLOR)
 
     def test_empty_color_values(self):
         config("test/data/ColorsTest5.conf")

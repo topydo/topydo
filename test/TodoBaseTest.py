@@ -85,7 +85,7 @@ class TodoBaseTester(TopydoTest):
 
     def test_set_tag_double_value(self):
         todo = TodoBase("(C) Foo foo:bar baz:bar")
-        todo.set_tag('foo', 'blah');
+        todo.set_tag('foo', 'blah')
 
         self.assertTrue(todo.has_tag('foo'))
         self.assertTrue(todo.tag_value('foo'), 'blah')
@@ -302,7 +302,7 @@ class TodoBaseTester(TopydoTest):
         todo.set_source_text(new_text)
 
         self.assertEqual(todo.src, new_text)
-        self.assertEqual(todo.priority(),'C')
+        self.assertEqual(todo.priority(), 'C')
 
     def test_set_creation_date1(self):
         todo = TodoBase("Foo")

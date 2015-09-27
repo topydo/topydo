@@ -73,7 +73,7 @@ class DeleteCommandTest(CommandTest):
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEqual(self.todolist.count(), 3) # force won't delete subtasks
+        self.assertEqual(self.todolist.count(), 3)  # force won't delete subtasks
         self.assertEqual(self.output, "|  2| Bar p:1\nRemoved: Foo id:1\n")
         self.assertEqual(self.errors, "")
 
@@ -82,7 +82,7 @@ class DeleteCommandTest(CommandTest):
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEqual(self.todolist.count(), 3) # force won't delete subtasks
+        self.assertEqual(self.todolist.count(), 3)  # force won't delete subtasks
         self.assertEqual(self.output, "|  2| Bar p:1\nRemoved: Foo id:1\n")
         self.assertEqual(self.errors, "")
 

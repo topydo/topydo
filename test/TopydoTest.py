@@ -24,4 +24,3 @@ class TopydoTest(unittest.TestCase):
         Make sure that every test case leaves a clean configuration.
         """
         config("")
-

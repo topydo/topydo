@@ -376,4 +376,3 @@ class OrdinalTagFilterTest(TopydoTest):
 
 if __name__ == '__main__':
     unittest.main()
-

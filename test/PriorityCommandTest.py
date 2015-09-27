@@ -87,7 +87,6 @@ class PriorityCommandTest(CommandTest):
         command = PriorityCommand(["-e", "@test", "C"], self.todolist, self.out, self.error, None)
         command.execute()
 
-
         result = "Priority changed from B to C\n|  3| (C) a @test with due:2015-06-03\nPriority set to C.\n|  4| (C) a @test with +project p:1\n"
 
         self.assertTrue(self.todolist.is_dirty())
@@ -206,6 +205,7 @@ class PriorityCommandTest(CommandTest):
         self.assertFalse(self.todolist.is_dirty())
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors, "Invalid priority given.\n")
+
     def test_empty(self):
         command = PriorityCommand([], self.todolist, self.out, self.error)
         command.execute()

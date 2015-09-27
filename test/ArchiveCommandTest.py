@@ -36,4 +36,3 @@ class ArchiveCommandTest(CommandTest):
 
 if __name__ == '__main__':
     unittest.main()
-
