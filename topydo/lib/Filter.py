@@ -151,19 +151,49 @@ class LimitFilter(Filter):
     def filter(self, p_todos):
         return p_todos[:self.limit] if self.limit >= 0 else p_todos
 
-ORDINAL_TAG_MATCH = r"(?P<key>[^:]*):(?P<operator><=?|=|>=?|!)?(?P<value>\S+)"
-
-class OrdinalTagFilter(Filter):
-    def __init__(self, p_expression):
-        super(OrdinalTagFilter, self).__init__()
+class OrdinalFilter(Filter):
+    """
+    Base class for ordinal filters.
+    """
+    def __init__(self, p_expression, p_pattern):
+        super(OrdinalFilter, self).__init__()
 
         self.expression = p_expression
 
-        match = re.match(ORDINAL_TAG_MATCH, self.expression)
+        match = re.match(p_pattern, self.expression)
         if match:
-            self.key = match.group('key')
+            try:
+                self.key = match.group('key')
+            except IndexError:
+                pass
             self.operator = match.group('operator') or '='
             self.value = match.group('value')
+
+    def compare_operands(self, p_operand1, p_operand2):
+        """
+        Returns True if conditional constructed from both operands and
+        self.operator is valid. Returns False otherwise.
+        """
+        if self.operator == '<':
+            return p_operand1 < p_operand2
+        elif self.operator == '<=':
+            return p_operand1 <= p_operand2
+        elif self.operator == '=':
+            return p_operand1 == p_operand2
+        elif self.operator == '>=':
+            return p_operand1 >= p_operand2
+        elif self.operator == '>':
+            return p_operand1 > p_operand2
+        elif self.operator == '!':
+            return p_operand1 != p_operand2
+
+        return False
+
+ORDINAL_TAG_MATCH = r"(?P<key>[^:]*):(?P<operator><=?|=|>=?|!)?(?P<value>\S+)"
+
+class OrdinalTagFilter(OrdinalFilter):
+    def __init__(self, p_expression):
+        super(OrdinalTagFilter, self).__init__(p_expression, ORDINAL_TAG_MATCH)
 
     def match(self, p_todo):
         """
@@ -199,18 +229,5 @@ class OrdinalTagFilter(Filter):
                 grep = GrepFilter(self.expression)
                 return grep.match(p_todo)
 
-        if self.operator == '<':
-            return operand1 < operand2
-        elif self.operator == '<=':
-            return operand1 <= operand2
-        elif self.operator == '=':
-            return operand1 == operand2
-        elif self.operator == '>=':
-            return operand1 >= operand2
-        elif self.operator == '>':
-            return operand1 > operand2
-        elif self.operator == '!':
-            return operand1 != operand2
-
-        return False
+        return self.compare_operands(operand1, operand2)
 
