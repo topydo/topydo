@@ -151,6 +151,8 @@ class LimitFilter(Filter):
     def filter(self, p_todos):
         return p_todos[:self.limit] if self.limit >= 0 else p_todos
 
+OPERATOR_MATCH = r"(?P<operator><=?|=|>=?|!)?"
+
 class OrdinalFilter(Filter):
     """
     Base class for ordinal filters.
@@ -189,7 +191,7 @@ class OrdinalFilter(Filter):
 
         return False
 
-ORDINAL_TAG_MATCH = r"(?P<key>[^:]*):(?P<operator><=?|=|>=?|!)?(?P<value>\S+)"
+ORDINAL_TAG_MATCH = r"(?P<key>[^:]*):" + OPERATOR_MATCH + r"(?P<value>\S+)"
 
 class OrdinalTagFilter(OrdinalFilter):
     def __init__(self, p_expression):
@@ -231,3 +233,24 @@ class OrdinalTagFilter(OrdinalFilter):
 
         return self.compare_operands(operand1, operand2)
 
+PRIORITY_MATCH = r"\(" + OPERATOR_MATCH + r"(?P<value>[A-Z]{1})\)"
+
+class PriorityFilter(OrdinalFilter):
+    def __init__(self, p_expression):
+        super(PriorityFilter, self).__init__(p_expression, PRIORITY_MATCH)
+
+    def match(self, p_todo):
+        """
+        Performs a match on a priority in the todo.
+
+        It gets priority from p_todo and compares it with user-entered
+        expression based on the given operator (default ==). It does that however
+        in reversed order to obtain more intuitive result. Example: (>B) will
+        match todos with priority (A).
+        Items without priority are designated with corresponding operand set to
+        'ZZ', because python doesn't allow NoneType() and str() comparisons.
+        """
+        operand1 = self.value
+        operand2 = p_todo.priority() or 'ZZ'
+
+        return self.compare_operands(operand1, operand2)
