@@ -37,7 +37,7 @@ class ListCommand(ExpressionCommand):
         self.printer = None
         self.sort_expression = config().sort_string()
         self.show_all = False
-        self.human_dates = False
+        self.human_dates = config().list_human_dates()
 
     def _poke_icalendar(self):
         """
