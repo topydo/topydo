@@ -142,13 +142,13 @@ class _Config:
 
     def console_height(self):
         try:
-            return int(self.cp.get('topydo', 'console_height'))
+            return int(self.cp.getint('topydo', 'console_height'))
         except ValueError:
             return int(self.defaults['console_height'])
 
     def console_width(self):
         try:
-            return int(self.cp.get('topydo', 'console_width'))
+            return int(self.cp.getint('topydo', 'console_width'))
         except ValueError:
             return int(self.defaults['console_width'])
 
@@ -168,7 +168,7 @@ class _Config:
         try:
             return self.cp.getboolean('ls', 'human_readable_dates')
         except ValueError:
-            return int(self.defaults['human_readable_dates'])
+            return self.defaults['human_readable_dates'] == '1'
 
     def keep_sorted(self):
         try:
