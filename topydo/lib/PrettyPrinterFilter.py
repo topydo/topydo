@@ -102,11 +102,14 @@ class PrettyPrinterIndentFilter(PrettyPrinterFilter):
             return(textwrap.fill(p_todo_str,
                                  initial_indent=' '*self.indent,
                                  subsequent_indent=' '*(10 + self.indent),
+                                 # 10 spaces added to hanging indented lines to
+                                 #  push the front of the line past the
+                                 #  identification and priority in the line above
                                  width=config().console_width() - 1,
-                                 break_long_words=True,  # will break long URL's
+                                 break_long_words=True,     # will break long URL's
                                  max_lines=self.max_lines,  # requires Python 3.4
-                                 placeholder=' ...'))  # requires Python 3.4
-        except:
+                                 placeholder=' ...'))       # requires Python 3.4
+        except TypeError:
             output = textwrap.fill(p_todo_str,
                                    initial_indent=' '*self.indent,
                                    subsequent_indent=' '*(10 + self.indent),
@@ -149,9 +152,8 @@ class PrettyPrinterHideTagFilter(PrettyPrinterFilter):
 
 class PrettyPrinterBasicPriorityFilter(PrettyPrinterFilter):
 
-    """ Adds strips the bracked from the priority of the todo item. Add a
-        (blank) space if not priority is specified (to maintain printing
-        alignment)
+    """ Strips the bracked from the priority of the todo item. Add a (blank)
+        space if not priority is specified (to maintain printing alignment)
     """
 
     def __init__(self, p_replacement=" "):
@@ -161,6 +163,10 @@ class PrettyPrinterBasicPriorityFilter(PrettyPrinterFilter):
     def filter(self, p_todo_str, _):
         """ Find the priority """
         matches = re.search('^(?P<id>\| *\w+\| )?(\((?P<pri>[A-Z])\) )?', p_todo_str)
+        # we are looking for the id string and priority at the beginning of the
+        # line, in the form of:
+        #   | 48| (V) ...
+        #   |h2j| (C) ...
         if matches:
             if matches.group('id'):
                 if matches.group('pri'):
