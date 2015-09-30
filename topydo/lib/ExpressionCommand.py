@@ -53,6 +53,8 @@ class ExpressionCommand(Command):
             for arg in args:
                 if re.match(Filter.ORDINAL_TAG_MATCH, arg):
                     argfilter = Filter.OrdinalTagFilter(arg)
+                elif re.match(Filter.PRIORITY_MATCH, arg):
+                    argfilter = Filter.PriorityFilter(arg)
                 elif len(arg) > 1 and arg[0] == '-':
                     # when a word starts with -, exclude it
                     argfilter = Filter.GrepFilter(arg[1:])
