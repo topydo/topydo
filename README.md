@@ -28,10 +28,10 @@ Simply install with:
 
 ### Optional dependencies
 
-* icalendar      : To print your todo.txt file as an iCalendar file
-                   (not supported for Python 3.2).
-* prompt-toolkit : For topydo's _prompt_ mode, which offers a shell-like
-                   interface with auto-completion.
+* [icalendar][7]      : To print your todo.txt file as an iCalendar file
+                        (not supported for Python 3.2).
+* [prompt-toolkit][6] : For topydo's _prompt_ mode, which offers a shell-like
+                        interface with auto-completion.
 
 Demo
 ----
@@ -44,3 +44,5 @@ Demo
 [3]: https://github.com/bram85/todo.txt-tools
 [4]: https://github.com/bram85/topydo/wiki
 [5]: https://raw.githubusercontent.com/bram85/topydo/stable/doc/topydo.gif
+[6]: https://github.com/jonathanslenders/python-prompt-toolkit
+[7]: https://github.com/collective/icalendar

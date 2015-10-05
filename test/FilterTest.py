@@ -374,6 +374,105 @@ class OrdinalTagFilterTest(TopydoTest):
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0].source(), self.todo3)
 
+class PriorityFilterTest(TopydoTest):
+    def setUp(self):
+        super(PriorityFilterTest, self).setUp()
+
+        self.todo1 = "(A) Foo"
+        self.todo2 = "(B) Bar"
+        self.todo3 = "(C) Baz"
+        self.todo4 = "(Z) FooBar"
+        self.todo5 = "FooBaz"
+
+        self.todos = [
+            Todo(self.todo1),
+            Todo(self.todo2),
+            Todo(self.todo3),
+            Todo(self.todo4),
+            Todo(self.todo5),
+        ]
+
+    def test_filter1(self):
+        pf = Filter.PriorityFilter('(A)')
+
+        result = pf.filter(self.todos)
+
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0].source(), self.todo1)
+
+    def test_filter1a(self):
+        pf = Filter.PriorityFilter('(=A)')
+
+        result = pf.filter(self.todos)
+
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0].source(), self.todo1)
+
+    def test_filter2(self):
+        pf = Filter.PriorityFilter('(>B)')
+
+        result = pf.filter(self.todos)
+
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0].source(), self.todo1)
+
+    def test_filter3(self):
+        pf = Filter.PriorityFilter('(>=C)')
+
+        result = pf.filter(self.todos)
+
+        self.assertEqual(len(result), 3)
+        self.assertEqual(result[0].source(), self.todo1)
+        self.assertEqual(result[1].source(), self.todo2)
+        self.assertEqual(result[2].source(), self.todo3)
+
+    def test_filter4(self):
+        pf = Filter.PriorityFilter('(<A)')
+
+        result = pf.filter(self.todos)
+
+        self.assertEqual(len(result), 4)
+        self.assertEqual(result[0].source(), self.todo2)
+        self.assertEqual(result[1].source(), self.todo3)
+        self.assertEqual(result[2].source(), self.todo4)
+        self.assertEqual(result[3].source(), self.todo5)
+
+    def test_filter5(self):
+        pf = Filter.PriorityFilter('(<=C)')
+
+        result = pf.filter(self.todos)
+
+        self.assertEqual(len(result), 3)
+        self.assertEqual(result[0].source(), self.todo3)
+        self.assertEqual(result[1].source(), self.todo4)
+        self.assertEqual(result[2].source(), self.todo5)
+
+    def test_filter6(self):
+        pf = Filter.PriorityFilter('(!B)')
+
+        result = pf.filter(self.todos)
+
+        self.assertEqual(len(result), 4)
+        self.assertEqual(result[0].source(), self.todo1)
+        self.assertEqual(result[1].source(), self.todo3)
+        self.assertEqual(result[2].source(), self.todo4)
+        self.assertEqual(result[3].source(), self.todo5)
+
+    def test_filter7(self):
+        pf = Filter.PriorityFilter('(>A)')
+
+        result = pf.filter(self.todos)
+
+        self.assertEqual(len(result), 0)
+
+    def test_filter8(self):
+        pf = Filter.PriorityFilter('(<Z)')
+
+        result = pf.filter(self.todos)
+
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0].source(), self.todo5)
+
 if __name__ == '__main__':
     unittest.main()
 
