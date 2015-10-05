@@ -69,10 +69,7 @@ class IcalPrinter(Printer):
         try:
             import icalendar
             self.icalendar = icalendar
-        except (SyntaxError, ImportError): # pragma: no cover
-            # icalendar does not support Python 3.2 resulting in a SyntaxError. Since
-            # this is an optional dependency, dropping Python 3.2 support altogether is
-            # too much. Therefore just disable the iCalendar functionality
+        except ImportError: # pragma: no cover
             self.icalendar = None
 
     def print_list(self, p_todos):

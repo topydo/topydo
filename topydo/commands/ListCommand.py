@@ -40,17 +40,12 @@ class ListCommand(ExpressionCommand):
         """
         Attempts to import the icalendar package. Returns True if it
         succeeds, otherwise False.
-
-        Raises a SyntaxError when icalendar couldn't be imported (most likely
-        under Python 3.2.
         """
         try:
             import icalendar as _
         except ImportError: # pragma: no cover
             self.error("icalendar package is not installed.")
             return False
-
-        # may also raise SyntaxError, but we'll deal with that in execute()
 
         return True
 
