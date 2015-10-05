@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-This module provides a completer class that can be used by get_input provided
+This module provides a completer class that can be used by the prompt provided
 by the prompt toolkit.
 """
 
