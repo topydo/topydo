@@ -9,7 +9,9 @@ smoothly into topydo.
   only**. If you would like to add a new feature, make sure to make a Pull
   Request on the `master` branch.
 
-* Use descriptive commit messages.
+* Use descriptive commit messages. The post
+  [How to write a commit message](http://chris.beams.io/posts/git-commit/) by
+  Chris Beams has some good guidelines.
 
 ### Coding style
 
@@ -50,4 +52,3 @@ smoothly into topydo.
 
   Which will generate annotated files in the *htmlcov* folder. The new code
   should be marked green (i.e. covered).
-
