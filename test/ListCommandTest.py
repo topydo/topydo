@@ -199,6 +199,17 @@ class ListCommandTest(CommandTest):
         self.assertEqual(self.output, "|  1| (C) Foo @Context2 Not@Context +Project1 Not+Project\n|  4| (C) Drink beer @ home\n|  5| (C) 13 + 29 = 42\n|  2| (D) Bar @Context1 +Project2\n")
         self.assertEqual(self.errors, "")
 
+    def test_list22(self):
+        """ Handle tag lists with spaces and punctuation."""
+        config(p_overrides={('ls', 'hide_tags'): 'p, id'})
+        self.todolist = load_file_to_todolist('test/data/ListCommandTagTest.txt')
+
+        command = ListCommand(["-x"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+        self.assertEqual(self.output, '|  1| Foo.\n')
+
     def test_help(self):
         command = ListCommand(["help"], self.todolist, self.out, self.error)
         command.execute()
