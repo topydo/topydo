@@ -23,6 +23,7 @@ from six import u
 from topydo.lib.ExpressionCommand import ExpressionCommand
 from topydo.lib.MultiCommand import MultiCommand
 from topydo.lib.Config import config
+from topydo.lib.Sorter import Sorter
 from topydo.lib.Todo import Todo
 from topydo.lib.TodoList import TodoList
 from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
@@ -45,17 +46,28 @@ class EditCommand(MultiCommand):
         self.is_expression = False
         self.edit_archive = False
         self.last_argument = False
+        self.sort_expression = None
 
     def get_flags(self):
-        return ("d", [])
+        return ("ds:", [])
 
     def process_flag(self, p_opt, p_value):
         if p_opt == '-d':
             self.edit_archive = True
             self.multi_mode = False
+        elif p_opt == '-s':
+            self.sort_expression = p_value
 
     def _todos_to_temp(self):
         f = tempfile.NamedTemporaryFile()
+
+        # when an expression is given (i.e. a subset such as a +Project) or
+        # when the user explicitly entered the -s flag, sort it
+        if self.is_expression or self.sort_expression:
+            expression = self.sort_expression or config().sort_expression()
+            sorter = Sorter(expression)
+            self.todos = sorter.sort(self.sort_expression)
+
         for todo in self.todos:
             f.write((todo.source() + "\n").encode('utf-8'))
         f.seek(0)
