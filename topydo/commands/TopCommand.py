@@ -23,11 +23,7 @@ from topydo.lib.PrettyPrinterFilter import (
     PrettyPrinterBasicPriorityFilter,
     PrettyPrinterHumanDatesFilter
 )
-
-try:
-    from shutil import get_terminal_size
-except ImportError:
-    from backports.shutil_get_terminal_size import get_terminal_size
+from topydo.lib.Utils import get_terminal_size
 
 
 class TopCommand(ExpressionCommand):

@@ -21,13 +21,10 @@ from six import u
 from datetime import date
 import textwrap
 
-try:
-    from shutil import get_terminal_size
-except ImportError:
-    from backports.shutil_get_terminal_size import get_terminal_size
-
 from topydo.lib.Config import config
 from topydo.lib.Colors import Colors, NEUTRAL_COLOR
+from topydo.lib.Utils import get_terminal_size
+
 
 class PrettyPrinterFilter(object):
     """
