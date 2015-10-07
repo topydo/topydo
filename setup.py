@@ -38,6 +38,7 @@ setup(
     url = "https://github.com/bram85/topydo",
     install_requires = [
         'six >= 1.9.0',
+        'arrow >= 0.6.0',
     ] + [p for p, cond in conditional_dependencies.items() if cond],
     extras_require = {
         'ical': ['icalendar'],

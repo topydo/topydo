@@ -21,6 +21,8 @@ from six import u
 from datetime import date
 import textwrap
 
+import arrow
+
 from topydo.lib.Config import config
 from topydo.lib.Colors import Colors, NEUTRAL_COLOR
 from topydo.lib.Utils import get_terminal_size
@@ -208,22 +210,11 @@ class PrettyPrinterHumanDatesFilter(PrettyPrinterFilter):
         pattern2 = re.compile('^(?P<line_start>(\| *\w+\| )?(\(?[A-Z ]\)? )?)(?P<is_date>(?P<year>\d{4})-(?P<month>\d{1,2})-(?P<day>\d{1,2}) )')
         matches2 = pattern2.match(line2)
         if matches2:
-            linedate = date(int(matches2.group('year')), int(matches2.group('month')), int(matches2.group('day')))
-            datedelta = date.today() - linedate
-            if datedelta.days == 0:
-                adddelta = 'today'
-            elif datedelta.days < 0:
-                adddetla = 'in the future'
-
-            else:
-                # most common, and extected case
-                if datedelta.days < 45 + 7:
-                    adddelta = str(datedelta.days) + ' days ago'
-                elif datedelta.days < 365*2:
-                    adddelta = str(datedelta.days//30) + ' months ago'
-                else:
-                    adddelta = str(datedelta.days//365) + ' years ago'
-                    # TO-DO: strip 's' if singular
+            linedate = arrow.now()  # set the time to 'now' so the comparisions work better
+            linedate = linedate.replace(year=int(matches2.group('year')))
+            linedate = linedate.replace(month=int(matches2.group('month')))
+            linedate = linedate.replace(day=int(matches2.group('day')))
+            adddelta = linedate.humanize()
             line3 = matches2.group('line_start') + pattern2.sub('', line2)
             addingdates = True
         else:
@@ -234,25 +225,11 @@ class PrettyPrinterHumanDatesFilter(PrettyPrinterFilter):
         pattern3 = re.compile('(?P<is_date> ' + config().tag_due() + ':(?P<year>\d{4})-(?P<month>\d{1,2})-(?P<day>\d{1,2}) ?)')
         matches3 = pattern3.search(line3)
         if matches3:
-            linedate = date(int(matches3.group('year')), int(matches3.group('month')), int(matches3.group('day')))
-            datedelta = date.today() - linedate  # negative numbers means in the future (i.e. not due yet)
-            if datedelta.days == 0:
-                duedelta = 'due today'
-            elif datedelta.days > 0 and datedelta.days < (61):
-                duedelta = 'overdue by ' + str(datedelta.days) + ' days'
-            elif datedelta.days >= (45+7) and datedelta.days < (365*2):
-                duedelta = 'overdue by ' + str(datedelta.days//30) + ' months'
-            elif datedelta.days >= (365*2):
-                duedelta = 'overdue by ' + str(-1*datedelta.days//365) + ' years'
-            elif -1*datedelta.days > 0 and -1*datedelta.days < (61):
-                duedelta = 'due in ' + str(-1*datedelta.days) + ' days'
-            elif -1*datedelta.days >= (45+7) and -1*datedelta.days < (365*2):
-                duedelta = 'due in ' + str(-1*datedelta.days//30) + ' months'
-            elif -1*datedelta.days >= (365*2):
-                duedelta = 'due in ' + str(-1*datedelta.days//365) + ' years'
-            else:
-                # something broke
-                pass
+            linedate = arrow.now()  # set the time to 'now' so the comparisions work better
+            linedate = linedate.replace(year=int(matches3.group('year')))
+            linedate = linedate.replace(month=int(matches3.group('month')))
+            linedate = linedate.replace(day=int(matches3.group('day')))
+            duedelta = 'due ' + linedate.humanize()
 
             if addingdates is True:
                 duedelta = ', ' + duedelta
