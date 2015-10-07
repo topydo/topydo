@@ -59,7 +59,7 @@ def get_terminal_size():
     returns the default size of 80x24.
     """
     try:
-        from shutil import get_terminal_size
+        from shutil import get_terminal_size  # pylint: disable=no-name-in-module
     except ImportError:
         from backports.shutil_get_terminal_size import get_terminal_size
 
