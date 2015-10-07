@@ -24,6 +24,11 @@ from topydo.lib.PrettyPrinterFilter import (
     PrettyPrinterHumanDatesFilter
 )
 
+try:
+    from shutil import get_terminal_size
+except(ImportError):
+    from backports.shutil_get_terminal_size import get_terminal_size
+
 
 class TopCommand(ExpressionCommand):
 
@@ -72,7 +77,9 @@ class TopCommand(ExpressionCommand):
 
             self.printer = pretty_printer_factory(self.todolist, filters)
 
-        self.out(self.printer.print_list(self._view().todos[:config().console_height() - 3]))
+        #  only print as many lines as are on the terminal
+        #  leave three blank lines to accomadate the new following terminal prompt
+        self.out(self.printer.print_list(self._view().todos[:get_terminal_size()[1] - 3]))
 
     def execute(self):
         if not super(TopCommand, self).execute():

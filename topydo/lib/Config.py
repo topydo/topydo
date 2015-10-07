@@ -55,8 +55,6 @@ class _Config:
             'filename': 'todo.txt',
             'archive_filename': 'done.txt',
             'identifiers': 'linenumber',
-            'console_height': '25',
-            'console_width': '80',
 
             # add
             'auto_creation_date': '1',
@@ -139,18 +137,6 @@ class _Config:
 
     def identifiers(self):
         return self.cp.get('topydo', 'identifiers')
-
-    def console_height(self):
-        try:
-            return int(self.cp.getint('topydo', 'console_height'))
-        except ValueError:
-            return int(self.defaults['console_height'])
-
-    def console_width(self):
-        try:
-            return int(self.cp.getint('topydo', 'console_width'))
-        except ValueError:
-            return int(self.defaults['console_width'])
 
     def list_limit(self):
         try:
@@ -271,6 +257,7 @@ class _Config:
             return self.cp.getboolean('add', 'auto_creation_date')
         except ValueError:
             return self.defaults['auto_creation_date'] == '1'
+
 
 def config(p_path=None, p_overrides=None):
     """
