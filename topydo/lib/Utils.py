@@ -21,6 +21,7 @@ Various utility functions.
 from datetime import date
 import re
 import os
+from collections import namedtuple
 
 
 def date_string_to_date(p_date):
@@ -69,6 +70,7 @@ def get_terminal_size():
         This can result from the 'underlying buffer being detached', which
         occurs during running the unittest on Windows (but not on Linux?)
         """
-        sz = os.terminal_size((80, 24))
+        Terminal_Size = namedtuple('Terminal_Size', 'columns lines')
+        sz = Terminal_Size(80, 24)
 
     return sz
