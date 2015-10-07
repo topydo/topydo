@@ -208,7 +208,7 @@ class ListCommandTest(CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
-        self.assertEqual(self.output, '|  1| Foo.\n')
+        self.assertEqual(self.output, '|  1|   Foo.\n')
 
     def test_list23(self):
         command = ListCommand(["-x", "-r", "Context1"], self.todolist, self.out, self.error)
