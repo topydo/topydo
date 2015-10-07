@@ -42,7 +42,7 @@ class MultiCommand(ExpressionCommand):
 
     def process_flag(self, p_option, p_value):
         """ Default implementation of processing specific flags. """
-        pass
+        raise NotImplementedError
 
     def _process_flags(self):
         opts, long_opts = self.get_flags()

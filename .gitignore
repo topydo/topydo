@@ -22,3 +22,5 @@ var/
 
 # Sublime Text
 *.sublime-*
+
+!/topydo/lib/

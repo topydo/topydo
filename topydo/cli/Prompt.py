@@ -21,7 +21,7 @@ import sys
 
 from topydo.cli.CLIApplicationBase import CLIApplicationBase, error, usage
 from topydo.cli.TopydoCompleter import TopydoCompleter
-from prompt_toolkit.shortcuts import get_input
+from prompt_toolkit.shortcuts import prompt
 from prompt_toolkit.history import InMemoryHistory
 
 from topydo.lib.Config import config, ConfigError
@@ -90,7 +90,7 @@ class PromptApplication(CLIApplicationBase):
             self._load_file()
 
             try:
-                user_input = get_input(u'topydo> ', history=history,
+                user_input = prompt(u'topydo> ', history=history,
                                        completer=self.completer,
                                        complete_while_typing=False).split()
             except (EOFError, KeyboardInterrupt):
