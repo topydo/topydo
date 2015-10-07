@@ -26,7 +26,7 @@ from topydo.lib.PrettyPrinterFilter import (
 
 try:
     from shutil import get_terminal_size
-except(ImportError):
+except ImportError:
     from backports.shutil_get_terminal_size import get_terminal_size
 
 
@@ -79,7 +79,7 @@ class TopCommand(ExpressionCommand):
 
         #  only print as many lines as are on the terminal
         #  leave three blank lines to accomadate the new following terminal prompt
-        self.out(self.printer.print_list(self._view().todos[:get_terminal_size()[1] - 3]))
+        self.out(self.printer.print_list(self._view().todos[:get_terminal_size().lines - 3]))
 
     def execute(self):
         if not super(TopCommand, self).execute():

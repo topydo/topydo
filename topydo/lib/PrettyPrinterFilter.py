@@ -23,7 +23,7 @@ import textwrap
 
 try:
     from shutil import get_terminal_size
-except(ImportError):
+except ImportError:
     from backports.shutil_get_terminal_size import get_terminal_size
 
 from topydo.lib.Config import config
@@ -110,7 +110,7 @@ class PrettyPrinterIndentFilter(PrettyPrinterFilter):
                                  # 10 spaces added to hanging indented lines to
                                  #  push the front of the line past the
                                  #  identification and priority in the line above
-                                 width=get_terminal_size()[0] - 1,
+                                 width=get_terminal_size().columns - 1,
                                  # terminal width, less one (so we don't wrap
                                  #  to the next line)
                                  break_long_words=True,     # will break long URL's
@@ -120,7 +120,7 @@ class PrettyPrinterIndentFilter(PrettyPrinterFilter):
             output = textwrap.fill(p_todo_str,
                                    initial_indent=' '*self.indent,
                                    subsequent_indent=' '*(10 + self.indent),
-                                   width=get_terminal_size()[0] - 1,
+                                   width=get_terminal_size().columns - 1,
                                    break_long_words=True)  # will break long URL's
             if self.max_lines:
                 return('\n'.join(output.splitlines()[:self.max_lines]))
