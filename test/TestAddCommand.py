@@ -33,6 +33,7 @@ from test.TestCommand import CommandTest
 from topydo.lib.Config import config
 from topydo.lib import TodoList
 
+
 class AddCommandTest(CommandTest):
     def setUp(self):
         super(AddCommandTest, self).setUp()

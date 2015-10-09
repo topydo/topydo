@@ -22,6 +22,7 @@ from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
 from topydo.lib.RelativeDate import relative_date_to_date
 from topydo.lib.Utils import date_string_to_date
 
+
 class PostponeCommand(MultiCommand):
     def __init__(self, p_args, p_todolist,
                  p_out=lambda a: None,

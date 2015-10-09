@@ -32,6 +32,7 @@ from topydo.lib.TodoList import TodoList
 from topydo.lib.Todo import Todo
 from topydo.lib.Config import config
 
+
 class EditCommandTest(CommandTest):
     def setUp(self):
         super(EditCommandTest, self).setUp()

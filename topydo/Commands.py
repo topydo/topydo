@@ -52,6 +52,7 @@ _SUBCOMMAND_MAP = {
     'tag': 'TagCommand',
 }
 
+
 def get_subcommand(p_args):
     """
     Retrieves the to-be executed Command and returns a tuple

@@ -24,6 +24,7 @@ from topydo.lib.Config import config
 from topydo.lib.TodoBase import TodoBase
 from topydo.lib.Utils import date_string_to_date
 
+
 class Todo(TodoBase):
     """
     This class adds common functionality with respect to dates to the Todo

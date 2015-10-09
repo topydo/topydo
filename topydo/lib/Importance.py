@@ -29,6 +29,7 @@ from topydo.lib.Config import config
 
 IMPORTANCE_VALUE = {'A': 3, 'B': 2, 'C': 1}
 
+
 def is_due_next_monday(p_todo):
     """ Returns True when the given task is due next Monday. """
     today = date.today()
@@ -36,6 +37,7 @@ def is_due_next_monday(p_todo):
 
     return due and due.weekday() == 0 and today.weekday() >= 4 and \
         p_todo.days_till_due()
+
 
 def importance(p_todo, p_ignore_weekend=config().ignore_weekends()):
     """
@@ -73,6 +75,7 @@ def importance(p_todo, p_ignore_weekend=config().ignore_weekends()):
         result += 1
 
     return result if not p_todo.is_completed() else 0
+
 
 def average_importance(p_todo, p_ignore_weekend=config().ignore_weekends()):
     own_importance = importance(p_todo, p_ignore_weekend)

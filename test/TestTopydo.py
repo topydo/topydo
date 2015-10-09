@@ -18,6 +18,7 @@ import unittest
 
 from topydo.lib.Config import config
 
+
 class TopydoTest(unittest.TestCase):
     def tearDown(self):
         """

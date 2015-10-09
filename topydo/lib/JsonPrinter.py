@@ -23,6 +23,7 @@ import json
 
 from topydo.lib.PrettyPrinter import Printer
 
+
 def _convert_todo(p_todo):
     """ Converts a Todo instance to a dictionary. """
     creation_date = p_todo.creation_date()
@@ -43,6 +44,7 @@ def _convert_todo(p_todo):
     }
 
     return result
+
 
 class JsonPrinter(Printer):
     """

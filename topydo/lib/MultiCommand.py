@@ -19,6 +19,7 @@ from six import u
 from topydo.lib.ExpressionCommand import ExpressionCommand
 from topydo.lib.TodoListBase import InvalidTodoException
 
+
 class MultiCommand(ExpressionCommand):
     """
     A common class for operations that can work with multiple todo IDs.

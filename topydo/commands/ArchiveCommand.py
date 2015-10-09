@@ -16,6 +16,7 @@
 
 from topydo.lib.Command import Command
 
+
 class ArchiveCommand(Command):
     def __init__(self, p_todolist, p_archive_list):
         """

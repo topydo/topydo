@@ -28,12 +28,14 @@ from topydo.lib.Config import config
 from topydo.Commands import _SUBCOMMAND_MAP
 from topydo.lib.RelativeDate import relative_date_to_date
 
+
 def _subcommands(p_word_before_cursor):
     """ Generator for subcommand name completion. """
     subcommands = [sc for sc in sorted(_SUBCOMMAND_MAP.keys()) if
                    sc.startswith(p_word_before_cursor)]
     for command in subcommands:
         yield Completion(command, -len(p_word_before_cursor))
+
 
 def _dates(p_word_before_cursor):
     """ Generator for date completion. """
@@ -78,6 +80,7 @@ def _dates(p_word_before_cursor):
             continue
 
         yield Completion(reldate, -len(value), display_meta=to_absolute(reldate))
+
 
 class TopydoCompleter(Completer):
     """

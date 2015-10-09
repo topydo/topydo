@@ -25,6 +25,7 @@ from six import u
 from topydo.lib.TodoParser import parse_line
 from topydo.lib.Utils import is_valid_priority
 
+
 class TodoBase(object):
     """
     This class represents a single todo item in a todo.txt file. It maintains

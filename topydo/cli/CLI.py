@@ -34,6 +34,7 @@ except ConfigError as config_error:
 from topydo.Commands import get_subcommand
 from topydo.lib import TodoList
 
+
 class CLIApplication(CLIApplicationBase):
     """
     Class that represents the (original) Command Line Interface of Topydo.
@@ -57,6 +58,7 @@ class CLIApplication(CLIApplicationBase):
             sys.exit(1)
         else:
             self._post_execute()
+
 
 def main():
     """ Main entry point of the CLI. """

@@ -22,6 +22,7 @@ from topydo.commands.PostponeCommand import PostponeCommand
 from test.TestCommand import CommandTest
 from topydo.lib.TodoList import TodoList
 
+
 class PostponeCommandTest(CommandTest):
     def setUp(self):
         super(PostponeCommandTest, self).setUp()

@@ -18,6 +18,7 @@ from topydo.lib.Command import Command, InvalidCommandArgument
 from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
 from topydo.lib.TodoListBase import InvalidTodoException
 
+
 class TagCommand(Command):
     def __init__(self, p_args, p_todolist,
                  p_out=lambda a: None,

@@ -23,11 +23,14 @@ from topydo.commands.DeleteCommand import DeleteCommand
 from topydo.lib.TodoList import TodoList
 from topydo.lib.TodoListBase import InvalidTodoException
 
+
 def _yes_prompt(self):
     return "y"
 
+
 def _no_prompt(self):
     return "n"
+
 
 class DeleteCommandTest(CommandTest):
     def setUp(self):

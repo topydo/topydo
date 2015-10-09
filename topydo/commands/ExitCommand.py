@@ -18,6 +18,7 @@ import sys
 
 from topydo.lib.Command import Command
 
+
 class ExitCommand(Command):
     """
     A command that exits topydo. Used for the 'exit' and 'quit' subcommands on

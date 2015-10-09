@@ -16,6 +16,7 @@
 
 """ Contains the class for a directed graph. """
 
+
 class DirectedGraph(object):
     """
     Represents a simple directed graph, used for tracking todo

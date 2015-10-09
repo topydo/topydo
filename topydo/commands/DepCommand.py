@@ -22,6 +22,7 @@ from topydo.lib.Sorter import Sorter
 from topydo.lib.TodoListBase import InvalidTodoException
 from topydo.lib.View import View
 
+
 class DepCommand(Command):
     def __init__(self, p_args, p_todolist,
                  p_out=lambda a: None,

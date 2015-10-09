@@ -19,6 +19,7 @@ import re
 from topydo.lib.RelativeDate import relative_date_to_date
 from topydo.lib.Utils import date_string_to_date
 
+
 class Filter(object):
     def filter(self, p_todos):
         """
@@ -31,12 +32,14 @@ class Filter(object):
     def match(self, _):
         raise NotImplementedError
 
+
 class NegationFilter(Filter):
     def __init__(self, p_filter):
         self._filter = p_filter
 
     def match(self, p_todo):
         return not self._filter.match(p_todo)
+
 
 class AndFilter(Filter):
     def __init__(self, p_filter1, p_filter2):
@@ -46,6 +49,7 @@ class AndFilter(Filter):
     def match(self, p_todo):
         return self._filter1.match(p_todo) and self._filter2.match(p_todo)
 
+
 class OrFilter(Filter):
     def __init__(self, p_filter1, p_filter2):
         self._filter1 = p_filter1
@@ -53,6 +57,7 @@ class OrFilter(Filter):
 
     def match(self, p_todo):
         return self._filter1.match(p_todo) or self._filter2.match(p_todo)
+
 
 class GrepFilter(Filter):
     """ Matches when the todo text contains a text. """
@@ -80,6 +85,7 @@ class GrepFilter(Filter):
 
         return string.find(expr) != -1
 
+
 class RelevanceFilter(Filter):
     """
     Matches when the todo is relevant, i.e.:
@@ -98,6 +104,7 @@ class RelevanceFilter(Filter):
         is_due |= p_todo.priority() == 'C' and p_todo.days_till_due() <= 14
 
         return p_todo.is_active() and is_due
+
 
 class DependencyFilter(Filter):
     """ Matches when a todo has no unfinished child tasks.  """
@@ -119,6 +126,7 @@ class DependencyFilter(Filter):
         uncompleted = [todo for todo in children if not todo.is_completed()]
 
         return not uncompleted
+
 
 class InstanceFilter(Filter):
     def __init__(self, p_todos):
@@ -143,6 +151,7 @@ class InstanceFilter(Filter):
         except ValueError:
             return False
 
+
 class LimitFilter(Filter):
     def __init__(self, p_limit):
         super(LimitFilter, self).__init__()
@@ -152,6 +161,7 @@ class LimitFilter(Filter):
         return p_todos[:self.limit] if self.limit >= 0 else p_todos
 
 OPERATOR_MATCH = r"(?P<operator><=?|=|>=?|!)?"
+
 
 class OrdinalFilter(Filter):
     """
@@ -192,6 +202,7 @@ class OrdinalFilter(Filter):
         return False
 
 ORDINAL_TAG_MATCH = r"(?P<key>[^:]*):" + OPERATOR_MATCH + r"(?P<value>\S+)"
+
 
 class OrdinalTagFilter(OrdinalFilter):
     def __init__(self, p_expression):
@@ -234,6 +245,7 @@ class OrdinalTagFilter(OrdinalFilter):
         return self.compare_operands(operand1, operand2)
 
 PRIORITY_MATCH = r"\(" + OPERATOR_MATCH + r"(?P<value>[A-Z]{1})\)"
+
 
 class PriorityFilter(OrdinalFilter):
     def __init__(self, p_expression):

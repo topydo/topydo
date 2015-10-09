@@ -20,6 +20,7 @@ import unittest
 from test.Facilities import load_file
 from test.TestTopydo import TopydoTest
 
+
 class TodoFileTest(TopydoTest):
     def test_empty_file(self):
         todofile = load_file('test/data/TodoFileTest1.txt')

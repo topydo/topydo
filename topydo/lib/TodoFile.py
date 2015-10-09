@@ -20,6 +20,7 @@ This module deals with todo.txt files.
 
 import codecs
 
+
 class TodoFile(object):
     """
     This class represents a todo.txt file, which can be read from or written

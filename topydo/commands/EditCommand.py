@@ -34,6 +34,7 @@ DEFAULT_EDITOR = 'vi'
 # cannot use super() inside the class itself
 BASE_TODOLIST = lambda tl: super(TodoList, tl)
 
+
 class EditCommand(MultiCommand):
     def __init__(self, p_args, p_todolist, p_output, p_error, p_input):
         super(EditCommand, self).__init__(p_args, p_todolist, p_output,

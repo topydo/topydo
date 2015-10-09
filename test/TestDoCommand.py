@@ -22,11 +22,14 @@ from topydo.commands.DoCommand import DoCommand
 from test.TestCommand import CommandTest
 from topydo.lib.TodoList import TodoList
 
+
 def _yes_prompt(self):
     return "y"
 
+
 def _no_prompt(self):
     return "n"
+
 
 class DoCommandTest(CommandTest):
     def setUp(self):

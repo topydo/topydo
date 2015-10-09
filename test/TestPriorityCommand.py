@@ -21,6 +21,7 @@ from topydo.commands.PriorityCommand import PriorityCommand
 from test.TestCommand import CommandTest
 from topydo.lib.TodoList import TodoList
 
+
 class PriorityCommandTest(CommandTest):
     def setUp(self):
         super(PriorityCommandTest, self).setUp()

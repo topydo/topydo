@@ -24,6 +24,7 @@ from topydo.commands.ListCommand import ListCommand
 from test.TestCommand import CommandTest
 from test.Facilities import load_file_to_todolist
 
+
 class ListCommandTest(CommandTest):
     def setUp(self):
         super(ListCommandTest, self).setUp()
@@ -217,6 +218,7 @@ class ListCommandTest(CommandTest):
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors, command.usage() + "\n\n" + command.help() + "\n")
 
+
 class ListCommandUnicodeTest(CommandTest):
     def setUp(self):
         super(ListCommandUnicodeTest, self).setUp()
@@ -232,6 +234,7 @@ class ListCommandUnicodeTest(CommandTest):
         expected = u("|  1| (C) And some sp\u00e9cial tag:\u25c4\n")
 
         self.assertEqual(self.output, expected)
+
 
 class ListCommandJsonTest(CommandTest):
     def test_json(self):
@@ -264,12 +267,14 @@ class ListCommandJsonTest(CommandTest):
         self.assertEqual(self.output, jsontext)
         self.assertEqual(self.errors, "")
 
+
 def replace_ical_tags(p_text):
     # replace identifiers with dots, since they're random.
     result = re.sub(r'\bical:....\b', 'ical:....', p_text)
     result = re.sub(r'\bUID:....\b', 'UID:....', result)
 
     return result
+
 
 class ListCommandIcalTest(CommandTest):
     def setUp(self):

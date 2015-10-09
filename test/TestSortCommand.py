@@ -21,6 +21,7 @@ from topydo.commands.SortCommand import SortCommand
 from test.TestCommand import CommandTest
 from test.Facilities import load_file_to_todolist
 
+
 class SortCommandTest(CommandTest):
     def setUp(self):
         super(SortCommandTest, self).setUp()

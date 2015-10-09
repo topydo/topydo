@@ -20,6 +20,7 @@ from topydo.commands.ListContextCommand import ListContextCommand
 from test.TestCommand import CommandTest
 from test.Facilities import load_file_to_todolist
 
+
 class ListContextCommandTest(CommandTest):
     def test_contexts1(self):
         todolist = load_file_to_todolist("test/data/TodoListTest.txt")

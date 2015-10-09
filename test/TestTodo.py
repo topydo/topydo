@@ -20,13 +20,16 @@ import unittest
 from topydo.lib.Todo import Todo
 from test.TestTopydo import TopydoTest
 
+
 def today_date():
     today = date.today()
     return today.isoformat()
 
+
 def tomorrow_date():
     tomorrow = date.today() + timedelta(days=1)
     return tomorrow.isoformat()
+
 
 class TodoTest(TopydoTest):
     def test_due_date1(self):

@@ -16,6 +16,7 @@
 
 from topydo.lib.Command import Command
 
+
 class ListContextCommand(Command):
     def __init__(self, p_args, p_todolist,
                  p_out=lambda a: None,

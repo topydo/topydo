@@ -18,12 +18,14 @@ import os
 
 from six.moves import configparser
 
+
 class ConfigError(Exception):
     def __init__(self, p_text):
         self.text = p_text
 
     def __str__(self):
         return self.text
+
 
 class _Config:
     def __init__(self, p_path=None, p_overrides=None):
@@ -251,6 +253,7 @@ class _Config:
             return self.cp.getboolean('add', 'auto_creation_date')
         except ValueError:
             return self.defaults['auto_creation_date'] == '1'
+
 
 def config(p_path=None, p_overrides=None):
     """

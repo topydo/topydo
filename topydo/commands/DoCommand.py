@@ -22,6 +22,7 @@ from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
 from topydo.lib.Recurrence import advance_recurring_todo, NoRecurrenceException
 from topydo.lib.Utils import date_string_to_date
 
+
 class DoCommand(DCommand):
     def __init__(self, p_args, p_todolist,
                  p_out=lambda a: None,

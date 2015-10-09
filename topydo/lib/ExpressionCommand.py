@@ -22,6 +22,7 @@ from topydo.lib import Filter
 from topydo.lib.Sorter import Sorter
 from topydo.lib.View import View
 
+
 class ExpressionCommand(Command):
     """
     A common class for commands operating on todos selected by expressions.

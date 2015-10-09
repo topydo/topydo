@@ -20,6 +20,7 @@ from topydo.lib.MultiCommand import MultiCommand
 from topydo.lib.PrettyPrinter import PrettyPrinter
 from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
 
+
 class DCommand(MultiCommand):
     """
     A common class for the 'do' and 'del' operations, because they're quite

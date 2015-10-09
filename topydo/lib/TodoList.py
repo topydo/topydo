@@ -22,6 +22,7 @@ from topydo.lib.Config import config
 from topydo.lib.Graph import DirectedGraph
 from topydo.lib.TodoListBase import TodoListBase
 
+
 class TodoList(TodoListBase):
     """
     Provides operations for a todo list, such as adding items, removing them,

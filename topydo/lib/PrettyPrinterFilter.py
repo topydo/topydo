@@ -22,6 +22,7 @@ from six import u
 from topydo.lib.Config import config
 from topydo.lib.Colors import Colors, NEUTRAL_COLOR
 
+
 class PrettyPrinterFilter(object):
     """
     Base class for a pretty printer filter.
@@ -34,6 +35,7 @@ class PrettyPrinterFilter(object):
         Applies a filter to p_todo_str and returns a modified version of it.
         """
         raise NotImplementedError
+
 
 class PrettyPrinterColorFilter(PrettyPrinterFilter):
     """
@@ -84,6 +86,7 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
 
         return p_todo_str
 
+
 class PrettyPrinterIndentFilter(PrettyPrinterFilter):
     """ Adds indentation to the todo item. """
     def __init__(self, p_indent=0):
@@ -94,6 +97,7 @@ class PrettyPrinterIndentFilter(PrettyPrinterFilter):
         """ Applies the indentation. """
         return ' ' * self.indent + p_todo_str
 
+
 class PrettyPrinterNumbers(PrettyPrinterFilter):
     """ Prepends the todo's number, retrieved from the todolist. """
     def __init__(self, p_todolist):
@@ -103,6 +107,7 @@ class PrettyPrinterNumbers(PrettyPrinterFilter):
     def filter(self, p_todo_str, p_todo):
         """ Prepends the number to the todo string. """
         return u("|{:>3}| {}").format(self.todolist.number(p_todo), p_todo_str)
+
 
 class PrettyPrinterHideTagFilter(PrettyPrinterFilter):
     """ Removes all occurences of the given tags from the text. """

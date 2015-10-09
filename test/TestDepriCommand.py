@@ -21,6 +21,7 @@ from topydo.commands.DepriCommand import DepriCommand
 from test.TestCommand import CommandTest
 from topydo.lib.TodoList import TodoList
 
+
 class DepriCommandTest(CommandTest):
     def setUp(self):
         super(DepriCommandTest, self).setUp()

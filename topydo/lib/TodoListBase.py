@@ -29,8 +29,10 @@ from topydo.lib.PrettyPrinter import PrettyPrinter
 from topydo.lib.Todo import Todo
 from topydo.lib.View import View
 
+
 class InvalidTodoException(Exception):
     pass
+
 
 class TodoListBase(object):
     """

@@ -39,6 +39,7 @@ from topydo.Commands import get_subcommand
 from topydo.lib import TodoFile
 from topydo.lib import TodoList
 
+
 def _todotxt_mtime():
     """
     Returns the mtime for the configured todo.txt file.
@@ -48,6 +49,7 @@ def _todotxt_mtime():
     except os.error:
         # file not found
         return None
+
 
 class PromptApplication(CLIApplicationBase):
     """
@@ -111,6 +113,7 @@ class PromptApplication(CLIApplicationBase):
                     self._post_execute()
             except TypeError:
                 usage()
+
 
 def main():
     """ Main entry point of the prompt interface. """

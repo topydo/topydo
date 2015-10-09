@@ -20,6 +20,7 @@ from topydo.lib.Config import config
 
 NEUTRAL_COLOR = '\033[0m'
 
+
 class Colors(object):
     def __init__(self):
         self.priority_colors = config().priority_colors()

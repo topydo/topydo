@@ -27,6 +27,7 @@ from topydo.lib.TodoList import TodoList
 from topydo.lib.TodoListBase import TodoListBase
 from test.TestTopydo import TopydoTest
 
+
 class TodoListTester(TopydoTest):
     def setUp(self):
         super(TodoListTester, self).setUp()
@@ -224,6 +225,7 @@ class TodoListTester(TopydoTest):
 
         self.assertNotEqual(self.todolist.number(todo), 't5c')
 
+
 class TodoListDependencyTester(TopydoTest):
     def setUp(self):
         super(TodoListDependencyTester, self).setUp()
@@ -360,6 +362,7 @@ class TodoListDependencyTester(TopydoTest):
 
         self.assertTrue(todolist.todo_by_dep_id('1'))
         self.assertFalse(todolist.todo_by_dep_id('2'))
+
 
 class TodoListCleanDependencyTester(TopydoTest):
     def setUp(self):

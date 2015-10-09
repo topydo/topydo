@@ -22,6 +22,7 @@ from topydo.lib.Importance import importance
 from topydo.lib.Todo import Todo
 from test.TestTopydo import TopydoTest
 
+
 class ImportanceTest(TopydoTest):
     def test_importance1(self):
         todo = Todo("Foo")

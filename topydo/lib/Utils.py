@@ -21,6 +21,7 @@ Various utility functions.
 from datetime import date
 import re
 
+
 def date_string_to_date(p_date):
     """
     Given a date in YYYY-MM-DD, returns a Python date object. Returns None
@@ -41,8 +42,10 @@ def date_string_to_date(p_date):
 
     return result
 
+
 def is_valid_priority(p_priority):
     return p_priority != None and re.match(r'^[A-Z]$', p_priority) != None
+
 
 def escape_ansi(p_string):
     return escape_ansi.pattern.sub('', p_string)

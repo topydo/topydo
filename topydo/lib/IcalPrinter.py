@@ -25,6 +25,7 @@ import string
 
 from topydo.lib.PrettyPrinter import Printer
 
+
 def _convert_priority(p_priority):
     """
     Converts todo.txt priority to an iCalendar priority (RFC 2445).
@@ -54,6 +55,7 @@ def _convert_priority(p_priority):
             result = 9
 
     return result
+
 
 class IcalPrinter(Printer):
     """

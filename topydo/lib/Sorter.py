@@ -21,9 +21,11 @@ import re
 
 from topydo.lib.Importance import importance, average_importance
 
+
 def is_priority_field(p_field):
     """ Returns True when the field name denotes the priority. """
     return p_field.startswith('prio')
+
 
 def get_field_function(p_field):
     """
@@ -58,6 +60,7 @@ def get_field_function(p_field):
                   else "1")
 
     return result
+
 
 class Sorter(object):
     """

@@ -37,6 +37,7 @@ _TAG_MATCH = re.compile('(?P<key>[^:]+):(?P<value>.+)')
 _PROJECT_MATCH = re.compile(r'\+(\S*\w)')
 _CONTEXT_MATCH = re.compile(r'@(\S*\w)')
 
+
 def parse_line(p_string):
     """
     Parses a single line as can be encountered in a todo.txt file.

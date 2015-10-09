@@ -18,6 +18,7 @@ from topydo.lib.JsonPrinter import JsonPrinter
 from topydo.lib.Todo import Todo
 from test.TestTopydo import TopydoTest
 
+
 class JsonPrinterTest(TopydoTest):
     """
     Tests the functionality of printing a single todo item. Printing a list is

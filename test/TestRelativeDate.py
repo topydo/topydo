@@ -20,6 +20,7 @@ import unittest
 from topydo.lib.RelativeDate import relative_date_to_date
 from test.TestTopydo import TopydoTest
 
+
 class RelativeDateTester(TopydoTest):
     def setUp(self):
         super(RelativeDateTester, self).setUp()

@@ -26,6 +26,7 @@ from six.moves import input
 
 MAIN_OPTS = "ac:d:ht:v"
 
+
 def usage():
     """ Prints the command-line usage of topydo. """
 
@@ -61,6 +62,7 @@ Available commands:
 Run `topydo help <subcommand>` for command-specific help.
 """)
 
+
 def write(p_file, p_string):
     """
     Write p_string to file p_file, trailed by a newline character.
@@ -73,10 +75,12 @@ def write(p_file, p_string):
     if p_string:
         p_file.write(p_string + "\n")
 
+
 def error(p_string):
     """ Writes an error on the standard error. """
 
     write(sys.stderr, p_string)
+
 
 def version():
     """ Print the current version and exit. """
@@ -102,6 +106,7 @@ from topydo.lib import TodoFile
 from topydo.lib import TodoList
 from topydo.lib import TodoListBase
 from topydo.lib.Utils import escape_ansi
+
 
 class CLIApplicationBase(object):
     """

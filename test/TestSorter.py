@@ -22,6 +22,7 @@ from topydo.lib.Sorter import Sorter
 from test.Facilities import load_file, todolist_to_string, load_file_to_todolist, print_view
 from test.TestTopydo import TopydoTest
 
+
 class SorterTest(TopydoTest):
     def sort_file(self, p_filename, p_filename_ref, p_sorter):
         """

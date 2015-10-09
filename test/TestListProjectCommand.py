@@ -20,6 +20,7 @@ from topydo.commands.ListProjectCommand import ListProjectCommand
 from test.TestCommand import CommandTest
 from test.Facilities import load_file_to_todolist
 
+
 class ListProjectCommandTest(CommandTest):
     def test_projects1(self):
         todolist = load_file_to_todolist("test/data/TodoListTest.txt")

@@ -20,6 +20,7 @@ from datetime import date, timedelta
 import calendar
 import re
 
+
 def _add_months(p_sourcedate, p_months):
     """
     Adds a number of months to the source date.
@@ -34,6 +35,7 @@ def _add_months(p_sourcedate, p_months):
     day = min(p_sourcedate.day, calendar.monthrange(year, month)[1])
 
     return date(year, month, day)
+
 
 def _convert_pattern(p_length, p_periodunit, p_offset=None):
     """
@@ -55,6 +57,7 @@ def _convert_pattern(p_length, p_periodunit, p_offset=None):
         result = _add_months(p_offset, p_length * 12)
 
     return result
+
 
 def _convert_weekday_pattern(p_weekday):
     """
@@ -80,6 +83,7 @@ def _convert_weekday_pattern(p_weekday):
 
     shift = (target_day - day) % 7
     return date.today() + timedelta(shift)
+
 
 def relative_date_to_date(p_date, p_offset=None):
     """

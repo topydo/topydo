@@ -23,6 +23,7 @@ from topydo.lib.TodoFile import TodoFile
 from topydo.lib.TodoList import TodoList
 from test.TestTopydo import TopydoTest
 
+
 class ViewTest(TopydoTest):
     def test_view(self):
         """ Check filters and printer for views. """

@@ -24,6 +24,7 @@ from test.Facilities import load_file, todolist_to_string, load_file_to_todolist
 from topydo.lib.Todo import Todo
 from test.TestTopydo import TopydoTest
 
+
 class FilterTest(TopydoTest):
     def test_filter03(self):
         todo = Todo("(C) Relevant")
@@ -295,6 +296,7 @@ class FilterTest(TopydoTest):
         self.assertEqual(todolist_to_string(filtered_todos),
                          todolist_to_string(reference))
 
+
 class OrdinalTagFilterTest(TopydoTest):
     def setUp(self):
         super(OrdinalTagFilterTest, self).setUp()
@@ -373,6 +375,7 @@ class OrdinalTagFilterTest(TopydoTest):
 
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0].source(), self.todo3)
+
 
 class PriorityFilterTest(TopydoTest):
     def setUp(self):

@@ -28,6 +28,7 @@ from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
 from topydo.lib.RelativeDate import relative_date_to_date
 from topydo.lib.TodoListBase import InvalidTodoException
 
+
 class AddCommand(Command):
     def __init__(self, p_args, p_todolist,
                  p_out=lambda a: None,

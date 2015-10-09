@@ -20,6 +20,7 @@ from topydo.commands.DepCommand import DepCommand
 from test.TestCommand import CommandTest
 from topydo.lib.TodoList import TodoList
 
+
 class DepCommandTest(CommandTest):
     def setUp(self):
         super(DepCommandTest, self).setUp()

@@ -25,6 +25,7 @@ if "win32" in sys.platform:
     import colorama
     colorama.init()
 
+
 def main():
     """ Main entry point of the CLI. """
     try:

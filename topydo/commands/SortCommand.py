@@ -18,6 +18,7 @@ from topydo.lib.Command import Command, InvalidCommandArgument
 from topydo.lib.Config import config
 from topydo.lib.Sorter import Sorter
 
+
 class SortCommand(Command):
     def __init__(self, p_args, p_todolist,
                  p_out=lambda a: None,

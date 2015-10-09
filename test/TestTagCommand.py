@@ -20,6 +20,7 @@ from topydo.commands.TagCommand import TagCommand
 from test.TestCommand import CommandTest
 from topydo.lib.TodoList import TodoList
 
+
 class TagCommandTest(CommandTest):
     def setUp(self):
         super(TagCommandTest, self).setUp()

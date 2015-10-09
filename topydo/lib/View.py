@@ -16,6 +16,7 @@
 
 """ A view is a list of todos, sorted and filtered. """
 
+
 class View(object):
     """
     A view is instantiated by a todo list, usually obtained from a todo.txt

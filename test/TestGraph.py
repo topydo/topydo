@@ -19,6 +19,7 @@ import unittest
 from topydo.lib.Graph import DirectedGraph
 from test.TestTopydo import TopydoTest
 
+
 class GraphTest(TopydoTest):
     def setUp(self):
         super(GraphTest, self).setUp()

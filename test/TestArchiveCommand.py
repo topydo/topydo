@@ -21,6 +21,7 @@ from test.TestCommand import CommandTest
 from test.Facilities import load_file_to_todolist
 from topydo.lib.TodoList import TodoList
 
+
 class ArchiveCommandTest(CommandTest):
     def test_archive(self):
         todolist = load_file_to_todolist("test/data/ArchiveCommandTest.txt")

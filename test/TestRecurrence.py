@@ -22,6 +22,7 @@ from topydo.lib.Recurrence import advance_recurring_todo, NoRecurrenceException
 from topydo.lib.Todo import Todo
 from test.TestTopydo import TopydoTest
 
+
 class RecurrenceTest(TopydoTest):
     def setUp(self):
         super(RecurrenceTest, self).setUp()

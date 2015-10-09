@@ -24,6 +24,7 @@ from topydo.lib.PrettyPrinterFilter import (
 from topydo.lib.IcalPrinter import IcalPrinter
 from topydo.lib.JsonPrinter import JsonPrinter
 
+
 class ListCommand(ExpressionCommand):
     def __init__(self, p_args, p_todolist,
                  p_out=lambda a: None,

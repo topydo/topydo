@@ -22,8 +22,10 @@ from topydo.lib.Config import config
 from topydo.lib.RelativeDate import relative_date_to_date
 from topydo.lib.Todo import Todo
 
+
 class NoRecurrenceException(Exception):
     pass
+
 
 def advance_recurring_todo(p_todo, p_offset=None, p_strict=False):
     """

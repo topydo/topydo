@@ -27,6 +27,7 @@ _TABLE_SIZES = {
     4: 1679609  # largest prime under zzzz_36
 }
 
+
 def _to_base36(p_value):
     """
     Converts integer to base36 string.
@@ -42,6 +43,7 @@ def _to_base36(p_value):
         base36 = alphabet[i] + base36
 
     return base36 or alphabet[0]
+
 
 def hash_list_values(p_list, p_key=lambda i: i):
     """

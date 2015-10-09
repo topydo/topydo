@@ -19,6 +19,7 @@ from topydo.lib.PrettyPrinterFilter import (
     PrettyPrinterNumbers
 )
 
+
 class Printer(object):
     """
     An abstract class that turns todo items into strings.
@@ -34,6 +35,7 @@ class Printer(object):
         formatted strings.
         """
         return "\n".join([self.print_todo(todo) for todo in p_todos])
+
 
 class PrettyPrinter(Printer):
     """
@@ -67,6 +69,7 @@ class PrettyPrinter(Printer):
             todo_str = ppf.filter(todo_str, p_todo)
 
         return todo_str
+
 
 def pretty_printer_factory(p_todolist, p_additional_filters=None):
     """ Returns a pretty printer suitable for the ls and dep subcommands. """
