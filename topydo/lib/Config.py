@@ -52,8 +52,8 @@ class _Config:
             # topydo
             'default_command': 'ls',
             'colors': '1',
-            'filename' : 'todo.txt',
-            'archive_filename' : 'done.txt',
+            'filename': 'todo.txt',
+            'archive_filename': 'done.txt',
             'identifiers': 'linenumber',
 
             # add
