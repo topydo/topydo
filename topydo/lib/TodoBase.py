@@ -145,7 +145,7 @@ class TodoBase(object):
         """
 
         if not self.is_completed() and \
-            (p_priority == None or is_valid_priority(p_priority)):
+                (p_priority == None or is_valid_priority(p_priority)):
 
             self.fields['priority'] = p_priority
 

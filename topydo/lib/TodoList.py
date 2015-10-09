@@ -66,7 +66,7 @@ class TodoList(TodoListBase):
             # connect all tasks we have in memory so far that refer to this
             # task
             for dep in \
-                [dep for dep in self._todos if dep.has_tag('p', dep_id)]:
+                    [dep for dep in self._todos if dep.has_tag('p', dep_id)]:
 
                 self._depgraph.add_edge(hash(p_todo), hash(dep), dep_id)
 
@@ -148,7 +148,7 @@ class TodoList(TodoListBase):
                     self.append(p_to_todo, "@{}".format(context))
 
         if p_from_todo != p_to_todo and not self._depgraph.has_edge(
-            hash(p_from_todo), hash(p_to_todo)):
+                hash(p_from_todo), hash(p_to_todo)):
 
             dep_id = None
             if p_from_todo.has_tag('id'):
