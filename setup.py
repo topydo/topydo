@@ -24,7 +24,7 @@ def find_version(*file_paths):
 conditional_dependencies = {
     "colorama>=0.2.5": "win32" in sys.platform,
     # shutil.get_terminal_size() was introduced in Python 3.3
-    "backports.shutil_get_terminal_size>=1.0.0": sys.hexversion < 0x303000F0,
+    "backports.shutil_get_terminal_size>=1.0.0": sys.hexversion < 0x30300F0,
 }
 
 
