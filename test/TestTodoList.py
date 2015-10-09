@@ -33,18 +33,18 @@ class TodoListTester(TopydoTest):
         super(TodoListTester, self).setUp()
 
         self.todofile = TodoFile('test/data/TodoListTest.txt')
-        lines = [line for line in self.todofile.read() \
+        lines = [line for line in self.todofile.read()
                  if re.search(r'\S', line)]
         self.text = ''.join(lines)
         self.todolist = TodoListBase(lines)
 
     def test_contexts(self):
-        self.assertEqual(set(['Context1', 'Context2']), \
+        self.assertEqual(set(['Context1', 'Context2']),
                          self.todolist.contexts())
         self.assertFalse(self.todolist.is_dirty())
 
     def test_projects(self):
-        self.assertEqual(set(['Project1', 'Project2']), \
+        self.assertEqual(set(['Project1', 'Project2']),
                          self.todolist.projects())
         self.assertFalse(self.todolist.is_dirty())
 
@@ -54,9 +54,9 @@ class TodoListTester(TopydoTest):
         todo = self.todolist.add(text)
 
         self.assertEqual(self.todolist.todo(count+1).source(), text)
-        self.assertEqual(set(['Project1', 'Project2', 'Project3']), \
+        self.assertEqual(set(['Project1', 'Project2', 'Project3']),
                          self.todolist.projects())
-        self.assertEqual(set(['Context1', 'Context2', 'Context3']), \
+        self.assertEqual(set(['Context1', 'Context2', 'Context3']),
                          self.todolist.contexts())
         self.assertEqual(self.todolist.number(todo), 6)
         self.assertTrue(self.todolist.is_dirty())
@@ -99,7 +99,7 @@ class TodoListTester(TopydoTest):
         todo = self.todolist.todo(2)
         self.todolist.delete(todo)
 
-        self.assertEqual(self.todolist.todo(2).source(), \
+        self.assertEqual(self.todolist.todo(2).source(),
                          "(C) Baz @Context1 +Project1 key:value")
         self.assertEqual(self.todolist.count(), count - 1)
         self.assertTrue(self.todolist.is_dirty())
@@ -119,9 +119,9 @@ class TodoListTester(TopydoTest):
         todo = self.todolist.todo(3)
         self.todolist.append(todo, "@Context3")
 
-        self.assertEqual(todo.source(), \
+        self.assertEqual(todo.source(),
                          "(C) Baz @Context1 +Project1 key:value @Context3")
-        self.assertEqual(set(['Context1', 'Context2', 'Context3']), \
+        self.assertEqual(set(['Context1', 'Context2', 'Context3']),
                          self.todolist.contexts())
         self.assertTrue(self.todolist.is_dirty())
 
@@ -131,7 +131,7 @@ class TodoListTester(TopydoTest):
         self.todolist.append(todo, "foo:bar")
 
         self.assertEqual(todo.text(), text)
-        self.assertEqual(todo.source(), \
+        self.assertEqual(todo.source(),
                          "(C) Baz @Context1 +Project1 key:value foo:bar")
 
     def test_append3(self):
@@ -248,23 +248,23 @@ class TodoListDependencyTester(TopydoTest):
 
     def test_check_dep(self):
         children = self.todolist.children(self.todolist.todo(1))
-        self.assertEqual(sorted([todo.source() for todo in children]), \
+        self.assertEqual(sorted([todo.source() for todo in children]),
                          sorted(['Bar p:1', 'Baz p:1 id:2', 'Buzz p:2']))
 
         children = self.todolist.children(self.todolist.todo(1), True)
-        self.assertEqual(sorted([todo.source() for todo in children]), \
+        self.assertEqual(sorted([todo.source() for todo in children]),
                          sorted(['Bar p:1', 'Baz p:1 id:2']))
 
         children = self.todolist.children(self.todolist.todo(3))
-        self.assertEqual(sorted([todo.source() for todo in children]), \
+        self.assertEqual(sorted([todo.source() for todo in children]),
                          ['Buzz p:2'])
 
         parents = self.todolist.parents(self.todolist.todo(4))
-        self.assertEqual(sorted([todo.source() for todo in parents]), \
+        self.assertEqual(sorted([todo.source() for todo in parents]),
                          sorted(['Foo id:1', 'Baz p:1 id:2']))
 
         parents = self.todolist.parents(self.todolist.todo(4), True)
-        self.assertEqual(sorted([todo.source() for todo in parents]), \
+        self.assertEqual(sorted([todo.source() for todo in parents]),
                          ['Baz p:1 id:2'])
 
         self.assertEqual(self.todolist.children(self.todolist.todo(2)), [])

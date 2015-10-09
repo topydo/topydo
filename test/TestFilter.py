@@ -41,7 +41,7 @@ class FilterTest(TopydoTest):
         filtered_todos = grep.filter(todos)
         reference = load_file('test/data/FilterTest1a-result.txt')
 
-        self.assertEqual(todolist_to_string(filtered_todos), \
+        self.assertEqual(todolist_to_string(filtered_todos),
                          todolist_to_string(reference))
 
     def test_filter05(self):
@@ -52,7 +52,7 @@ class FilterTest(TopydoTest):
         filtered_todos = grep.filter(todos)
         reference = load_file('test/data/FilterTest1b-result.txt')
 
-        self.assertEqual(todolist_to_string(filtered_todos), \
+        self.assertEqual(todolist_to_string(filtered_todos),
                          todolist_to_string(reference))
 
     def test_filter06(self):
@@ -63,7 +63,7 @@ class FilterTest(TopydoTest):
         filtered_todos = grep.filter(todos)
         reference = load_file('test/data/FilterTest1c-result.txt')
 
-        self.assertEqual(todolist_to_string(filtered_todos), \
+        self.assertEqual(todolist_to_string(filtered_todos),
                          todolist_to_string(reference))
 
     def test_filter07(self):
@@ -74,7 +74,7 @@ class FilterTest(TopydoTest):
         filtered_todos = depfilter.filter(todolist.todos())
         reference = load_file('test/data/FilterTest2-result.txt')
 
-        self.assertEqual(todolist_to_string(filtered_todos), \
+        self.assertEqual(todolist_to_string(filtered_todos),
                          todolist_to_string(reference))
 
     def test_filter08(self):
@@ -85,7 +85,7 @@ class FilterTest(TopydoTest):
         filtered_todos = grep.filter(todos)
         reference = load_file('test/data/FilterTest1a-result.txt')
 
-        self.assertEqual(todolist_to_string(filtered_todos), \
+        self.assertEqual(todolist_to_string(filtered_todos),
                          todolist_to_string(reference))
 
     def test_filter09(self):
@@ -160,7 +160,7 @@ class FilterTest(TopydoTest):
         filtered_todos = grep.filter(todos)
         reference = load_file('test/data/FilterTest3-result.txt')
 
-        self.assertEqual(todolist_to_string(filtered_todos), \
+        self.assertEqual(todolist_to_string(filtered_todos),
                          todolist_to_string(reference))
 
     def test_filter17(self):
@@ -172,7 +172,7 @@ class FilterTest(TopydoTest):
         filtered_todos = andfilter.filter(todos)
         reference = load_file('test/data/FilterTest4-result.txt')
 
-        self.assertEqual(todolist_to_string(filtered_todos), \
+        self.assertEqual(todolist_to_string(filtered_todos),
                          todolist_to_string(reference))
 
     def test_filter18(self):
@@ -184,7 +184,7 @@ class FilterTest(TopydoTest):
         filtered_todos = grep.filter(todos)
         reference = load_file('test/data/FilterTest5-result.txt')
 
-        self.assertEqual(todolist_to_string(filtered_todos), \
+        self.assertEqual(todolist_to_string(filtered_todos),
                          todolist_to_string(reference))
 
     def test_filter20(self):
@@ -194,7 +194,7 @@ class FilterTest(TopydoTest):
         filtered_todos = otf.filter(todos)
         reference = load_file('test/data/FilterTest6-result.txt')
 
-        self.assertEqual(todolist_to_string(filtered_todos), \
+        self.assertEqual(todolist_to_string(filtered_todos),
                          todolist_to_string(reference))
 
     def test_filter21(self):

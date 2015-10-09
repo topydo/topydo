@@ -69,7 +69,7 @@ class TodoBase(object):
         the given key-value combination.
         """
 
-        result = [t for t in self.tag_values(p_key) \
+        result = [t for t in self.tag_values(p_key)
                   if p_value == "" or t == p_value]
         return len(result) > 0
 
@@ -100,7 +100,7 @@ class TodoBase(object):
 
         if not p_force_add and value:
             # remove old value from the tags
-            self.fields['tags'] = [t for t in self.fields['tags'] \
+            self.fields['tags'] = [t for t in self.fields['tags']
                                    if not (t[0] == p_key and t[1] == value)]
 
             self.src = re.sub(
@@ -123,7 +123,7 @@ class TodoBase(object):
 
         # Build a new list that excludes the specified tag, match by value when
         # p_value is given.
-        self.fields['tags'] = [t for t in self.fields['tags'] \
+        self.fields['tags'] = [t for t in self.fields['tags']
                                if not (t[0] == p_key and (p_value == "" or
                                                           t[1] == p_value))]
 
@@ -146,7 +146,7 @@ class TodoBase(object):
         the task was completed.
         """
 
-        if not self.is_completed() and \
+        if not self.is_completed() and
                 (p_priority == None or is_valid_priority(p_priority)):
 
             self.fields['priority'] = p_priority
@@ -206,7 +206,7 @@ class TodoBase(object):
             self.fields['completed'] = True
             self.fields['completionDate'] = p_completion_date
 
-            self.src = re.sub(r'^(\([A-Z]\) )?', \
+            self.src = re.sub(r'^(\([A-Z]\) )?',
                               'x ' + p_completion_date.isoformat() + ' ',
                               self.src)
 
@@ -221,7 +221,7 @@ class TodoBase(object):
         # exceptions, hence the lambda
         self.src = re.sub(
             r'^(x \d{4}-\d{2}-\d{2} |\([A-Z]\) )?(\d{4}-\d{2}-\d{2} )?(.*)$',
-            lambda m: \
+            lambda m:
             u("{}{} {}").format(m.group(1) or '', p_date.isoformat(),
                                 m.group(3)), self.src)
 

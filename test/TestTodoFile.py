@@ -31,7 +31,7 @@ class TodoFileTest(TopydoTest):
         todofile = load_file('test/data/utf-8.txt')
 
         self.assertEqual(todofile[0].source(),
-        				 u('(C) \u25ba UTF-8 test \u25c4'))
+                         u('(C) \u25ba UTF-8 test \u25c4'))
 
 if __name__ == '__main__':
     unittest.main()

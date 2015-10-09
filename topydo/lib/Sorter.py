@@ -41,10 +41,10 @@ def get_field_function(p_field):
     elif p_field == 'creationdate' or p_field == 'creation':
         # when a task has no creation date, push it to the end by assigning it
         # the maximum possible date.
-        result = (lambda a: a.creation_date() if a.creation_date() \
+        result = (lambda a: a.creation_date() if a.creation_date()
                   else date.max)
     elif p_field == 'done' or p_field == 'completed' or p_field == 'completion':
-        result = (lambda a: a.completion_date() if a.completion_date() \
+        result = (lambda a: a.completion_date() if a.completion_date()
                   else date.max)
     elif p_field == 'importance':
         result = importance
@@ -56,7 +56,7 @@ def get_field_function(p_field):
         # try to find the corresponding tag
         # when a tag is not present, push it to the end of the list by giving
         # it an artificially higher value
-        result = (lambda a: "0" + a.tag_value(p_field) if a.has_tag(p_field) \
+        result = (lambda a: "0" + a.tag_value(p_field) if a.has_tag(p_field)
                   else "1")
 
     return result
@@ -116,8 +116,8 @@ class Sorter(object):
         fields = self.sortstring.lower().split(',')
 
         for field in fields:
-            parsed_field = re.match( \
-                r'(?P<order>(asc|desc)(ending)?:)?(?P<field>\S+)', \
+            parsed_field = re.match(
+                r'(?P<order>(asc|desc)(ending)?:)?(?P<field>\S+)',
                 field)
 
             if not parsed_field:
