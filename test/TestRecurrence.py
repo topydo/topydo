@@ -20,7 +20,7 @@ import unittest
 from topydo.lib.Config import config
 from topydo.lib.Recurrence import advance_recurring_todo, NoRecurrenceException
 from topydo.lib.Todo import Todo
-from test.TopydoTest import TopydoTest
+from test.TestTopydo import TopydoTest
 
 class RecurrenceTest(TopydoTest):
     def setUp(self):

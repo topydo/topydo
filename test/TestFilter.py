@@ -20,9 +20,9 @@ from datetime import date, timedelta
 import unittest
 
 from topydo.lib import Filter
-from test.TestFacilities import load_file, todolist_to_string, load_file_to_todolist
+from test.Facilities import load_file, todolist_to_string, load_file_to_todolist
 from topydo.lib.Todo import Todo
-from test.TopydoTest import TopydoTest
+from test.TestTopydo import TopydoTest
 
 class FilterTest(TopydoTest):
     def test_filter03(self):

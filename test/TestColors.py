@@ -19,7 +19,7 @@
 import unittest
 from topydo.lib.Colors import Colors, NEUTRAL_COLOR
 from topydo.lib.Config import config
-from test.TopydoTest import TopydoTest
+from test.TestTopydo import TopydoTest
 
 class ColorsTest(TopydoTest):
     def test_project_color1(self):

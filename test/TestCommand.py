@@ -16,26 +16,22 @@
 
 import unittest
 
-from topydo.lib.Config import config
-from test.TopydoTest import TopydoTest
+from topydo.lib.Utils import escape_ansi
+from test.TestTopydo import TopydoTest
 
-class ConfigTest(TopydoTest):
-    def test_config1(self):
-        self.assertEqual(config("test/data/config1").default_command(), 'do')
+class CommandTest(TopydoTest):
+    def __init__(self, *args, **kwargs):
+        super(CommandTest, self).__init__(*args, **kwargs)
+        self.output = ""
+        self.errors = ""
 
-    def test_config2(self):
-        self.assertNotEqual(config("").default_command(), 'do')
+    def out(self, p_output):
+        if p_output:
+            self.output += escape_ansi(p_output + "\n")
 
-    def test_config3(self):
-        self.assertTrue(config("test/data/config2").ignore_weekends())
-
-    def test_config4(self):
-        """ Test that value in file is overridden by parameter. """
-        overrides = {
-            ('topydo', 'default_command'): 'edit'
-        }
-
-        self.assertEqual(config("test/data/config1", p_overrides=overrides).default_command(), 'edit')
+    def error(self, p_error):
+        if p_error:
+            self.errors += escape_ansi(p_error + "\n")
 
 if __name__ == '__main__':
     unittest.main()

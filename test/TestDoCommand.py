@@ -19,7 +19,7 @@ import unittest
 from six import u
 
 from topydo.commands.DoCommand import DoCommand
-from test.CommandTest import CommandTest
+from test.TestCommand import CommandTest
 from topydo.lib.TodoList import TodoList
 
 def _yes_prompt(self):

@@ -17,7 +17,7 @@
 import unittest
 from six import u
 
-from test.CommandTest import CommandTest
+from test.TestCommand import CommandTest
 from topydo.lib.Config import config
 from topydo.commands.DeleteCommand import DeleteCommand
 from topydo.lib.TodoList import TodoList

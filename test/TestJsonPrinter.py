@@ -16,7 +16,7 @@
 
 from topydo.lib.JsonPrinter import JsonPrinter
 from topydo.lib.Todo import Todo
-from test.TopydoTest import TopydoTest
+from test.TestTopydo import TopydoTest
 
 class JsonPrinterTest(TopydoTest):
     """

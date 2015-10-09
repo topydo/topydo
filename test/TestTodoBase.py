@@ -21,7 +21,7 @@ import re
 import unittest
 
 from topydo.lib.TodoBase import TodoBase
-from test.TopydoTest import TopydoTest
+from test.TestTopydo import TopydoTest
 
 class TodoBaseTester(TopydoTest):
     def test_parse_tag(self):

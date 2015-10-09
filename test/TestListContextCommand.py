@@ -17,8 +17,8 @@
 import unittest
 
 from topydo.commands.ListContextCommand import ListContextCommand
-from test.CommandTest import CommandTest
-from test.TestFacilities import load_file_to_todolist
+from test.TestCommand import CommandTest
+from test.Facilities import load_file_to_todolist
 
 class ListContextCommandTest(CommandTest):
     def test_contexts1(self):

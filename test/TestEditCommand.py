@@ -27,7 +27,7 @@ from six import u
 import os
 
 from topydo.commands.EditCommand import EditCommand
-from test.CommandTest import CommandTest
+from test.TestCommand import CommandTest
 from topydo.lib.TodoList import TodoList
 from topydo.lib.Todo import Todo
 from topydo.lib.Config import config

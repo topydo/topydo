@@ -25,7 +25,7 @@ from topydo.lib.TodoFile import TodoFile
 from topydo.lib.TodoListBase import InvalidTodoException
 from topydo.lib.TodoList import TodoList
 from topydo.lib.TodoListBase import TodoListBase
-from test.TopydoTest import TopydoTest
+from test.TestTopydo import TopydoTest
 
 class TodoListTester(TopydoTest):
     def setUp(self):

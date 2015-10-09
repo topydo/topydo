@@ -14,31 +14,28 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from datetime import date
 import unittest
 
 from topydo.lib.Config import config
-from topydo.lib.Importance import importance
-from topydo.lib.Todo import Todo
-from test.TopydoTest import TopydoTest
+from test.TestTopydo import TopydoTest
 
-class ImportanceTest(TopydoTest):
-    def test_importance1(self):
-        todo = Todo("Foo")
-        self.assertEqual(importance(todo), 2)
+class ConfigTest(TopydoTest):
+    def test_config1(self):
+        self.assertEqual(config("test/data/config1").default_command(), 'do')
 
-    def test_importance2(self):
-        todo = Todo("(A) Foo")
-        self.assertEqual(importance(todo), 5)
+    def test_config2(self):
+        self.assertNotEqual(config("").default_command(), 'do')
 
-    def test_importance3(self):
-        todo = Todo("(A) Foo " + config().tag_star() + ":1")
-        self.assertEqual(importance(todo), 6)
+    def test_config3(self):
+        self.assertTrue(config("test/data/config2").ignore_weekends())
 
-    def test_importance4(self):
-        today_str = date.today().isoformat()
-        todo = Todo("(C) Foo " + config().tag_due() + ":" + today_str)
-        self.assertEqual(importance(todo), 8)
+    def test_config4(self):
+        """ Test that value in file is overridden by parameter. """
+        overrides = {
+            ('topydo', 'default_command'): 'edit'
+        }
+
+        self.assertEqual(config("test/data/config1", p_overrides=overrides).default_command(), 'edit')
 
 if __name__ == '__main__':
     unittest.main()

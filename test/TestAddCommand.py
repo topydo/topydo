@@ -29,7 +29,7 @@ from io import StringIO
 
 from topydo.commands import AddCommand
 from topydo.commands import ListCommand
-from test.CommandTest import CommandTest
+from test.TestCommand import CommandTest
 from topydo.lib.Config import config
 from topydo.lib import TodoList
 

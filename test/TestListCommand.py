@@ -21,8 +21,8 @@ import unittest
 
 from topydo.lib.Config import config
 from topydo.commands.ListCommand import ListCommand
-from test.CommandTest import CommandTest
-from test.TestFacilities import load_file_to_todolist
+from test.TestCommand import CommandTest
+from test.Facilities import load_file_to_todolist
 
 class ListCommandTest(CommandTest):
     def setUp(self):
