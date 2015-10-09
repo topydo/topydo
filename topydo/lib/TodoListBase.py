@@ -75,7 +75,7 @@ class TodoListBase(object):
                 try:
                     result = self._id_todo_map[p_identifier]
                 except KeyError:
-                    pass # we'll try something else
+                    pass  # we'll try something else
 
             return result
 

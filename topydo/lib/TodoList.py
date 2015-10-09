@@ -37,7 +37,7 @@ class TodoList(TodoListBase):
         The string will be parsed.
         """
         # initialize these first because the constructor calls add_list
-        self._tododict = {} # hash(todo) to todo lookup
+        self._tododict = {}  # hash(todo) to todo lookup
         self._depgraph = DirectedGraph()
 
         super(TodoList, self).__init__(p_todostrings)

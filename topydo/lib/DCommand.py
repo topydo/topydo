@@ -35,7 +35,7 @@ class DCommand(MultiCommand):
 
         self.force = False
 
-        self.length = len(self.todolist.todos()) # to determine newly activated todos
+        self.length = len(self.todolist.todos())  # to determine newly activated todos
 
     def get_flags(self):
         return ("f", ["force"])

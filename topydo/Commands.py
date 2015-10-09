@@ -32,7 +32,7 @@ _SUBCOMMAND_MAP = {
     'depri': 'DepriCommand',
     'do': 'DoCommand',
     'edit': 'EditCommand',
-    'exit': 'ExitCommand', # used for the prompt
+    'exit': 'ExitCommand',  # used for the prompt
     'ls': 'ListCommand',
     'lscon': 'ListContextCommand',
     'listcon': 'ListContextCommand',

@@ -174,9 +174,9 @@ class CLIApplicationBase(object):
 
     def _help(self, args):
         if args == None:
-            pass # TODO
+            pass  # TODO
         else:
-            pass # TODO
+            pass  # TODO
 
     def _input(self):
         """

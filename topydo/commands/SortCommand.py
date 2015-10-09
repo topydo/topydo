@@ -35,7 +35,7 @@ class SortCommand(Command):
         except InvalidCommandArgument:
             expression = config().sort_string()
 
-        sorter = Sorter(expression) # TODO: validate
+        sorter = Sorter(expression)  # TODO: validate
         sorted_todos = sorter.sort(self.todolist.todos())
 
         self.todolist.erase()

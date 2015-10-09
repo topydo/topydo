@@ -23,8 +23,8 @@ from hashlib import sha1
 
 _TABLE_SIZES = {
     # we choose a large table size to reduce the chance of collisions.
-    3: 46649, # largest prime under zzz_36
-    4: 1679609 # largest prime under zzzz_36
+    3: 46649,   # largest prime under zzz_36
+    4: 1679609  # largest prime under zzzz_36
 }
 
 def _to_base36(p_value):

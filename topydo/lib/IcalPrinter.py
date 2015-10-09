@@ -69,7 +69,7 @@ class IcalPrinter(Printer):
         try:
             import icalendar
             self.icalendar = icalendar
-        except ImportError: # pragma: no cover
+        except ImportError:  # pragma: no cover
             self.icalendar = None
 
     def print_list(self, p_todos):

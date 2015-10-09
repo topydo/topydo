@@ -163,7 +163,7 @@ class EditCommandTest(CommandTest):
         os.environ['EDITOR'] = editor
         todotxt = config().todotxt()
 
-        result = self.todolist.print_todos() # copy TodoList content *before* executing command
+        result = self.todolist.print_todos()  # copy TodoList content *before* executing command
 
         command = EditCommand([], self.todolist, self.out, self.error, None)
         command.execute()
