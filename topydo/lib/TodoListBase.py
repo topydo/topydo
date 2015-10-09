@@ -89,7 +89,6 @@ class TodoListBase(object):
             When the identifier is a number but has leading zeros, the result
             will be None.
             """
-
             result = None
 
             if config().identifiers() != 'text':

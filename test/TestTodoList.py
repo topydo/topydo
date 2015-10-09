@@ -216,13 +216,11 @@ class TodoListTester(TopydoTest):
         """
         Must be able to handle integers when text identifiers are enabled.
         """
-
         config("test/data/todolist-uid.conf")
         self.assertRaises(InvalidTodoException, self.todolist.todo, 1)
 
     def test_new_uid(self):
         """ Make sure that item has new text ID after append. """
-
         config("test/data/todolist-uid.conf")
         todo = self.todolist.todo('t5c')
         self.todolist.append(todo, "A")
@@ -282,7 +280,6 @@ class TodoListDependencyTester(TopydoTest):
         Make sure that previous add_dependency invocation stored the
         edge_id properly.
         """
-
         todo1 = self.todolist.todo(1)
         todo4 = self.todolist.todo(4)
         todo5 = self.todolist.todo(5)
@@ -297,7 +294,6 @@ class TodoListDependencyTester(TopydoTest):
         """
         Test that projects are not added double.
         """
-
         todo6 = self.todolist.todo(6)
         todo7 = self.todolist.todo(7)
         projects = todo7.projects().copy()

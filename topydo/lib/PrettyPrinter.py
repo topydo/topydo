@@ -73,7 +73,6 @@ class PrettyPrinter(Printer):
 
 def pretty_printer_factory(p_todolist, p_additional_filters=None):
     """ Returns a pretty printer suitable for the ls and dep subcommands. """
-
     p_additional_filters = p_additional_filters or []
 
     printer = PrettyPrinter()

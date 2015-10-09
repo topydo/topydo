@@ -126,7 +126,6 @@ class DepCommandTest(CommandTest):
         Helper function that checks the removal of the dependency from todo 1
         to todo 3.
         """
-
         command = DepCommand(p_args, self.todolist, self.out, self.error)
         command.execute()
 

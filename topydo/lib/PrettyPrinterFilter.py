@@ -47,7 +47,6 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
 
     def filter(self, p_todo_str, p_todo):
         """ Applies the colors. """
-
         colorscheme = Colors()
         priority_colors = colorscheme.get_priority_colors()
         project_color = colorscheme.get_project_color()

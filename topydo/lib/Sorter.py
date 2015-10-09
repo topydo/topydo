@@ -101,7 +101,6 @@ class Sorter(object):
         sort operation is done first, relying on the stability of the sorted()
         function.
         """
-
         sorted_todos = p_todos
         for function, order in reversed(self.functions):
             sorted_todos = sorted(sorted_todos, key=function,

@@ -49,7 +49,6 @@ class TodoFile(object):
         p_todos can be a list of todo items, or a string that is just written
         to the file.
         """
-
         todofile = codecs.open(self.path, 'w', encoding="utf-8")
 
         if p_todos is list:

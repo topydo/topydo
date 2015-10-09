@@ -98,6 +98,7 @@ class IcalPrinter(Printer):
             Gets a unique ID from a todo item, stored by the ical tag. If the
             tag is not present, a random value is assigned to it and returned.
             """
+
             def generate_uid(p_length=4):
                 """
                 Generates a random string of the given length, used as

@@ -110,14 +110,12 @@ class TodoBaseTester(TopydoTest):
 
     def test_tag_empty_value(self):
         """ Tag should not be recorded when there is no value. """
-
         todo = TodoBase("(C) Foo foo:")
 
         self.assertFalse(todo.has_tag('foo'))
 
     def test_tag_empty_key(self):
         """ Tag should not be recorded when there is no key. """
-
         todo = TodoBase("(C) Foo :bar")
 
         self.assertFalse(todo.has_tag(''))

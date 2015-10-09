@@ -26,7 +26,6 @@ class Filter(object):
         Filters a list of todos. Truncates the list after p_limit todo
         items (or no maximum limit if omitted).
         """
-
         return [t for t in p_todos if self.match(t)]
 
     def match(self, _):

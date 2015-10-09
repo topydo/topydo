@@ -78,7 +78,6 @@ def write(p_file, p_string):
 
 def error(p_string):
     """ Writes an error on the standard error. """
-
     write(sys.stderr, p_string)
 
 

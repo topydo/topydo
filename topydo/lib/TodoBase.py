@@ -58,7 +58,6 @@ class TodoBase(object):
         Returns a list of all tag values associated with p_key. Returns
         empty list if p_key does not exist.
         """
-
         tags = self.fields['tags']
         matches = [tag[1] for tag in tags if tag[0] == p_key]
         return matches if len(matches) else []
@@ -69,7 +68,6 @@ class TodoBase(object):
         value is passed, it will only return true when there exists a tag with
         the given key-value combination.
         """
-
         result = [t for t in self.tag_values(p_key)
                   if p_value == "" or t == p_value]
         return len(result) > 0
@@ -92,7 +90,6 @@ class TodoBase(object):
         When p_old_value is set, all tags having this value will be set to the
         new value.
         """
-
         if p_value == "":
             self.remove_tag(p_key, p_old_value)
             return
@@ -146,7 +143,6 @@ class TodoBase(object):
         Priority remains unchanged when an invalid priority is given, or when
         the task was completed.
         """
-
         if not self.is_completed() and (p_priority is None or
                                         is_valid_priority(p_priority)):
             self.fields['priority'] = p_priority

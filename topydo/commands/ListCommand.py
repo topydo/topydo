@@ -75,7 +75,6 @@ class ListCommand(ExpressionCommand):
         printing). If a format was specified on the commandline, this format is
         sent to the output.
         """
-
         if self.printer is None:
             # create a standard printer with some filters
             indent = config().list_indent()

@@ -95,7 +95,6 @@ def relative_date_to_date(p_date, p_offset=None):
     * 'today' or 'tomorrow'
     * days of the week (in full or abbreviated)
     """
-
     result = None
     p_date = p_date.lower()
     p_offset = p_offset or date.today()

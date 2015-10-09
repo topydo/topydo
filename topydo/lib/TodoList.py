@@ -58,7 +58,6 @@ class TodoList(TodoListBase):
         Makes sure that the dependency graph is consistent according to the
         given todo.
         """
-
         dep_id = p_todo.tag_value('id')
         # maintain dependency graph
         if dep_id:
@@ -226,6 +225,5 @@ class TodoList(TodoListBase):
         This is used for calculating the average importance, that requires
         access to a todo's parents.
         """
-
         for todo in self._todos:
             todo.attributes['parents'] = self.parents(todo)

@@ -72,7 +72,6 @@ class PromptApplication(CLIApplicationBase):
         If the modification time of the todo.txt file is equal to the last time
         it was checked, nothing will be done.
         """
-
         current_mtime = _todotxt_mtime()
 
         if not self.todofile or self.mtime != current_mtime:
