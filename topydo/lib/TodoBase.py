@@ -216,7 +216,7 @@ class TodoBase(object):
         """
         self.fields['creationDate'] = p_date
 
-        # not particulary pretty, but inspired by
+        # not particularly pretty, but inspired by
         # http://bugs.python.org/issue1519638 non-existent matches trigger
         # exceptions, hence the lambda
         self.src = re.sub(

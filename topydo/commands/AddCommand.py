@@ -61,7 +61,7 @@ class AddCommand(Command):
     def _add_todo(self, p_todo_text):
         def _preprocess_input_todo(p_todo_text):
             """
-            Preprocesses user input when adding a task.
+            Pre-processes user input when adding a task.
 
             It detects a priority mid-sentence and puts it at the start.
             """

@@ -44,7 +44,7 @@ def parse_line(p_string):
     First checks whether the standard elements are present, such as priority,
     creation date, completeness check and the completion date.
 
-    Then the rest of the analyzed for any occurences of contexts, projects or
+    Then the rest of the analyzed for any occurrences of contexts, projects or
     tags.
 
     Returns an dictionary with the default values as shown below.

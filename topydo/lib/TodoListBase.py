@@ -86,7 +86,7 @@ class TodoListBase(object):
             """
             Attempts to find the todo on the given line number.
 
-            When the identifier is a number but has leading zeroes, the result
+            When the identifier is a number but has leading zeros, the result
             will be None.
             """
 

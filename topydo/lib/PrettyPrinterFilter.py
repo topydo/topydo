@@ -28,7 +28,7 @@ class PrettyPrinterFilter(object):
     """
     Base class for a pretty printer filter.
 
-    Subclasses must reimplement the filter method.
+    Subclasses must re-implement the filter method.
     """
 
     def filter(self, p_todo_str, _):
@@ -111,7 +111,7 @@ class PrettyPrinterNumbers(PrettyPrinterFilter):
 
 
 class PrettyPrinterHideTagFilter(PrettyPrinterFilter):
-    """ Removes all occurences of the given tags from the text. """
+    """ Removes all occurrences of the given tags from the text. """
     def __init__(self, p_hidden_tags):
         super(PrettyPrinterHideTagFilter, self).__init__()
         self.hidden_tags = p_hidden_tags
