@@ -246,11 +246,24 @@ class PrettyPrinterHumanDatesFilter(PrettyPrinterFilter):
             line4 = line3
 
         """ Threshold dates """
+        pattern4 = re.compile('(?P<is_date> ' + config().tag_start() + ':(?P<year>\d{4})-(?P<month>\d{1,2})-(?P<day>\d{1,2}) ?)')
+        matches4 = pattern4.search(line3)
+        if matches4:
+            thresholddelta = 'threshold of ' + self.humanize_from_match(matches4)
+
+            if addingdates is True:
+                thresholddelta = ', ' + thresholddelta
+            addingdates = True
+            line5 = pattern4.sub(' ', line4)
+        else:
+            thresholddelta = ''
+            line5 = line4
         # To-do: implement this
 
         if addingdates is True:
-            line5 = line4.rstrip() + ' (' + adddelta + duedelta + ')'
+            line6 = line5.rstrip() + ' (' + adddelta + duedelta + \
+                        thresholddelta + ')'
         else:
-            line5 = line4
+            line6 = line5
 
-        return line5
+        return line6
