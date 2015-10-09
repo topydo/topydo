@@ -226,4 +226,3 @@ class CLIApplicationBase(object):
 
     def run(self):
         raise NotImplementedError
-

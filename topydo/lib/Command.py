@@ -92,4 +92,3 @@ class Command(object):
     def help(self):
         """ Returns the help text for this command. """
         raise NotImplementedError
-

@@ -110,4 +110,3 @@ def get_subcommand(p_args):
             result = import_subcommand(p_command)
 
     return (result, args)
-

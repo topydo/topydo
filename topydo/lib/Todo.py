@@ -95,4 +95,3 @@ class Todo(TodoBase):
             return diff.days
         else:
             return 0
-

@@ -226,4 +226,3 @@ class TodoBase(object):
     def creation_date(self):
         """ Returns the creation date of a todo. """
         return self.fields['creationDate']
-

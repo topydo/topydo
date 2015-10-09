@@ -103,4 +103,3 @@ def parse_line(p_string):
     result['text'] = result['text'][:-1]
 
     return result
-

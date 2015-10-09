@@ -478,4 +478,3 @@ class PriorityFilterTest(TopydoTest):
 
 if __name__ == '__main__':
     unittest.main()
-
