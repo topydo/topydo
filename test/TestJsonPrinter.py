@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import unittest
+
 from topydo.lib.JsonPrinter import JsonPrinter
 from topydo.lib.Todo import Todo
 from test.TestTopydo import TopydoTest
@@ -32,3 +34,6 @@ class JsonPrinterTest(TopydoTest):
         result = printer.print_todo(todo)
 
         self.assertEqual(result, '{"completed": false, "completion_date": null, "contexts": [], "creation_date": "2015-06-06", "priority": null, "projects": [], "source": "2015-06-06 Foo due:2015-05-32", "tags": [["due", "2015-05-32"]], "text": "Foo"}')
+
+if __name__ == '__main__':
+    unittest.main()
