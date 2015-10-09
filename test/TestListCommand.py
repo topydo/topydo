@@ -241,7 +241,7 @@ class ListCommandUnicodeTest(CommandTest):
         self.todolist = load_file_to_todolist("test/data/ListCommandUnicodeTest.txt")
 
     def test_list_unicode1(self):
-        """ Unicode filters """
+        """ Unicode filters."""
         command = ListCommand([u("\u25c4")], self.todolist, self.out,
                               self.error)
         command.execute()

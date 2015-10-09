@@ -68,7 +68,7 @@ class TagCommand(Command):
 
     def _choose(self):
         """
-        Returns the chosen number of the tag value to process (or "all")
+        Returns the chosen number of the tag value to process (or "all").
         """
         answer = "all"
 

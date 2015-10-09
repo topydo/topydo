@@ -90,7 +90,7 @@ class FilterTest(TopydoTest):
                          todolist_to_string(reference))
 
     def test_filter09(self):
-        """ Test instance filter """
+        """ Test instance filter. """
         todos = load_file('test/data/FilterTest1.txt')
         instance_filter = Filter.InstanceFilter(todos[2:])
 
@@ -99,7 +99,7 @@ class FilterTest(TopydoTest):
         self.assertEqual(todos[2:], filtered_todos)
 
     def test_filter10(self):
-        """ Test instance filter """
+        """ Test instance filter. """
         todos = load_file('test/data/FilterTest1.txt')
         instance_filter = Filter.InstanceFilter([])
 
@@ -108,7 +108,7 @@ class FilterTest(TopydoTest):
         self.assertEqual([], filtered_todos)
 
     def test_filter11(self):
-        """ Test instance filter """
+        """ Test instance filter. """
         todos = load_file('test/data/FilterTest1.txt')
         instance_filter = Filter.InstanceFilter(todos[2:])
 

@@ -28,7 +28,7 @@ class SortCommandTest(CommandTest):
         self.todolist = load_file_to_todolist("test/data/SorterTest1.txt")
 
     def test_sort1(self):
-        """ Alphabetically sorted """
+        """ Alphabetically sorted. """
         command = SortCommand(["text"], self.todolist, self.out, self.error)
         command.execute()
 

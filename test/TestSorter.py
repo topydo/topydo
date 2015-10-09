@@ -38,7 +38,7 @@ class SorterTest(TopydoTest):
         self.assertEqual(todolist_to_string(todos), text_before)
 
     def test_sort01(self):
-        """ Alphabetically sorted """
+        """ Alphabetically sorted. """
         sorter = Sorter('text')
         self.sort_file('test/data/SorterTest1.txt',
                        'test/data/SorterTest1-result.txt', sorter)
@@ -69,19 +69,19 @@ class SorterTest(TopydoTest):
                        'test/data/SorterTest3-result.txt', sorter)
 
     def test_sort04(self):
-        """ Ascendingly sorted by due date """
+        """ Ascendingly sorted by due date. """
         sorter = Sorter(config().tag_due())
         self.sort_file('test/data/SorterTest4.txt',
                        'test/data/SorterTest4-result.txt', sorter)
 
     def test_sort05(self):
-        """ Descendingly sorted by due date """
+        """ Descendingly sorted by due date. """
         sorter = Sorter('desc:due')
         self.sort_file('test/data/SorterTest5.txt',
                        'test/data/SorterTest5-result.txt', sorter)
 
     def test_sort06(self):
-        """ Ascendingly sorted by creation date """
+        """ Ascendingly sorted by creation date. """
         sorter = Sorter('creation')
         self.sort_file('test/data/SorterTest6.txt',
                        'test/data/SorterTest6-result.txt', sorter)
@@ -93,7 +93,7 @@ class SorterTest(TopydoTest):
                        'test/data/SorterTest7-result.txt', sorter)
 
     def test_sort08(self):
-        """ Descendingly sorted by importance """
+        """ Descendingly sorted by importance. """
         sorter = Sorter('desc:importance')
         self.sort_file('test/data/SorterTest8.txt',
                        'test/data/SorterTest8-result.txt', sorter)

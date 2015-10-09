@@ -114,8 +114,7 @@ class TodoList(TodoListBase):
             """
             def id_exists(p_id):
                 """
-                Returns True if there exists a todo with the given parent
-                ID.
+                Returns True if there exists a todo with the given parent ID.
                 """
                 for todo in self._todos:
                     if todo.has_tag('id', str(p_id)):

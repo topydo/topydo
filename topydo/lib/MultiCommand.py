@@ -63,7 +63,7 @@ class MultiCommand(ExpressionCommand):
         self.todos = self._view().todos
 
     def get_todos(self):
-        """ Gets todo objects from supplied todo IDs """
+        """ Gets todo objects from supplied todo IDs. """
         if self.is_expression:
             self.get_todos_from_expr()
         else:

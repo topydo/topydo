@@ -226,7 +226,7 @@ class AddCommandTest(CommandTest):
 
     def test_add_dep09(self):
         """
-        The text ID shown after adding and after an 'ls' must be equal."
+        The text ID shown after adding and after an 'ls' must be equal.
         By appending the parent's projects, the textual ID may change.
         """
         config("test/data/todolist-uid-projects.conf")
@@ -249,7 +249,7 @@ class AddCommandTest(CommandTest):
 
     def test_add_dep10(self):
         """
-        The text ID shown after adding and after an 'ls' must be equal."
+        The text ID shown after adding and after an 'ls' must be equal.
         By appending the parent's contexts, the textual ID may change.
         """
         config("test/data/todolist-uid-contexts.conf")
