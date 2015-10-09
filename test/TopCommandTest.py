@@ -18,6 +18,7 @@ from six import u
 import unittest
 
 from topydo.lib.Config import config
+from topydo.lib.Utils import get_terminal_size
 from topydo.commands.TopCommand import TopCommand
 from test.CommandTest import CommandTest
 from test.TestFacilities import load_file_to_todolist
@@ -183,9 +184,7 @@ class TopCommandTest(CommandTest):
         self.assertEqual(self.output, "|  3| C Baz @Context1 +Project1 key:value id:1\n|  1| C Foo @Context2 Not@Context +Project1 Not+Project\n")
         self.assertEqual(self.errors, "")
 
-    # skip test_top20 through test_top29
-
-    # To-Do: add tests with multiline todo items, add tests of human readable dates
+    # skip test_top20 through test_top30
 
     def test_help(self):
         command = TopCommand(["help"], self.todolist, self.out, self.error)
@@ -193,6 +192,37 @@ class TopCommandTest(CommandTest):
 
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors, command.usage() + "\n\n" + command.help() + "\n")
+
+
+class TopCommandLongLinesTest(CommandTest):
+
+    def setUp(self):
+        super(TopCommandLongLinesTest, self).setUp()
+        self.todolist = load_file_to_todolist("test/data/TopCommandLongLinesTest.txt")
+
+    def test_top31(self):
+        """ Test that multiline todo items are trucated. """
+        command = TopCommand([], self.todolist, self.out, self.error)
+        command.execute()
+
+        column_count, _ = get_terminal_size()
+
+        self.assertFalse(self.todolist.is_dirty())
+        for line in self.output.splitlines():
+            self.assertTrue(len(line) > column_count)
+        self.assertEqual(self.errors, "")
+
+    def test_top32(self):
+        """ Test that only a screenful of lines a printed. """
+        command = TopCommand([], self.todolist, self.out, self.error)
+        command.execute()
+
+        _, line_count = get_terminal_size()
+
+        self.assertFalse(self.todolist.is_dirty())
+        lines = self.output.splitlines()
+        self.assertTrue(len(lines) <= line_count - 3)
+        self.assertEqual(self.errors, "")
 
 
 class TopCommandUnicodeTest(CommandTest):
