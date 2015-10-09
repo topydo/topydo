@@ -131,13 +131,13 @@ class DepCommandTest(CommandTest):
         self.rm_helper(["rm", "1", "to", "3"])
 
     def test_rm2(self):
-        self.rm_helper(["rm", "1", "3"]) 
+        self.rm_helper(["rm", "1", "3"])
 
     def test_del1(self):
         self.rm_helper(["del", "1", "to", "3"])
 
     def test_del2(self):
-        self.rm_helper(["del", "1", "3"]) 
+        self.rm_helper(["del", "1", "3"])
 
     def test_rm3(self):
         command = DepCommand(["rm", "99", "3"], self.todolist, self.out, self.error)

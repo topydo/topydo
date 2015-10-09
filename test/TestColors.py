@@ -150,7 +150,7 @@ class ColorsTest(TopydoTest):
 
         self.assertEqual(color['A'], NEUTRAL_COLOR)
         self.assertEqual(color['B'], NEUTRAL_COLOR)
-        self.assertEqual(color['C'], NEUTRAL_COLOR) 
+        self.assertEqual(color['C'], NEUTRAL_COLOR)
 
     def test_empty_color_values(self):
         config("test/data/ColorsTest5.conf")
