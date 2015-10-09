@@ -33,7 +33,7 @@ class TodoListTester(TopydoTest):
 
         self.todofile = TodoFile('test/data/TodoListTest.txt')
         lines = [line for line in self.todofile.read() \
-                       if re.search(r'\S', line)]
+                 if re.search(r'\S', line)]
         self.text = ''.join(lines)
         self.todolist = TodoListBase(lines)
 

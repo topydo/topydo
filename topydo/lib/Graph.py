@@ -130,8 +130,8 @@ class DirectedGraph(object):
         """
         Returns True iff the given node has no incoming or outgoing edges.
         """
-        return len(self.incoming_neighbors(p_id)) == 0 \
-           and len(self.outgoing_neighbors(p_id)) == 0
+        return(len(self.incoming_neighbors(p_id)) == 0
+               and len(self.outgoing_neighbors(p_id)) == 0)
 
     def has_edge(self, p_from, p_to):
         """ Returns True when the graph has the given edge. """

@@ -69,7 +69,7 @@ class TodoBase(object):
         """
 
         result = [t for t in self.tag_values(p_key) \
-                    if p_value == "" or t == p_value]
+                  if p_value == "" or t == p_value]
         return len(result) > 0
 
     def add_tag(self, p_key, p_value):

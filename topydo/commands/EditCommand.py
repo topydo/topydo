@@ -85,7 +85,7 @@ class EditCommand(MultiCommand):
             return 1
         except(OSError):
             self.error('There is no such editor as: ' + editor + '. '
-                        'Check your $EDITOR and/or $PATH')
+                       'Check your $EDITOR and/or $PATH')
 
     def _catch_todo_errors(self):
         errors = []
@@ -117,7 +117,7 @@ class EditCommand(MultiCommand):
                     self.out(self.printer.print_todo(todo))
             else:
                 self.error('Number of edited todos is not equal to '
-                            'number of supplied todo IDs.')
+                           'number of supplied todo IDs.')
         else:
             self.error(self.usage())
 
