@@ -86,7 +86,7 @@ class TodoBaseTester(TopydoTest):
 
     def test_set_tag_double_value(self):
         todo = TodoBase("(C) Foo foo:bar baz:bar")
-        todo.set_tag('foo', 'blah');
+        todo.set_tag('foo', 'blah')
 
         self.assertTrue(todo.has_tag('foo'))
         self.assertTrue(todo.tag_value('foo'), 'blah')
