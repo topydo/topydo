@@ -76,7 +76,7 @@ class AddCommandTest(CommandTest):
         command.execute()
 
         self.assertEqual(self.todolist.todo(1).priority(), None)
-        self.assertEqual(self.todolist.todo(1).source(), self.today + " Fo(C)o" )
+        self.assertEqual(self.todolist.todo(1).source(), self.today + " Fo(C)o")
         self.assertEqual(self.errors, "")
 
     def test_add_priority4(self):
