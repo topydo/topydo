@@ -198,6 +198,20 @@ class PrettyPrinterHumanDatesFilter(PrettyPrinterFilter):
     def __init__(self):
         super(PrettyPrinterHumanDatesFilter, self).__init__()
 
+    def humanize_from_match(self, matchgroup):
+        """
+        Takes a match group, compares it to 'now', and then returns a 'human
+        readable' version of the difference.
+
+        Assumes the matchgroup has matches named 'year', 'month', and 'day'.
+        """
+        linedate = arrow.now()  # set the time to 'now' so the comparisions work better
+        linedate = linedate.replace(year=int(matchgroup.group('year')))
+        linedate = linedate.replace(month=int(matchgroup.group('month')))
+        linedate = linedate.replace(day=int(matchgroup.group('day')))
+        delta = linedate.humanize()
+        return(delta)
+
     def filter(self, p_todo_str, _):
 
         addingdates = False
@@ -210,11 +224,7 @@ class PrettyPrinterHumanDatesFilter(PrettyPrinterFilter):
         pattern2 = re.compile('^(?P<line_start>(\| *\w+\| )?(\(?[A-Z ]\)? )?)(?P<is_date>(?P<year>\d{4})-(?P<month>\d{1,2})-(?P<day>\d{1,2}) )')
         matches2 = pattern2.match(line2)
         if matches2:
-            linedate = arrow.now()  # set the time to 'now' so the comparisions work better
-            linedate = linedate.replace(year=int(matches2.group('year')))
-            linedate = linedate.replace(month=int(matches2.group('month')))
-            linedate = linedate.replace(day=int(matches2.group('day')))
-            adddelta = linedate.humanize()
+            adddelta = self.humanize_from_match(matches2)
             line3 = matches2.group('line_start') + pattern2.sub('', line2)
             addingdates = True
         else:
@@ -225,11 +235,7 @@ class PrettyPrinterHumanDatesFilter(PrettyPrinterFilter):
         pattern3 = re.compile('(?P<is_date> ' + config().tag_due() + ':(?P<year>\d{4})-(?P<month>\d{1,2})-(?P<day>\d{1,2}) ?)')
         matches3 = pattern3.search(line3)
         if matches3:
-            linedate = arrow.now()  # set the time to 'now' so the comparisions work better
-            linedate = linedate.replace(year=int(matches3.group('year')))
-            linedate = linedate.replace(month=int(matches3.group('month')))
-            linedate = linedate.replace(day=int(matches3.group('day')))
-            duedelta = 'due ' + linedate.humanize()
+            duedelta = 'due ' + self.humanize_from_match(matches3)
 
             if addingdates is True:
                 duedelta = ', ' + duedelta
