@@ -18,7 +18,7 @@
 
 from topydo.lib.Config import config
 
-NEUTRAL_COLOR  = '\033[0m'
+NEUTRAL_COLOR = '\033[0m'
 
 class Colors(object):
     def __init__(self):
