@@ -34,7 +34,8 @@ class TagCommandTest(CommandTest):
         self.todolist = TodoList(todos)
 
     def test_add_tag1(self):
-        command = TagCommand(["1", "due", "2014-10-22"], self.todolist, self.out, self.error)
+        command = TagCommand(["1", "due", "2014-10-22"], self.todolist,
+                             self.out, self.error)
         command.execute()
 
         self.assertEqual(self.todolist.todo(1).source(), "Foo due:2014-10-22")
@@ -43,7 +44,8 @@ class TagCommandTest(CommandTest):
         self.assertTrue(self.todolist.is_dirty())
 
     def test_add_tag2(self):
-        command = TagCommand(["Foo", "due", "2014-10-22"], self.todolist, self.out, self.error)
+        command = TagCommand(["Foo", "due", "2014-10-22"], self.todolist,
+                             self.out, self.error)
         command.execute()
 
         self.assertEqual(self.todolist.todo(1).source(), "Foo due:2014-10-22")
@@ -52,16 +54,20 @@ class TagCommandTest(CommandTest):
         self.assertTrue(self.todolist.is_dirty())
 
     def test_add_tag3(self):
-        command = TagCommand(["-a", "2", "due", "2014-10-19"], self.todolist, self.out, self.error)
+        command = TagCommand(["-a", "2", "due", "2014-10-19"], self.todolist,
+                             self.out, self.error)
         command.execute()
 
-        self.assertEqual(self.todolist.todo(2).source(), "Bar due:2014-10-22 due:2014-10-19")
-        self.assertEqual(self.output, "|  2| Bar due:2014-10-22 due:2014-10-19\n")
+        self.assertEqual(self.todolist.todo(2).source(),
+                         "Bar due:2014-10-22 due:2014-10-19")
+        self.assertEqual(self.output,
+                         "|  2| Bar due:2014-10-22 due:2014-10-19\n")
         self.assertEqual(self.errors, "")
         self.assertTrue(self.todolist.is_dirty())
 
     def test_add_tag4(self):
-        command = TagCommand(["Foox", "due", "2014-10-22"], self.todolist, self.out, self.error)
+        command = TagCommand(["Foox", "due", "2014-10-22"], self.todolist,
+                             self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -69,7 +75,8 @@ class TagCommandTest(CommandTest):
         self.assertEqual(self.errors, "Invalid todo number.\n")
 
     def test_set_tag04(self):
-        command = TagCommand(["3", "due", "2014-10-20"], self.todolist, self.out, self.error)
+        command = TagCommand(["3", "due", "2014-10-20"], self.todolist,
+                             self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -77,7 +84,8 @@ class TagCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_set_tag05(self):
-        command = TagCommand(["4", "due", "2014-10-20"], self.todolist, self.out, self.error, lambda t: "all")
+        command = TagCommand(["4", "due", "2014-10-20"], self.todolist,
+                             self.out, self.error, lambda t: "all")
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
@@ -85,7 +93,8 @@ class TagCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_set_tag06(self):
-        command = TagCommand(["4", "due", "2014-10-20"], self.todolist, self.out, self.error, lambda t: "1")
+        command = TagCommand(["4", "due", "2014-10-20"], self.todolist,
+                             self.out, self.error, lambda t: "1")
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -93,7 +102,8 @@ class TagCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_set_tag07(self):
-        command = TagCommand(["4", "due", "2014-10-20"], self.todolist, self.out, self.error, lambda t: "2")
+        command = TagCommand(["4", "due", "2014-10-20"], self.todolist,
+                             self.out, self.error, lambda t: "2")
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
@@ -101,7 +111,8 @@ class TagCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_set_tag08(self):
-        command = TagCommand(["4", "due", "2014-10-20"], self.todolist, self.out, self.error, lambda t: "")
+        command = TagCommand(["4", "due", "2014-10-20"], self.todolist,
+                             self.out, self.error, lambda t: "")
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -109,7 +120,8 @@ class TagCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_set_tag09(self):
-        command = TagCommand(["4", "due", "2014-10-20"], self.todolist, self.out, self.error, lambda t: "99")
+        command = TagCommand(["4", "due", "2014-10-20"], self.todolist,
+                             self.out, self.error, lambda t: "99")
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -117,11 +129,13 @@ class TagCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_set_tag10(self):
-        command = TagCommand(["-f", "4", "due", "2014-10-20"], self.todolist, self.out, self.error, lambda t: "99")
+        command = TagCommand(["-f", "4", "due", "2014-10-20"], self.todolist,
+                             self.out, self.error, lambda t: "99")
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEqual(self.output, "|  4| Fnord due:2014-10-20 due:2014-10-20\n")
+        self.assertEqual(self.output,
+                         "|  4| Fnord due:2014-10-20 due:2014-10-20\n")
         self.assertEqual(self.errors, "")
 
     def test_rm_tag01(self):
@@ -141,15 +155,18 @@ class TagCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_rm_tag03(self):
-        command = TagCommand(["4", "due"], self.todolist, self.out, self.error, lambda t: "all")
+        command = TagCommand(["4", "due"], self.todolist, self.out,
+                             self.error, lambda t: "all")
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEqual(self.output, " 1. 2014-10-20\n 2. 2014-10-22\n|  4| Fnord\n")
+        self.assertEqual(self.output,
+                         " 1. 2014-10-20\n 2. 2014-10-22\n|  4| Fnord\n")
         self.assertEqual(self.errors, "")
 
     def test_rm_tag04(self):
-        command = TagCommand(["4", "due"], self.todolist, self.out, self.error, lambda t: "1")
+        command = TagCommand(["4", "due"], self.todolist, self.out, self.error,
+                             lambda t: "1")
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
@@ -157,7 +174,8 @@ class TagCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_rm_tag06(self):
-        command = TagCommand(["4", "due"], self.todolist, self.out, self.error, lambda t: "99")
+        command = TagCommand(["4", "due"], self.todolist, self.out, self.error,
+                             lambda t: "99")
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -165,7 +183,8 @@ class TagCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_rm_tag07(self):
-        command = TagCommand(["4", "due"], self.todolist, self.out, self.error, lambda t: "A")
+        command = TagCommand(["4", "due"], self.todolist, self.out, self.error,
+                             lambda t: "A")
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -189,7 +208,8 @@ class TagCommandTest(CommandTest):
         self.assertEqual(self.errors, "Invalid todo number.\n")
 
     def test_rm_tag10(self):
-        command = TagCommand(["-f", "4", "due"], self.todolist, self.out, self.error, lambda t: "A")
+        command = TagCommand(["-f", "4", "due"], self.todolist, self.out,
+                             self.error, lambda t: "A")
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
@@ -209,7 +229,8 @@ class TagCommandTest(CommandTest):
         command.execute()
 
         self.assertEqual(self.output, "")
-        self.assertEqual(self.errors, command.usage() + "\n\n" + command.help() + "\n")
+        self.assertEqual(self.errors,
+                         command.usage() + "\n\n" + command.help() + "\n")
 
 if __name__ == '__main__':
     unittest.main()

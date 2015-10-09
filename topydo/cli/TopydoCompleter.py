@@ -109,7 +109,8 @@ class TopydoCompleter(Completer):
     def get_completions(self, p_document, _):
         # include all characters except whitespaces (for + and @)
         word_before_cursor = p_document.get_word_before_cursor(True)
-        is_first_word = not re.match(r'\s*\S+\s', p_document.current_line_before_cursor)
+        is_first_word = not re.match(r'\s*\S+\s',
+                                     p_document.current_line_before_cursor)
 
         if is_first_word:
             return _subcommands(word_before_cursor)

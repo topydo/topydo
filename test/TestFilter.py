@@ -132,7 +132,8 @@ class FilterTest(TopydoTest):
         filtered_todos = limit_filter.filter(todos)
 
         self.assertEqual(len(filtered_todos), 1)
-        self.assertEqual(filtered_todos[0].source(), '(C) This is part of some +Project')
+        self.assertEqual(filtered_todos[0].source(),
+                         '(C) This is part of some +Project')
 
     def test_filter14(self):
         """ Test limit filter. """

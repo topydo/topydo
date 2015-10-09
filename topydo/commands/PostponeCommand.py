@@ -85,8 +85,8 @@ Synopsis: postpone [-s] <NUMBER> [<NUMBER2> ...] <PATTERN>"
         return """\
 Postpone the todo item(s) with the given number(s) and the given pattern.
 
-Postponing is done by adjusting the due date(s) of the todo(s), and if the -s flag is
-given, the start date accordingly.
+Postponing is done by adjusting the due date(s) of the todo(s), and if the -s
+flag is given, the start date accordingly.
 
 It is also possible to postpone items as complete with an expression using
 the -e flag. Use -x to also process todo items that are normally invisible

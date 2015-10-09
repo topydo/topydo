@@ -44,37 +44,44 @@ class PostponeCommandTest(CommandTest):
         self.todolist = TodoList(todos)
 
     def test_postpone01(self):
-        command = PostponeCommand(["1", "1w"], self.todolist, self.out, self.error)
+        command = PostponeCommand(["1", "1w"], self.todolist, self.out,
+                                  self.error)
         command.execute()
 
         due = self.today + timedelta(7)
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEqual(self.output, "|  1| Foo due:{}\n".format(due.isoformat()))
+        self.assertEqual(self.output,
+                         "|  1| Foo due:{}\n".format(due.isoformat()))
         self.assertEqual(self.errors, "")
 
     def test_postpone02(self):
-        command = PostponeCommand(["2", "1w"], self.todolist, self.out, self.error)
+        command = PostponeCommand(["2", "1w"], self.todolist, self.out,
+                                  self.error)
         command.execute()
 
         due = self.today + timedelta(7)
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEqual(self.output, "|  2| Bar due:{}\n".format(due.isoformat()))
+        self.assertEqual(self.output,
+                         "|  2| Bar due:{}\n".format(due.isoformat()))
         self.assertEqual(self.errors, "")
 
     def test_postpone03(self):
-        command = PostponeCommand(["-s", "2", "1w"], self.todolist, self.out, self.error)
+        command = PostponeCommand(["-s", "2", "1w"], self.todolist, self.out,
+                                  self.error)
         command.execute()
 
         due = self.today + timedelta(7)
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEqual(self.output, "|  2| Bar due:{}\n".format(due.isoformat()))
+        self.assertEqual(self.output,
+                         "|  2| Bar due:{}\n".format(due.isoformat()))
         self.assertEqual(self.errors, "")
 
     def test_postpone04(self):
-        command = PostponeCommand(["3", "1w"], self.todolist, self.out, self.error)
+        command = PostponeCommand(["3", "1w"], self.todolist, self.out,
+                                  self.error)
         command.execute()
 
         due = self.today + timedelta(7)
@@ -84,7 +91,8 @@ class PostponeCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_postpone05(self):
-        command = PostponeCommand(["-s", "3", "1w"], self.todolist, self.out, self.error)
+        command = PostponeCommand(["-s", "3", "1w"], self.todolist, self.out,
+                                  self.error)
         command.execute()
 
         due = self.today + timedelta(7)
@@ -96,17 +104,20 @@ class PostponeCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_postpone06(self):
-        command = PostponeCommand(["4", "1w"], self.todolist, self.out, self.error)
+        command = PostponeCommand(["4", "1w"], self.todolist, self.out,
+                                  self.error)
         command.execute()
 
         due = self.today + timedelta(7)
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEqual(self.output, "|  4| Past due:{}\n".format(due.isoformat()))
+        self.assertEqual(self.output,
+                         "|  4| Past due:{}\n".format(due.isoformat()))
         self.assertEqual(self.errors, "")
 
     def test_postpone07(self):
-        command = PostponeCommand(["5", "1w"], self.todolist, self.out, self.error)
+        command = PostponeCommand(["5", "1w"], self.todolist, self.out,
+                                  self.error)
         command.execute()
 
         due = self.future + timedelta(7)
@@ -117,7 +128,8 @@ class PostponeCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_postpone08(self):
-        command = PostponeCommand(["-s", "5", "1w"], self.todolist, self.out, self.error)
+        command = PostponeCommand(["-s", "5", "1w"], self.todolist, self.out,
+                                  self.error)
         command.execute()
 
         due = self.future + timedelta(7)
@@ -129,7 +141,8 @@ class PostponeCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_postpone09(self):
-        command = PostponeCommand(["1", "foo"], self.todolist, self.out, self.error)
+        command = PostponeCommand(["1", "foo"], self.todolist, self.out,
+                                  self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -137,7 +150,8 @@ class PostponeCommandTest(CommandTest):
         self.assertEqual(self.errors, "Invalid date pattern given.\n")
 
     def test_postpone10(self):
-        command = PostponeCommand(["99", "foo"], self.todolist, self.out, self.error)
+        command = PostponeCommand(["99", "foo"], self.todolist, self.out,
+                                  self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -145,7 +159,8 @@ class PostponeCommandTest(CommandTest):
         self.assertEqual(self.errors, "Invalid todo number given.\n")
 
     def test_postpone11(self):
-        command = PostponeCommand(["A", "foo"], self.todolist, self.out, self.error)
+        command = PostponeCommand(["A", "foo"], self.todolist, self.out,
+                                  self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -161,17 +176,20 @@ class PostponeCommandTest(CommandTest):
         self.assertEqual(self.errors, command.usage() + "\n")
 
     def test_postpone13(self):
-        command = PostponeCommand(["Foo", "1w"], self.todolist, self.out, self.error)
+        command = PostponeCommand(["Foo", "1w"], self.todolist, self.out,
+                                  self.error)
         command.execute()
 
         due = self.today + timedelta(7)
 
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEqual(self.output, "|  1| Foo due:{}\n".format(due.isoformat()))
+        self.assertEqual(self.output,
+                         "|  1| Foo due:{}\n".format(due.isoformat()))
         self.assertEqual(self.errors, "")
 
     def test_postpone14(self):
-        command = PostponeCommand(["1", "2", "1w"], self.todolist, self.out, self.error)
+        command = PostponeCommand(["1", "2", "1w"], self.todolist, self.out,
+                                  self.error)
         command.execute()
 
         due = self.today + timedelta(7)
@@ -181,7 +199,8 @@ class PostponeCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_postpone15(self):
-        command = PostponeCommand(["Foo", "2", "1w"], self.todolist, self.out, self.error)
+        command = PostponeCommand(["Foo", "2", "1w"], self.todolist, self.out,
+                                  self.error)
         command.execute()
 
         due = self.today + timedelta(7)
@@ -191,7 +210,8 @@ class PostponeCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_postpone16(self):
-        command = PostponeCommand(["-s", "2", "3", "1w"], self.todolist, self.out, self.error)
+        command = PostponeCommand(["-s", "2", "3", "1w"], self.todolist,
+                                  self.out, self.error)
         command.execute()
 
         due = self.today + timedelta(7)
@@ -203,7 +223,8 @@ class PostponeCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_postpone17(self):
-        command = PostponeCommand(["1", "2", "3"], self.todolist, self.out, self.error)
+        command = PostponeCommand(["1", "2", "3"], self.todolist, self.out,
+                                  self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -211,7 +232,8 @@ class PostponeCommandTest(CommandTest):
         self.assertEqual(self.errors, "Invalid date pattern given.\n")
 
     def test_postpone18(self):
-        command = PostponeCommand(["1", "99", "123", "1w"], self.todolist, self.out, self.error)
+        command = PostponeCommand(["1", "99", "123", "1w"], self.todolist,
+                                  self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -219,7 +241,8 @@ class PostponeCommandTest(CommandTest):
         self.assertEqual(self.errors, "Invalid todo number given: 99.\nInvalid todo number given: 123.\n")
 
     def test_postpone19(self):
-        command = PostponeCommand(["Zoo", "99", "123", "1w"], self.todolist, self.out, self.error)
+        command = PostponeCommand(["Zoo", "99", "123", "1w"], self.todolist,
+                                  self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -228,15 +251,18 @@ class PostponeCommandTest(CommandTest):
 
     def test_postpone20(self):
         """ Throw an error with invalid argument containing special characters. """
-        command = PostponeCommand([u("Fo\u00d3B\u0105r"), "Bar", "1d"], self.todolist, self.out, self.error, None)
+        command = PostponeCommand([u("Fo\u00d3B\u0105r"), "Bar", "1d"],
+                                  self.todolist, self.out, self.error, None)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
         self.assertEqual(self.output, "")
-        self.assertEqual(self.errors, u("Invalid todo number given: Fo\u00d3B\u0105r.\n"))
+        self.assertEqual(self.errors,
+                         u("Invalid todo number given: Fo\u00d3B\u0105r.\n"))
 
     def test_expr_postpone1(self):
-        command = PostponeCommand(["-e", "due:tod", "2w"], self.todolist, self.out, self.error, None)
+        command = PostponeCommand(["-e", "due:tod", "2w"], self.todolist,
+                                  self.out, self.error, None)
         command.execute()
 
         due = self.today + timedelta(14)
@@ -248,33 +274,38 @@ class PostponeCommandTest(CommandTest):
 
     def test_expr_postpone2(self):
         cmd_args = ["-e", "t:{}".format(self.start.isoformat()), "due:tod", "1w"]
-        command = PostponeCommand(cmd_args, self.todolist, self.out, self.error, None)
+        command = PostponeCommand(cmd_args, self.todolist, self.out,
+                                  self.error, None)
         command.execute()
 
         due = self.today + timedelta(7)
 
-        result = "|  3| Baz due:{} t:{}\n".format(due.isoformat(), self.start.isoformat())
+        result = "|  3| Baz due:{} t:{}\n".format(due.isoformat(),
+                                                  self.start.isoformat())
 
         self.assertTrue(self.todolist.is_dirty())
         self.assertEqual(self.output, result)
         self.assertEqual(self.errors, "")
 
     def test_expr_postpone3(self):
-        command = PostponeCommand(["-e", "@test", "due:tod", "+project", "C"], self.todolist, self.out, self.error, None)
+        command = PostponeCommand(["-e", "@test", "due:tod", "+project", "C"],
+                                  self.todolist, self.out, self.error, None)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
 
     def test_expr_postpone4(self):
         """ Don't postpone unrelevant todo items. """
-        command = PostponeCommand(["-e", "FutureStart", "1w"], self.todolist, self.out, self.error, None)
+        command = PostponeCommand(["-e", "FutureStart", "1w"], self.todolist,
+                                  self.out, self.error, None)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
 
     def test_expr_postpone5(self):
         """ Force postponing unrelevant items with additional -x flag. """
-        command = PostponeCommand(["-xe", "FutureStart", "1w"], self.todolist, self.out, self.error, None)
+        command = PostponeCommand(["-xe", "FutureStart", "1w"], self.todolist,
+                                  self.out, self.error, None)
         command.execute()
 
         due = self.today + timedelta(7)
@@ -285,11 +316,13 @@ class PostponeCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_help(self):
-        command = PostponeCommand(["help"], self.todolist, self.out, self.error)
+        command = PostponeCommand(["help"], self.todolist, self.out,
+                                  self.error)
         command.execute()
 
         self.assertEqual(self.output, "")
-        self.assertEqual(self.errors, command.usage() + "\n\n" + command.help() + "\n")
+        self.assertEqual(self.errors,
+                         command.usage() + "\n\n" + command.help() + "\n")
 
 if __name__ == '__main__':
     unittest.main()

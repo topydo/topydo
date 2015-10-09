@@ -124,7 +124,8 @@ class TodoBase(object):
         # Build a new list that excludes the specified tag, match by value when
         # p_value is given.
         self.fields['tags'] = [t for t in self.fields['tags'] \
-                               if not (t[0] == p_key and (p_value == "" or t[1] == p_value))]
+                               if not (t[0] == p_key and (p_value == "" or
+                                                          t[1] == p_value))]
 
         # when value == "", match any value having key p_key
         value = p_value if p_value != "" else r'\S+'
@@ -206,7 +207,8 @@ class TodoBase(object):
             self.fields['completionDate'] = p_completion_date
 
             self.src = re.sub(r'^(\([A-Z]\) )?', \
-                              'x ' + p_completion_date.isoformat() + ' ', self.src)
+                              'x ' + p_completion_date.isoformat() + ' ',
+                              self.src)
 
     def set_creation_date(self, p_date=date.today()):
         """
@@ -220,8 +222,8 @@ class TodoBase(object):
         self.src = re.sub(
             r'^(x \d{4}-\d{2}-\d{2} |\([A-Z]\) )?(\d{4}-\d{2}-\d{2} )?(.*)$',
             lambda m: \
-            u("{}{} {}").format(m.group(1) or '', p_date.isoformat(), m.group(3)),
-            self.src)
+            u("{}{} {}").format(m.group(1) or '', p_date.isoformat(),
+                                m.group(3)), self.src)
 
     def creation_date(self):
         """ Returns the creation date of a todo. """

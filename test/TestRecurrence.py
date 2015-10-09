@@ -165,12 +165,14 @@ class RecurrenceTest(TopydoTest):
 
     def test_no_recurrence(self):
         self.todo.remove_tag('rec')
-        self.assertRaises(NoRecurrenceException, advance_recurring_todo, self.todo)
+        self.assertRaises(NoRecurrenceException, advance_recurring_todo,
+                          self.todo)
 
     def test_invalid_recurrence(self):
         """ Throw exception when 'rec' tag has an invalid value. """
         self.todo.set_tag('rec', '1')
-        self.assertRaises(NoRecurrenceException, advance_recurring_todo, self.todo)
+        self.assertRaises(NoRecurrenceException, advance_recurring_todo,
+                          self.todo)
 
 if __name__ == '__main__':
     unittest.main()

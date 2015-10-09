@@ -71,7 +71,8 @@ class TodoListTester(TopydoTest):
         self.todolist.add('\n(C) New task')
 
         self.assertEqual(self.todolist.count(), count + 1)
-        self.assertEqual(self.todolist.todo(count + 1).source(), '(C) New task')
+        self.assertEqual(self.todolist.todo(count + 1).source(),
+                         '(C) New task')
         self.assertEqual(self.todolist.todo(count + 1).priority(), 'C')
 
     def test_add3b(self):
@@ -79,7 +80,8 @@ class TodoListTester(TopydoTest):
         self.todolist.add('(C) New task\n')
 
         self.assertEqual(self.todolist.count(), count + 1)
-        self.assertEqual(self.todolist.todo(count + 1).source(), '(C) New task')
+        self.assertEqual(self.todolist.todo(count + 1).source(),
+                         '(C) New task')
         self.assertEqual(self.todolist.todo(count + 1).priority(), 'C')
 
     def test_add4(self):
@@ -142,7 +144,8 @@ class TodoListTester(TopydoTest):
     def test_todo(self):
         count = self.todolist.count()
 
-        self.assertRaises(InvalidTodoException, self.todolist.todo, count + 100)
+        self.assertRaises(InvalidTodoException, self.todolist.todo,
+                          count + 100)
         self.assertFalse(self.todolist.is_dirty())
 
     def test_count(self):
@@ -198,7 +201,8 @@ class TodoListTester(TopydoTest):
     def test_uid1(self):
         config("test/data/todolist-uid.conf")
 
-        self.assertEqual(self.todolist.todo('t5c').source(), "(C) Foo @Context2 Not@Context +Project1 Not+Project")
+        self.assertEqual(self.todolist.todo('t5c').source(),
+                         "(C) Foo @Context2 Not@Context +Project1 Not+Project")
 
     def test_uid2(self):
         """ Changing the priority should not change the identifier. """
@@ -206,7 +210,8 @@ class TodoListTester(TopydoTest):
 
         todo = self.todolist.todo('t5c')
         self.todolist.set_priority(todo, 'B')
-        self.assertEqual(self.todolist.todo('t5c').source(), "(B) Foo @Context2 Not@Context +Project1 Not+Project")
+        self.assertEqual(self.todolist.todo('t5c').source(),
+                         "(B) Foo @Context2 Not@Context +Project1 Not+Project")
 
     def test_uid3(self):
         """

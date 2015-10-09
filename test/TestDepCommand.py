@@ -36,7 +36,8 @@ class DepCommandTest(CommandTest):
         self.todolist = TodoList(todos)
 
     def test_add1(self):
-        command = DepCommand(["add", "1", "to", "4"], self.todolist, self.out, self.error)
+        command = DepCommand(["add", "1", "to", "4"], self.todolist, self.out,
+                             self.error)
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
@@ -45,7 +46,8 @@ class DepCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_add2(self):
-        command = DepCommand(["add", "1", "4"], self.todolist, self.out, self.error)
+        command = DepCommand(["add", "1", "4"], self.todolist, self.out,
+                             self.error)
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
@@ -54,7 +56,8 @@ class DepCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_add3(self):
-        command = DepCommand(["add", "99", "3"], self.todolist, self.out, self.error)
+        command = DepCommand(["add", "99", "3"], self.todolist, self.out,
+                             self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -62,7 +65,8 @@ class DepCommandTest(CommandTest):
         self.assertEqual(self.errors, "Invalid todo number given.\n")
 
     def test_add4(self):
-        command = DepCommand(["add", "A", "3"], self.todolist, self.out, self.error)
+        command = DepCommand(["add", "A", "3"], self.todolist, self.out,
+                             self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -78,7 +82,8 @@ class DepCommandTest(CommandTest):
         self.assertEqual(self.errors, command.usage() + "\n")
 
     def test_add6(self):
-        command = DepCommand(["add", "1", "after", "4"], self.todolist, self.out, self.error)
+        command = DepCommand(["add", "1", "after", "4"], self.todolist,
+                             self.out, self.error)
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
@@ -87,7 +92,8 @@ class DepCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_add7(self):
-        command = DepCommand(["add", "1", "before", "4"], self.todolist, self.out, self.error)
+        command = DepCommand(["add", "1", "before", "4"], self.todolist,
+                             self.out, self.error)
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
@@ -96,7 +102,8 @@ class DepCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_add8(self):
-        command = DepCommand(["add", "1", "partof", "4"], self.todolist, self.out, self.error)
+        command = DepCommand(["add", "1", "partof", "4"], self.todolist,
+                             self.out, self.error)
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
@@ -105,7 +112,8 @@ class DepCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_add9(self):
-        command = DepCommand(["add", "Foo", "to", "4"], self.todolist, self.out, self.error)
+        command = DepCommand(["add", "Foo", "to", "4"], self.todolist,
+                             self.out, self.error)
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
@@ -141,7 +149,8 @@ class DepCommandTest(CommandTest):
         self.rm_helper(["del", "1", "3"])
 
     def test_rm3(self):
-        command = DepCommand(["rm", "99", "3"], self.todolist, self.out, self.error)
+        command = DepCommand(["rm", "99", "3"], self.todolist, self.out,
+                             self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -149,7 +158,8 @@ class DepCommandTest(CommandTest):
         self.assertEqual(self.errors, "Invalid todo number given.\n")
 
     def test_rm4(self):
-        command = DepCommand(["rm", "A", "3"], self.todolist, self.out, self.error)
+        command = DepCommand(["rm", "A", "3"], self.todolist, self.out,
+                             self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -165,7 +175,8 @@ class DepCommandTest(CommandTest):
         self.assertEqual(self.errors, command.usage() + "\n")
 
     def test_ls1(self):
-        command = DepCommand(["ls", "1", "to"], self.todolist, self.out, self.error)
+        command = DepCommand(["ls", "1", "to"], self.todolist, self.out,
+                             self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -173,7 +184,8 @@ class DepCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_ls2(self):
-        command = DepCommand(["ls", "99", "to"], self.todolist, self.out, self.error)
+        command = DepCommand(["ls", "99", "to"], self.todolist, self.out,
+                             self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -181,7 +193,8 @@ class DepCommandTest(CommandTest):
         self.assertEqual(self.errors, "Invalid todo number given.\n")
 
     def test_ls3(self):
-        command = DepCommand(["ls", "to", "3"], self.todolist, self.out, self.error)
+        command = DepCommand(["ls", "to", "3"], self.todolist, self.out,
+                             self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -189,7 +202,8 @@ class DepCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_ls4(self):
-        command = DepCommand(["ls", "to", "99"], self.todolist, self.out, self.error)
+        command = DepCommand(["ls", "to", "99"], self.todolist, self.out,
+                             self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -213,7 +227,8 @@ class DepCommandTest(CommandTest):
         self.assertEqual(self.errors, command.usage() + "\n")
 
     def test_ls7(self):
-        command = DepCommand(["ls", "top", "99"], self.todolist, self.out, self.error)
+        command = DepCommand(["ls", "top", "99"], self.todolist, self.out,
+                             self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -221,7 +236,8 @@ class DepCommandTest(CommandTest):
         self.assertEqual(self.errors, command.usage() + "\n")
 
     def gc_helper(self, p_subcommand):
-        command = DepCommand([p_subcommand], self.todolist, self.out, self.error)
+        command = DepCommand([p_subcommand], self.todolist, self.out,
+                             self.error)
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
@@ -256,7 +272,8 @@ class DepCommandTest(CommandTest):
         command.execute()
 
         self.assertEqual(self.output, "")
-        self.assertEqual(self.errors, command.usage() + "\n\n" + command.help() + "\n")
+        self.assertEqual(self.errors,
+                         command.usage() + "\n\n" + command.help() + "\n")
 
 if __name__ == '__main__':
     unittest.main()

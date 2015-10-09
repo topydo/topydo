@@ -64,7 +64,8 @@ class GraphTest(TopydoTest):
         self.assertEqual(self.graph.incoming_neighbors(1, True), set())
 
     def test_incoming_neighbors4(self):
-        self.assertEqual(self.graph.incoming_neighbors(5, True), set([1, 2, 3, 4, 6]))
+        self.assertEqual(self.graph.incoming_neighbors(5, True),
+                         set([1, 2, 3, 4, 6]))
 
     def test_outgoing_neighbors1(self):
         self.assertEqual(self.graph.outgoing_neighbors(1), set([2, 3]))
@@ -73,7 +74,8 @@ class GraphTest(TopydoTest):
         self.assertEqual(self.graph.outgoing_neighbors(2), set([4]))
 
     def test_outgoing_neighbors3(self):
-        self.assertEqual(self.graph.outgoing_neighbors(1, True), set([2, 3, 4, 5, 6]))
+        self.assertEqual(self.graph.outgoing_neighbors(1, True),
+                         set([2, 3, 4, 5, 6]))
 
     def test_outgoing_neighbors4(self):
         self.assertEqual(self.graph.outgoing_neighbors(3), set([5]))

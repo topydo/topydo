@@ -64,7 +64,8 @@ class DepriCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_depri4(self):
-        command = DepriCommand(["1", "Baz"], self.todolist, self.out, self.error)
+        command = DepriCommand(["1", "Baz"], self.todolist, self.out,
+                               self.error)
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
@@ -74,7 +75,8 @@ class DepriCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_expr_depri1(self):
-        command = DepriCommand(["-e", "@test"], self.todolist, self.out, self.error, None)
+        command = DepriCommand(["-e", "@test"], self.todolist, self.out,
+                               self.error, None)
         command.execute()
 
         result = "Priority removed.\n|  4| a @test with due:2015-06-03\nPriority removed.\n|  5| a @test with +project p:1\n"
@@ -84,7 +86,8 @@ class DepriCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_expr_depri2(self):
-        command = DepriCommand(["-e", "@test", "due:2015-06-03"], self.todolist, self.out, self.error, None)
+        command = DepriCommand(["-e", "@test", "due:2015-06-03"],
+                               self.todolist, self.out, self.error, None)
         command.execute()
 
         result = "Priority removed.\n|  4| a @test with due:2015-06-03\n"
@@ -94,21 +97,24 @@ class DepriCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_expr_depri3(self):
-        command = DepriCommand(["-e", "@test", "due:2015-06-03", "+project"], self.todolist, self.out, self.error, None)
+        command = DepriCommand(["-e", "@test", "due:2015-06-03", "+project"],
+                               self.todolist, self.out, self.error, None)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
 
     def test_expr_depri4(self):
         """ Don't remove priority from unrelevant todo items. """
-        command = DepriCommand(["-e", "Bax"], self.todolist, self.out, self.error, None)
+        command = DepriCommand(["-e", "Bax"], self.todolist, self.out,
+                               self.error, None)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
 
     def test_expr_depri5(self):
         """ Force unprioritizing unrelevant items with additional -x flag. """
-        command = DepriCommand(["-xe", "Bax"], self.todolist, self.out, self.error, None)
+        command = DepriCommand(["-xe", "Bax"], self.todolist, self.out,
+                               self.error, None)
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
@@ -124,7 +130,8 @@ class DepriCommandTest(CommandTest):
         self.assertEqual(self.errors, "Invalid todo number given.\n")
 
     def test_invalid2(self):
-        command = DepriCommand(["99", "1"], self.todolist, self.out, self.error)
+        command = DepriCommand(["99", "1"], self.todolist, self.out,
+                               self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -132,7 +139,8 @@ class DepriCommandTest(CommandTest):
         self.assertEqual(self.errors, "Invalid todo number given: 99.\n")
 
     def test_invalid3(self):
-        command = DepriCommand(["99", "FooBar"], self.todolist, self.out, self.error)
+        command = DepriCommand(["99", "FooBar"], self.todolist, self.out,
+                               self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -140,13 +148,17 @@ class DepriCommandTest(CommandTest):
         self.assertEqual(self.errors, "Invalid todo number given: 99.\nInvalid todo number given: FooBar.\n")
 
     def test_invalid4(self):
-        """ Throw an error with invalid argument containing special characters. """
-        command = DepriCommand([u("Fo\u00d3B\u0105r"), "Bar"], self.todolist, self.out, self.error, None)
+        """
+        Throw an error with invalid argument containing special characters.
+        """
+        command = DepriCommand([u("Fo\u00d3B\u0105r"), "Bar"], self.todolist,
+                               self.out, self.error, None)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
         self.assertFalse(self.output)
-        self.assertEqual(self.errors, u("Invalid todo number given: Fo\u00d3B\u0105r.\n"))
+        self.assertEqual(self.errors,
+                         u("Invalid todo number given: Fo\u00d3B\u0105r.\n"))
 
     def test_empty(self):
         command = DepriCommand([], self.todolist, self.out, self.error)
@@ -161,7 +173,8 @@ class DepriCommandTest(CommandTest):
         command.execute()
 
         self.assertEqual(self.output, "")
-        self.assertEqual(self.errors, command.usage() + "\n\n" + command.help() + "\n")
+        self.assertEqual(self.errors,
+                         command.usage() + "\n\n" + command.help() + "\n")
 
 if __name__ == '__main__':
     unittest.main()

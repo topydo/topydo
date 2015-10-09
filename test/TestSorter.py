@@ -40,21 +40,24 @@ class SorterTest(TopydoTest):
     def test_sort01(self):
         """ Alphabetically sorted """
         sorter = Sorter('text')
-        self.sort_file('test/data/SorterTest1.txt', 'test/data/SorterTest1-result.txt', sorter)
+        self.sort_file('test/data/SorterTest1.txt',
+                       'test/data/SorterTest1-result.txt', sorter)
 
     def test_sort02a(self):
         """
         Ascendingly sorted by priority. Also checks stableness of the sort.
         """
         sorter = Sorter('prio')
-        self.sort_file('test/data/SorterTest2.txt', 'test/data/SorterTest2-result.txt', sorter)
+        self.sort_file('test/data/SorterTest2.txt',
+                       'test/data/SorterTest2-result.txt', sorter)
 
     def test_sort02b(self):
         """
         Ascendingly sorted by priority. Also checks stableness of the sort.
         """
         sorter = Sorter('asc:prio')
-        self.sort_file('test/data/SorterTest2.txt', 'test/data/SorterTest2-result.txt', sorter)
+        self.sort_file('test/data/SorterTest2.txt',
+                       'test/data/SorterTest2-result.txt', sorter)
 
     def test_sort03(self):
         """
@@ -62,32 +65,38 @@ class SorterTest(TopydoTest):
         sort.
         """
         sorter = Sorter('desc:prio')
-        self.sort_file('test/data/SorterTest3.txt', 'test/data/SorterTest3-result.txt', sorter)
+        self.sort_file('test/data/SorterTest3.txt',
+                       'test/data/SorterTest3-result.txt', sorter)
 
     def test_sort04(self):
         """ Ascendingly sorted by due date """
         sorter = Sorter(config().tag_due())
-        self.sort_file('test/data/SorterTest4.txt', 'test/data/SorterTest4-result.txt', sorter)
+        self.sort_file('test/data/SorterTest4.txt',
+                       'test/data/SorterTest4-result.txt', sorter)
 
     def test_sort05(self):
         """ Descendingly sorted by due date """
         sorter = Sorter('desc:due')
-        self.sort_file('test/data/SorterTest5.txt', 'test/data/SorterTest5-result.txt', sorter)
+        self.sort_file('test/data/SorterTest5.txt',
+                       'test/data/SorterTest5-result.txt', sorter)
 
     def test_sort06(self):
         """ Ascendingly sorted by creation date """
         sorter = Sorter('creation')
-        self.sort_file('test/data/SorterTest6.txt', 'test/data/SorterTest6-result.txt', sorter)
+        self.sort_file('test/data/SorterTest6.txt',
+                       'test/data/SorterTest6-result.txt', sorter)
 
     def test_sort07(self):
         """ Ascendingly sorted by completion date. """
         sorter = Sorter('completion')
-        self.sort_file('test/data/SorterTest7.txt', 'test/data/SorterTest7-result.txt', sorter)
+        self.sort_file('test/data/SorterTest7.txt',
+                       'test/data/SorterTest7-result.txt', sorter)
 
     def test_sort08(self):
         """ Descendingly sorted by importance """
         sorter = Sorter('desc:importance')
-        self.sort_file('test/data/SorterTest8.txt', 'test/data/SorterTest8-result.txt', sorter)
+        self.sort_file('test/data/SorterTest8.txt',
+                       'test/data/SorterTest8-result.txt', sorter)
 
     def test_sort09(self):
         """
@@ -95,22 +104,26 @@ class SorterTest(TopydoTest):
         ascending priority.
         """
         sorter = Sorter('desc:importance,priority')
-        self.sort_file('test/data/SorterTest9.txt', 'test/data/SorterTest9-result.txt', sorter)
+        self.sort_file('test/data/SorterTest9.txt',
+                       'test/data/SorterTest9-result.txt', sorter)
 
     def test_sort10(self):
         """ Deal with garbage input. """
         sorter = Sorter('')
-        self.sort_file('test/data/SorterTest9.txt', 'test/data/SorterTest9.txt', sorter)
+        self.sort_file('test/data/SorterTest9.txt',
+                       'test/data/SorterTest9.txt', sorter)
 
     def test_sort11(self):
         """ Deal with garbage input. """
         sorter = Sorter('fnord')
-        self.sort_file('test/data/SorterTest9.txt', 'test/data/SorterTest9.txt', sorter)
+        self.sort_file('test/data/SorterTest9.txt',
+                       'test/data/SorterTest9.txt', sorter)
 
     def test_sort12(self):
         """ Deal with garbage input. """
         sorter = Sorter('desc:importance,,priority')
-        self.sort_file('test/data/SorterTest9.txt', 'test/data/SorterTest9-result.txt', sorter)
+        self.sort_file('test/data/SorterTest9.txt',
+                       'test/data/SorterTest9-result.txt', sorter)
 
     def test_sort13(self):
         """
@@ -120,7 +133,8 @@ class SorterTest(TopydoTest):
         dependencies the average importance should be equal.
         """
         sorter = Sorter('desc:importance-avg')
-        self.sort_file('test/data/SorterTest9.txt', 'test/data/SorterTest9-result.txt', sorter)
+        self.sort_file('test/data/SorterTest9.txt',
+                       'test/data/SorterTest9-result.txt', sorter)
 
     def test_sort14(self):
         sorter = Sorter('desc:importance-average')

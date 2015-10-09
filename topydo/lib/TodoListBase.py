@@ -133,7 +133,9 @@ class TodoListBase(object):
         return result
 
     def add(self, p_src):
-        """ Given a todo string, parse it and put it to the end of the list. """
+        """
+        Given a todo string, parse it and put it to the end of the list.
+        """
         todos = self.add_list([p_src])
 
         return todos[0] if len(todos) else None
@@ -248,8 +250,8 @@ class TodoListBase(object):
 
     def _update_todo_ids(self):
         # the idea is to have a hash that is independent of the position of the
-        # todo. Use the text (without tags) of the todo to keep the id as stable
-        # as possible (not influenced by priorities or due dates, etc.)
+        # todo. Use the text (without tags) of the todo to keep the id as
+        # stable as possible (not influenced by priorities or due dates, etc.)
         self._todo_id_map = {}
         self._id_todo_map = {}
 

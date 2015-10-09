@@ -65,7 +65,8 @@ class AddCommand(Command):
 
             It detects a priority mid-sentence and puts it at the start.
             """
-            todo_text = re.sub(r'^(.+) (\([A-Z]\))(.*)$', r'\2 \1\3', p_todo_text)
+            todo_text = re.sub(r'^(.+) (\([A-Z]\))(.*)$', r'\2 \1\3',
+                               p_todo_text)
 
             return todo_text
 

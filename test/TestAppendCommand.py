@@ -28,14 +28,16 @@ class AppendCommandTest(CommandTest):
         self.todolist.add("Foo")
 
     def test_append1(self):
-        command = AppendCommand([1, "Bar"], self.todolist, self.out, self.error)
+        command = AppendCommand([1, "Bar"], self.todolist, self.out,
+                                self.error)
         command.execute()
 
         self.assertEqual(self.output, "|  1| Foo Bar\n")
         self.assertEqual(self.errors, "")
 
     def test_append2(self):
-        command = AppendCommand([2, "Bar"], self.todolist, self.out, self.error)
+        command = AppendCommand([2, "Bar"], self.todolist, self.out,
+                                self.error)
         command.execute()
 
         self.assertEqual(self.output, "")
@@ -56,7 +58,8 @@ class AppendCommandTest(CommandTest):
         self.assertEqual(self.errors, command.usage() + "\n")
 
     def test_append5(self):
-        command = AppendCommand([1, "Bar", "Baz"], self.todolist, self.out, self.error)
+        command = AppendCommand([1, "Bar", "Baz"], self.todolist, self.out,
+                                self.error)
         command.execute()
 
         self.assertEqual(self.output, "|  1| Foo Bar Baz\n")
@@ -81,7 +84,8 @@ class AppendCommandTest(CommandTest):
         command.execute()
 
         self.assertEqual(self.output, "")
-        self.assertEqual(self.errors, command.usage() + "\n\n" + command.help() + "\n")
+        self.assertEqual(self.errors,
+                         command.usage() + "\n\n" + command.help() + "\n")
 
 if __name__ == '__main__':
     unittest.main()

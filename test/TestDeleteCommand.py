@@ -45,7 +45,8 @@ class DeleteCommandTest(CommandTest):
         self.todolist = TodoList(todos)
 
     def test_del1(self):
-        command = DeleteCommand(["1"], self.todolist, self.out, self.error, _no_prompt)
+        command = DeleteCommand(["1"], self.todolist, self.out, self.error,
+                                _no_prompt)
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
@@ -54,7 +55,8 @@ class DeleteCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_del1_regex(self):
-        command = DeleteCommand(["Foo"], self.todolist, self.out, self.error, _no_prompt)
+        command = DeleteCommand(["Foo"], self.todolist, self.out, self.error,
+                                _no_prompt)
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
@@ -63,16 +65,19 @@ class DeleteCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_del2(self):
-        command = DeleteCommand(["1"], self.todolist, self.out, self.error, _yes_prompt)
+        command = DeleteCommand(["1"], self.todolist, self.out, self.error,
+                                _yes_prompt)
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
         self.assertEqual(self.todolist.count(), 2)
-        self.assertEqual(self.output, "|  2| Bar p:1\nRemoved: Bar\nRemoved: Foo\n")
+        self.assertEqual(self.output,
+                         "|  2| Bar p:1\nRemoved: Bar\nRemoved: Foo\n")
         self.assertEqual(self.errors, "")
 
     def test_del3(self):
-        command = DeleteCommand(["-f", "1"], self.todolist, self.out, self.error, _yes_prompt)
+        command = DeleteCommand(["-f", "1"], self.todolist, self.out,
+                                self.error, _yes_prompt)
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
@@ -81,7 +86,8 @@ class DeleteCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_del4(self):
-        command = DeleteCommand(["--force", "1"], self.todolist, self.out, self.error, _yes_prompt)
+        command = DeleteCommand(["--force", "1"], self.todolist, self.out,
+                                self.error, _yes_prompt)
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
@@ -128,7 +134,8 @@ class DeleteCommandTest(CommandTest):
 
     def test_multi_del1(self):
         """ Test deletion of multiple items. """
-        command = DeleteCommand(["1", "2"], self.todolist, self.out, self.error, _no_prompt)
+        command = DeleteCommand(["1", "2"], self.todolist, self.out,
+                                self.error, _no_prompt)
         command.execute()
 
         result = "a @test with due:2015-06-03\na @test with +project"
@@ -138,7 +145,8 @@ class DeleteCommandTest(CommandTest):
 
     def test_multi_del2(self):
         """ Test deletion of multiple items. """
-        command = DeleteCommand(["1", "2"], self.todolist, self.out, self.error, _yes_prompt)
+        command = DeleteCommand(["1", "2"], self.todolist, self.out,
+                                self.error, _yes_prompt)
         command.execute()
 
         result = "a @test with due:2015-06-03\na @test with +project"
@@ -148,7 +156,8 @@ class DeleteCommandTest(CommandTest):
 
     def test_multi_del3(self):
         """  Fail if any of supplied todo numbers is invalid. """
-        command = DeleteCommand(["99", "2"], self.todolist, self.out, self.error, _yes_prompt)
+        command = DeleteCommand(["99", "2"], self.todolist, self.out,
+                                self.error, _yes_prompt)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -157,7 +166,8 @@ class DeleteCommandTest(CommandTest):
 
     def test_multi_del4(self):
         """  Check output when all supplied todo numbers are invalid. """
-        command = DeleteCommand(["99", "A"], self.todolist, self.out, self.error, _yes_prompt)
+        command = DeleteCommand(["99", "A"], self.todolist, self.out,
+                                self.error, _yes_prompt)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -165,16 +175,21 @@ class DeleteCommandTest(CommandTest):
         self.assertEqual(self.errors, "Invalid todo number given: 99.\nInvalid todo number given: A.\n")
 
     def test_multi_del5(self):
-        """ Throw an error with invalid argument containing special characters. """
-        command = DeleteCommand([u("Fo\u00d3B\u0105r"), "Bar"], self.todolist, self.out, self.error, None)
+        """
+        Throw an error with invalid argument containing special characters.
+        """
+        command = DeleteCommand([u("Fo\u00d3B\u0105r"), "Bar"], self.todolist,
+                                self.out, self.error, None)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
         self.assertEqual(self.output, "")
-        self.assertEqual(self.errors, u("Invalid todo number given: Fo\u00d3B\u0105r.\n"))
+        self.assertEqual(self.errors,
+                         u("Invalid todo number given: Fo\u00d3B\u0105r.\n"))
 
     def test_expr_del1(self):
-        command = DeleteCommand(["-e", "@test"], self.todolist, self.out, self.error, None)
+        command = DeleteCommand(["-e", "@test"], self.todolist, self.out,
+                                self.error, None)
         command.execute()
 
         result = "Removed: a @test with due:2015-06-03\nRemoved: a @test with +project\n"
@@ -185,7 +200,8 @@ class DeleteCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_expr_del2(self):
-        command = DeleteCommand(["-e", "@test", "due:2015-06-03"], self.todolist, self.out, self.error, None)
+        command = DeleteCommand(["-e", "@test", "due:2015-06-03"],
+                                self.todolist, self.out, self.error, None)
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
@@ -193,14 +209,16 @@ class DeleteCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_expr_del3(self):
-        command = DeleteCommand(["-e", "@test", "due:2015-06-03", "+project"], self.todolist, self.out, self.error, None)
+        command = DeleteCommand(["-e", "@test", "due:2015-06-03", "+project"],
+                                self.todolist, self.out, self.error, None)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
 
     def test_expr_del4(self):
         """ Remove only relevant todo items. """
-        command = DeleteCommand(["-e", ""], self.todolist, self.out, self.error, None)
+        command = DeleteCommand(["-e", ""], self.todolist, self.out,
+                                self.error, None)
         command.execute()
 
         result = "Foo"
@@ -211,7 +229,8 @@ class DeleteCommandTest(CommandTest):
 
     def test_expr_del5(self):
         """ Force deleting unrelevant items with additional -x flag. """
-        command = DeleteCommand(["-xe", ""], self.todolist, self.out, self.error, _yes_prompt)
+        command = DeleteCommand(["-xe", ""], self.todolist, self.out,
+                                self.error, _yes_prompt)
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
@@ -230,7 +249,8 @@ class DeleteCommandTest(CommandTest):
         command.execute()
 
         self.assertEqual(self.output, "")
-        self.assertEqual(self.errors, command.usage() + "\n\n" + command.help() + "\n")
+        self.assertEqual(self.errors,
+                         command.usage() + "\n\n" + command.help() + "\n")
 
 if __name__ == '__main__':
     unittest.main()

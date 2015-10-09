@@ -203,7 +203,9 @@ class _Config:
                                              hidden_tags.split(',')]
 
     def priority_colors(self):
-        """ Returns a dict with priorities as keys and color numbers as value. """
+        """
+        Returns a dict with priorities as keys and color numbers as value.
+        """
         pri_colors_str = self.cp.get('colorscheme', 'priority_colors')
 
         def _str_to_dict(p_string):

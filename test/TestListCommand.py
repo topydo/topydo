@@ -39,7 +39,8 @@ class ListCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_list03(self):
-        command = ListCommand(["Context1"], self.todolist, self.out, self.error)
+        command = ListCommand(["Context1"], self.todolist, self.out,
+                              self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -47,7 +48,8 @@ class ListCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_list04(self):
-        command = ListCommand(["-x", "Context1"], self.todolist, self.out, self.error)
+        command = ListCommand(["-x", "Context1"], self.todolist, self.out,
+                              self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -63,7 +65,8 @@ class ListCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_list06(self):
-        command = ListCommand(["Project3"], self.todolist, self.out, self.error)
+        command = ListCommand(["Project3"], self.todolist, self.out,
+                              self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -71,7 +74,8 @@ class ListCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_list07(self):
-        command = ListCommand(["-s", "text", "-x", "Project1"], self.todolist, self.out, self.error)
+        command = ListCommand(["-s", "text", "-x", "Project1"], self.todolist,
+                              self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -79,7 +83,8 @@ class ListCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_list08(self):
-        command = ListCommand(["--", "-project1"], self.todolist, self.out, self.error)
+        command = ListCommand(["--", "-project1"], self.todolist, self.out,
+                              self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -87,7 +92,8 @@ class ListCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_list09(self):
-        command = ListCommand(["--", "-project1", "-Drink"], self.todolist, self.out, self.error)
+        command = ListCommand(["--", "-project1", "-Drink"], self.todolist,
+                              self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -95,7 +101,8 @@ class ListCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_list10(self):
-        command = ListCommand(["text1", "2"], self.todolist, self.out, self.error)
+        command = ListCommand(["text1", "2"], self.todolist, self.out,
+                              self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -115,7 +122,8 @@ class ListCommandTest(CommandTest):
     def test_list12(self):
         config("test/data/listcommand.conf")
 
-        command = ListCommand(["-x", "project"], self.todolist, self.out, self.error)
+        command = ListCommand(["-x", "project"], self.todolist, self.out,
+                              self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -123,7 +131,8 @@ class ListCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_list13(self):
-        command = ListCommand(["-x", "--", "-@Context1 +Project2"], self.todolist, self.out, self.error)
+        command = ListCommand(["-x", "--", "-@Context1 +Project2"],
+                              self.todolist, self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -159,15 +168,18 @@ class ListCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_list17(self):
-        command = ListCommand(["-x", "id:"], self.todolist, self.out, self.error)
+        command = ListCommand(["-x", "id:"], self.todolist, self.out,
+                              self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
-        self.assertEqual(self.output, "|  3| (C) Baz @Context1 +Project1 key:value\n")
+        self.assertEqual(self.output,
+                         "|  3| (C) Baz @Context1 +Project1 key:value\n")
         self.assertEqual(self.errors, "")
 
     def test_list18(self):
-        command = ListCommand(["-x", "date:2014-12-12"], self.todolist, self.out, self.error)
+        command = ListCommand(["-x", "date:2014-12-12"], self.todolist,
+                              self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -177,7 +189,8 @@ class ListCommandTest(CommandTest):
         """ Force showing all tags. """
         config('test/data/listcommand-tags.conf')
 
-        command = ListCommand(["-s", "text", "-x", "Project1"], self.todolist, self.out, self.error)
+        command = ListCommand(["-s", "text", "-x", "Project1"], self.todolist,
+                              self.out, self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -193,7 +206,8 @@ class ListCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_list21(self):
-        command = ListCommand(["-f invalid"], self.todolist, self.out, self.error)
+        command = ListCommand(["-f invalid"], self.todolist, self.out,
+                              self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -216,7 +230,8 @@ class ListCommandTest(CommandTest):
         command.execute()
 
         self.assertEqual(self.output, "")
-        self.assertEqual(self.errors, command.usage() + "\n\n" + command.help() + "\n")
+        self.assertEqual(self.errors,
+                         command.usage() + "\n\n" + command.help() + "\n")
 
 
 class ListCommandUnicodeTest(CommandTest):
@@ -226,7 +241,8 @@ class ListCommandUnicodeTest(CommandTest):
 
     def test_list_unicode1(self):
         """ Unicode filters """
-        command = ListCommand([u("\u25c4")], self.todolist, self.out, self.error)
+        command = ListCommand([u("\u25c4")], self.todolist, self.out,
+                              self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -246,7 +262,8 @@ class ListCommandJsonTest(CommandTest):
         self.assertFalse(todolist.is_dirty())
 
         jsontext = ""
-        with codecs.open('test/data/ListCommandTest.json', 'r', encoding='utf-8') as json:
+        with codecs.open('test/data/ListCommandTest.json', 'r',
+                         encoding='utf-8') as json:
             jsontext = json.read()
 
         self.assertEqual(self.output, jsontext)
@@ -261,7 +278,8 @@ class ListCommandJsonTest(CommandTest):
         self.assertFalse(todolist.is_dirty())
 
         jsontext = ""
-        with codecs.open('test/data/ListCommandUnicodeTest.json', 'r', encoding='utf-8') as json:
+        with codecs.open('test/data/ListCommandUnicodeTest.json', 'r',
+                         encoding='utf-8') as json:
             jsontext = json.read()
 
         self.assertEqual(self.output, jsontext)
@@ -283,16 +301,19 @@ class ListCommandIcalTest(CommandTest):
     def test_ical(self):
         todolist = load_file_to_todolist("test/data/ListCommandIcalTest.txt")
 
-        command = ListCommand(["-x", "-f", "ical"], todolist, self.out, self.error)
+        command = ListCommand(["-x", "-f", "ical"], todolist, self.out,
+                              self.error)
         command.execute()
 
         self.assertTrue(todolist.is_dirty())
 
         icaltext = ""
-        with codecs.open('test/data/ListCommandTest.ics', 'r', encoding='utf-8') as ical:
+        with codecs.open('test/data/ListCommandTest.ics', 'r',
+                         encoding='utf-8') as ical:
             icaltext = ical.read()
 
-        self.assertEqual(replace_ical_tags(self.output), replace_ical_tags(icaltext))
+        self.assertEqual(replace_ical_tags(self.output),
+                         replace_ical_tags(icaltext))
         self.assertEqual(self.errors, "")
 
     def test_ical_unicode(self):
@@ -304,10 +325,12 @@ class ListCommandIcalTest(CommandTest):
         self.assertTrue(todolist.is_dirty())
 
         icaltext = ""
-        with codecs.open('test/data/ListCommandUnicodeTest.ics', 'r', encoding='utf-8') as ical:
+        with codecs.open('test/data/ListCommandUnicodeTest.ics', 'r',
+                         encoding='utf-8') as ical:
             icaltext = ical.read()
 
-        self.assertEqual(replace_ical_tags(self.output), replace_ical_tags(icaltext))
+        self.assertEqual(replace_ical_tags(self.output),
+                         replace_ical_tags(icaltext))
         self.assertEqual(self.errors, "")
 
 if __name__ == '__main__':

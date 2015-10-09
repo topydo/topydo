@@ -64,7 +64,8 @@ class EditCommandTest(CommandTest):
         mock_open_in_editor.return_value = 0
         mock_todos_from_temp.return_value = [Todo('Lazy Cat')]
 
-        command = EditCommand(["Bar"], self.todolist, self.out, self.error, None)
+        command = EditCommand(["Bar"], self.todolist, self.out, self.error,
+                              None)
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
@@ -73,7 +74,8 @@ class EditCommandTest(CommandTest):
 
     def test_edit3(self):
         """ Throw an error after invalid todo number given as argument. """
-        command = EditCommand(["FooBar"], self.todolist, self.out, self.error, None)
+        command = EditCommand(["FooBar"], self.todolist, self.out, self.error,
+                              None)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -81,7 +83,8 @@ class EditCommandTest(CommandTest):
 
     def test_edit4(self):
         """ Throw an error with pointing invalid argument. """
-        command = EditCommand(["Bar", "5"], self.todolist, self.out, self.error, None)
+        command = EditCommand(["Bar", "5"], self.todolist, self.out,
+                              self.error, None)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -94,7 +97,8 @@ class EditCommandTest(CommandTest):
         mock_open_in_editor.return_value = 0
         mock_todos_from_temp.return_value = [Todo('Only one line')]
 
-        command = EditCommand(["1", "Bar"], self.todolist, self.out, self.error, None)
+        command = EditCommand(["1", "Bar"], self.todolist, self.out,
+                              self.error, None)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
@@ -102,12 +106,16 @@ class EditCommandTest(CommandTest):
         self.assertEqual(self.todolist.print_todos(), u("Foo id:1\nBar p:1 @test\nBaz @test\nFo\u00f3B\u0105\u017a"))
 
     def test_edit6(self):
-        """ Throw an error with invalid argument containing special characters. """
-        command = EditCommand([u("Fo\u00d3B\u0105r"), "Bar"], self.todolist, self.out, self.error, None)
+        """
+        Throw an error with invalid argument containing special characters.
+        """
+        command = EditCommand([u("Fo\u00d3B\u0105r"), "Bar"], self.todolist,
+                              self.out, self.error, None)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
-        self.assertEqual(self.errors, u("Invalid todo number given: Fo\u00d3B\u0105r.\n"))
+        self.assertEqual(self.errors,
+                         u("Invalid todo number given: Fo\u00d3B\u0105r.\n"))
 
     @mock.patch('topydo.commands.EditCommand.EditCommand._todos_from_temp')
     @mock.patch('topydo.commands.EditCommand.EditCommand._open_in_editor')
@@ -116,21 +124,25 @@ class EditCommandTest(CommandTest):
         mock_open_in_editor.return_value = 0
         mock_todos_from_temp.return_value = [Todo('Lazy Cat')]
 
-        command = EditCommand([u("Fo\u00f3B\u0105\u017a")], self.todolist, self.out, self.error, None)
+        command = EditCommand([u("Fo\u00f3B\u0105\u017a")], self.todolist,
+                              self.out, self.error, None)
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
         self.assertEqual(self.errors, "")
-        self.assertEqual(self.todolist.print_todos(), u("Foo id:1\nBar p:1 @test\nBaz @test\nLazy Cat"))
+        self.assertEqual(self.todolist.print_todos(),
+                         u("Foo id:1\nBar p:1 @test\nBaz @test\nLazy Cat"))
 
     @mock.patch('topydo.commands.EditCommand.EditCommand._todos_from_temp')
     @mock.patch('topydo.commands.EditCommand.EditCommand._open_in_editor')
     def test_edit_expr(self, mock_open_in_editor, mock_todos_from_temp):
         """ Edit todos matching expression. """
         mock_open_in_editor.return_value = 0
-        mock_todos_from_temp.return_value = [Todo('Lazy Cat'), Todo('Lazy Dog')]
+        mock_todos_from_temp.return_value = [Todo('Lazy Cat'),
+                                             Todo('Lazy Dog')]
 
-        command = EditCommand(["-e", "@test"], self.todolist, self.out, self.error, None)
+        command = EditCommand(["-e", "@test"], self.todolist, self.out,
+                              self.error, None)
         command.execute()
 
         expected = u("|  3| Lazy Cat\n|  4| Lazy Dog\n")
@@ -149,7 +161,8 @@ class EditCommandTest(CommandTest):
         os.environ['EDITOR'] = editor
         archive = config().archive()
 
-        command = EditCommand(["-d"], self.todolist, self.out, self.error, None)
+        command = EditCommand(["-d"], self.todolist, self.out, self.error,
+                              None)
         command.execute()
 
         self.assertEqual(self.errors, "")

@@ -80,11 +80,11 @@ class MultiCommand(ExpressionCommand):
 
     def _catch_todo_errors(self):
         """
-        Returns None or list of error messages depending on number of valid todo
-        objects and number of invalid todo IDs.
+        Returns None or list of error messages depending on number of valid
+        todo objects and number of invalid todo IDs.
 
-        In case of multiple invalid todo IDs we generate separate error message for each
-        one of them with information about supplied ID.
+        In case of multiple invalid todo IDs we generate separate error message
+        for each one of them with information about supplied ID.
         """
         errors = []
 

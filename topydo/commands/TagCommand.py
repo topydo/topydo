@@ -131,6 +131,6 @@ is omitted, the tag is removed from the todo item.
 
 -a : Do not change the current value of the tag if it exists, but add a new
      value.
--f : Force setting/removing all values of the tag. Prevents interaction with the
-     user.
+-f : Force setting/removing all values of the tag. Prevents interaction with
+     the user.
 """
