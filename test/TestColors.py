@@ -185,3 +185,6 @@ class ColorsTest(TopydoTest):
         self.assertEqual(context_color, '\033[1;35m')
         self.assertEqual(link_color, '\033[4;36m')
         self.assertEqual(metadata_color, '\033[1;32m')
+
+if __name__ == '__main__':
+    unittest.main()
