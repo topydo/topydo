@@ -15,17 +15,17 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-from subprocess import call, check_call, CalledProcessError
 import tempfile
+from subprocess import CalledProcessError, call, check_call
 
 from six import u
 
+from topydo.lib.Config import config
 from topydo.lib.ExpressionCommand import ExpressionCommand
 from topydo.lib.MultiCommand import MultiCommand
-from topydo.lib.Config import config
+from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
 from topydo.lib.Todo import Todo
 from topydo.lib.TodoList import TodoList
-from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
 
 # the true and only editor
 DEFAULT_EDITOR = 'vi'

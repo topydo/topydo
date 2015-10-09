@@ -14,11 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from datetime import date, timedelta
 import unittest
+from datetime import date, timedelta
 
-from topydo.lib.RelativeDate import relative_date_to_date
 from test.TestTopydo import TopydoTest
+from topydo.lib.RelativeDate import relative_date_to_date
 
 
 class RelativeDateTester(TopydoTest):

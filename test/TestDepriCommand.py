@@ -15,10 +15,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
+
 from six import u
 
-from topydo.commands.DepriCommand import DepriCommand
 from test.TestCommand import CommandTest
+from topydo.commands.DepriCommand import DepriCommand
 from topydo.lib.TodoList import TodoList
 
 

@@ -16,9 +16,9 @@
 
 import unittest
 
+from test.TestTopydo import TopydoTest
 from topydo.lib.JsonPrinter import JsonPrinter
 from topydo.lib.Todo import Todo
-from test.TestTopydo import TopydoTest
 
 
 class JsonPrinterTest(TopydoTest):

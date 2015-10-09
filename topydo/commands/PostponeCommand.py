@@ -16,8 +16,8 @@
 
 from datetime import date, timedelta
 
-from topydo.lib.MultiCommand import MultiCommand
 from topydo.lib.Config import config
+from topydo.lib.MultiCommand import MultiCommand
 from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
 from topydo.lib.RelativeDate import relative_date_to_date
 from topydo.lib.Utils import date_string_to_date

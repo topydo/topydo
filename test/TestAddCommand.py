@@ -14,8 +14,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from datetime import date
 import unittest
+from datetime import date
+from io import StringIO
+
+from six import u
+
+from test.TestCommand import CommandTest
+from topydo.commands import AddCommand, ListCommand
+from topydo.lib import TodoList
+from topydo.lib.Config import config
 
 # We're searching for 'mock'
 # pylint: disable=no-name-in-module
@@ -23,15 +31,6 @@ try:
     from unittest import mock
 except ImportError:
     import mock
-
-from six import u
-from io import StringIO
-
-from topydo.commands import AddCommand
-from topydo.commands import ListCommand
-from test.TestCommand import CommandTest
-from topydo.lib.Config import config
-from topydo.lib import TodoList
 
 
 class AddCommandTest(CommandTest):

@@ -19,9 +19,9 @@ Provides a printer that transforms a list of Todo items to an iCalendar
 file according to RFC 2445.
 """
 
-from datetime import datetime, time
 import random
 import string
+from datetime import datetime, time
 
 from topydo.lib.PrettyPrinter import Printer
 

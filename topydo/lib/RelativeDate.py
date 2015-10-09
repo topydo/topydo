@@ -16,9 +16,9 @@
 
 """ This module deals with relative dates (2d, 5y, Monday, today, etc.) """
 
-from datetime import date, timedelta
 import calendar
 import re
+from datetime import date, timedelta
 
 
 def _add_months(p_sourcedate, p_months):

@@ -15,11 +15,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
+
 from six import u
 
 from test.TestCommand import CommandTest
-from topydo.lib.Config import config
 from topydo.commands.DeleteCommand import DeleteCommand
+from topydo.lib.Config import config
 from topydo.lib.TodoList import TodoList
 from topydo.lib.TodoListBase import InvalidTodoException
 

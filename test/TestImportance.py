@@ -14,13 +14,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from datetime import date
 import unittest
+from datetime import date
 
+from test.TestTopydo import TopydoTest
 from topydo.lib.Config import config
 from topydo.lib.Importance import importance
 from topydo.lib.Todo import Todo
-from test.TestTopydo import TopydoTest
 
 
 class ImportanceTest(TopydoTest):

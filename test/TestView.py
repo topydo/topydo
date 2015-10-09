@@ -16,12 +16,12 @@
 
 import unittest
 
+from test.Facilities import load_file, print_view, todolist_to_string
+from test.TestTopydo import TopydoTest
 from topydo.lib import Filter
 from topydo.lib.Sorter import Sorter
-from test.Facilities import load_file, todolist_to_string, print_view
 from topydo.lib.TodoFile import TodoFile
 from topydo.lib.TodoList import TodoList
-from test.TestTopydo import TopydoTest
 
 
 class ViewTest(TopydoTest):

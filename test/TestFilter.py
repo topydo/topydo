@@ -16,13 +16,14 @@
 
 """ Tests for the filter functionality. """
 
-from datetime import date, timedelta
 import unittest
+from datetime import date, timedelta
 
-from topydo.lib import Filter
-from test.Facilities import load_file, todolist_to_string, load_file_to_todolist
-from topydo.lib.Todo import Todo
+from test.Facilities import (load_file, load_file_to_todolist,
+                             todolist_to_string)
 from test.TestTopydo import TopydoTest
+from topydo.lib import Filter
+from topydo.lib.Todo import Todo
 
 
 class FilterTest(TopydoTest):

@@ -16,9 +16,9 @@
 
 import re
 
+from topydo.lib import Filter
 from topydo.lib.Command import Command
 from topydo.lib.Config import config
-from topydo.lib import Filter
 from topydo.lib.Sorter import Sorter
 from topydo.lib.View import View
 

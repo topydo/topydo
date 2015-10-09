@@ -17,9 +17,10 @@
 """ Tests for the colorscheme functionality. """
 
 import unittest
-from topydo.lib.Colors import Colors, NEUTRAL_COLOR
-from topydo.lib.Config import config
+
 from test.TestTopydo import TopydoTest
+from topydo.lib.Colors import NEUTRAL_COLOR, Colors
+from topydo.lib.Config import config
 
 
 class ColorsTest(TopydoTest):

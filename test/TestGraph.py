@@ -16,8 +16,8 @@
 
 import unittest
 
-from topydo.lib.Graph import DirectedGraph
 from test.TestTopydo import TopydoTest
+from topydo.lib.Graph import DirectedGraph
 
 
 class GraphTest(TopydoTest):

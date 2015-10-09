@@ -14,15 +14,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from topydo.lib.ExpressionCommand import ExpressionCommand
 from topydo.lib.Config import config
-from topydo.lib.PrettyPrinter import pretty_printer_factory
-from topydo.lib.PrettyPrinterFilter import (
-    PrettyPrinterIndentFilter,
-    PrettyPrinterHideTagFilter
-)
+from topydo.lib.ExpressionCommand import ExpressionCommand
 from topydo.lib.IcalPrinter import IcalPrinter
 from topydo.lib.JsonPrinter import JsonPrinter
+from topydo.lib.PrettyPrinter import pretty_printer_factory
+from topydo.lib.PrettyPrinterFilter import (PrettyPrinterHideTagFilter,
+                                            PrettyPrinterIndentFilter)
 
 
 class ListCommand(ExpressionCommand):

@@ -19,13 +19,12 @@
 import re
 import unittest
 
+from test.TestTopydo import TopydoTest
 from topydo.lib.Config import config
 from topydo.lib.Todo import Todo
 from topydo.lib.TodoFile import TodoFile
-from topydo.lib.TodoListBase import InvalidTodoException
 from topydo.lib.TodoList import TodoList
-from topydo.lib.TodoListBase import TodoListBase
-from test.TestTopydo import TopydoTest
+from topydo.lib.TodoListBase import InvalidTodoException, TodoListBase
 
 
 class TodoListTester(TopydoTest):

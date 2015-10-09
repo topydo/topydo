@@ -18,8 +18,8 @@
 Various utility functions.
 """
 
-from datetime import date
 import re
+from datetime import date
 
 
 def date_string_to_date(p_date):

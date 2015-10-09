@@ -16,10 +16,12 @@
 
 """ Entry file for the Python todo.txt CLI. """
 
-import sys
 import getopt
-from topydo.cli.CLIApplicationBase import MAIN_OPTS, error
+import sys
+
 from topydo.cli.CLI import CLIApplication
+from topydo.cli.CLIApplicationBase import MAIN_OPTS, error
+
 # enable color on windows CMD
 if "win32" in sys.platform:
     import colorama

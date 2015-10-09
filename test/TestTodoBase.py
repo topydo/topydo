@@ -16,12 +16,12 @@
 
 """ Tests for the TodoBase class. """
 
-from datetime import date, timedelta
 import re
 import unittest
+from datetime import date, timedelta
 
-from topydo.lib.TodoBase import TodoBase
 from test.TestTopydo import TopydoTest
+from topydo.lib.TodoBase import TodoBase
 
 
 class TodoBaseTester(TopydoTest):

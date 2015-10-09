@@ -18,8 +18,9 @@
 This module contains the class that represents a single todo item.
 """
 
-from datetime import date
 import re
+from datetime import date
+
 from six import u
 
 from topydo.lib.TodoParser import parse_line

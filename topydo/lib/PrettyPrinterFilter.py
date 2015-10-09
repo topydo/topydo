@@ -17,10 +17,11 @@
 """ Provides filters used for pretty printing. """
 
 import re
+
 from six import u
 
+from topydo.lib.Colors import NEUTRAL_COLOR, Colors
 from topydo.lib.Config import config
-from topydo.lib.Colors import Colors, NEUTRAL_COLOR
 
 
 class PrettyPrinterFilter(object):

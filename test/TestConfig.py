@@ -16,8 +16,8 @@
 
 import unittest
 
-from topydo.lib.Config import config
 from test.TestTopydo import TopydoTest
+from topydo.lib.Config import config
 
 
 class ConfigTest(TopydoTest):

@@ -16,10 +16,10 @@
 
 """ This module provides functionality to sort lists with todo items. """
 
-from datetime import date
 import re
+from datetime import date
 
-from topydo.lib.Importance import importance, average_importance
+from topydo.lib.Importance import average_importance, importance
 
 
 def is_priority_field(p_field):

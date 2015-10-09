@@ -18,12 +18,13 @@
 A list of todo items.
 """
 
-from datetime import date
 import re
+from datetime import date
+
 from six import text_type
 
-from topydo.lib.Config import config
 from topydo.lib import Filter
+from topydo.lib.Config import config
 from topydo.lib.HashListValues import hash_list_values
 from topydo.lib.PrettyPrinter import PrettyPrinter
 from topydo.lib.Todo import Todo

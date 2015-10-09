@@ -14,15 +14,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from six import u
 import codecs
 import re
 import unittest
 
-from topydo.lib.Config import config
-from topydo.commands.ListCommand import ListCommand
-from test.TestCommand import CommandTest
+from six import u
+
 from test.Facilities import load_file_to_todolist
+from test.TestCommand import CommandTest
+from topydo.commands.ListCommand import ListCommand
+from topydo.lib.Config import config
 
 
 class ListCommandTest(CommandTest):

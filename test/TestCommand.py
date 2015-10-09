@@ -16,8 +16,8 @@
 
 import unittest
 
-from topydo.lib.Utils import escape_ansi
 from test.TestTopydo import TopydoTest
+from topydo.lib.Utils import escape_ansi
 
 
 class CommandTest(TopydoTest):

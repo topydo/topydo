@@ -14,13 +14,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from datetime import date, timedelta
 import unittest
+from datetime import date, timedelta
 
-from topydo.lib.Config import config
-from topydo.lib.Recurrence import advance_recurring_todo, NoRecurrenceException
-from topydo.lib.Todo import Todo
 from test.TestTopydo import TopydoTest
+from topydo.lib.Config import config
+from topydo.lib.Recurrence import NoRecurrenceException, advance_recurring_todo
+from topydo.lib.Todo import Todo
 
 
 class RecurrenceTest(TopydoTest):

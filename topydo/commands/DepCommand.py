@@ -14,9 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from topydo.lib import Filter
 from topydo.lib.Command import Command, InvalidCommandArgument
 from topydo.lib.Config import config
-from topydo.lib import Filter
 from topydo.lib.PrettyPrinter import pretty_printer_factory
 from topydo.lib.Sorter import Sorter
 from topydo.lib.TodoListBase import InvalidTodoException

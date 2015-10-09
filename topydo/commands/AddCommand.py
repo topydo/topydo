@@ -16,14 +16,14 @@
 
 """ Provides the AddCommand class that implements the 'add' subcommand. """
 
-from datetime import date
-import re
-from sys import stdin
 import codecs
+import re
+from datetime import date
 from os.path import expanduser
+from sys import stdin
 
-from topydo.lib.Config import config
 from topydo.lib.Command import Command
+from topydo.lib.Config import config
 from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
 from topydo.lib.RelativeDate import relative_date_to_date
 from topydo.lib.TodoListBase import InvalidTodoException

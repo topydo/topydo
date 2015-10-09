@@ -23,9 +23,8 @@ import datetime
 import re
 
 from prompt_toolkit.completion import Completer, Completion
-
-from topydo.lib.Config import config
 from topydo.Commands import _SUBCOMMAND_MAP
+from topydo.lib.Config import config
 from topydo.lib.RelativeDate import relative_date_to_date
 
 
