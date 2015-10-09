@@ -20,8 +20,8 @@ import unittest
 
 from six import u
 
+from test.CommandTestCase import CommandTest
 from test.Facilities import load_file_to_todolist
-from test.TestCommand import CommandTest
 from topydo.commands.ListCommand import ListCommand
 from topydo.lib.Config import config
 

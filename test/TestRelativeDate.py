@@ -17,7 +17,7 @@
 import unittest
 from datetime import date, timedelta
 
-from test.TestTopydo import TopydoTest
+from test.TopydoTestCase import TopydoTest
 from topydo.lib.RelativeDate import relative_date_to_date
 
 

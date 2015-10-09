@@ -14,9 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import unittest
-
-from test.TestTopydo import TopydoTest
+from test.TopydoTestCase import TopydoTest
 from topydo.lib.Utils import escape_ansi
 
 
@@ -33,6 +31,3 @@ class CommandTest(TopydoTest):
     def error(self, p_error):
         if p_error:
             self.errors += escape_ansi(p_error + "\n")
-
-if __name__ == '__main__':
-    unittest.main()

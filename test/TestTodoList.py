@@ -19,7 +19,7 @@
 import re
 import unittest
 
-from test.TestTopydo import TopydoTest
+from test.TopydoTestCase import TopydoTest
 from topydo.lib.Config import config
 from topydo.lib.Todo import Todo
 from topydo.lib.TodoFile import TodoFile

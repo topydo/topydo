@@ -19,7 +19,7 @@ import unittest
 from six import u
 
 from test.Facilities import load_file
-from test.TestTopydo import TopydoTest
+from test.TopydoTestCase import TopydoTest
 
 
 class TodoFileTest(TopydoTest):

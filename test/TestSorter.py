@@ -18,7 +18,7 @@ import unittest
 
 from test.Facilities import (load_file, load_file_to_todolist, print_view,
                              todolist_to_string)
-from test.TestTopydo import TopydoTest
+from test.TopydoTestCase import TopydoTest
 from topydo.lib.Config import config
 from topydo.lib.Sorter import Sorter
 

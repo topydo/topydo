@@ -20,7 +20,7 @@ from io import StringIO
 
 from six import u
 
-from test.TestCommand import CommandTest
+from test.CommandTestCase import CommandTest
 from topydo.commands import AddCommand, ListCommand
 from topydo.lib import TodoList
 from topydo.lib.Config import config

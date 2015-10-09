@@ -16,7 +16,7 @@
 
 import unittest
 
-from test.TestCommand import CommandTest
+from test.CommandTestCase import CommandTest
 from topydo.commands.TagCommand import TagCommand
 from topydo.lib.TodoList import TodoList
 

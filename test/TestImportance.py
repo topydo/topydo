@@ -17,7 +17,7 @@
 import unittest
 from datetime import date
 
-from test.TestTopydo import TopydoTest
+from test.TopydoTestCase import TopydoTest
 from topydo.lib.Config import config
 from topydo.lib.Importance import importance
 from topydo.lib.Todo import Todo

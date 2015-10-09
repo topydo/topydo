@@ -19,7 +19,7 @@ from datetime import date, timedelta
 
 from six import u
 
-from test.TestCommand import CommandTest
+from test.CommandTestCase import CommandTest
 from topydo.commands.DoCommand import DoCommand
 from topydo.lib.TodoList import TodoList
 

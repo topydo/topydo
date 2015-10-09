@@ -19,7 +19,7 @@ import unittest
 
 from six import u
 
-from test.TestCommand import CommandTest
+from test.CommandTestCase import CommandTest
 from topydo.commands.EditCommand import EditCommand
 from topydo.lib.Config import config
 from topydo.lib.Todo import Todo

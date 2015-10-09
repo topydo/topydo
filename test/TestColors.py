@@ -18,7 +18,7 @@
 
 import unittest
 
-from test.TestTopydo import TopydoTest
+from test.TopydoTestCase import TopydoTest
 from topydo.lib.Colors import NEUTRAL_COLOR, Colors
 from topydo.lib.Config import config
 
