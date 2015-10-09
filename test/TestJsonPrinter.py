@@ -26,6 +26,7 @@ class JsonPrinterTest(TopydoTest):
     Tests the functionality of printing a single todo item. Printing a list is
     already covered by the ListCommand tests.
     """
+
     def test_json(self):
         """ Print a single todo item. """
         printer = JsonPrinter()

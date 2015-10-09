@@ -50,6 +50,7 @@ class JsonPrinter(Printer):
     """
     A printer that converts a list of Todo items to a string in JSON format.
     """
+
     def __init__(self):
         super(JsonPrinter, self).__init__()
 

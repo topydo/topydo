@@ -22,6 +22,7 @@ class DirectedGraph(object):
     Represents a simple directed graph, used for tracking todo
     dependencies. The nodes are very simple: just integers.
     """
+
     def __init__(self):
         self._edges = {}
         self._edge_numbers = {}

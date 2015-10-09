@@ -56,6 +56,7 @@ class PromptApplication(CLIApplicationBase):
     This class implements a variant of topydo's CLI showing a shell and
     offering auto-completion thanks to the prompt toolkit.
     """
+
     def __init__(self):
         super(PromptApplication, self).__init__()
 

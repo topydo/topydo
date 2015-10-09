@@ -64,6 +64,7 @@ class IcalPrinter(Printer):
 
     https://www.rfc-editor.org/rfc/rfc2445.txt
     """
+
     def __init__(self, p_todolist):
         super(IcalPrinter, self).__init__()
         self.todolist = p_todolist

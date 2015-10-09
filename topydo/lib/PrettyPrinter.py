@@ -24,6 +24,7 @@ class Printer(object):
 
     Subclasses must at least implement the print_todo method.
     """
+
     def print_todo(self, p_todo):
         raise NotImplementedError
 
@@ -44,6 +45,7 @@ class PrettyPrinter(Printer):
     add colors, indentation, etc. These filters are found in the
     PrettyPrinterFilter module.
     """
+
     def __init__(self):
         """
         Constructor.

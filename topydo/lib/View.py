@@ -23,6 +23,7 @@ class View(object):
     file. Also a sorter and a list of filters should be given that is applied
     to the list.
     """
+
     def __init__(self, p_sorter, p_filters, p_todolist):
         self._todolist = p_todolist
         self._sorter = p_sorter

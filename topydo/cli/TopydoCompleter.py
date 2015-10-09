@@ -86,6 +86,7 @@ class TopydoCompleter(Completer):
     Completer class that completes projects, contexts, dates and
     subcommands.
     """
+
     def __init__(self, p_todolist):
         self.todolist = p_todolist
 

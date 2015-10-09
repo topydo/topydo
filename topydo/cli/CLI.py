@@ -39,6 +39,7 @@ class CLIApplication(CLIApplicationBase):
     """
     Class that represents the (original) Command Line Interface of Topydo.
     """
+
     def __init__(self):
         super(CLIApplication, self).__init__()
 

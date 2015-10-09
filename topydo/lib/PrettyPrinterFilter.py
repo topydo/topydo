@@ -90,6 +90,7 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
 
 class PrettyPrinterIndentFilter(PrettyPrinterFilter):
     """ Adds indentation to the todo item. """
+
     def __init__(self, p_indent=0):
         super(PrettyPrinterIndentFilter, self).__init__()
         self.indent = p_indent
@@ -101,6 +102,7 @@ class PrettyPrinterIndentFilter(PrettyPrinterFilter):
 
 class PrettyPrinterNumbers(PrettyPrinterFilter):
     """ Prepends the todo's number, retrieved from the todolist. """
+
     def __init__(self, p_todolist):
         super(PrettyPrinterNumbers, self).__init__()
         self.todolist = p_todolist
@@ -112,6 +114,7 @@ class PrettyPrinterNumbers(PrettyPrinterFilter):
 
 class PrettyPrinterHideTagFilter(PrettyPrinterFilter):
     """ Removes all occurrences of the given tags from the text. """
+
     def __init__(self, p_hidden_tags):
         super(PrettyPrinterHideTagFilter, self).__init__()
         self.hidden_tags = p_hidden_tags

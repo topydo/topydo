@@ -86,6 +86,7 @@ class Sorter(object):
     specific search is done first. This relies on the fact that sorting is
     stable.
     """
+
     def __init__(self, p_sortstring="desc:priority"):
         self.sortstring = p_sortstring
         self.functions = []

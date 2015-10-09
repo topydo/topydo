@@ -108,6 +108,7 @@ class RelevanceFilter(Filter):
 
 class DependencyFilter(Filter):
     """ Matches when a todo has no unfinished child tasks.  """
+
     def __init__(self, p_todolist):
         """
         Constructor.
@@ -164,9 +165,8 @@ OPERATOR_MATCH = r"(?P<operator><=?|=|>=?|!)?"
 
 
 class OrdinalFilter(Filter):
-    """
-    Base class for ordinal filters.
-    """
+    """ Base class for ordinal filters. """
+
     def __init__(self, p_expression, p_pattern):
         super(OrdinalFilter, self).__init__()
 

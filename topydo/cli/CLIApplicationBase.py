@@ -115,6 +115,7 @@ class CLIApplicationBase(object):
 
     Handles input/output of the various subcommands.
     """
+
     def __init__(self):
         self.todolist = TodoList.TodoList([])
         self.todofile = None
