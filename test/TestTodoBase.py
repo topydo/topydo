@@ -302,7 +302,7 @@ class TodoBaseTester(TopydoTest):
         todo.set_source_text(new_text)
 
         self.assertEqual(todo.src, new_text)
-        self.assertEqual(todo.priority(),'C')
+        self.assertEqual(todo.priority(), 'C')
 
     def test_set_creation_date1(self):
         todo = TodoBase("Foo")

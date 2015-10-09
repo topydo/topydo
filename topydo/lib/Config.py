@@ -214,7 +214,7 @@ class _Config:
 
         try:
             if pri_colors_str == '':
-                pri_colors_dict = {'A':'', 'B': '', 'C': ''}
+                pri_colors_dict = {'A': '', 'B': '', 'C': ''}
             else:
                 pri_colors_dict = _str_to_dict(pri_colors_str)
         except ValueError:

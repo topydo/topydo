@@ -63,7 +63,7 @@ class DepriCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_depri4(self):
-        command = DepriCommand(["1","Baz"], self.todolist, self.out, self.error)
+        command = DepriCommand(["1", "Baz"], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
