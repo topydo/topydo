@@ -103,8 +103,7 @@ class RelativeDateTester(TopydoTest):
         self.assertEqual(result, self.today)
 
     def test_today3(self):
-        result = relative_date_to_date('today', \
-            date.today() + timedelta(1))
+        result = relative_date_to_date('today', date.today() + timedelta(1))
         self.assertEqual(result, self.today)
 
     def test_tomorrow1(self):

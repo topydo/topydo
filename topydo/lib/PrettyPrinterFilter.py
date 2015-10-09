@@ -114,6 +114,6 @@ class PrettyPrinterHideTagFilter(PrettyPrinterFilter):
         for hidden_tag in self.hidden_tags:
             # inspired from remove_tag in TodoBase
             p_todo_str = re.sub(r'\s?\b' + hidden_tag + r':\S+\b', '',
-                p_todo_str)
+                                p_todo_str)
 
         return p_todo_str

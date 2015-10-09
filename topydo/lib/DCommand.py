@@ -91,7 +91,7 @@ class DCommand(MultiCommand):
         just before that point.
         """
         return [todo for todo in self.todolist.todos()[:self.length]
-            if not self._uncompleted_children(todo) and todo.is_active()]
+                if not self._uncompleted_children(todo) and todo.is_active()]
 
     def condition(self, _):
         """

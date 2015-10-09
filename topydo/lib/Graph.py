@@ -93,7 +93,7 @@ class DirectedGraph(object):
 
             if p_reverse:
                 parents = [node for node, neighbors in self._edges.items() \
-                    if current in neighbors]
+                           if current in neighbors]
 
                 stack = stack + parents
                 result = result.union(parents)

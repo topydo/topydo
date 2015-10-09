@@ -37,7 +37,7 @@ BASE_TODOLIST = lambda tl: super(TodoList, tl)
 class EditCommand(MultiCommand):
     def __init__(self, p_args, p_todolist, p_output, p_error, p_input):
         super(EditCommand, self).__init__(p_args, p_todolist, p_output,
-            p_error, p_input)
+                                          p_error, p_input)
 
         if len(self.args) == 0:
             self.multi_mode = False

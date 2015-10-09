@@ -198,7 +198,7 @@ class _Config:
         hidden_tags = self.cp.get('ls', 'hide_tags')
         # pylint: disable=no-member
         return [] if hidden_tags == '' else [tag.strip() for tag in
-            hidden_tags.split(',')]
+                                             hidden_tags.split(',')]
 
     def priority_colors(self):
         """ Returns a dict with priorities as keys and color numbers as value. """

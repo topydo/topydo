@@ -260,7 +260,7 @@ class TodoBaseTester(TopydoTest):
 
         self.assertEqual(todo.fields['completionDate'], today)
         self.assertTrue(re.match('^x ' + today_str + ' 2014-06-12 Foo', \
-            todo.src))
+                                 todo.src))
 
     def test_set_complete3(self):
         todo = TodoBase("Foo")

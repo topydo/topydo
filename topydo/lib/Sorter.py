@@ -40,10 +40,10 @@ def get_field_function(p_field):
         # when a task has no creation date, push it to the end by assigning it
         # the maximum possible date.
         result = (lambda a: a.creation_date() if a.creation_date() \
-            else date.max)
+                  else date.max)
     elif p_field == 'done' or p_field == 'completed' or p_field == 'completion':
         result = (lambda a: a.completion_date() if a.completion_date() \
-            else date.max)
+                  else date.max)
     elif p_field == 'importance':
         result = importance
     elif p_field == 'importance-avg' or p_field == 'importance-average':
@@ -55,7 +55,7 @@ def get_field_function(p_field):
         # when a tag is not present, push it to the end of the list by giving
         # it an artificially higher value
         result = (lambda a: "0" + a.tag_value(p_field) if a.has_tag(p_field) \
-            else "1")
+                  else "1")
 
     return result
 

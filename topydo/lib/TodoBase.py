@@ -100,7 +100,7 @@ class TodoBase(object):
         if not p_force_add and value:
             # remove old value from the tags
             self.fields['tags'] = [t for t in self.fields['tags'] \
-                if not (t[0] == p_key and t[1] == value)]
+                                   if not (t[0] == p_key and t[1] == value)]
 
             self.src = re.sub(
                 r'\b' + p_key + ':' + value + r'\b',
@@ -123,7 +123,7 @@ class TodoBase(object):
         # Build a new list that excludes the specified tag, match by value when
         # p_value is given.
         self.fields['tags'] = [t for t in self.fields['tags'] \
-            if not (t[0] == p_key and (p_value == "" or t[1] == p_value))]
+                               if not (t[0] == p_key and (p_value == "" or t[1] == p_value))]
 
         # when value == "", match any value having key p_key
         value = p_value if p_value != "" else r'\S+'
@@ -205,7 +205,7 @@ class TodoBase(object):
             self.fields['completionDate'] = p_completion_date
 
             self.src = re.sub(r'^(\([A-Z]\) )?', \
-                'x ' + p_completion_date.isoformat() + ' ', self.src)
+                              'x ' + p_completion_date.isoformat() + ' ', self.src)
 
     def set_creation_date(self, p_date=date.today()):
         """

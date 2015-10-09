@@ -207,7 +207,7 @@ class TodoList(TodoListBase):
         def clean_by_tag(tag_name):
             """ Generic function to handle 'p' and 'id' tags. """
             for todo in [todo for todo in self._todos
-                if todo.has_tag(tag_name)]:
+                         if todo.has_tag(tag_name)]:
 
                 value = todo.tag_value(tag_name)
                 if not self._depgraph.has_edge_id(value):
