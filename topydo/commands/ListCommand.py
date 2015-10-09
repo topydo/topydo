@@ -78,7 +78,7 @@ class ListCommand(ExpressionCommand):
         sent to the output.
         """
 
-        if self.printer == None:
+        if self.printer is None:
             # create a standard printer with some filters
             indent = config().list_indent()
             hidden_tags = config().hidden_tags()

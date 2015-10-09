@@ -146,12 +146,11 @@ class TodoBase(object):
         the task was completed.
         """
 
-        if not self.is_completed() and
-                (p_priority == None or is_valid_priority(p_priority)):
-
+        if not self.is_completed() and (p_priority is None or
+                                        is_valid_priority(p_priority)):
             self.fields['priority'] = p_priority
 
-            priority_str = '' if p_priority == None else '(' + p_priority + ') '
+            priority_str = '' if p_priority is None else '(' + p_priority + ') '
             self.src = re.sub(r'^(\([A-Z]\) )?', priority_str, self.src)
 
     def priority(self):

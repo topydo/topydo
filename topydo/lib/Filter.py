@@ -68,7 +68,7 @@ class GrepFilter(Filter):
         # convert to string in case we receive integers
         self.expression = p_expression
 
-        if p_case_sensitive != None:
+        if p_case_sensitive is not None:
             self.case_sensitive = p_case_sensitive
         else:
             # only be case sensitive when the expression contains at least one

@@ -178,7 +178,7 @@ class CLIApplicationBase(object):
                 archive_file.write(archive.print_todos())
 
     def _help(self, args):
-        if args == None:
+        if args is None:
             pass  # TODO
         else:
             pass  # TODO

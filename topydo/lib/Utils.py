@@ -44,7 +44,7 @@ def date_string_to_date(p_date):
 
 
 def is_valid_priority(p_priority):
-    return p_priority != None and re.match(r'^[A-Z]$', p_priority) != None
+    return p_priority is not None and re.match(r'^[A-Z]$', p_priority) is not None
 
 
 def escape_ansi(p_string):

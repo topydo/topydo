@@ -51,7 +51,7 @@ class CLIApplication(CLIApplicationBase):
 
         (subcommand, args) = get_subcommand(args)
 
-        if subcommand == None:
+        if subcommand is None:
             self._usage()
 
         if self._execute(subcommand, args) == False:

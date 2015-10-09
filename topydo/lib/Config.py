@@ -102,7 +102,7 @@ class _Config:
 
         # when a path is given, *only* use the values in that file, or the
         # defaults listed above.
-        if p_path != None:
+        if p_path is not None:
             files = [p_path]
 
         self.cp.read(files)
@@ -269,7 +269,7 @@ def config(p_path=None, p_overrides=None):
     passed value instead. Structure: (section, option) => value
     The previous configuration instance will be discarded.
     """
-    if not config.instance or p_path != None or p_overrides != None:
+    if not config.instance or p_path is not None or p_overrides is not None:
         try:
             config.instance = _Config(p_path, p_overrides)
         except configparser.ParsingError as perr:
