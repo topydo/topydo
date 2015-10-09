@@ -206,6 +206,7 @@ class PriorityCommandTest(CommandTest):
         self.assertFalse(self.todolist.is_dirty())
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors, "Invalid priority given.\n")
+
     def test_empty(self):
         command = PriorityCommand([], self.todolist, self.out, self.error)
         command.execute()
