@@ -16,12 +16,11 @@
 
 import os
 import tempfile
-from subprocess import CalledProcessError, call, check_call
+from subprocess import CalledProcessError, check_call
 
 from six import u
 
 from topydo.lib.Config import config
-from topydo.lib.ExpressionCommand import ExpressionCommand
 from topydo.lib.MultiCommand import MultiCommand
 from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
 from topydo.lib.Todo import Todo
