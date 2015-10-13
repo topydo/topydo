@@ -21,11 +21,6 @@ def find_version(*file_paths):
     raise RuntimeError("Unable to find version string.")
 
 
-conditional_dependencies = {
-    "colorama>=0.2.5": "win32" in sys.platform,
-}
-
-
 setup(
     name = "topydo",
     packages = find_packages(exclude=["test"]),
@@ -36,8 +31,9 @@ setup(
     url = "https://github.com/bram85/topydo",
     install_requires = [
         'six >= 1.9.0',
-    ] + [p for p, cond in conditional_dependencies.items() if cond],
+    ],
     extras_require = {
+        ':sys_platform=="win32"': ['colorama>=0.2.5'],
         'ical': ['icalendar'],
         'prompt-toolkit': ['prompt-toolkit >= 0.53'],
         'edit-cmd-tests': ['mock'],
