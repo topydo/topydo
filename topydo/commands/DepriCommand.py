@@ -17,6 +17,7 @@
 from topydo.lib.MultiCommand import MultiCommand
 from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
 
+
 class DepriCommand(MultiCommand):
     def __init__(self, p_args, p_todolist,
                  p_out=lambda a: None,

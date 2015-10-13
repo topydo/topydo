@@ -1,5 +1,5 @@
 # Topydo - A todo.txt client written in Python.
-# Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
+# Copyright (C) 2014 - 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -37,13 +37,14 @@ _TAG_MATCH = re.compile('(?P<key>[^:]+):(?P<value>.+)')
 _PROJECT_MATCH = re.compile(r'\+(\S*\w)')
 _CONTEXT_MATCH = re.compile(r'@(\S*\w)')
 
+
 def parse_line(p_string):
     """
     Parses a single line as can be encountered in a todo.txt file.
     First checks whether the standard elements are present, such as priority,
     creation date, completeness check and the completion date.
 
-    Then the rest of the analyzed for any occurences of contexts, projects or
+    Then the rest of the analyzed for any occurrences of contexts, projects or
     tags.
 
     Returns an dictionary with the default values as shown below.
@@ -102,4 +103,3 @@ def parse_line(p_string):
     result['text'] = result['text'][:-1]
 
     return result
-

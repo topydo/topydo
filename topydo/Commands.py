@@ -32,7 +32,7 @@ _SUBCOMMAND_MAP = {
     'depri': 'DepriCommand',
     'do': 'DoCommand',
     'edit': 'EditCommand',
-    'exit': 'ExitCommand', # used for the prompt
+    'exit': 'ExitCommand',  # used for the prompt
     'ls': 'ListCommand',
     'lscon': 'ListContextCommand',
     'listcon': 'ListContextCommand',
@@ -52,10 +52,10 @@ _SUBCOMMAND_MAP = {
     'tag': 'TagCommand',
 }
 
+
 def get_subcommand(p_args):
     """
-    Retrieves the to-be executed Command and returns a tuple
-    (Command, args).
+    Retrieves the to-be executed Command and returns a tuple (Command, args).
 
     If args is an empty list, then the Command that corresponds with the
     default command specified in the configuration will be returned.
@@ -109,4 +109,3 @@ def get_subcommand(p_args):
             result = import_subcommand(p_command)
 
     return (result, args)
-

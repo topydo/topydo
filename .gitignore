@@ -1,4 +1,4 @@
-*.pyc
+*.py[cod]
 *.sw?
 install
 .coverage
@@ -19,6 +19,7 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+.eggs/
 
 # Sublime Text
 *.sublime-*

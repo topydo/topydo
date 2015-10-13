@@ -14,15 +14,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from topydo.lib.ExpressionCommand import ExpressionCommand
 from topydo.lib.Config import config
-from topydo.lib.PrettyPrinter import pretty_printer_factory
-from topydo.lib.PrettyPrinterFilter import (
-    PrettyPrinterIndentFilter,
-    PrettyPrinterHideTagFilter
-)
+from topydo.lib.ExpressionCommand import ExpressionCommand
 from topydo.lib.IcalPrinter import IcalPrinter
 from topydo.lib.JsonPrinter import JsonPrinter
+from topydo.lib.PrettyPrinter import pretty_printer_factory
+from topydo.lib.PrettyPrinterFilter import (PrettyPrinterHideTagFilter,
+                                            PrettyPrinterIndentFilter)
+
 
 class ListCommand(ExpressionCommand):
     def __init__(self, p_args, p_todolist,
@@ -43,7 +42,7 @@ class ListCommand(ExpressionCommand):
         """
         try:
             import icalendar as _
-        except ImportError: # pragma: no cover
+        except ImportError:  # pragma: no cover
             self.error("icalendar package is not installed.")
             return False
 
@@ -76,8 +75,7 @@ class ListCommand(ExpressionCommand):
         printing). If a format was specified on the commandline, this format is
         sent to the output.
         """
-
-        if self.printer == None:
+        if self.printer is None:
             # create a standard printer with some filters
             indent = config().list_indent()
             hidden_tags = config().hidden_tags()
@@ -96,7 +94,7 @@ class ListCommand(ExpressionCommand):
 
         try:
             self._process_flags()
-        except SyntaxError: # pragma: no cover
+        except SyntaxError:  # pragma: no cover
             # importing icalendar failed, most likely due to Python 3.2
             self.error("icalendar is not supported in this Python version.")
             return False
@@ -119,7 +117,7 @@ When an expression is given, only the todos matching that expression are shown.
 
 -f : Specify the output format, being 'text' (default), 'ical' or 'json'.
 
-     * 'text' - Text output with colors and identation if applicable.
+     * 'text' - Text output with colors and indentation if applicable.
      * 'ical' - iCalendar (RFC 2445). Is not supported in Python 3.2. Be aware
                 that this is not a read-only operation, todo items may obtain
                 an 'ical' tag with a unique ID. Completed todo items may be

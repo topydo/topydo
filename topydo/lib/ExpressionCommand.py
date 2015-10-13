@@ -16,16 +16,18 @@
 
 import re
 
+from topydo.lib import Filter
 from topydo.lib.Command import Command
 from topydo.lib.Config import config
-from topydo.lib import Filter
 from topydo.lib.Sorter import Sorter
 from topydo.lib.View import View
+
 
 class ExpressionCommand(Command):
     """
     A common class for commands operating on todos selected by expressions.
     """
+
     def __init__(self, p_args, p_todolist,
                  p_out=lambda a: None,
                  p_err=lambda a: None,

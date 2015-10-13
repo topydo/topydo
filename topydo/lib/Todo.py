@@ -1,5 +1,5 @@
 # Topydo - A todo.txt client written in Python.
-# Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
+# Copyright (C) 2014 - 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@ from datetime import date
 from topydo.lib.Config import config
 from topydo.lib.TodoBase import TodoBase
 from topydo.lib.Utils import date_string_to_date
+
 
 class Todo(TodoBase):
     """
@@ -94,4 +95,3 @@ class Todo(TodoBase):
             return diff.days
         else:
             return 0
-

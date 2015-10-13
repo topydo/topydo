@@ -18,6 +18,7 @@ from topydo.lib.Command import Command, InvalidCommandArgument
 from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
 from topydo.lib.TodoListBase import InvalidTodoException
 
+
 class TagCommand(Command):
     def __init__(self, p_args, p_todolist,
                  p_out=lambda a: None,
@@ -67,7 +68,7 @@ class TagCommand(Command):
 
     def _choose(self):
         """
-        Returns the chosen number of the tag value to process (or "all")
+        Returns the chosen number of the tag value to process (or "all").
         """
         answer = "all"
 
@@ -103,7 +104,7 @@ class TagCommand(Command):
             if answer == "all":
                 for value in self.current_values:
                     self._set_helper(value)
-            elif answer != None and self.value != self.current_values[answer]:
+            elif answer is not None and self.value != self.current_values[answer]:
                 self._set_helper(self.current_values[answer])
 
         else:
@@ -130,6 +131,6 @@ is omitted, the tag is removed from the todo item.
 
 -a : Do not change the current value of the tag if it exists, but add a new
      value.
--f : Force setting/removing all values of the tag. Prevents interaction with the
-     user.
+-f : Force setting/removing all values of the tag. Prevents interaction with
+     the user.
 """

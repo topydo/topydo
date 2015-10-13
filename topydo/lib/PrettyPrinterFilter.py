@@ -17,16 +17,18 @@
 """ Provides filters used for pretty printing. """
 
 import re
+
 from six import u
 
+from topydo.lib.Colors import NEUTRAL_COLOR, Colors
 from topydo.lib.Config import config
-from topydo.lib.Colors import Colors, NEUTRAL_COLOR
+
 
 class PrettyPrinterFilter(object):
     """
     Base class for a pretty printer filter.
 
-    Subclasses must reimplement the filter method.
+    Subclasses must re-implement the filter method.
     """
 
     def filter(self, p_todo_str, _):
@@ -34,6 +36,7 @@ class PrettyPrinterFilter(object):
         Applies a filter to p_todo_str and returns a modified version of it.
         """
         raise NotImplementedError
+
 
 class PrettyPrinterColorFilter(PrettyPrinterFilter):
     """
@@ -44,7 +47,6 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
 
     def filter(self, p_todo_str, p_todo):
         """ Applies the colors. """
-
         colorscheme = Colors()
         priority_colors = colorscheme.get_priority_colors()
         project_color = colorscheme.get_project_color()
@@ -84,8 +86,10 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
 
         return p_todo_str
 
+
 class PrettyPrinterIndentFilter(PrettyPrinterFilter):
     """ Adds indentation to the todo item. """
+
     def __init__(self, p_indent=0):
         super(PrettyPrinterIndentFilter, self).__init__()
         self.indent = p_indent
@@ -94,8 +98,10 @@ class PrettyPrinterIndentFilter(PrettyPrinterFilter):
         """ Applies the indentation. """
         return ' ' * self.indent + p_todo_str
 
+
 class PrettyPrinterNumbers(PrettyPrinterFilter):
     """ Prepends the todo's number, retrieved from the todolist. """
+
     def __init__(self, p_todolist):
         super(PrettyPrinterNumbers, self).__init__()
         self.todolist = p_todolist
@@ -104,8 +110,10 @@ class PrettyPrinterNumbers(PrettyPrinterFilter):
         """ Prepends the number to the todo string. """
         return u("|{:>3}| {}").format(self.todolist.number(p_todo), p_todo_str)
 
+
 class PrettyPrinterHideTagFilter(PrettyPrinterFilter):
-    """ Removes all occurences of the given tags from the text. """
+    """ Removes all occurrences of the given tags from the text. """
+
     def __init__(self, p_hidden_tags):
         super(PrettyPrinterHideTagFilter, self).__init__()
         self.hidden_tags = p_hidden_tags
@@ -114,6 +122,6 @@ class PrettyPrinterHideTagFilter(PrettyPrinterFilter):
         for hidden_tag in self.hidden_tags:
             # inspired from remove_tag in TodoBase
             p_todo_str = re.sub(r'\s?\b' + hidden_tag + r':\S+\b', '',
-                p_todo_str)
+                                p_todo_str)
 
         return p_todo_str

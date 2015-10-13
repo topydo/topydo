@@ -1,5 +1,5 @@
 # Topydo - A todo.txt client written in Python.
-# Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
+# Copyright (C) 2014 - 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,12 +18,14 @@
 This module contains the class that represents a single todo item.
 """
 
-from datetime import date
 import re
+from datetime import date
+
 from six import u
 
 from topydo.lib.TodoParser import parse_line
 from topydo.lib.Utils import is_valid_priority
+
 
 class TodoBase(object):
     """
@@ -56,7 +58,6 @@ class TodoBase(object):
         Returns a list of all tag values associated with p_key. Returns
         empty list if p_key does not exist.
         """
-
         tags = self.fields['tags']
         matches = [tag[1] for tag in tags if tag[0] == p_key]
         return matches if len(matches) else []
@@ -67,9 +68,8 @@ class TodoBase(object):
         value is passed, it will only return true when there exists a tag with
         the given key-value combination.
         """
-
-        result = [t for t in self.tag_values(p_key) \
-                    if p_value == "" or t == p_value]
+        result = [t for t in self.tag_values(p_key)
+                  if p_value == "" or t == p_value]
         return len(result) > 0
 
     def add_tag(self, p_key, p_value):
@@ -90,7 +90,6 @@ class TodoBase(object):
         When p_old_value is set, all tags having this value will be set to the
         new value.
         """
-
         if p_value == "":
             self.remove_tag(p_key, p_old_value)
             return
@@ -99,8 +98,8 @@ class TodoBase(object):
 
         if not p_force_add and value:
             # remove old value from the tags
-            self.fields['tags'] = [t for t in self.fields['tags'] \
-                if not (t[0] == p_key and t[1] == value)]
+            self.fields['tags'] = [t for t in self.fields['tags']
+                                   if not (t[0] == p_key and t[1] == value)]
 
             self.src = re.sub(
                 r'\b' + p_key + ':' + value + r'\b',
@@ -122,8 +121,9 @@ class TodoBase(object):
 
         # Build a new list that excludes the specified tag, match by value when
         # p_value is given.
-        self.fields['tags'] = [t for t in self.fields['tags'] \
-            if not (t[0] == p_key and (p_value == "" or t[1] == p_value))]
+        self.fields['tags'] = [t for t in self.fields['tags']
+                               if not (t[0] == p_key and (p_value == "" or
+                                                          t[1] == p_value))]
 
         # when value == "", match any value having key p_key
         value = p_value if p_value != "" else r'\S+'
@@ -143,13 +143,11 @@ class TodoBase(object):
         Priority remains unchanged when an invalid priority is given, or when
         the task was completed.
         """
-
-        if not self.is_completed() and \
-            (p_priority == None or is_valid_priority(p_priority)):
-
+        if not self.is_completed() and (p_priority is None or
+                                        is_valid_priority(p_priority)):
             self.fields['priority'] = p_priority
 
-            priority_str = '' if p_priority == None else '(' + p_priority + ') '
+            priority_str = '' if p_priority is None else '(' + p_priority + ') '
             self.src = re.sub(r'^(\([A-Z]\) )?', priority_str, self.src)
 
     def priority(self):
@@ -204,8 +202,9 @@ class TodoBase(object):
             self.fields['completed'] = True
             self.fields['completionDate'] = p_completion_date
 
-            self.src = re.sub(r'^(\([A-Z]\) )?', \
-                'x ' + p_completion_date.isoformat() + ' ', self.src)
+            self.src = re.sub(r'^(\([A-Z]\) )?',
+                              'x ' + p_completion_date.isoformat() + ' ',
+                              self.src)
 
     def set_creation_date(self, p_date=date.today()):
         """
@@ -213,16 +212,15 @@ class TodoBase(object):
         """
         self.fields['creationDate'] = p_date
 
-        # not particulary pretty, but inspired by
+        # not particularly pretty, but inspired by
         # http://bugs.python.org/issue1519638 non-existent matches trigger
         # exceptions, hence the lambda
         self.src = re.sub(
             r'^(x \d{4}-\d{2}-\d{2} |\([A-Z]\) )?(\d{4}-\d{2}-\d{2} )?(.*)$',
-            lambda m: \
-            u("{}{} {}").format(m.group(1) or '', p_date.isoformat(), m.group(3)),
-            self.src)
+            lambda m:
+            u("{}{} {}").format(m.group(1) or '', p_date.isoformat(),
+                                m.group(3)), self.src)
 
     def creation_date(self):
         """ Returns the creation date of a todo. """
         return self.fields['creationDate']
-

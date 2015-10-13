@@ -39,6 +39,7 @@ from topydo.Commands import get_subcommand
 from topydo.lib import TodoFile
 from topydo.lib import TodoList
 
+
 def _todotxt_mtime():
     """
     Returns the mtime for the configured todo.txt file.
@@ -49,11 +50,13 @@ def _todotxt_mtime():
         # file not found
         return None
 
+
 class PromptApplication(CLIApplicationBase):
     """
     This class implements a variant of topydo's CLI showing a shell and
     offering auto-completion thanks to the prompt toolkit.
     """
+
     def __init__(self):
         super(PromptApplication, self).__init__()
 
@@ -69,7 +72,6 @@ class PromptApplication(CLIApplicationBase):
         If the modification time of the todo.txt file is equal to the last time
         it was checked, nothing will be done.
         """
-
         current_mtime = _todotxt_mtime()
 
         if not self.todofile or self.mtime != current_mtime:
@@ -91,8 +93,8 @@ class PromptApplication(CLIApplicationBase):
 
             try:
                 user_input = prompt(u'topydo> ', history=history,
-                                       completer=self.completer,
-                                       complete_while_typing=False).split()
+                                    completer=self.completer,
+                                    complete_while_typing=False).split()
             except (EOFError, KeyboardInterrupt):
                 sys.exit(0)
 
@@ -112,10 +114,10 @@ class PromptApplication(CLIApplicationBase):
             except TypeError:
                 usage()
 
+
 def main():
     """ Main entry point of the prompt interface. """
     PromptApplication().run()
 
 if __name__ == '__main__':
     main()
-

@@ -16,12 +16,14 @@
 
 """ A view is a list of todos, sorted and filtered. """
 
+
 class View(object):
     """
     A view is instantiated by a todo list, usually obtained from a todo.txt
     file. Also a sorter and a list of filters should be given that is applied
     to the list.
     """
+
     def __init__(self, p_sorter, p_filters, p_todolist):
         self._todolist = p_todolist
         self._sorter = p_sorter

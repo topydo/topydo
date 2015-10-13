@@ -1,5 +1,5 @@
 # Topydo - A todo.txt client written in Python.
-# Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
+# Copyright (C) 2014 - 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,11 +16,13 @@
 
 """ Contains the class for a directed graph. """
 
+
 class DirectedGraph(object):
     """
     Represents a simple directed graph, used for tracking todo
     dependencies. The nodes are very simple: just integers.
     """
+
     def __init__(self):
         self._edges = {}
         self._edge_numbers = {}
@@ -36,8 +38,7 @@ class DirectedGraph(object):
 
     def add_edge(self, p_from, p_to, p_id=None):
         """
-        Adds an edge to the graph. The nodes will be added if they don't
-        exist.
+        Adds an edge to the graph. The nodes will be added if they don't exist.
 
         The p_id is the id of the edge, if the client wishes to maintain this.
         """
@@ -59,15 +60,13 @@ class DirectedGraph(object):
 
     def incoming_neighbors(self, p_id, p_recursive=False):
         """
-        Returns a set of the direct neighbors that can reach the given
-        node.
+        Returns a set of the direct neighbors that can reach the given node.
         """
         return self.reachable_nodes_reverse(p_id, p_recursive)
 
     def outgoing_neighbors(self, p_id, p_recursive=False):
         """
-        Returns the set of the direct neighbors that the given node can
-        reach.
+        Returns the set of the direct neighbors that the given node can reach.
         """
         return self.reachable_nodes(p_id, p_recursive)
 
@@ -92,8 +91,8 @@ class DirectedGraph(object):
             visited.add(current)
 
             if p_reverse:
-                parents = [node for node, neighbors in self._edges.items() \
-                    if current in neighbors]
+                parents = [node for node, neighbors in self._edges.items()
+                           if current in neighbors]
 
                 stack = stack + parents
                 result = result.union(parents)
@@ -130,8 +129,8 @@ class DirectedGraph(object):
         """
         Returns True iff the given node has no incoming or outgoing edges.
         """
-        return len(self.incoming_neighbors(p_id)) == 0 \
-           and len(self.outgoing_neighbors(p_id)) == 0
+        return(len(self.incoming_neighbors(p_id)) == 0
+               and len(self.outgoing_neighbors(p_id)) == 0)
 
     def has_edge(self, p_from, p_to):
         """ Returns True when the graph has the given edge. """
