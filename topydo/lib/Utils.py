@@ -1,5 +1,5 @@
 # Topydo - A todo.txt client written in Python.
-# Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
+# Copyright (C) 2014 - 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,8 +18,8 @@
 Various utility functions.
 """
 
-from datetime import date
 import re
+from datetime import date
 import os
 from collections import namedtuple
 
@@ -44,8 +44,10 @@ def date_string_to_date(p_date):
 
     return result
 
+
 def is_valid_priority(p_priority):
-    return p_priority is not None and re.match(r'^[A-Z]$', p_priority) != None
+    return p_priority is not None and re.match(r'^[A-Z]$', p_priority) is not None
+
 
 def escape_ansi(p_string):
     return escape_ansi.pattern.sub('', p_string)

@@ -20,6 +20,7 @@ from topydo.lib.MultiCommand import MultiCommand
 from topydo.lib.PrettyPrinter import PrettyPrinter
 from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
 
+
 class DCommand(MultiCommand):
     """
     A common class for the 'do' and 'del' operations, because they're quite
@@ -35,7 +36,8 @@ class DCommand(MultiCommand):
 
         self.force = False
 
-        self.length = len(self.todolist.todos()) # to determine newly activated todos
+        # to determine newly activated todos
+        self.length = len(self.todolist.todos())
 
     def get_flags(self):
         return ("f", ["force"])
@@ -91,7 +93,7 @@ class DCommand(MultiCommand):
         just before that point.
         """
         return [todo for todo in self.todolist.todos()[:self.length]
-            if not self._uncompleted_children(todo) and todo.is_active()]
+                if not self._uncompleted_children(todo) and todo.is_active()]
 
     def condition(self, _):
         """

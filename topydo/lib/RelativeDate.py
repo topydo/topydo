@@ -1,5 +1,5 @@
 # Topydo - A todo.txt client written in Python.
-# Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
+# Copyright (C) 2014 - 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,9 +16,10 @@
 
 """ This module deals with relative dates (2d, 5y, Monday, today, etc.) """
 
-from datetime import date, timedelta
 import calendar
 import re
+from datetime import date, timedelta
+
 
 def _add_months(p_sourcedate, p_months):
     """
@@ -34,6 +35,7 @@ def _add_months(p_sourcedate, p_months):
     day = min(p_sourcedate.day, calendar.monthrange(year, month)[1])
 
     return date(year, month, day)
+
 
 def _convert_pattern(p_length, p_periodunit, p_offset=None):
     """
@@ -55,6 +57,7 @@ def _convert_pattern(p_length, p_periodunit, p_offset=None):
         result = _add_months(p_offset, p_length * 12)
 
     return result
+
 
 def _convert_weekday_pattern(p_weekday):
     """
@@ -81,6 +84,7 @@ def _convert_weekday_pattern(p_weekday):
     shift = (target_day - day) % 7
     return date.today() + timedelta(shift)
 
+
 def relative_date_to_date(p_date, p_offset=None):
     """
     Transforms a relative date into a date object.
@@ -91,7 +95,6 @@ def relative_date_to_date(p_date, p_offset=None):
     * 'today' or 'tomorrow'
     * days of the week (in full or abbreviated)
     """
-
     result = None
     p_date = p_date.lower()
     p_offset = p_offset or date.today()

@@ -18,12 +18,14 @@ import os
 
 from six.moves import configparser
 
+
 class ConfigError(Exception):
     def __init__(self, p_text):
         self.text = p_text
 
     def __str__(self):
         return self.text
+
 
 class _Config:
     def __init__(self, p_path=None, p_overrides=None):
@@ -205,10 +207,12 @@ class _Config:
         hidden_tags = self.cp.get('ls', 'hide_tags')
         # pylint: disable=no-member
         return [] if hidden_tags == '' else [tag.strip() for tag in
-            hidden_tags.split(',')]
+                                             hidden_tags.split(',')]
 
     def priority_colors(self):
-        """ Returns a dict with priorities as keys and color numbers as value. """
+        """
+        Returns a dict with priorities as keys and color numbers as value.
+        """
         pri_colors_str = self.cp.get('colorscheme', 'priority_colors')
 
         def _str_to_dict(p_string):
@@ -272,7 +276,7 @@ def config(p_path=None, p_overrides=None):
     passed value instead. Structure: (section, option) => value
     The previous configuration instance will be discarded.
     """
-    if not config.instance or p_path != None or p_overrides != None:
+    if not config.instance or p_path is not None or p_overrides is not None:
         try:
             config.instance = _Config(p_path, p_overrides)
         except configparser.ParsingError as perr:

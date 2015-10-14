@@ -16,17 +16,18 @@
 
 """ Provides the AddCommand class that implements the 'add' subcommand. """
 
-from datetime import date
-import re
-from sys import stdin
 import codecs
+import re
+from datetime import date
 from os.path import expanduser
+from sys import stdin
 
-from topydo.lib.Config import config
 from topydo.lib.Command import Command
+from topydo.lib.Config import config
 from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
 from topydo.lib.RelativeDate import relative_date_to_date
 from topydo.lib.TodoListBase import InvalidTodoException
+
 
 class AddCommand(Command):
     def __init__(self, p_args, p_todolist,
@@ -60,11 +61,12 @@ class AddCommand(Command):
     def _add_todo(self, p_todo_text):
         def _preprocess_input_todo(p_todo_text):
             """
-            Preprocesses user input when adding a task.
+            Pre-processes user input when adding a task.
 
             It detects a priority mid-sentence and puts it at the start.
             """
-            todo_text = re.sub(r'^(.+) (\([A-Z]\))(.*)$', r'\2 \1\3', p_todo_text)
+            todo_text = re.sub(r'^(.+) (\([A-Z]\))(.*)$', r'\2 \1\3',
+                               p_todo_text)
 
             return todo_text
 

@@ -18,11 +18,13 @@ import sys
 
 from topydo.lib.Command import Command
 
+
 class ExitCommand(Command):
     """
     A command that exits topydo. Used for the 'exit' and 'quit' subcommands on
     the prompt CLI.
     """
+
     def __init__(self, p_args, p_todolist, p_output, p_error, p_input):
         super(ExitCommand, self).__init__(p_args, p_todolist, p_output, p_error,
                                           p_input)

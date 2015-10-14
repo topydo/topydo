@@ -16,6 +16,7 @@
 
 from topydo.lib.DCommand import DCommand
 
+
 class DeleteCommand(DCommand):
     def __init__(self, p_args, p_todolist,
                  p_out=lambda a: None,

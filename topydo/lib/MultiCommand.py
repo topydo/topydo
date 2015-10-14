@@ -19,6 +19,7 @@ from six import u
 from topydo.lib.ExpressionCommand import ExpressionCommand
 from topydo.lib.TodoListBase import InvalidTodoException
 
+
 class MultiCommand(ExpressionCommand):
     """
     A common class for operations that can work with multiple todo IDs.
@@ -62,7 +63,7 @@ class MultiCommand(ExpressionCommand):
         self.todos = self._view().todos
 
     def get_todos(self):
-        """ Gets todo objects from supplied todo IDs """
+        """ Gets todo objects from supplied todo IDs. """
         if self.is_expression:
             self.get_todos_from_expr()
         else:
@@ -79,11 +80,11 @@ class MultiCommand(ExpressionCommand):
 
     def _catch_todo_errors(self):
         """
-        Returns None or list of error messages depending on number of valid todo
-        objects and number of invalid todo IDs.
+        Returns None or list of error messages depending on number of valid
+        todo objects and number of invalid todo IDs.
 
-        In case of multiple invalid todo IDs we generate separate error message for each
-        one of them with information about supplied ID.
+        In case of multiple invalid todo IDs we generate separate error message
+        for each one of them with information about supplied ID.
         """
         errors = []
 

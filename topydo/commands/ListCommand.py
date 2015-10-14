@@ -14,17 +14,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from topydo.lib.ExpressionCommand import ExpressionCommand
 from topydo.lib.Config import config
-from topydo.lib.PrettyPrinter import pretty_printer_factory
-from topydo.lib.PrettyPrinterFilter import (
-    PrettyPrinterIndentFilter,
-    PrettyPrinterHideTagFilter,
-    PrettyPrinterBasicPriorityFilter,
-    PrettyPrinterHumanDatesFilter
-)
+from topydo.lib.ExpressionCommand import ExpressionCommand
 from topydo.lib.IcalPrinter import IcalPrinter
 from topydo.lib.JsonPrinter import JsonPrinter
+from topydo.lib.PrettyPrinter import pretty_printer_factory
+from topydo.lib.PrettyPrinterFilter import (PrettyPrinterHideTagFilter,
+                                            PrettyPrinterIndentFilter,
+                                            PrettyPrinterBasicPriorityFilter,
+                                            PrettyPrinterHumanDatesFilter)
+
 
 class ListCommand(ExpressionCommand):
     def __init__(self, p_args, p_todolist,
@@ -81,7 +80,6 @@ class ListCommand(ExpressionCommand):
         printing). If a format was specified on the commandline, this format is
         sent to the output.
         """
-
         if self.printer is None:
             # create a standard printer with some filters
             indent = config().list_indent()

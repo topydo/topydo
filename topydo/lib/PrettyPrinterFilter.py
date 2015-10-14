@@ -17,22 +17,24 @@
 """ Provides filters used for pretty printing. """
 
 import re
+
 from six import u
 from datetime import date
 import textwrap
 
 import arrow
 
+from topydo.lib.Colors import NEUTRAL_COLOR, Colors
 from topydo.lib.Config import config
-from topydo.lib.Colors import Colors, NEUTRAL_COLOR
 from topydo.lib.Utils import get_terminal_size
+
 
 
 class PrettyPrinterFilter(object):
     """
     Base class for a pretty printer filter.
 
-    Subclasses must reimplement the filter method.
+    Subclasses must re-implement the filter method.
     """
 
     def filter(self, p_todo_str, _):
@@ -40,6 +42,7 @@ class PrettyPrinterFilter(object):
         Applies a filter to p_todo_str and returns a modified version of it.
         """
         raise NotImplementedError
+
 
 class PrettyPrinterColorFilter(PrettyPrinterFilter):
     """
@@ -50,7 +53,6 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
 
     def filter(self, p_todo_str, p_todo):
         """ Applies the colors. """
-
         colorscheme = Colors()
         priority_colors = colorscheme.get_priority_colors()
         project_color = colorscheme.get_project_color()
@@ -132,6 +134,7 @@ class PrettyPrinterIndentFilter(PrettyPrinterFilter):
 
 class PrettyPrinterNumbers(PrettyPrinterFilter):
     """ Prepends the todo's number, retrieved from the todolist. """
+
     def __init__(self, p_todolist):
         super(PrettyPrinterNumbers, self).__init__()
         self.todolist = p_todolist
@@ -142,7 +145,8 @@ class PrettyPrinterNumbers(PrettyPrinterFilter):
 
 
 class PrettyPrinterHideTagFilter(PrettyPrinterFilter):
-    """ Removes all occurences of the given tags from the text. """
+    """ Removes all occurrences of the given tags from the text. """
+
     def __init__(self, p_hidden_tags):
         super(PrettyPrinterHideTagFilter, self).__init__()
         self.hidden_tags = p_hidden_tags
@@ -151,7 +155,7 @@ class PrettyPrinterHideTagFilter(PrettyPrinterFilter):
         for hidden_tag in self.hidden_tags:
             # inspired from remove_tag in TodoBase
             p_todo_str = re.sub(r'\s?\b' + hidden_tag + r':\S+\b', '',
-                p_todo_str)
+                                p_todo_str)
 
         return p_todo_str
 
@@ -258,7 +262,6 @@ class PrettyPrinterHumanDatesFilter(PrettyPrinterFilter):
         else:
             thresholddelta = ''
             line5 = line4
-        # To-do: implement this
 
         if addingdates is True:
             line6 = line5.rstrip() + ' (' + adddelta + duedelta + \

@@ -1,5 +1,5 @@
 # Topydo - A todo.txt client written in Python.
-# Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
+# Copyright (C) 2014 - 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,17 +19,18 @@ import re
 from topydo.lib.RelativeDate import relative_date_to_date
 from topydo.lib.Utils import date_string_to_date
 
+
 class Filter(object):
     def filter(self, p_todos):
         """
         Filters a list of todos. Truncates the list after p_limit todo
         items (or no maximum limit if omitted).
         """
-
         return [t for t in p_todos if self.match(t)]
 
     def match(self, _):
         raise NotImplementedError
+
 
 class NegationFilter(Filter):
     def __init__(self, p_filter):
@@ -37,6 +38,7 @@ class NegationFilter(Filter):
 
     def match(self, p_todo):
         return not self._filter.match(p_todo)
+
 
 class AndFilter(Filter):
     def __init__(self, p_filter1, p_filter2):
@@ -46,6 +48,7 @@ class AndFilter(Filter):
     def match(self, p_todo):
         return self._filter1.match(p_todo) and self._filter2.match(p_todo)
 
+
 class OrFilter(Filter):
     def __init__(self, p_filter1, p_filter2):
         self._filter1 = p_filter1
@@ -53,6 +56,7 @@ class OrFilter(Filter):
 
     def match(self, p_todo):
         return self._filter1.match(p_todo) or self._filter2.match(p_todo)
+
 
 class GrepFilter(Filter):
     """ Matches when the todo text contains a text. """
@@ -63,7 +67,7 @@ class GrepFilter(Filter):
         # convert to string in case we receive integers
         self.expression = p_expression
 
-        if p_case_sensitive != None:
+        if p_case_sensitive is not None:
             self.case_sensitive = p_case_sensitive
         else:
             # only be case sensitive when the expression contains at least one
@@ -79,6 +83,7 @@ class GrepFilter(Filter):
             string = string.lower()
 
         return string.find(expr) != -1
+
 
 class RelevanceFilter(Filter):
     """
@@ -99,8 +104,10 @@ class RelevanceFilter(Filter):
 
         return p_todo.is_active() and is_due
 
+
 class DependencyFilter(Filter):
     """ Matches when a todo has no unfinished child tasks.  """
+
     def __init__(self, p_todolist):
         """
         Constructor.
@@ -119,6 +126,7 @@ class DependencyFilter(Filter):
         uncompleted = [todo for todo in children if not todo.is_completed()]
 
         return not uncompleted
+
 
 class InstanceFilter(Filter):
     def __init__(self, p_todos):
@@ -143,6 +151,7 @@ class InstanceFilter(Filter):
         except ValueError:
             return False
 
+
 class LimitFilter(Filter):
     def __init__(self, p_limit):
         super(LimitFilter, self).__init__()
@@ -153,10 +162,10 @@ class LimitFilter(Filter):
 
 OPERATOR_MATCH = r"(?P<operator><=?|=|>=?|!)?"
 
+
 class OrdinalFilter(Filter):
-    """
-    Base class for ordinal filters.
-    """
+    """ Base class for ordinal filters. """
+
     def __init__(self, p_expression, p_pattern):
         super(OrdinalFilter, self).__init__()
 
@@ -192,6 +201,7 @@ class OrdinalFilter(Filter):
         return False
 
 ORDINAL_TAG_MATCH = r"(?P<key>[^:]*):" + OPERATOR_MATCH + r"(?P<value>\S+)"
+
 
 class OrdinalTagFilter(OrdinalFilter):
     def __init__(self, p_expression):
@@ -234,6 +244,7 @@ class OrdinalTagFilter(OrdinalFilter):
         return self.compare_operands(operand1, operand2)
 
 PRIORITY_MATCH = r"\(" + OPERATOR_MATCH + r"(?P<value>[A-Z]{1})\)"
+
 
 class PriorityFilter(OrdinalFilter):
     def __init__(self, p_expression):

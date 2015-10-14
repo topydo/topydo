@@ -53,10 +53,10 @@ _SUBCOMMAND_MAP = {
     'top': 'TopCommand'
 }
 
+
 def get_subcommand(p_args):
     """
-    Retrieves the to-be executed Command and returns a tuple
-    (Command, args).
+    Retrieves the to-be executed Command and returns a tuple (Command, args).
 
     If args is an empty list, then the Command that corresponds with the
     default command specified in the configuration will be returned.
