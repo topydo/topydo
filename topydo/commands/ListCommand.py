@@ -19,10 +19,10 @@ from topydo.lib.ExpressionCommand import ExpressionCommand
 from topydo.lib.IcalPrinter import IcalPrinter
 from topydo.lib.JsonPrinter import JsonPrinter
 from topydo.lib.PrettyPrinter import pretty_printer_factory
-from topydo.lib.PrettyPrinterFilter import (PrettyPrinterHideTagFilter,
-                                            PrettyPrinterIndentFilter,
-                                            PrettyPrinterBasicPriorityFilter,
-                                            PrettyPrinterHumanDatesFilter)
+from topydo.lib.PrettyPrinterFilter import (PrettyPrinterBasicPriorityFilter,
+                                            PrettyPrinterHideTagFilter,
+                                            PrettyPrinterHumanDatesFilter,
+                                            PrettyPrinterIndentFilter)
 
 
 class ListCommand(ExpressionCommand):

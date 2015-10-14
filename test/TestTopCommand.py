@@ -14,14 +14,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from six import u
 import unittest
 
+from six import u
+from topydo.commands.TopCommand import TopCommand
 from topydo.lib.Config import config
 from topydo.lib.Utils import get_terminal_size
-from topydo.commands.TopCommand import TopCommand
-from test.CommandTest import CommandTest
-from test.TestFacilities import load_file_to_todolist
+
+from test.CommandTestCase import CommandTest
+from test.Facilities import load_file_to_todolist
 
 
 class TopCommandTest(CommandTest):
