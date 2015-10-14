@@ -210,7 +210,7 @@ class TopCommandLongLinesTest(CommandTest):
 
         self.assertFalse(self.todolist.is_dirty())
         for line in self.output.splitlines():
-            self.assertTrue(len(line) > column_count)
+            self.assertTrue(len(line) < column_count)
         self.assertEqual(self.errors, "")
 
     def test_top32(self):

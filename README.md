@@ -33,7 +33,7 @@ Simply install with:
                                             window size. This function was
                                             added to the standard library in
                                             Python 3.3 and so is only
-                                            required in older version of
+                                            required in older versions of
                                             Python.
 
 ### Optional dependencies

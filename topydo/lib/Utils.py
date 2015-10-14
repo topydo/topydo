@@ -72,7 +72,7 @@ def get_terminal_size():
         This can result from the 'underlying buffer being detached', which
         occurs during running the unittest on Windows (but not on Linux?)
         """
-        Terminal_Size = namedtuple('Terminal_Size', 'columns lines')
-        sz = Terminal_Size(80, 24)
+        terminal_size = namedtuple('Terminal_Size', 'columns lines')
+        sz = terminal_size(80, 24)
 
     return sz
