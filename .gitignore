@@ -20,6 +20,7 @@ var/
 .installed.cfg
 *.egg
 .eggs/
+htmlcov/
 
 # Sublime Text
 *.sublime-*
