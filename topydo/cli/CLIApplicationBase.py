@@ -25,6 +25,7 @@ from six import PY2
 from six.moves import input
 
 MAIN_OPTS = "ac:d:ht:v"
+READ_ONLY_COMMANDS = ('List', 'ListContext', 'ListProject')
 
 
 def usage():
@@ -104,6 +105,7 @@ from topydo.commands.SortCommand import SortCommand
 from topydo.lib import TodoFile
 from topydo.lib import TodoList
 from topydo.lib import TodoListBase
+from topydo.lib.ChangeSet import ChangeSet
 from topydo.lib.Utils import escape_ansi
 
 
@@ -119,6 +121,7 @@ class CLIApplicationBase(object):
         self.todolist = TodoList.TodoList([])
         self.todofile = None
         self.do_archive = True
+        self.backup = None
 
     def _usage(self):
         usage()
@@ -170,6 +173,9 @@ class CLIApplicationBase(object):
         archive_file = TodoFile.TodoFile(config().archive())
         archive = TodoListBase.TodoListBase(archive_file.read())
 
+        if self.backup:
+            self.backup.add_archive(archive)
+
         if archive:
             command = ArchiveCommand(self.todolist, archive)
             command.execute()
@@ -194,6 +200,11 @@ class CLIApplicationBase(object):
         Execute a subcommand with arguments. p_command is a class (not an
         object).
         """
+        cmds_wo_backup = tuple(cmd + 'Command' for cmd in READ_ONLY_COMMANDS
+        if config().backup_count() > 0 and p_command and not p_command.__module__.endswith(cmds_wo_backup):
+            call = [p_command.__module__.lower()[16:-7]] + p_args # strip "topydo.commands" and "Command"
+            self.backup = ChangeSet(self.todolist, p_call=call)
+
         command = p_command(
             p_args,
             self.todolist,
@@ -222,7 +233,12 @@ class CLIApplicationBase(object):
             if config().keep_sorted():
                 self._execute(SortCommand, [])
 
+            if self.backup:
+                self.backup.save(self.todolist)
+
             self.todofile.write(self.todolist.print_todos())
+
+        self.backup = None
 
     def run(self):
         raise NotImplementedError

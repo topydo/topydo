@@ -57,6 +57,7 @@ class _Config:
             'filename': 'todo.txt',
             'archive_filename': 'done.txt',
             'identifiers': 'linenumber',
+            'backup_count': '5',
 
             # add
             'auto_creation_date': '1',
@@ -138,6 +139,15 @@ class _Config:
 
     def identifiers(self):
         return self.cp.get('topydo', 'identifiers')
+
+    def backup_count(self):
+        try:
+            value = self.cp.getint('topydo', 'backup_count')
+            if value < 0:
+                value = 0
+            return value
+        except ValueError:
+            return int(self.defaults['backup_count'])
 
     def list_limit(self):
         try:
@@ -255,7 +265,6 @@ class _Config:
             return self.cp.getboolean('add', 'auto_creation_date')
         except ValueError:
             return self.defaults['auto_creation_date'] == '1'
-
 
 def config(p_path=None, p_overrides=None):
     """
