@@ -202,23 +202,23 @@ class PrettyPrinterHumanDatesFilter(PrettyPrinterFilter):
     def __init__(self):
         super(PrettyPrinterHumanDatesFilter, self).__init__()
 
-    def humanize_from_match(self, matchgroup):
+    def date_from_match(self, matchgroup):
         """
-        Takes a match group, compares it to 'now', and then returns a 'human
-        readable' version of the difference.
+        Takes a match group and then returns a date.
 
         Assumes the matchgroup has matches named 'year', 'month', and 'day'.
+
+        The returned arrow object has hours, minutes, and seconds set to now.
         """
         linedate = arrow.now()  # set the time to 'now' so the comparisions work better
         linedate = linedate.replace(year=int(matchgroup.group('year')))
         linedate = linedate.replace(month=int(matchgroup.group('month')))
         linedate = linedate.replace(day=int(matchgroup.group('day')))
-        delta = linedate.humanize()
-        return(delta)
+        return(linedate)
 
     def filter(self, p_todo_str, _):
 
-        addingdates = False
+        adding_dates = False
 
         """ First, the date added
             This, per the spec, will be at the front of the line,
@@ -228,44 +228,48 @@ class PrettyPrinterHumanDatesFilter(PrettyPrinterFilter):
         pattern2 = re.compile('^(?P<line_start>(\| *\w+\| )?(\(?[A-Z ]\)? )?)(?P<is_date>(?P<year>\d{4})-(?P<month>\d{1,2})-(?P<day>\d{1,2}) )')
         matches2 = pattern2.match(line2)
         if matches2:
-            adddelta = self.humanize_from_match(matches2)
+            add_delta = self.date_from_match(matches2).humanize()
             line3 = matches2.group('line_start') + pattern2.sub('', line2)
-            addingdates = True
+            adding_dates = True
         else:
-            adddelta = ''
+            add_delta = ''
             line3 = line2
 
         """ Due dates """
         pattern3 = re.compile('(?P<is_date> ' + config().tag_due() + ':(?P<year>\d{4})-(?P<month>\d{1,2})-(?P<day>\d{1,2}) ?)')
         matches3 = pattern3.search(line3)
         if matches3:
-            duedelta = 'due ' + self.humanize_from_match(matches3)
+            due_delta = 'due ' + self.date_from_match(matches3).humanize()
 
-            if addingdates is True:
-                duedelta = ', ' + duedelta
-            addingdates = True
+            if adding_dates is True:
+                due_delta = ', ' + due_delta
+            adding_dates = True
             line4 = pattern3.sub(' ', line3)
         else:
-            duedelta = ''
+            due_delta = ''
             line4 = line3
 
         """ Threshold dates """
         pattern4 = re.compile('(?P<is_date> ' + config().tag_start() + ':(?P<year>\d{4})-(?P<month>\d{1,2})-(?P<day>\d{1,2}) ?)')
         matches4 = pattern4.search(line3)
         if matches4:
-            thresholddelta = 'threshold of ' + self.humanize_from_match(matches4)
+            threshold_date = self.date_from_match(matches4)
+            if threshold_date <= arrow.now():
+                threshold_delta = 'threshold of ' + threshold_date.humanize()
+            else:
+                threshold_delta = 'threshold in ' + threshold_date.humanize(only_distance=True)
 
-            if addingdates is True:
-                thresholddelta = ', ' + thresholddelta
-            addingdates = True
+            if adding_dates is True:
+                threshold_delta = ', ' + threshold_delta
+            adding_dates = True
             line5 = pattern4.sub(' ', line4)
         else:
-            thresholddelta = ''
+            threshold_delta = ''
             line5 = line4
 
-        if addingdates is True:
-            line6 = line5.rstrip() + ' (' + adddelta + duedelta + \
-                        thresholddelta + ')'
+        if adding_dates is True:
+            line6 = line5.rstrip() + ' (' + add_delta + due_delta + \
+                        threshold_delta + ')'
         else:
             line6 = line5
 

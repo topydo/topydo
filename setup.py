@@ -31,7 +31,7 @@ setup(
     url = "https://github.com/bram85/topydo",
     install_requires = [
         'six >= 1.9.0',
-        'arrow >= 0.6.0',
+        'arrow >= 0.7.0',
     ],
     extras_require = {
         ':sys_platform=="win32"': ['colorama>=0.2.5'],
