@@ -47,6 +47,7 @@ _SUBCOMMAND_MAP = {
     'postpone': 'PostponeCommand',
     'pri': 'PriorityCommand',
     'quit': 'ExitCommand',
+    'revert': 'RevertCommand',
     'rm': 'DeleteCommand',
     'sort': 'SortCommand',
     'tag': 'TagCommand',

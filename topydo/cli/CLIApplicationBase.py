@@ -57,6 +57,7 @@ Available commands:
 * listprojects (lsprj)
 * postpone
 * pri
+* revert
 * sort
 * tag
 
@@ -200,7 +201,7 @@ class CLIApplicationBase(object):
         Execute a subcommand with arguments. p_command is a class (not an
         object).
         """
-        cmds_wo_backup = tuple(cmd + 'Command' for cmd in READ_ONLY_COMMANDS
+        cmds_wo_backup = tuple(cmd + 'Command' for cmd in ('Revert', ) + READ_ONLY_COMMANDS)
         if config().backup_count() > 0 and p_command and not p_command.__module__.endswith(cmds_wo_backup):
             call = [p_command.__module__.lower()[16:-7]] + p_args # strip "topydo.commands" and "Command"
             self.backup = ChangeSet(self.todolist, p_call=call)
