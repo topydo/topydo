@@ -186,5 +186,14 @@ class EditCommandTest(CommandTest):
         self.assertEqual(self.todolist.print_todos(), result)
         mock_call.assert_called_once_with([editor, todotxt])
 
+    def test_help(self):
+        command = EditCommand(["help"], self.todolist, self.out, self.error,
+                              None)
+        command.execute()
+
+        self.assertEqual(self.output, "")
+        self.assertEqual(self.errors,
+                         command.usage() + "\n\n" + command.help() + "\n")
+
 if __name__ == '__main__':
     unittest.main()
