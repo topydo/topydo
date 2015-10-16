@@ -19,7 +19,6 @@
 import re
 
 from six import u
-from datetime import date
 import textwrap
 
 import arrow
@@ -179,6 +178,7 @@ class PrettyPrinterBasicPriorityFilter(PrettyPrinterFilter):
         #   |h2j| (C) ...
         if matches:
             if matches.group('id'):
+                """ If we have an id """
                 if matches.group('pri'):
                     """ If we have a priority """
                     return(matches.group('id') + matches.group('pri') + ' ' + p_todo_str[matches.span()[1]:])
@@ -189,10 +189,11 @@ class PrettyPrinterBasicPriorityFilter(PrettyPrinterFilter):
                     """ If we have a priority """
                     return(matches.group('pri') + ' ' + p_todo_str[matches.span()[1]:])
                 else:
-                    return(self.p_replacement + ' ' + p_todo_str[matches.span()[1]:])
+                    """ No match found """
+                    return(self.p_replacement + ' ' + p_todo_str)
         else:
-            """ No match found """
-            return(self.p_replacement + ' ' + p_todo_str)
+            # we should never reach here
+            pass
 
 
 class PrettyPrinterHumanDatesFilter(PrettyPrinterFilter):
