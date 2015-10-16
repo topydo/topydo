@@ -15,13 +15,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
-from datetime import date
-
-from topydo.lib.Config import config
+from datetime import date, timedelta
 from test.CommandTestCase import CommandTest
+
+from topydo.commands import AddCommand, ListCommand
 from topydo.lib import TodoList
-from topydo.commands import AddCommand
-from topydo.commands import ListCommand
+from topydo.lib.Config import config
 
 
 class HumanDatesTest(CommandTest):
@@ -30,6 +29,7 @@ class HumanDatesTest(CommandTest):
         super(HumanDatesTest, self).setUp()
         self.todolist = TodoList.TodoList([])
         self.today = date.today().isoformat()
+        self.tomorrow = (date.today() + timedelta(days=1)).isoformat()
 
     def testAddedDate(self):
         """ Converts the date added to a human readable format. """
@@ -75,6 +75,21 @@ class HumanDatesTest(CommandTest):
                                           self.error)
         command.execute()
         self.assertEqual(self.output, "|  1|   New todo (just now, threshold of just now)\n")
+        self.assertEqual(self.errors, "")
+
+    def testThresholdFutureDate(self):
+        """ Deals with a future threshold date. """
+        args = ["New todo {}:{}".format(config().tag_start(), self.tomorrow)]
+        command = AddCommand.AddCommand(args, self.todolist, self.out,
+                                        self.error)
+        command.execute()
+        self.assertEqual(self.errors, "")
+
+        self.output = ""
+        command = ListCommand.ListCommand(['-x'], self.todolist, self.out,
+                                          self.error)
+        command.execute()
+        self.assertEqual(self.output, "|  1|   New todo (just now, threshold in a day)\n")
         self.assertEqual(self.errors, "")
 
     def testThreeDates(self):
