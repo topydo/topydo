@@ -49,7 +49,7 @@ class ListCommand(ExpressionCommand):
         return True
 
     def _process_flags(self):
-        opts, args = self.getopt('f:s:x')
+        opts, args = self.getopt('f:n:s:x')
 
         for opt, value in opts:
             if opt == '-x':
@@ -64,6 +64,11 @@ class ListCommand(ExpressionCommand):
                         self.printer = IcalPrinter(self.todolist)
                 else:
                     self.printer = None
+            elif opt == '-n':
+                try:
+                    self.limit = int(value)
+                except ValueError:
+                    pass # use default value in configuration
 
         self.args = args
 

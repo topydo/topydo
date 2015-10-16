@@ -37,6 +37,7 @@ class ExpressionCommand(Command):
 
         self.sort_expression = config().sort_string()
         self.show_all = False
+        self.limit = config().list_limit()
         # Commands using last argument differently (i.e as something other than
         # todo ID/expression) have to set attribute below to True.
         self.last_argument = False
@@ -75,7 +76,7 @@ class ExpressionCommand(Command):
         filters += arg_filters()
 
         if not self.show_all:
-            filters.append(Filter.LimitFilter(config().list_limit()))
+            filters.append(Filter.LimitFilter(self.limit))
 
         return filters
 

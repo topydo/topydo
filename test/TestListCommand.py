@@ -226,6 +226,48 @@ class ListCommandTest(CommandTest):
         self.assertFalse(self.todolist.is_dirty())
         self.assertEqual(self.output, '|  1| Foo.\n')
 
+    def test_list31(self):
+        """ Don't show any todos with -n 0 """
+        command = ListCommand(["-n", "0"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEqual(self.output, "")
+        self.assertEqual(self.errors, "")
+
+    def test_list32(self):
+        """ Only show the top todo. """
+        command = ListCommand(["-n", "1"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEqual(self.output, "|  1| (C) Foo @Context2 Not@Context +Project1 Not+Project\n")
+        self.assertEqual(self.errors, "")
+
+    def test_list33(self):
+        """ Negative values result in showing all relevent todos. """
+        command = ListCommand(["-n", "-1"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEqual(self.output, "|  1| (C) Foo @Context2 Not@Context +Project1 Not+Project\n|  4| (C) Drink beer @ home\n|  5| (C) 13 + 29 = 42\n|  2| (D) Bar @Context1 +Project2\n")
+        self.assertEqual(self.errors, "")
+
+    def test_list34(self):
+        """ Test non-integer value for -n """
+        config(p_overrides={('ls', 'list_limit'): '2'})
+
+        command = ListCommand(["-n", "foo"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEqual(self.output, "|  1| (C) Foo @Context2 Not@Context +Project1 Not+Project\n|  4| (C) Drink beer @ home\n")
+        self.assertEqual(self.errors, "")
+
+    def test_list35(self):
+        """ -x flag takes precedence over -n """
+        command = ListCommand(["-x", "-n", "foo"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEqual(self.output, "|  1| (C) Foo @Context2 Not@Context +Project1 Not+Project\n|  3| (C) Baz @Context1 +Project1 key:value\n|  4| (C) Drink beer @ home\n|  5| (C) 13 + 29 = 42\n|  2| (D) Bar @Context1 +Project2\n|  6| x 2014-12-12 Completed but with date:2014-12-12\n")
+        self.assertEqual(self.errors, "")
+
     def test_help(self):
         command = ListCommand(["help"], self.todolist, self.out, self.error)
         command.execute()
