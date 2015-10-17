@@ -176,24 +176,23 @@ class PrettyPrinterBasicPriorityFilter(PrettyPrinterFilter):
         # line, in the form of:
         #   | 48| (V) ...
         #   |h2j| (C) ...
-        if matches:
-            if matches.group('id'):
-                """ If we have an id """
-                if matches.group('pri'):
-                    """ If we have a priority """
-                    return(matches.group('id') + matches.group('pri') + ' ' + p_todo_str[matches.span()[1]:])
-                else:
-                    return(matches.group('id') + self.p_replacement + ' ' + p_todo_str[matches.span()[1]:])
+
+        # there will always be a match (so don't check for it), even if it's
+        # 'nothing', because both match groups are optional
+        if matches.group('id'):
+            """ If we have an id """
+            if matches.group('pri'):
+                """ If we have a priority """
+                return(matches.group('id') + matches.group('pri') + ' ' + p_todo_str[matches.span()[1]:])
             else:
-                if matches.group('pri'):
-                    """ If we have a priority """
-                    return(matches.group('pri') + ' ' + p_todo_str[matches.span()[1]:])
-                else:
-                    """ No match found """
-                    return(self.p_replacement + ' ' + p_todo_str)
+                return(matches.group('id') + self.p_replacement + ' ' + p_todo_str[matches.span()[1]:])
         else:
-            # we should never reach here
-            pass
+            if matches.group('pri'):
+                """ If we have a priority """
+                return(matches.group('pri') + ' ' + p_todo_str[matches.span()[1]:])
+            else:
+                """ No match found """
+                return(self.p_replacement + ' ' + p_todo_str)
 
 
 class PrettyPrinterHumanDatesFilter(PrettyPrinterFilter):
