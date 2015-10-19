@@ -66,6 +66,5 @@ topydo is a todo list application using the todo.txt format. It is heavily inspi
 * Allow todos to recur;
 * Some conveniences when adding new items (e.g. adding creation date and use relative dates)
 """,
-
     test_suite = "test",
 )
