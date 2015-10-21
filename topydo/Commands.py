@@ -79,6 +79,21 @@ def get_subcommand(p_args):
         __import__(modulename, globals(), locals(), [classname], 0)
         return getattr(sys.modules[modulename], classname)
 
+    def resolve_alias(p_alias, p_args):
+        """
+        Resolves a subcommand alias and returns a tuple (Command, args).
+
+        If alias resolves to non-existent command, main help message is
+        returned.
+        """
+        real_subcommand, alias_args = alias_map[p_alias]
+        try:
+            result = import_subcommand(real_subcommand)
+            args = alias_args + p_args
+            return (result, args)
+        except KeyError:
+            return get_subcommand(['help'])
+
     result = None
     args = p_args
     alias_map = config().aliases()
@@ -87,12 +102,7 @@ def get_subcommand(p_args):
         subcommand = p_args[0]
 
         if subcommand in alias_map:
-            real_subcommand, alias_args = alias_map[subcommand]
-            try:
-                result = import_subcommand(real_subcommand)
-                args = alias_args + args[1:]
-            except ImportError:
-                pass
+            result, args = resolve_alias(subcommand, args[1:])
         elif subcommand in _SUBCOMMAND_MAP:
             result = import_subcommand(subcommand)
             args = args[1:]
@@ -108,12 +118,16 @@ def get_subcommand(p_args):
                 pass
         else:
             p_command = config().default_command()
-            if p_command in _SUBCOMMAND_MAP:
+            if p_command in alias_map:
+                result, args = resolve_alias(p_command, args)
+            elif p_command in _SUBCOMMAND_MAP:
                 result = import_subcommand(p_command)
                 # leave args unchanged
     except IndexError:
         p_command = config().default_command()
-        if p_command in _SUBCOMMAND_MAP:
+        if p_command in alias_map:
+            result, args = resolve_alias(p_command, args)
+        elif p_command in _SUBCOMMAND_MAP:
             result = import_subcommand(p_command)
 
     return (result, args)
