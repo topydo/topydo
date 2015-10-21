@@ -53,7 +53,6 @@ _SUBCOMMAND_MAP = {
     'tag': 'TagCommand',
 }
 
-
 def get_subcommand(p_args):
     """
     Retrieves the to-be executed Command and returns a tuple (Command, args).
@@ -82,11 +81,19 @@ def get_subcommand(p_args):
 
     result = None
     args = p_args
+    alias_map = config().aliases()
 
     try:
         subcommand = p_args[0]
 
-        if subcommand in _SUBCOMMAND_MAP:
+        if subcommand in alias_map:
+            real_subcommand, alias_args = alias_map[subcommand]
+            try:
+                result = import_subcommand(real_subcommand)
+                args = alias_args + args[1:]
+            except ImportError:
+                pass
+        elif subcommand in _SUBCOMMAND_MAP:
             result = import_subcommand(subcommand)
             args = args[1:]
         elif subcommand == 'help':
