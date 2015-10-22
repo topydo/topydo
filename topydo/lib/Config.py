@@ -95,6 +95,17 @@ class _Config:
                 'link_color': 'cyan',
                 'priority_colors': 'A:cyan,B:yellow,C:blue',
             },
+
+            'aliases': {
+                'lsproj': 'lsprj',
+                'listprj': 'lsprj',
+                'listproj': 'lsprj',
+                'listproject': 'lsprj',
+                'listprojects': 'lsprj',
+                'listcon': 'lscon',
+                'listcontext': 'lscon',
+                'listcontexts': 'lscon',
+            },
         }
 
         self.config = {}
