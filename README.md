@@ -35,6 +35,7 @@ Simply install with:
                                             Python 3.3 and so is only
                                             required in older versions of
                                             Python.
+* [python-dateutil][10]: A dependency of *arrow*.
 
 ### Optional dependencies
 
@@ -58,3 +59,4 @@ Demo
 [7]: https://github.com/collective/icalendar
 [8]: https://github.com/crsmithdev/arrow
 [9]: https://github.com/chrippa/backports.shutil_get_terminal_size
+[10]: https://dateutil.readthedocs.org/
