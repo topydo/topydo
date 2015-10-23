@@ -241,7 +241,7 @@ class AddCommandTest(CommandTest):
                                         self.out, self.error)
         command.execute()
 
-        command = ListCommand.ListCommand(["Bar"], self.todolist, self.out,
+        command = ListCommand.ListCommand(["-r", "Bar"], self.todolist, self.out,
                                           self.error)
         command.execute()
 
@@ -264,7 +264,7 @@ class AddCommandTest(CommandTest):
                                         self.out, self.error)
         command.execute()
 
-        command = ListCommand.ListCommand(["Bar"], self.todolist, self.out,
+        command = ListCommand.ListCommand(["-r", "Bar"], self.todolist, self.out,
                                           self.error)
         command.execute()
 

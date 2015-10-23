@@ -36,7 +36,7 @@ class ListCommand(ExpressionCommand):
         self.printer = None
         self.sort_expression = config().sort_string()
         self.show_all = False
-        self.human_dates = config().list_human_dates()
+        self.raw_dates = None
 
     def _poke_icalendar(self):
         """
@@ -68,7 +68,7 @@ class ListCommand(ExpressionCommand):
                 else:
                     self.printer = None
             elif opt == '-r':
-                self.human_dates = True
+                self.raw_dates = True
 
         self.args = args
 
@@ -88,7 +88,12 @@ class ListCommand(ExpressionCommand):
             filters = []
             filters.append(PrettyPrinterHideTagFilter(hidden_tags))
             filters.append(PrettyPrinterBasicPriorityFilter())
-            if self.human_dates:
+            # the 'raw dates' command-line option overrides the 'human dates'
+            #  configuration setting
+            if self.raw_dates is not None:
+                if not self.raw_dates:
+                    filters.append(PrettyPrinterHumanDatesFilter())
+            elif config().list_human_dates():
                 filters.append(PrettyPrinterHumanDatesFilter())
             # run indent after rearranging the text, but before adding colours
             filters.append(PrettyPrinterIndentFilter(indent))
@@ -132,7 +137,8 @@ When an expression is given, only the todos matching that expression are shown.
                 an 'ical' tag with a unique ID. Completed todo items may be
                 archived.
      * 'json' - Javascript Object Notation (JSON)
--r : Displays creation and due dates in a relative, human-readable format
+-r : Display dates in their 'raw' format (overrides configuration 'human
+      readable dates' setting).
 -s : Sort the list according to a sort expression. Defaults to the expression
      in the configuration.
 -x : Show all todos (i.e. do not filter on dependencies or relevance).

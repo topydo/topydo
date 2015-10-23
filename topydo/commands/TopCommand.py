@@ -36,13 +36,16 @@ class TopCommand(ExpressionCommand):
         self.printer = None
         self.sort_expression = config().sort_string()
         self.show_all = False
+        self.raw_dates = None
 
     def _process_flags(self):
-        opts, args = self.getopt('s:x')
+        opts, args = self.getopt(':rs:x')
 
         for opt, value in opts:
             if opt == '-x':
                 self.show_all = True
+            elif opt == '-r':
+                self.raw_dates = True
             elif opt == '-s':
                 self.sort_expression = value
 
@@ -65,7 +68,11 @@ class TopCommand(ExpressionCommand):
             filters = []
             filters.append(PrettyPrinterHideTagFilter(hidden_tags))
             filters.append(PrettyPrinterBasicPriorityFilter())
-            filters.append(PrettyPrinterHumanDatesFilter())
+            if self.raw_dates is not None:
+                if not self.raw_dates:
+                    filters.append(PrettyPrinterHumanDatesFilter())
+            else:
+                filters.append(PrettyPrinterHumanDatesFilter())
             # run indent after rearranging the text, but before adding colours
             filters.append(PrettyPrinterIndentFilter(indent, 1))  # only one line per item
 
@@ -85,7 +92,7 @@ class TopCommand(ExpressionCommand):
         return True
 
     def usage(self):
-        return """ Synopsis: top [-x] [-s <sort_expression>] [expression]"""
+        return """ Synopsis: top [-x] [-r] [-s <sort_expression>] [expression]"""
 
     def help(self):
         return """\
@@ -97,6 +104,7 @@ Lists one screen of the most relevant todos. A todo is relevant when:
 
 When an expression is given, only the todos matching that expression are shown.
 
+-r : Display dates in their 'raw' format.
 -s : Sort the list according to a sort expression. Defaults to the expression
      in the configuration.
 -x : Show all todos (i.e. do not filter on dependencies or relevance).
