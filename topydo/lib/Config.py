@@ -42,6 +42,7 @@ class _Config:
         """
         self.sections = [
             'add',
+            'aliases',
             'colorscheme',
             'dep',
             'ls',
@@ -93,6 +94,17 @@ class _Config:
                 'metadata_color': 'green',
                 'link_color': 'cyan',
                 'priority_colors': 'A:cyan,B:yellow,C:blue',
+            },
+
+            'aliases': {
+                'lsproj': 'lsprj',
+                'listprj': 'lsprj',
+                'listproj': 'lsprj',
+                'listproject': 'lsprj',
+                'listprojects': 'lsprj',
+                'listcon': 'lscon',
+                'listcontext': 'lscon',
+                'listcontexts': 'lscon',
             },
         }
 
@@ -278,6 +290,22 @@ class _Config:
             return self.cp.getboolean('add', 'auto_creation_date')
         except ValueError:
             return self.defaults['add']['auto_creation_date'] == '1'
+
+    def aliases(self):
+        """
+        Returns dict with aliases names as keys and pairs of actual
+        subcommand and alias args as values.
+        """
+        aliases = self.cp.items('aliases')
+        alias_dict = dict()
+
+        for alias, meaning in aliases:
+            meaning = meaning.split()
+            real_subcommand = meaning[0]
+            alias_args = meaning[1:]
+            alias_dict[alias] = (real_subcommand, alias_args)
+
+        return alias_dict
 
 def config(p_path=None, p_overrides=None):
     """
