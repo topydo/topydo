@@ -69,6 +69,7 @@ class _Config:
                 'hide_tags': 'id,p,ical',
                 'indent': '0',
                 'list_limit': '-1',
+                'list_format': '|%i| (%p) %s',
             },
 
             'tags': {
@@ -306,6 +307,11 @@ class _Config:
             alias_dict[alias] = (real_subcommand, alias_args)
 
         return alias_dict
+
+    def list_format(self):
+        """ Returns the list format used by `ls` """
+        return self.cp.get('ls', 'list_format')
+
 
 def config(p_path=None, p_overrides=None):
     """

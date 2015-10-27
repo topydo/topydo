@@ -125,3 +125,55 @@ class PrettyPrinterHideTagFilter(PrettyPrinterFilter):
                                 p_todo_str)
 
         return p_todo_str
+
+
+class PrettyPrinterFormatFilter(PrettyPrinterFilter):
+    def __init__(self, p_todolist, p_format=None):
+        super(PrettyPrinterFormatFilter, self).__init__()
+        self.todolist = p_todolist
+        self.format = p_format or config().list_format()
+
+    def filter(self, p_todo_str, p_todo):
+        placeholders = {
+            # absolute creation date
+            'c': lambda t: t.creation_date().isoformat() if t.creation_date() else '',
+
+            # relative creation date
+            'C': lambda t: '#', # TODO: humanized creation date
+
+            # absolute due date
+            'd': lambda t: t.due_date().isoformat() if t.due_date() else '',
+
+            # relative due date
+            'D': lambda t: '#', # TODO: humanized due date
+
+            # todo ID
+            'i': lambda t: str(self.todolist.number(t)),
+
+            # list of tags (spaces)
+            'K': lambda t: ' '.join(['{}:{}'.format(tag, value)
+                                     for tag, value in sorted(p_todo.tags())]),
+
+            # priority
+            'p': lambda t: t.priority() if t.priority() else '',
+
+            # text
+            's': lambda t: t.text(),
+
+            # absolute start date
+            't': lambda t: t.start_date().isoformat() if t.start_date() else '',
+
+            # relative start date
+            'T': lambda t: '#', # TODO: humanized start date
+
+            # literal %
+            '%': lambda _: '%',
+        }
+
+        p_todo_str = self.format
+
+        for placeholder, getter in placeholders.items():
+            p_todo_str = re.sub(r'%\[?{}\]?'.format(placeholder), getter(p_todo), p_todo_str)
+
+        return p_todo_str
+
