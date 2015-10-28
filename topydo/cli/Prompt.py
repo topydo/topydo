@@ -99,14 +99,13 @@ class PromptApplication(CLIApplicationBase):
                 sys.exit(0)
 
             mtime_after = _todotxt_mtime()
+            (subcommand, args) = get_subcommand(user_input)
 
-            if self.mtime != mtime_after:
-                # refuse to perform operations such as 'del' and 'do' if the
-                # todo.txt file has been changed in the background.
+            # refuse to perform operations such as 'del' and 'do' if the
+            # todo.txt file has been changed in the background.
+            if not self.is_read_only(subcommand) and self.mtime != mtime_after:
                 error("WARNING: todo.txt file was modified by another application.\nTo prevent unintended changes, this operation was not executed.")
                 continue
-
-            (subcommand, args) = get_subcommand(user_input)
 
             try:
                 if self._execute(subcommand, args) != False:

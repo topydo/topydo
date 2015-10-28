@@ -196,13 +196,18 @@ class CLIApplicationBase(object):
         """
         return input
 
+    def is_read_only(self, p_command):
+        """ Returns True when the given command class is read-only. """
+        read_only_commands = tuple(cmd + 'Command' for cmd in ('Revert', ) +
+                READ_ONLY_COMMANDS)
+        return p_command.__module__.endswith(read_only_commands)
+
     def _execute(self, p_command, p_args):
         """
         Execute a subcommand with arguments. p_command is a class (not an
         object).
         """
-        cmds_wo_backup = tuple(cmd + 'Command' for cmd in ('Revert', ) + READ_ONLY_COMMANDS)
-        if config().backup_count() > 0 and p_command and not p_command.__module__.endswith(cmds_wo_backup):
+        if config().backup_count() > 0 and p_command and not self.is_read_only(p_command):
             call = [p_command.__module__.lower()[16:-7]] + p_args # strip "topydo.commands" and "Command"
             self.backup = ChangeSet(self.todolist, p_call=call)
 
