@@ -111,7 +111,7 @@ class _Config:
 
         self.config = {}
 
-        self.cp = configparser.ConfigParser()
+        self.cp = configparser.RawConfigParser()
 
         for section in self.defaults:
             self.cp.add_section(section)
