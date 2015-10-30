@@ -193,30 +193,32 @@ class PrettyPrinterFormatFilter(PrettyPrinterFilter):
                        r'(?P<after>{{.+?}})?'
                        r'(?P<whitespace>\s)*'
                        r'(?P<end>.*)').format(placeholder)
-            if repl == '':
-                p_todo_str = re.sub(pattern, match.group('start') + match.group('end'), p_todo_str)
-            else:
-                def strip_braces(p_matchobj):
-                    try:
-                        before = p_matchobj.group('before').strip('{}')
-                    except AttributeError:
-                        before = ''
+            match = re.match(pattern, p_todo_str)
+            if match:
+                if repl == '':
+                    p_todo_str = re.sub(pattern, match.group('start') + match.group('end'), p_todo_str)
+                else:
+                    def strip_braces(p_matchobj):
+                        try:
+                            before = p_matchobj.group('before').strip('{}')
+                        except AttributeError:
+                            before = ''
 
-                    placeholder = p_matchobj.group('placeholder')
+                        placeholder = p_matchobj.group('placeholder')
 
-                    try:
-                        after = p_matchobj.group('after').strip('{}')
-                    except AttributeError:
-                        after = ''
+                        try:
+                            after = p_matchobj.group('after').strip('{}')
+                        except AttributeError:
+                            after = ''
 
-                    whitespace = p_matchobj.group('whitespace') or ''
-                    start = p_matchobj.group('start') or ''
-                    end = p_matchobj.group('end') or ''
+                        whitespace = p_matchobj.group('whitespace') or ''
+                        start = p_matchobj.group('start') or ''
+                        end = p_matchobj.group('end') or ''
 
-                    return start + before + '%' + placeholder + after + whitespace + end
+                        return start + before + '%' + placeholder + after + whitespace + end
 
-                p_todo_str = re.sub(pattern, strip_braces, p_todo_str)
-                p_todo_str = re.sub(r'%{}'.format(placeholder), repl, p_todo_str)
+                    p_todo_str = re.sub(pattern, strip_braces, p_todo_str)
+                    p_todo_str = re.sub(r'%{}'.format(placeholder), repl, p_todo_str)
 
         return p_todo_str.rstrip()
 
