@@ -218,5 +218,5 @@ class PrettyPrinterFormatFilter(PrettyPrinterFilter):
                 p_todo_str = re.sub(pattern, strip_braces, p_todo_str)
                 p_todo_str = re.sub(r'%{}'.format(placeholder), repl, p_todo_str)
 
-        return p_todo_str
+        return p_todo_str.rstrip()
 
