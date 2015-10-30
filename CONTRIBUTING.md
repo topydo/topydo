@@ -5,10 +5,6 @@ smoothly into topydo.
 
 ### General
 
-* This Github page defaults to the **stable** branch which is for **bug fixes
-  only**. If you would like to add a new feature, make sure to make a Pull
-  Request on the `master` branch.
-
 * Use descriptive commit messages. The post
   [How to write a commit message](http://chris.beams.io/posts/git-commit/) by
   Chris Beams has some good guidelines.
