@@ -96,24 +96,7 @@ class EditCommandTest(CommandTest):
         self.assertFalse(self.todolist.is_dirty())
         self.assertEqual(self.errors, "Invalid todo number given: 5.\n")
 
-    @mock.patch('topydo.commands.EditCommand._is_edited')
-    @mock.patch('topydo.commands.EditCommand.EditCommand._todos_from_temp')
-    @mock.patch('topydo.commands.EditCommand.EditCommand._open_in_editor')
-    def test_edit05(self, mock_open_in_editor, mock_todos_from_temp, mock_is_edited):
-        """ Don't let to delete todos acidentally while editing. """
-        mock_open_in_editor.return_value = 0
-        mock_todos_from_temp.return_value = [Todo('Only one line')]
-        mock_is_edited.return_value = True
-
-        command = EditCommand(["1", "Bar"], self.todolist, self.out,
-                              self.error, None)
-        command.execute()
-
-        self.assertFalse(self.todolist.is_dirty())
-        self.assertEqual(self.errors, "Number of edited todos is not equal to number of supplied todo IDs.\n")
-        self.assertEqual(self.todolist.print_todos(), u("Foo id:1\nBar p:1 @test\nBaz @test\nFo\u00f3B\u0105\u017a"))
-
-    def test_edit06(self):
+    def test_edit05(self):
         """
         Throw an error with invalid argument containing special characters.
         """
@@ -128,7 +111,7 @@ class EditCommandTest(CommandTest):
     @mock.patch('topydo.commands.EditCommand._is_edited')
     @mock.patch('topydo.commands.EditCommand.EditCommand._todos_from_temp')
     @mock.patch('topydo.commands.EditCommand.EditCommand._open_in_editor')
-    def test_edit07(self, mock_open_in_editor, mock_todos_from_temp, mock_is_edited):
+    def test_edit06(self, mock_open_in_editor, mock_todos_from_temp, mock_is_edited):
         """ Edit todo with special characters. """
         mock_open_in_editor.return_value = 0
         mock_todos_from_temp.return_value = [Todo('Lazy Cat')]
@@ -146,7 +129,7 @@ class EditCommandTest(CommandTest):
     @mock.patch('topydo.commands.EditCommand._is_edited')
     @mock.patch('topydo.commands.EditCommand.EditCommand._todos_from_temp')
     @mock.patch('topydo.commands.EditCommand.EditCommand._open_in_editor')
-    def test_edit08(self, mock_open_in_editor, mock_todos_from_temp, mock_is_edited):
+    def test_edit07(self, mock_open_in_editor, mock_todos_from_temp, mock_is_edited):
         """ Don't perform write if tempfile is unchanged """
         mock_open_in_editor.return_value = 0
         mock_todos_from_temp.return_value = [Todo('Only one line')]
