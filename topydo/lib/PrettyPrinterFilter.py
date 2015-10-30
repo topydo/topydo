@@ -22,7 +22,7 @@ from six import u
 
 from topydo.lib.Colors import NEUTRAL_COLOR, Colors
 from topydo.lib.Config import config
-from topydo.lib.ListFormat import filler
+from topydo.lib.ListFormat import filler, humanize_date
 
 
 class PrettyPrinterFilter(object):
@@ -140,13 +140,13 @@ class PrettyPrinterFormatFilter(PrettyPrinterFilter):
             'c': lambda t: t.creation_date().isoformat() if t.creation_date() else '',
 
             # relative creation date
-            'C': lambda t: '#', # TODO: humanized creation date
+            'C': lambda t: humanize_date(t.creation_date()) if t.creation_date() else '',
 
             # absolute due date
             'd': lambda t: t.due_date().isoformat() if t.due_date() else '',
 
             # relative due date
-            'D': lambda t: '#', # TODO: humanized due date
+            'D': lambda t: humanize_date(t.due_date()) if t.due_date() else '',
 
             # todo ID
             'i': lambda t: str(self.todolist.number(t)),
@@ -168,7 +168,7 @@ class PrettyPrinterFormatFilter(PrettyPrinterFilter):
             't': lambda t: t.start_date().isoformat() if t.start_date() else '',
 
             # relative start date
-            'T': lambda t: '#', # TODO: humanized start date
+            'T': lambda t: humanize_date(t.start_date()) if t.start_date() else '',
 
             # literal %
             '%': lambda _: '%',

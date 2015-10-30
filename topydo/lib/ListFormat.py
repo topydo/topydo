@@ -16,9 +16,16 @@
 
 """ Ulities for formatting output with "list_format" option."""
 
+import arrow
+
 def filler(p_str, p_len):
     """
     Returns p_str preceded by additional spaces if p_str is shorter than p_len.
     """
     to_fill = p_len - len(p_str)
     return to_fill*' ' + p_str
+
+def humanize_date(p_datetime):
+    now = arrow.now()
+    date = now.replace(day=p_datetime.day, month=p_datetime.month, year=p_datetime.year)
+    return date.humanize()
