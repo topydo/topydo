@@ -22,6 +22,7 @@ from six import u
 
 from topydo.lib.Colors import NEUTRAL_COLOR, Colors
 from topydo.lib.Config import config
+from topydo.lib.ListFormat import filler
 
 
 class PrettyPrinterFilter(object):
@@ -149,6 +150,9 @@ class PrettyPrinterFormatFilter(PrettyPrinterFilter):
 
             # todo ID
             'i': lambda t: str(self.todolist.number(t)),
+
+            # todo ID pre-filled with 1 or 2 spaces if its length is <3
+            'I': lambda t: filler(str(self.todolist.number(t)), 3),
 
             # list of tags (spaces)
             'K': lambda t: ' '.join(['{}:{}'.format(tag, value)
