@@ -110,7 +110,7 @@ class ChangeSet(object):
         self._write()
         self.close()
 
-    def delete(self, p_timestamp=None):
+    def delete(self, p_timestamp=None, p_write=True):
         """ Removes backup from the backup file. """
         timestamp = p_timestamp or self.timestamp
         index = self._get_index()
@@ -119,7 +119,9 @@ class ChangeSet(object):
             del self.backup_dict[timestamp]
             index.remove(index[[change[0] for change in index].index(timestamp)])
             self._save_index(index)
-            self._write()
+
+            if p_write:
+                self._write()
         except KeyError:
             pass
 
@@ -143,12 +145,15 @@ class ChangeSet(object):
         """
         Removes oldest backups that exceed the limit configured in backup_count
         option.
+
+        Does not write back to file system, make sure to call self._write()
+        afterwards.
         """
         index = self._get_index()
         backup_limit = config().backup_count() - 1
 
         for changeset in index[backup_limit:]:
-            self.delete(changeset[0])
+            self.delete(changeset[0], p_write=False)
 
     def get_backup(self, p_todolist):
         """

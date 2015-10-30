@@ -30,7 +30,9 @@ from topydo.lib.RelativeDate import relative_date_to_date
 
 def _subcommands(p_word_before_cursor):
     """ Generator for subcommand name completion. """
-    subcommands = [sc for sc in sorted(_SUBCOMMAND_MAP.keys()) if
+    sc_map = config().aliases()
+    sc_map.update(_SUBCOMMAND_MAP)
+    subcommands = [sc for sc in sorted(sc_map.keys()) if
                    sc.startswith(p_word_before_cursor)]
     for command in subcommands:
         yield Completion(command, -len(p_word_before_cursor))

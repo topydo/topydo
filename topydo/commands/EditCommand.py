@@ -33,6 +33,11 @@ DEFAULT_EDITOR = 'vi'
 # cannot use super() inside the class itself
 BASE_TODOLIST = lambda tl: super(TodoList, tl)
 
+def _get_file_mtime(p_file):
+    return os.stat(p_file.name).st_mtime
+
+def _is_edited(p_orig_mtime, p_file):
+    return p_orig_mtime < _get_file_mtime(p_file)
 
 class EditCommand(MultiCommand):
     def __init__(self, p_args, p_todolist, p_output, p_error, p_input):
@@ -105,10 +110,12 @@ class EditCommand(MultiCommand):
         self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
 
         temp_todos = self._todos_to_temp()
+        orig_mtime = _get_file_mtime(temp_todos)
 
         if not self._open_in_editor(temp_todos.name):
             new_todos = self._todos_from_temp(temp_todos)
-            if len(new_todos) == len(self.todos):
+
+            if _is_edited(orig_mtime, temp_todos):
                 for todo in self.todos:
                     BASE_TODOLIST(self.todolist).delete(todo)
 
@@ -116,8 +123,7 @@ class EditCommand(MultiCommand):
                     self.todolist.add_todo(todo)
                     self.out(self.printer.print_todo(todo))
             else:
-                self.error('Number of edited todos is not equal to '
-                           'number of supplied todo IDs.')
+                self.error('Editing aborted. Nothing to do.')
         else:
             self.error(self.usage())
 
