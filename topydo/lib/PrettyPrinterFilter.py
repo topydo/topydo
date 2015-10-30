@@ -155,8 +155,14 @@ class PrettyPrinterFormatFilter(PrettyPrinterFilter):
             'I': lambda t: filler(str(self.todolist.number(t)), 3),
 
             # list of tags (spaces)
-            'K': lambda t: ' '.join(['{}:{}'.format(tag, value)
-                                     for tag, value in sorted(p_todo.tags())]),
+            'K': lambda t: ' '.join([u('{}:{}').format(tag, value)
+                                     for tag, value in sorted(p_todo.tags()) if
+                                     tag not in config().hidden_tags()]),
+
+            # list of tags (spaces) without due: and t:
+            'k': lambda t: ' '.join([u('{}:{}').format(tag, value)
+                                     for tag, value in sorted(p_todo.tags()) if
+                                     tag not in config().hidden_tags() + [config().tag_start(), config().tag_due()]]),
 
             # priority
             'p': lambda t: t.priority() if t.priority() else '',
@@ -169,6 +175,9 @@ class PrettyPrinterFormatFilter(PrettyPrinterFilter):
 
             # relative start date
             'T': lambda t: humanize_date(t.start_date()) if t.start_date() else '',
+
+            # completed
+            'x': lambda t: 'x ' + t.completion_date().isoformat() if t.is_completed() else '',
 
             # literal %
             '%': lambda _: '%',
