@@ -22,7 +22,7 @@ from six import u
 
 from topydo.lib.Colors import NEUTRAL_COLOR, Colors
 from topydo.lib.Config import config
-from topydo.lib.ListFormat import filler, humanize_date
+from topydo.lib.ListFormat import filler, humanize_date, humanize_dates
 
 
 class PrettyPrinterFilter(object):
@@ -148,21 +148,27 @@ class PrettyPrinterFormatFilter(PrettyPrinterFilter):
             # relative due date
             'D': lambda t: humanize_date(t.due_date()) if t.due_date() else '',
 
+            # relative dates:  due, start
+            'h': lambda t: humanize_dates(p_due=t.due_date(), p_start=t.start_date()),
+
+            # relative dates in form:  creation, due, start
+            'H': lambda t: humanize_dates(t.due_date(), t.start_date(), t.creation_date()),
+
             # todo ID
             'i': lambda t: str(self.todolist.number(t)),
 
             # todo ID pre-filled with 1 or 2 spaces if its length is <3
             'I': lambda t: filler(str(self.todolist.number(t)), 3),
 
-            # list of tags (spaces)
-            'K': lambda t: ' '.join([u('{}:{}').format(tag, value)
-                                     for tag, value in sorted(p_todo.tags()) if
-                                     tag not in config().hidden_tags()]),
-
             # list of tags (spaces) without due: and t:
             'k': lambda t: ' '.join([u('{}:{}').format(tag, value)
                                      for tag, value in sorted(p_todo.tags()) if
                                      tag not in config().hidden_tags() + [config().tag_start(), config().tag_due()]]),
+
+            # list of tags (spaces)
+            'K': lambda t: ' '.join([u('{}:{}').format(tag, value)
+                                     for tag, value in sorted(p_todo.tags()) if
+                                     tag not in config().hidden_tags()]),
 
             # priority
             'p': lambda t: t.priority() if t.priority() else '',
