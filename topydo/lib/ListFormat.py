@@ -29,3 +29,22 @@ def humanize_date(p_datetime):
     now = arrow.now()
     date = now.replace(day=p_datetime.day, month=p_datetime.month, year=p_datetime.year)
     return date.humanize()
+
+def humanize_dates(p_due=None, p_start=None, p_creation=None):
+    """
+    Returns string with humanized versions of p_due, p_start and p_creation
+    """
+    now = arrow.now()
+    dates_list = []
+    if p_creation:
+        dates_list.append(humanize_date(p_creation))
+    if p_due:
+        dates_list.append('due ' + humanize_date(p_due))
+    if p_start:
+        start = humanize_date(p_start)
+        if start.endswith('ago'):
+            dates_list.append('started ' + start)
+        else:
+            dates_list.append('starts in ' + start)
+
+    return ', '.join(dates_list)
