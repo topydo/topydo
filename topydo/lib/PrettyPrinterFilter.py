@@ -18,11 +18,13 @@
 
 import re
 
+from collections import OrderedDict
 from six import u
 
 from topydo.lib.Colors import NEUTRAL_COLOR, Colors
 from topydo.lib.Config import config
 from topydo.lib.ListFormat import filler, humanize_date, humanize_dates
+from topydo.lib.Utils import get_terminal_size
 
 
 class PrettyPrinterFilter(object):
@@ -135,59 +137,62 @@ class PrettyPrinterFormatFilter(PrettyPrinterFilter):
         self.format = p_format or config().list_format()
 
     def filter(self, p_todo_str, p_todo):
-        placeholders = {
-            # absolute creation date
-            'c': lambda t: t.creation_date().isoformat() if t.creation_date() else '',
+        placeholders = OrderedDict()
+        # absolute creation date
+        placeholders['c'] = lambda t: t.creation_date().isoformat() if t.creation_date() else ''
 
-            # relative creation date
-            'C': lambda t: humanize_date(t.creation_date()) if t.creation_date() else '',
+        # relative creation date
+        placeholders['C'] = lambda t: humanize_date(t.creation_date()) if t.creation_date() else ''
 
-            # absolute due date
-            'd': lambda t: t.due_date().isoformat() if t.due_date() else '',
+        # absolute due date
+        placeholders['d'] = lambda t: t.due_date().isoformat() if t.due_date() else ''
 
-            # relative due date
-            'D': lambda t: humanize_date(t.due_date()) if t.due_date() else '',
+        # relative due date
+        placeholders['D'] = lambda t: humanize_date(t.due_date()) if t.due_date() else ''
 
-            # relative dates:  due, start
-            'h': lambda t: humanize_dates(t.due_date(), t.start_date()),
+        # relative dates:  due, start
+        placeholders['h'] = lambda t: humanize_dates(t.due_date(), t.start_date())
 
-            # relative dates in form:  creation, due, start
-            'H': lambda t: humanize_dates(t.due_date(), t.start_date(), t.creation_date()),
+        # relative dates in form:  creation, due, start
+        placeholders['H'] = lambda t: humanize_dates(t.due_date(), t.start_date(), t.creation_date())
 
-            # todo ID
-            'i': lambda t: str(self.todolist.number(t)),
+        # todo ID
+        placeholders['i'] = lambda t: str(self.todolist.number(t))
 
-            # todo ID pre-filled with 1 or 2 spaces if its length is <3
-            'I': lambda t: filler(str(self.todolist.number(t)), 3),
+        # todo ID pre-filled with 1 or 2 spaces if its length is <3
+        placeholders['I'] = lambda t: filler(str(self.todolist.number(t)), 3)
 
-            # list of tags (spaces) without due: and t:
-            'k': lambda t: ' '.join([u('{}:{}').format(tag, value)
-                                     for tag, value in sorted(p_todo.tags()) if
-                                     tag not in config().hidden_tags() + [config().tag_start(), config().tag_due()]]),
+        # list of tags (spaces) without due: and t:
+        placeholders['k'] = lambda t: ' '.join([u('{}:{}').format(tag, value)
+                                    for tag, value in sorted(p_todo.tags()) if
+                                    tag not in config().hidden_tags() + [config().tag_start(), config().tag_due()]])
 
-            # list of tags (spaces)
-            'K': lambda t: ' '.join([u('{}:{}').format(tag, value)
-                                     for tag, value in sorted(p_todo.tags()) if
-                                     tag not in config().hidden_tags()]),
+        # list of tags (spaces)
+        placeholders['K'] = lambda t: ' '.join([u('{}:{}').format(tag, value)
+                                    for tag, value in sorted(p_todo.tags()) if
+                                    tag not in config().hidden_tags()])
 
-            # priority
-            'p': lambda t: t.priority() if t.priority() else '',
+        # priority
+        placeholders['p'] = lambda t: t.priority() if t.priority() else ''
 
-            # text
-            's': lambda t: t.text(),
+        # text
+        placeholders['s'] = lambda t: t.text()
 
-            # absolute start date
-            't': lambda t: t.start_date().isoformat() if t.start_date() else '',
+        # absolute start date
+        placeholders['t'] = lambda t: t.start_date().isoformat() if t.start_date() else ''
 
-            # relative start date
-            'T': lambda t: humanize_date(t.start_date()) if t.start_date() else '',
+        # relative start date
+        placeholders['T'] = lambda t: humanize_date(t.start_date()) if t.start_date() else ''
 
-            # completed
-            'x': lambda t: 'x ' + t.completion_date().isoformat() if t.is_completed() else '',
+        # completed
+        placeholders['x'] = lambda t: 'x ' + t.completion_date().isoformat() if t.is_completed() else ''
 
-            # literal %
-            '%': lambda _: '%',
-        }
+        # literal %
+        placeholders['%'] = lambda _: '%'
+
+        # text (truncated if necessary)
+        placeholders['S'] = lambda t: t.text()
+
 
         p_todo_str = self.format
 
@@ -225,6 +230,13 @@ class PrettyPrinterFormatFilter(PrettyPrinterFilter):
 
                     p_todo_str = re.sub(pattern, strip_braces, p_todo_str)
                     p_todo_str = re.sub(r'%{}'.format(placeholder), repl, p_todo_str)
+                    p_todo_str = p_todo_str.rstrip()
 
-        return p_todo_str.rstrip()
+                    if placeholder == 'S':
+                        line_width = get_terminal_size().columns -1
+                        if len(p_todo_str) > line_width:
+                            text_lim = line_width - len(p_todo_str) - 3
+                            p_todo_str = re.sub(re.escape(repl), repl[:text_lim] + '...', p_todo_str)
+
+        return p_todo_str
 
