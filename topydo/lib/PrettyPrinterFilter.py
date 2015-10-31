@@ -22,6 +22,7 @@ from six import u
 
 from topydo.lib.Colors import NEUTRAL_COLOR, Colors
 from topydo.lib.Config import config
+from topydo.lib.ListFormat import filler, humanize_date
 
 
 class PrettyPrinterFilter(object):
@@ -139,20 +140,29 @@ class PrettyPrinterFormatFilter(PrettyPrinterFilter):
             'c': lambda t: t.creation_date().isoformat() if t.creation_date() else '',
 
             # relative creation date
-            'C': lambda t: '#', # TODO: humanized creation date
+            'C': lambda t: humanize_date(t.creation_date()) if t.creation_date() else '',
 
             # absolute due date
             'd': lambda t: t.due_date().isoformat() if t.due_date() else '',
 
             # relative due date
-            'D': lambda t: '#', # TODO: humanized due date
+            'D': lambda t: humanize_date(t.due_date()) if t.due_date() else '',
 
             # todo ID
             'i': lambda t: str(self.todolist.number(t)),
 
+            # todo ID pre-filled with 1 or 2 spaces if its length is <3
+            'I': lambda t: filler(str(self.todolist.number(t)), 3),
+
             # list of tags (spaces)
-            'K': lambda t: ' '.join(['{}:{}'.format(tag, value)
-                                     for tag, value in sorted(p_todo.tags())]),
+            'K': lambda t: ' '.join([u('{}:{}').format(tag, value)
+                                     for tag, value in sorted(p_todo.tags()) if
+                                     tag not in config().hidden_tags()]),
+
+            # list of tags (spaces) without due: and t:
+            'k': lambda t: ' '.join([u('{}:{}').format(tag, value)
+                                     for tag, value in sorted(p_todo.tags()) if
+                                     tag not in config().hidden_tags() + [config().tag_start(), config().tag_due()]]),
 
             # priority
             'p': lambda t: t.priority() if t.priority() else '',
@@ -164,7 +174,10 @@ class PrettyPrinterFormatFilter(PrettyPrinterFilter):
             't': lambda t: t.start_date().isoformat() if t.start_date() else '',
 
             # relative start date
-            'T': lambda t: '#', # TODO: humanized start date
+            'T': lambda t: humanize_date(t.start_date()) if t.start_date() else '',
+
+            # completed
+            'x': lambda t: 'x ' + t.completion_date().isoformat() if t.is_completed() else '',
 
             # literal %
             '%': lambda _: '%',
@@ -173,7 +186,39 @@ class PrettyPrinterFormatFilter(PrettyPrinterFilter):
         p_todo_str = self.format
 
         for placeholder, getter in placeholders.items():
-            p_todo_str = re.sub(r'%\[?{}\]?'.format(placeholder), getter(p_todo), p_todo_str)
+            repl = getter(p_todo)
+            pattern = (r'(?P<start>.*)'
+                       r'%(?P<before>{{.+?}})?'
+                       r'\[?(?P<placeholder>{})\]?'
+                       r'(?P<after>{{.+?}})?'
+                       r'(?P<whitespace>\s)*'
+                       r'(?P<end>.*)').format(placeholder)
+            match = re.match(pattern, p_todo_str)
+            if match:
+                if repl == '':
+                    p_todo_str = re.sub(pattern, match.group('start') + match.group('end'), p_todo_str)
+                else:
+                    def strip_braces(p_matchobj):
+                        try:
+                            before = p_matchobj.group('before').strip('{}')
+                        except AttributeError:
+                            before = ''
 
-        return p_todo_str
+                        placeholder = p_matchobj.group('placeholder')
+
+                        try:
+                            after = p_matchobj.group('after').strip('{}')
+                        except AttributeError:
+                            after = ''
+
+                        whitespace = p_matchobj.group('whitespace') or ''
+                        start = p_matchobj.group('start') or ''
+                        end = p_matchobj.group('end') or ''
+
+                        return start + before + '%' + placeholder + after + whitespace + end
+
+                    p_todo_str = re.sub(pattern, strip_braces, p_todo_str)
+                    p_todo_str = re.sub(r'%{}'.format(placeholder), repl, p_todo_str)
+
+        return p_todo_str.rstrip()
 

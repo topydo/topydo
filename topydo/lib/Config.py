@@ -69,7 +69,7 @@ class _Config:
                 'hide_tags': 'id,p,ical',
                 'indent': '0',
                 'list_limit': '-1',
-                'list_format': '|%i| (%p) %s',
+                'list_format': '|%I| %x %c %{(}p{)} %s %k',
             },
 
             'tags': {
@@ -111,7 +111,7 @@ class _Config:
 
         self.config = {}
 
-        self.cp = configparser.ConfigParser()
+        self.cp = configparser.RawConfigParser()
 
         for section in self.defaults:
             self.cp.add_section(section)
