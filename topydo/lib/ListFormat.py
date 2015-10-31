@@ -29,3 +29,26 @@ def humanize_date(p_datetime):
     now = arrow.now()
     date = now.replace(day=p_datetime.day, month=p_datetime.month, year=p_datetime.year)
     return date.humanize()
+
+def humanize_dates(p_due=None, p_start=None, p_creation=None):
+    """
+    Returns string with humanized versions of p_due, p_start and p_creation.
+    Examples:
+    - all dates: "16 days ago, due in a month, started 2 days ago"
+    - p_due and p_start: "due in a month, started 2 days ago"
+    - p_creation and p_due: "16 days ago, due in a month"
+    """
+    dates_list = []
+    if p_creation:
+        dates_list.append(humanize_date(p_creation))
+    if p_due:
+        dates_list.append('due ' + humanize_date(p_due))
+    if p_start:
+        now = arrow.now().date()
+        start = humanize_date(p_start)
+        if p_start <= now:
+            dates_list.append('started ' + start)
+        else:
+            dates_list.append('starts in ' + start)
+
+    return ', '.join(dates_list)
