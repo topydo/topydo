@@ -23,7 +23,8 @@ from six import u
 
 from topydo.lib.Colors import NEUTRAL_COLOR, Colors
 from topydo.lib.Config import config
-from topydo.lib.ListFormat import filler, humanize_date, humanize_dates
+from topydo.lib.ListFormat import (filler, humanize_date, humanize_dates,
+                                   strip_placeholder_braces)
 from topydo.lib.Utils import get_terminal_size
 
 
@@ -205,41 +206,48 @@ class PrettyPrinterFormatFilter(PrettyPrinterFilter):
                        r'%(?P<before>{{.+?}})?'
                        r'(?P<placeholder>{ph}|\[{ph}\])'
                        r'(?P<after>{{.+?}})?'
-                       r'(?P<whitespace>\s)*'
+                       r'(?P<whitespace> *)'
                        r'(?P<end>.*)').format(ph=placeholder)
             match = re.match(pattern, p_todo_str)
             if match:
                 if repl == '':
                     p_todo_str = re.sub(pattern, match.group('start') + match.group('end'), p_todo_str)
                 else:
-                    def strip_braces(p_matchobj):
-                        try:
-                            before = p_matchobj.group('before').strip('{}')
-                        except AttributeError:
-                            before = ''
 
-                        placeholder = p_matchobj.group('placeholder')
-
-                        try:
-                            after = p_matchobj.group('after').strip('{}')
-                        except AttributeError:
-                            after = ''
-
-                        whitespace = p_matchobj.group('whitespace') or ''
-                        start = p_matchobj.group('start') or ''
-                        end = p_matchobj.group('end') or ''
-
-                        return start + before + '%' + placeholder + after + whitespace + end
-
-                    p_todo_str = re.sub(pattern, strip_braces, p_todo_str)
+                    p_todo_str = re.sub(pattern, strip_placeholder_braces, p_todo_str)
                     p_todo_str = re.sub(r'%({ph}|\[{ph}\])'.format(ph=placeholder), repl, p_todo_str)
                     p_todo_str = p_todo_str.rstrip()
 
                     if placeholder == 'S':
-                        line_width = get_terminal_size().columns -1
-                        if len(p_todo_str) > line_width:
-                            text_lim = line_width - len(p_todo_str) - 3
+                        p_todo_str = re.sub(' *\t *', '\t', p_todo_str)
+                        line_width = get_terminal_size().columns
+                        if len(p_todo_str) >= line_width:
+                            text_lim = line_width - len(p_todo_str) - 4
                             p_todo_str = re.sub(re.escape(repl), repl[:text_lim] + '...', p_todo_str)
 
         return p_todo_str
 
+class PrettyPrinterAlignFilter(PrettyPrinterFilter):
+    """
+    Final make-up for todo item line.
+    Currently it only provides right alignment from place specified in
+    list_format config-option (subsitutes tab-character with as many spaces as
+    it is needed to fill the whole line).
+    """
+
+    def __init__(self):
+        super(PrettyPrinterAlignFilter, self).__init__()
+
+    def filter(self, p_todo_str, _):
+        tab = re.search('.*\t', p_todo_str)
+
+        if tab:
+            line_width = get_terminal_size().columns
+            to_fill = line_width - len(p_todo_str)
+
+            if to_fill > 0:
+                p_todo_str = re.sub('\t', ' '*to_fill, p_todo_str)
+            elif to_fill <= 0:
+                p_todo_str = re.sub('\t', ' ', p_todo_str)
+
+        return p_todo_str
