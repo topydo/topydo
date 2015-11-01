@@ -38,13 +38,21 @@ class GetSubcommandTest(TopydoTest):
         self.assertTrue(issubclass(real_cmd, AddCommand))
         self.assertEqual(final_args, ["help"])
 
-    def test_alias(self):
+    def test_alias01(self):
         config("test/data/aliases.conf")
 
         args = ["foo"]
         real_cmd, final_args = get_subcommand(args)
         self.assertTrue(issubclass(real_cmd, DeleteCommand))
         self.assertEqual(final_args, ["-f", "test"])
+
+    def test_alias02(self):
+        config("test/data/aliases.conf")
+
+        args = ["format"]
+        real_cmd, final_args = get_subcommand(args)
+        self.assertTrue(issubclass(real_cmd, ListCommand))
+        self.assertEqual(final_args, ["-F", "|I| x c d {(}p{)} s k", "-n", "25"])
 
     def test_default_cmd01(self):
         args = ["bar"]
