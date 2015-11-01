@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import shlex
 
 from six import iteritems
 from six.moves import configparser
@@ -301,7 +302,7 @@ class _Config:
         alias_dict = dict()
 
         for alias, meaning in aliases:
-            meaning = meaning.split()
+            meaning = shlex.split(meaning)
             real_subcommand = meaning[0]
             alias_args = meaning[1:]
             alias_dict[alias] = (real_subcommand, alias_args)
