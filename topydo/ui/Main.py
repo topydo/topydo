@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import shlex
 import urwid
 from six import u
 
@@ -122,7 +123,8 @@ class UIApplication(CLIApplicationBase):
         Executes a command, given as a string.
         """
         p_output = p_output or self._output
-        (subcommand, args) = get_subcommand(p_command.split())
+        p_command = shlex.split(p_command)
+        (subcommand, args) = get_subcommand(p_command)
 
         try:
             command = subcommand(
