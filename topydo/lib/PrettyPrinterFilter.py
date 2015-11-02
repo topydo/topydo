@@ -229,7 +229,7 @@ class PrettyPrinterFormatFilter(PrettyPrinterFilter):
                         return start + before + '%' + placeholder + after + whitespace + end
 
                     p_todo_str = re.sub(pattern, strip_braces, p_todo_str)
-                    p_todo_str = re.sub(r'%{}'.format(placeholder), repl, p_todo_str)
+                    p_todo_str = re.sub(r'%({ph}|\[{ph}\])'.format(ph=placeholder), repl, p_todo_str)
                     p_todo_str = p_todo_str.rstrip()
 
                     if placeholder == 'S':
