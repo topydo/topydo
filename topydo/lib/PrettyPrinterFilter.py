@@ -200,10 +200,10 @@ class PrettyPrinterFormatFilter(PrettyPrinterFilter):
             repl = getter(p_todo)
             pattern = (r'(?P<start>.*)'
                        r'%(?P<before>{{.+?}})?'
-                       r'\[?(?P<placeholder>{})\]?'
+                       r'(?P<placeholder>{ph}|\[{ph}\])'
                        r'(?P<after>{{.+?}})?'
                        r'(?P<whitespace>\s)*'
-                       r'(?P<end>.*)').format(placeholder)
+                       r'(?P<end>.*)').format(ph=placeholder)
             match = re.match(pattern, p_todo_str)
             if match:
                 if repl == '':
