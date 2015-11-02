@@ -17,6 +17,7 @@
 """ Entry file for the topydo Prompt interface (CLI). """
 
 import os.path
+import shlex
 import sys
 
 from topydo.cli.CLIApplicationBase import CLIApplicationBase, error, usage
@@ -94,7 +95,8 @@ class PromptApplication(CLIApplicationBase):
             try:
                 user_input = prompt(u'topydo> ', history=history,
                                     completer=self.completer,
-                                    complete_while_typing=False).split()
+                                    complete_while_typing=False)
+                user_input = shlex.split(user_input)
             except (EOFError, KeyboardInterrupt):
                 sys.exit(0)
 
