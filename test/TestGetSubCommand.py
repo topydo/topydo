@@ -54,6 +54,14 @@ class GetSubcommandTest(TopydoTest):
         self.assertTrue(issubclass(real_cmd, ListCommand))
         self.assertEqual(final_args, ["-F", "|I| x c d {(}p{)} s k", "-n", "25"])
 
+    def test_alias03(self):
+        config("test/data/aliases.conf")
+
+        args = ["smile"]
+        real_cmd, final_args = get_subcommand(args)
+        self.assertTrue(issubclass(real_cmd, ListCommand))
+        self.assertEqual(final_args, [u("\u263b")])
+
     def test_default_cmd01(self):
         args = ["bar"]
         real_cmd, final_args = get_subcommand(args)

@@ -34,6 +34,7 @@ setup(
     ],
     extras_require = {
         ':sys_platform=="win32"': ['colorama>=0.2.5'],
+        ':python_version=="2.7"': ['ushlex'],
         'ical': ['icalendar'],
         'prompt-toolkit': ['prompt-toolkit >= 0.53'],
         'edit-cmd-tests': ['mock'],
