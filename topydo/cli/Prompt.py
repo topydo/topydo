@@ -103,7 +103,7 @@ class PromptApplication(CLIApplicationBase):
 
             # refuse to perform operations such as 'del' and 'do' if the
             # todo.txt file has been changed in the background.
-            if not self.is_read_only(subcommand) and self.mtime != mtime_after:
+            if subcommand and not self.is_read_only(subcommand) and self.mtime != mtime_after:
                 error("WARNING: todo.txt file was modified by another application.\nTo prevent unintended changes, this operation was not executed.")
                 continue
 
