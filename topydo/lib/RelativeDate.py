@@ -63,8 +63,7 @@ def _convert_weekday_pattern(p_weekday):
     """
     Converts a weekday name to an absolute date.
 
-    When today's day of the week is entered, it will return today and not next
-    week's.
+    When today's day of the week is entered, it will return next week's date.
     """
     day_value = {
         'mo': 0,
@@ -81,7 +80,7 @@ def _convert_weekday_pattern(p_weekday):
 
     day = date.today().weekday()
 
-    shift = (target_day - day) % 7
+    shift = 7 - (day - target_day) % 7
     return date.today() + timedelta(shift)
 
 
