@@ -54,7 +54,7 @@ Demo
 [2]: https://github.com/ginatrapani/todo.txt-cli
 [3]: https://github.com/bram85/todo.txt-tools
 [4]: https://github.com/bram85/topydo/wiki
-[5]: https://raw.githubusercontent.com/bram85/topydo/stable/doc/topydo.gif
+[5]: https://raw.githubusercontent.com/bram85/topydo/master/doc/topydo.gif
 [6]: https://github.com/jonathanslenders/python-prompt-toolkit
 [7]: https://github.com/collective/icalendar
 [8]: https://github.com/crsmithdev/arrow

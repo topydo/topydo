@@ -39,8 +39,7 @@ class SortCommand(Command):
         sorter = Sorter(expression)  # TODO: validate
         sorted_todos = sorter.sort(self.todolist.todos())
 
-        self.todolist.erase()
-        self.todolist.add_todos(sorted_todos)
+        self.todolist.replace(sorted_todos)
 
     def usage(self):
         return """Synopsis: sort [expression]"""

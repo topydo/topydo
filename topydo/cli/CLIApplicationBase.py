@@ -25,6 +25,7 @@ from six import PY2
 from six.moves import input
 
 MAIN_OPTS = "ac:d:ht:v"
+READ_ONLY_COMMANDS = ('List', 'ListContext', 'ListProject')
 
 
 def usage():
@@ -56,6 +57,7 @@ Available commands:
 * listprojects (lsprj)
 * postpone
 * pri
+* revert
 * sort
 * tag
 * top
@@ -100,8 +102,6 @@ except ConfigError as config_error:
     error(str(config_error))
     sys.exit(1)
 
-from topydo.commands.ArchiveCommand import ArchiveCommand
-from topydo.commands.SortCommand import SortCommand
 from topydo.lib import TodoFile
 from topydo.lib import TodoList
 from topydo.lib import TodoListBase
@@ -120,6 +120,7 @@ class CLIApplicationBase(object):
         self.todolist = TodoList.TodoList([])
         self.todofile = None
         self.do_archive = True
+        self.backup = None
 
     def _usage(self):
         usage()
@@ -171,7 +172,11 @@ class CLIApplicationBase(object):
         archive_file = TodoFile.TodoFile(config().archive())
         archive = TodoListBase.TodoListBase(archive_file.read())
 
+        if self.backup:
+            self.backup.add_archive(archive)
+
         if archive:
+            from topydo.commands.ArchiveCommand import ArchiveCommand
             command = ArchiveCommand(self.todolist, archive)
             command.execute()
 
@@ -190,11 +195,23 @@ class CLIApplicationBase(object):
         """
         return input
 
+    def is_read_only(self, p_command):
+        """ Returns True when the given command class is read-only. """
+        read_only_commands = tuple(cmd + 'Command' for cmd in ('Revert', ) +
+                READ_ONLY_COMMANDS)
+        return p_command.__module__.endswith(read_only_commands)
+
     def _execute(self, p_command, p_args):
         """
         Execute a subcommand with arguments. p_command is a class (not an
         object).
         """
+        if config().backup_count() > 0 and p_command and not self.is_read_only(p_command):
+            call = [p_command.__module__.lower()[16:-7]] + p_args # strip "topydo.commands" and "Command"
+
+            from topydo.lib.ChangeSet import ChangeSet
+            self.backup = ChangeSet(self.todolist, p_call=call)
+
         command = p_command(
             p_args,
             self.todolist,
@@ -221,9 +238,15 @@ class CLIApplicationBase(object):
                 self._archive()
 
             if config().keep_sorted():
+                from topydo.commands.SortCommand import SortCommand
                 self._execute(SortCommand, [])
 
+            if self.backup:
+                self.backup.save(self.todolist)
+
             self.todofile.write(self.todolist.print_todos())
+
+        self.backup = None
 
     def run(self):
         raise NotImplementedError

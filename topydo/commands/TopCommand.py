@@ -39,7 +39,7 @@ class TopCommand(ExpressionCommand):
         self.raw_dates = None
 
     def _process_flags(self):
-        opts, args = self.getopt(':rs:x')
+        opts, args = self.getopt('rs:x')
 
         for opt, value in opts:
             if opt == '-x':

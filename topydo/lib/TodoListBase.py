@@ -173,6 +173,12 @@ class TodoListBase(object):
         self._todos = []
         self.dirty = True
 
+    def replace(self, p_todos):
+        """ Replaces whole todolist with todo objects supplied as p_todos. """
+        self.erase()
+        self.add_todos(p_todos)
+        self.dirty = True
+
     def count(self):
         """ Returns the number of todos on this list. """
         return len(self._todos)
