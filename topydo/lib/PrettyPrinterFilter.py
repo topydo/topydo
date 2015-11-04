@@ -211,9 +211,9 @@ class PrettyPrinterHumanDatesFilter(PrettyPrinterFilter):
         The returned arrow object has hours, minutes, and seconds set to now.
         """
         linedate = arrow.now()  # set the time to 'now' so the comparisions work better
-        linedate = linedate.replace(year=int(matchgroup.group('year')))
-        linedate = linedate.replace(month=int(matchgroup.group('month')))
-        linedate = linedate.replace(day=int(matchgroup.group('day')))
+        linedate = linedate.replace(year=int(matchgroup.group('year')),
+                                    month=int(matchgroup.group('month')),
+                                    day=int(matchgroup.group('day')))
         return(linedate)
 
     def filter(self, p_todo_str, _):

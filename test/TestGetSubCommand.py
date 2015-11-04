@@ -15,7 +15,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
-from unittest import skip
 
 from six import u
 
@@ -55,7 +54,6 @@ class GetSubcommandTest(TopydoTest):
         self.assertTrue(issubclass(real_cmd, ListCommand))
         self.assertEqual(final_args, ["-F", "|I| x c d {(}p{)} s k", "-n", "25"])
 
-    @skip('unicode')
     def test_alias03(self):
         config("test/data/aliases.conf")
 
