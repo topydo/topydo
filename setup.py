@@ -37,8 +37,8 @@ setup(
         ':python_version=="2.7"': ['ushlex'],
         'ical': ['icalendar'],
         'prompt-toolkit': ['prompt-toolkit >= 0.53'],
-        'edit-cmd-tests': ['mock'],
         'test': ['green', 'coverage'],
+        'test:python_version=="2.7"': ['mock'],
         'test:python_version!="3.2"': ['pylint'],
     },
     entry_points= {
