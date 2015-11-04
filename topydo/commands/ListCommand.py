@@ -16,8 +16,6 @@
 
 from topydo.lib.Config import config
 from topydo.lib.ExpressionCommand import ExpressionCommand
-from topydo.lib.IcalPrinter import IcalPrinter
-from topydo.lib.JsonPrinter import JsonPrinter
 from topydo.lib.PrettyPrinter import pretty_printer_factory
 from topydo.lib.PrettyPrinterFilter import (PrettyPrinterHideTagFilter,
                                             PrettyPrinterIndentFilter,
@@ -51,7 +49,7 @@ class ListCommand(ExpressionCommand):
         return True
 
     def _process_flags(self):
-        opts, args = self.getopt('f:F:s:x')
+        opts, args = self.getopt('f:F:n:s:x')
 
         for opt, value in opts:
             if opt == '-x':
@@ -60,14 +58,21 @@ class ListCommand(ExpressionCommand):
                 self.sort_expression = value
             elif opt == '-f':
                 if value == 'json':
+                    from topydo.lib.JsonPrinter import JsonPrinter
                     self.printer = JsonPrinter()
                 elif value == 'ical':
                     if self._poke_icalendar():
+                        from topydo.lib.IcalPrinter import IcalPrinter
                         self.printer = IcalPrinter(self.todolist)
                 else:
                     self.printer = None
             elif opt == '-F':
                 self.format = value
+            elif opt == '-n':
+                try:
+                    self.limit = int(value)
+                except ValueError:
+                    pass # use default value in configuration
 
         self.args = args
 

@@ -116,16 +116,12 @@ class EditCommand(MultiCommand):
             new_todos = self._todos_from_temp(temp_todos)
 
             if _is_edited(orig_mtime, temp_todos):
-                if len(new_todos) == len(self.todos):
-                    for todo in self.todos:
-                        BASE_TODOLIST(self.todolist).delete(todo)
+                for todo in self.todos:
+                    BASE_TODOLIST(self.todolist).delete(todo)
 
-                    for todo in new_todos:
-                        self.todolist.add_todo(todo)
-                        self.out(self.printer.print_todo(todo))
-                else:
-                    self.error('Number of edited todos is not equal to '
-                            'number of supplied todo IDs.')
+                for todo in new_todos:
+                    self.todolist.add_todo(todo)
+                    self.out(self.printer.print_todo(todo))
             else:
                 self.error('Editing aborted. Nothing to do.')
         else:

@@ -1,7 +1,7 @@
 topydo
 ======
 
-[![Build Status](https://travis-ci.org/bram85/topydo.svg?branch=master)](https://travis-ci.org/bram85/topydo) [![Join the chat at https://gitter.im/bram85/topydo](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/bram85/topydo?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=bram85&url=https://github.com/bram85/topydo&title=topydo&language=&tags=github&category=software) 
+[![Build Status](https://travis-ci.org/bram85/topydo.svg?branch=master)](https://travis-ci.org/bram85/topydo) [![Coverage Status](https://coveralls.io/repos/bram85/topydo/badge.svg?branch=master&service=github)](https://coveralls.io/github/bram85/topydo?branch=master) [![Join the chat at https://gitter.im/bram85/topydo](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/bram85/topydo?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=bram85&url=https://github.com/bram85/topydo&title=topydo&language=&tags=github&category=software) 
 
 topydo is a todo list application using the [todo.txt format][1]. It is heavily
 inspired by the [todo.txt CLI][2] by Gina Trapani. This tool is actually a
@@ -43,6 +43,6 @@ Demo
 [2]: https://github.com/ginatrapani/todo.txt-cli
 [3]: https://github.com/bram85/todo.txt-tools
 [4]: https://github.com/bram85/topydo/wiki
-[5]: https://raw.githubusercontent.com/bram85/topydo/stable/doc/topydo.gif
+[5]: https://raw.githubusercontent.com/bram85/topydo/master/doc/topydo.gif
 [6]: https://github.com/jonathanslenders/python-prompt-toolkit
 [7]: https://github.com/collective/icalendar
