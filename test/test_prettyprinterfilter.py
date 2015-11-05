@@ -16,7 +16,7 @@
 
 import unittest
 
-from test.TopydoTestCase import TopydoTest
+from test.topydo_testcase import TopydoTest
 from topydo.lib.PrettyPrinterFilter import PrettyPrinterBasicPriorityFilter
 
 

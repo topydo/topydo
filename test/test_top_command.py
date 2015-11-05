@@ -21,8 +21,8 @@ from topydo.commands.TopCommand import TopCommand
 from topydo.lib.Config import config
 from topydo.lib.Utils import get_terminal_size
 
-from test.CommandTestCase import CommandTest
-from test.Facilities import load_file_to_todolist
+from test.command_testcase import CommandTest
+from test.facilities import load_file_to_todolist
 
 
 class TopCommandTest(CommandTest):

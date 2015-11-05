@@ -16,7 +16,7 @@
 
 import unittest
 from datetime import date, timedelta
-from test.CommandTestCase import CommandTest
+from test.command_testcase import CommandTest
 
 from topydo.commands import AddCommand, ListCommand
 from topydo.lib import TodoList
