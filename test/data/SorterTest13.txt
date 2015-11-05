@@ -1,0 +1,3 @@
+Todo item with +Project2 @Context2
+Todo item with +project1 @context3
+Todo item with +project3 @context1
