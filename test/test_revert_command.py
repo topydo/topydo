@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import tempfile
 import unittest
 
 from datetime import date
@@ -47,8 +48,8 @@ class RevertCommandTest(CommandTest):
 
         self.tmp_name = str(uuid4().hex.upper()[0:6])
 
-        archive_filename = '/tmp/' + self.tmp_name + '_archive'
-        todo_filename = '/tmp/' + self.tmp_name + '_todo'
+        archive_filename = tempfile.gettempdir() + os.sep + self.tmp_name + '_archive'
+        todo_filename = tempfile.gettempdir() + os.sep + self.tmp_name + '_todo'
 
         config(p_overrides={('topydo', 'archive_filename'): archive_filename,
             ('topydo', 'filename'): todo_filename, ('topydo', 'backup_count'): '5'})
