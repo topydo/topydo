@@ -184,8 +184,11 @@ class PrettyPrinterFormatFilter(PrettyPrinterFilter):
         # relative start date
         placeholders['T'] = lambda t: humanize_date(t.start_date()) if t.start_date() else ''
 
-        # completed
+        # absolute completion date
         placeholders['x'] = lambda t: 'x ' + t.completion_date().isoformat() if t.is_completed() else ''
+
+        # relative completion date
+        placeholders['X'] = lambda t: 'x ' + humanize_date(t.completion_date()) if t.is_completed() else ''
 
         # literal %
         placeholders['%'] = lambda _: '%'
