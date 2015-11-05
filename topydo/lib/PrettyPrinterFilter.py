@@ -163,15 +163,14 @@ class PrettyPrinterFormatFilter(PrettyPrinterFilter):
         # todo ID pre-filled with 1 or 2 spaces if its length is <3
         placeholders['I'] = lambda t: filler(str(self.todolist.number(t)), 3)
 
-        # list of tags (spaces) without due: and t:
+        # list of tags (spaces) without hidden ones and due: and t:
         placeholders['k'] = lambda t: ' '.join([u('{}:{}').format(tag, value)
                                     for tag, value in sorted(p_todo.tags()) if
                                     tag not in config().hidden_tags() + [config().tag_start(), config().tag_due()]])
 
-        # list of tags (spaces)
+        # list of all tags (spaces)
         placeholders['K'] = lambda t: ' '.join([u('{}:{}').format(tag, value)
-                                    for tag, value in sorted(p_todo.tags()) if
-                                    tag not in config().hidden_tags()])
+                                    for tag, value in sorted(p_todo.tags())])
 
         # priority
         placeholders['p'] = lambda t: t.priority() if t.priority() else ''
@@ -225,7 +224,8 @@ class PrettyPrinterFormatFilter(PrettyPrinterFilter):
                             text_lim = line_width - len(p_todo_str) - 4
                             p_todo_str = re.sub(re.escape(repl), repl[:text_lim] + '...', p_todo_str)
 
-        return p_todo_str
+        # cut trailing space left when last placeholder in p_todo_str is empty and its predecessor is not
+        return p_todo_str.rstrip()
 
 class PrettyPrinterAlignFilter(PrettyPrinterFilter):
     """
