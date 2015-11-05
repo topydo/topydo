@@ -74,7 +74,7 @@ class _Config:
                 'hide_tags': 'id,p,ical',
                 'indent': '0',
                 'list_limit': '-1',
-                'list_format': '|%I| %x %c %{(}p{)} %s %k',
+                'list_format': '|%I| %x %{(}p{)} %c %s %k',
             },
 
             'tags': {
