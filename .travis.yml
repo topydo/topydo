@@ -14,11 +14,22 @@ matrix:
     - python: "pypy"
     - python: "pypy3"
 install:
+  - "python -m pip install pip --upgrade"
   - "pip install ."
-  - "pip install icalendar"
-  - "pip install pylint"
-script: "./run-tests.sh"
+  - "pip install .[ical]"
+  - "pip install .[test]"
+  - "pip install coveralls"
+script:
+  - "green -vvr"
+  - "python -m pylint --errors-only topydo test"
 # Cache Dependencies
+after_script:
+- if [[ $TRAVIS_PYTHON_VERSION == 3.4 ]]; then
+          coveralls;
+  fi
+- if [[ $TRAVIS_PYTHON_VERSION == 2.7 ]]; then
+          coveralls;
+  fi
 cache:
   directories:
     - $HOME/travis/.cache/pip
