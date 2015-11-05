@@ -9,8 +9,8 @@
 
 * New feature: aliases. Aliases can be defined in the configuration file:
 
-      [aliases]
-      showall = ls -x
+        [aliases]
+        showall = ls -x
 
   (thanks to @mruwek)
 * Filter based on priorities (thanks to @mruwek)
