@@ -17,7 +17,8 @@
 from topydo.lib.Config import config
 from topydo.lib.ExpressionCommand import ExpressionCommand
 from topydo.lib.PrettyPrinter import pretty_printer_factory
-from topydo.lib.PrettyPrinterFilter import (PrettyPrinterHideTagFilter,
+from topydo.lib.PrettyPrinterFilter import (PrettyPrinterAlignFilter,
+                                            PrettyPrinterHideTagFilter,
                                             PrettyPrinterIndentFilter,
                                             PrettyPrinterFormatFilter)
 
@@ -92,6 +93,7 @@ class ListCommand(ExpressionCommand):
             filters = []
             filters.append(PrettyPrinterFormatFilter(self.todolist,
                            self.format))
+            filters.append(PrettyPrinterAlignFilter())
             filters.append(PrettyPrinterIndentFilter(indent))
             filters.append(PrettyPrinterHideTagFilter(hidden_tags))
 

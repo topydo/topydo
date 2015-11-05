@@ -52,3 +52,36 @@ def humanize_dates(p_due=None, p_start=None, p_creation=None):
             dates_list.append('starts in ' + start)
 
     return ', '.join(dates_list)
+
+def strip_placeholder_braces(p_matchobj):
+    """
+    Returns string with conditional braces around placeholder stripped and
+    percent sign glued into placeholder character.
+
+    Returned string is composed from 'start', 'before', 'placeholder', 'after',
+    'whitespace', and 'end' match-groups of p_matchobj. Conditional braces are
+    stripped from 'before' and 'after' groups. 'whitespace', 'start', and 'end'
+    groups are preserved without any change.
+
+    Using this function as an 'repl' argument in re.sub it is possible to turn:
+        %{(}B{)}
+    into:
+        (%B)
+    """
+    try:
+        before = p_matchobj.group('before').strip('{}')
+    except AttributeError:
+        before = ''
+
+    placeholder = p_matchobj.group('placeholder')
+
+    try:
+        after = p_matchobj.group('after').strip('{}')
+    except AttributeError:
+        after = ''
+
+    whitespace = p_matchobj.group('whitespace') or ''
+    start = p_matchobj.group('start') or ''
+    end = p_matchobj.group('end') or ''
+
+    return start + before + '%' + placeholder + after + whitespace + end
