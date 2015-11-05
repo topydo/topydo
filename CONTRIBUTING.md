@@ -22,7 +22,7 @@ smoothly into topydo.
 
 * Run tests with:
 
-        ./run-tests.sh [python2|python3]
+        green
 
   Obviously, I won't accept anything that makes the tests fail. When you submit
   a Pull Request, Travis CI will automatically run all tests for various Python

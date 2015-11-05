@@ -34,9 +34,12 @@ setup(
     ],
     extras_require = {
         ':sys_platform=="win32"': ['colorama>=0.2.5'],
+        ':python_version=="2.7"': ['ushlex'],
         'ical': ['icalendar'],
         'prompt-toolkit': ['prompt-toolkit >= 0.53'],
-        'edit-cmd-tests': ['mock'],
+        'test': ['green', 'coverage'],
+        'test:python_version=="2.7"': ['mock'],
+        'test:python_version!="3.2"': ['pylint'],
     },
     entry_points= {
         'console_scripts': ['topydo = topydo.cli.UILoader:main'],

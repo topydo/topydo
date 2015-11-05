@@ -1,3 +1,41 @@
+0.7
+---
+
+* New subcommand: `revert`. Revert the last executed command(s). The number of
+  revisions can be tuned in the configuration file:
+
+      [topydo]
+      backup_count = 25
+
+* New feature: aliases. Aliases can be defined in the configuration file:
+
+        [aliases]
+        showall = ls -x
+
+  (thanks to @mruwek)
+* Filter based on priorities (thanks to @mruwek)
+
+      ls (A)
+      ls (<A)
+
+* `ls` has a `-n` flag to limit the number of todo items (similar to the
+  list_limit option in the configuration file:
+
+      ls -n 5
+
+* Prompt mode no longer warns about background modifications to todo.txt when a
+  read-only command is entered (e.g. `ls`).
+* Removed restriction in `edit` mode that requires keeping the same amount of
+  lines in the todo.txt file.
+* `edit` only processes the todo items when edits were actually made in the
+  editor.
+* Bugfix: not all tags were properly hidden with the `hide_tags` configuration
+  option.
+* Better PEP8 compliance (thanks to @MinchinWeb)
+* Various test/CI improvements (thanks to @MinchinWeb)
+* Support for Python 3.2 removed.
+* Many other minor improvements (a.o. thanks to @MinchinWeb)
+
 0.6
 ---
 
@@ -16,7 +54,9 @@
 ---
 
 * Remove 'ical' subcommand in favor of 'topydo ls -f ical'
-* Remove options highlight_projects_colors in favor of colorscheme options. In case you wish to disable the project/context colors, assign an empty value in the configuration file:
+* Remove options highlight_projects_colors in favor of colorscheme options. In
+  case you wish to disable the project/context colors, assign an empty value in
+  the configuration file:
 
       [colorscheme]
       project_color =
