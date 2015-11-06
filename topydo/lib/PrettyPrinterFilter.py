@@ -83,7 +83,7 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
 
             # add link_color to any valid URL specified outside of the tag.
             p_todo_str = re.sub(r'(^|\s)(\w+:){1}(//\S+)',
-                                ' ' + link_color + r'\2\3' + color,
+                                r'\1' + link_color + r'\2\3' + color,
                                 p_todo_str)
 
             p_todo_str += NEUTRAL_COLOR
