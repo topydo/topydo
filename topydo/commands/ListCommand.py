@@ -16,9 +16,11 @@
 
 from topydo.lib.Config import config
 from topydo.lib.ExpressionCommand import ExpressionCommand
+from topydo.lib.Filter import InstanceFilter
 from topydo.lib.PrettyPrinter import pretty_printer_factory
 from topydo.lib.PrettyPrinterFilter import (PrettyPrinterHideTagFilter,
                                             PrettyPrinterIndentFilter)
+from topydo.lib.TodoListBase import InvalidTodoException
 
 
 class ListCommand(ExpressionCommand):
@@ -32,6 +34,7 @@ class ListCommand(ExpressionCommand):
         self.printer = None
         self.sort_expression = config().sort_string()
         self.show_all = False
+        self.ids = None
 
     def _poke_icalendar(self):
         """
@@ -47,7 +50,7 @@ class ListCommand(ExpressionCommand):
         return True
 
     def _process_flags(self):
-        opts, args = self.getopt('f:n:s:x')
+        opts, args = self.getopt('f:i:n:s:x')
 
         for opt, value in opts:
             if opt == '-x':
@@ -69,8 +72,33 @@ class ListCommand(ExpressionCommand):
                     self.limit = int(value)
                 except ValueError:
                     pass # use default value in configuration
+            elif opt == '-i':
+                self.ids = value.split(',')
 
         self.args = args
+
+    def _filters(self):
+        """
+        Additional filters to select particular todo items given with the -i
+        flag.
+        """
+        filters = super(ListCommand, self)._filters()
+
+        if self.ids:
+            def get_todo(p_id):
+                """
+                Safely obtains a todo item given the user-supplied ID.
+                Returns None if an invalid ID was entered.
+                """
+                try:
+                    return self.todolist.todo(p_id)
+                except InvalidTodoException:
+                    return None
+
+            todos = [get_todo(i) for i in self.ids]
+            filters.append(InstanceFilter(todos))
+
+        return filters
 
     def _print(self):
         """
@@ -128,6 +156,7 @@ When an expression is given, only the todos matching that expression are shown.
                 an 'ical' tag with a unique ID. Completed todo items may be
                 archived.
      * 'json' - Javascript Object Notation (JSON)
+-i : Comma separated list of todo IDs to print.
 -s : Sort the list according to a sort expression. Defaults to the expression
      in the configuration.
 -x : Show all todos (i.e. do not filter on dependencies or relevance).
