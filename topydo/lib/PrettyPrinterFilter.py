@@ -65,9 +65,6 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
             except KeyError:
                 pass
 
-            # color by priority
-            p_todo_str = color + p_todo_str
-
             # color projects / contexts
             p_todo_str = re.sub(
                 r'\B(\+|@)(\S*\w)',
@@ -87,6 +84,9 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
                                 p_todo_str)
 
             p_todo_str += NEUTRAL_COLOR
+            
+            # color by priority
+            p_todo_str = color + p_todo_str
 
         return p_todo_str
 
