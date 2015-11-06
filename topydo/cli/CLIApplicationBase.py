@@ -60,6 +60,7 @@ Available commands:
 * revert
 * sort
 * tag
+* top
 
 Run `topydo help <subcommand>` for command-specific help.
 """)

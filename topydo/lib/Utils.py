@@ -20,6 +20,8 @@ Various utility functions.
 
 import re
 from datetime import date
+import os
+from collections import namedtuple
 
 
 def date_string_to_date(p_date):
@@ -51,3 +53,26 @@ def escape_ansi(p_string):
     return escape_ansi.pattern.sub('', p_string)
 
 escape_ansi.pattern = re.compile(r'\x1b[^m]*m')
+
+
+def get_terminal_size():
+    """
+    Try to determine terminal size at run time. If that is not possible,
+    returns the default size of 80x24.
+    """
+    try:
+        from shutil import get_terminal_size  # pylint: disable=no-name-in-module
+    except ImportError:
+        from backports.shutil_get_terminal_size import get_terminal_size
+
+    try:
+        sz = get_terminal_size()
+    except ValueError:
+        """
+        This can result from the 'underlying buffer being detached', which
+        occurs during running the unittest on Windows (but not on Linux?)
+        """
+        terminal_size = namedtuple('Terminal_Size', 'columns lines')
+        sz = terminal_size(80, 24)
+
+    return sz

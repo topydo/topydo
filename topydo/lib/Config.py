@@ -74,6 +74,7 @@ class _Config:
                 'hide_tags': 'id,p,ical',
                 'indent': '0',
                 'list_limit': '-1',
+                'human_readable_dates': '1',
             },
 
             'tags': {
@@ -198,6 +199,12 @@ class _Config:
             return self.cp.getint('ls', 'indent')
         except ValueError:
             return int(self.defaults['ls']['indent'])
+
+    def list_human_dates(self):
+        try:
+            return self.cp.getboolean('ls', 'human_readable_dates')
+        except ValueError:
+            return self.defaults['ls']['human_readable_dates'] == '1'
 
     def keep_sorted(self):
         try:

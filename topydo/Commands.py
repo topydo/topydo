@@ -43,6 +43,7 @@ _SUBCOMMAND_MAP = {
     'rm': 'DeleteCommand',
     'sort': 'SortCommand',
     'tag': 'TagCommand',
+    'top': 'TopCommand'
 }
 
 def get_subcommand(p_args):

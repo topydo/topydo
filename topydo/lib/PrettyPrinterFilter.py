@@ -19,9 +19,14 @@
 import re
 
 from six import u
+import textwrap
+
+import arrow
 
 from topydo.lib.Colors import NEUTRAL_COLOR, Colors
 from topydo.lib.Config import config
+from topydo.lib.Utils import get_terminal_size
+
 
 
 class PrettyPrinterFilter(object):
@@ -88,15 +93,42 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
 
 
 class PrettyPrinterIndentFilter(PrettyPrinterFilter):
+
     """ Adds indentation to the todo item. """
 
-    def __init__(self, p_indent=0):
+    def __init__(self, p_indent=0, p_max_lines=None):
         super(PrettyPrinterIndentFilter, self).__init__()
         self.indent = p_indent
+        self.max_lines = p_max_lines
 
     def filter(self, p_todo_str, _):
         """ Applies the indentation. """
-        return ' ' * self.indent + p_todo_str
+        try:
+            return(textwrap.fill(p_todo_str,
+                                 initial_indent=' '*self.indent,
+                                 subsequent_indent=' '*(10 + self.indent),
+                                 # 10 spaces added to hanging indented lines to
+                                 #  push the front of the line past the
+                                 #  identification and priority in the line above
+                                 width=get_terminal_size().columns - 1,
+                                 # terminal width, less one (so we don't wrap
+                                 #  to the next line)
+                                 break_long_words=True,     # will break long URL's
+                                 max_lines=self.max_lines,  # requires Python 3.4
+                                 placeholder=' ...'))       # requires Python 3.4
+        except TypeError:
+            output = textwrap.fill(p_todo_str,
+                                   initial_indent=' '*self.indent,
+                                   subsequent_indent=' '*(10 + self.indent),
+                                   width=get_terminal_size().columns - 1,
+                                   break_long_words=True)  # will break long URL's
+            if self.max_lines:
+                return('\n'.join(output.splitlines()[:self.max_lines]))
+                #  for use with the 'top' command, but it doesn't give the
+                #  ellipse (...) at the end of the line if it continues on
+            else:
+                return(output)
+
 
 
 class PrettyPrinterNumbers(PrettyPrinterFilter):
@@ -125,3 +157,120 @@ class PrettyPrinterHideTagFilter(PrettyPrinterFilter):
                                 p_todo_str)
 
         return p_todo_str
+
+
+class PrettyPrinterBasicPriorityFilter(PrettyPrinterFilter):
+
+    """ Strips the bracked from the priority of the todo item. Add a (blank)
+        space if not priority is specified (to maintain printing alignment)
+    """
+
+    def __init__(self, p_replacement=" "):
+        super(PrettyPrinterBasicPriorityFilter, self).__init__()
+        self.p_replacement = p_replacement
+
+    def filter(self, p_todo_str, _):
+        """ Find the priority """
+        matches = re.search('^(?P<id>\| *\w+\| )?(\((?P<pri>[A-Z])\) )?', p_todo_str)
+        # we are looking for the id string and priority at the beginning of the
+        # line, in the form of:
+        #   | 48| (V) ...
+        #   |h2j| (C) ...
+
+        # there will always be a match (so don't check for it), even if it's
+        # 'nothing', because both match groups are optional
+        if matches.group('id'):
+            """ If we have an id """
+            if matches.group('pri'):
+                """ If we have a priority """
+                return(matches.group('id') + matches.group('pri') + ' ' + p_todo_str[matches.span()[1]:])
+            else:
+                return(matches.group('id') + self.p_replacement + ' ' + p_todo_str[matches.span()[1]:])
+        else:
+            if matches.group('pri'):
+                """ If we have a priority """
+                return(matches.group('pri') + ' ' + p_todo_str[matches.span()[1]:])
+            else:
+                """ No match found """
+                return(self.p_replacement + ' ' + p_todo_str)
+
+
+class PrettyPrinterHumanDatesFilter(PrettyPrinterFilter):
+
+    """ Turns dates to human readable versions. """
+
+    def __init__(self):
+        super(PrettyPrinterHumanDatesFilter, self).__init__()
+
+    def date_from_match(self, matchgroup):
+        """
+        Takes a match group and then returns a date.
+
+        Assumes the matchgroup has matches named 'year', 'month', and 'day'.
+
+        The returned arrow object has hours, minutes, and seconds set to now.
+        """
+        linedate = arrow.now()  # set the time to 'now' so the comparisions work better
+        linedate = linedate.replace(year=int(matchgroup.group('year')),
+                                    month=int(matchgroup.group('month')),
+                                    day=int(matchgroup.group('day')))
+        return(linedate)
+
+    def filter(self, p_todo_str, _):
+
+        adding_dates = False
+
+        """ First, the date added
+            This, per the spec, will be at the front of the line,
+            after the priority
+        """
+        line2 = p_todo_str
+        pattern2 = re.compile('^(?P<line_start>(\| *\w+\| )?(\(?[A-Z ]\)? )?)(?P<is_date>(?P<year>\d{4})-(?P<month>\d{1,2})-(?P<day>\d{1,2}) )')
+        matches2 = pattern2.match(line2)
+        if matches2:
+            add_delta = self.date_from_match(matches2).humanize()
+            line3 = matches2.group('line_start') + pattern2.sub('', line2)
+            adding_dates = True
+        else:
+            add_delta = ''
+            line3 = line2
+
+        """ Due dates """
+        pattern3 = re.compile('(?P<is_date> ' + config().tag_due() + ':(?P<year>\d{4})-(?P<month>\d{1,2})-(?P<day>\d{1,2}) ?)')
+        matches3 = pattern3.search(line3)
+        if matches3:
+            due_delta = 'due ' + self.date_from_match(matches3).humanize()
+
+            if adding_dates is True:
+                due_delta = ', ' + due_delta
+            adding_dates = True
+            line4 = pattern3.sub(' ', line3)
+        else:
+            due_delta = ''
+            line4 = line3
+
+        """ Threshold dates """
+        pattern4 = re.compile('(?P<is_date> ' + config().tag_start() + ':(?P<year>\d{4})-(?P<month>\d{1,2})-(?P<day>\d{1,2}) ?)')
+        matches4 = pattern4.search(line3)
+        if matches4:
+            threshold_date = self.date_from_match(matches4)
+            if threshold_date <= arrow.now():
+                threshold_delta = 'threshold of ' + threshold_date.humanize()
+            else:
+                threshold_delta = 'threshold in ' + threshold_date.humanize(only_distance=True)
+
+            if adding_dates is True:
+                threshold_delta = ', ' + threshold_delta
+            adding_dates = True
+            line5 = pattern4.sub(' ', line4)
+        else:
+            threshold_delta = ''
+            line5 = line4
+
+        if adding_dates is True:
+            line6 = line5.rstrip() + ' (' + add_delta + due_delta + \
+                        threshold_delta + ')'
+        else:
+            line6 = line5
+
+        return line6

@@ -142,7 +142,7 @@ class AddCommandTest(CommandTest):
                          self.today + " Bar id:1")
         self.assertEqual(self.errors, "")
 
-    def test_add_de04(self):
+    def test_add_dep04(self):
         """ Test for using an after: tag with non-existing value. """
         command = AddCommand.AddCommand(["Foo after:1"], self.todolist,
                                         self.out, self.error)
@@ -241,11 +241,11 @@ class AddCommandTest(CommandTest):
                                         self.out, self.error)
         command.execute()
 
-        command = ListCommand.ListCommand(["Bar"], self.todolist, self.out,
+        command = ListCommand.ListCommand(["-r", "Bar"], self.todolist, self.out,
                                           self.error)
         command.execute()
 
-        self.assertEqual(self.output, "|kbn| {today} Bar p:1 +Project\n|kbn| {today} Bar +Project\n".format(today=self.today))
+        self.assertEqual(self.output, "|kbn| {today} Bar p:1 +Project\n|kbn|   {today} Bar +Project\n".format(today=self.today))
 
     def test_add_dep10(self):
         """
@@ -264,11 +264,11 @@ class AddCommandTest(CommandTest):
                                         self.out, self.error)
         command.execute()
 
-        command = ListCommand.ListCommand(["Bar"], self.todolist, self.out,
+        command = ListCommand.ListCommand(["-r", "Bar"], self.todolist, self.out,
                                           self.error)
         command.execute()
 
-        self.assertEqual(self.output, "|wb3| {today} Bar p:1 @Context\n|wb3| {today} Bar @Context\n".format(today=self.today))
+        self.assertEqual(self.output, "|wb3| {today} Bar p:1 @Context\n|wb3|   {today} Bar @Context\n".format(today=self.today))
 
     def test_add_reldate1(self):
         command = AddCommand.AddCommand(["Foo due:today"], self.todolist,

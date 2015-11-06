@@ -26,6 +26,17 @@ Simply install with:
 
     pip install topydo
 
+### Required dependencies
+
+* [arrow][8]          : Used to turn dates into a human readable version.
+* [backports.shutil_get_terminal_size][9] : Used to determine your terminal
+                                            window size. This function was
+                                            added to the standard library in
+                                            Python 3.3 and so is only
+                                            required in older versions of
+                                            Python.
+* [python-dateutil][10]: A dependency of *arrow*.
+
 ### Optional dependencies
 
 * [icalendar][7]      : To print your todo.txt file as an iCalendar file
@@ -46,3 +57,6 @@ Demo
 [5]: https://raw.githubusercontent.com/bram85/topydo/master/doc/topydo.gif
 [6]: https://github.com/jonathanslenders/python-prompt-toolkit
 [7]: https://github.com/collective/icalendar
+[8]: https://github.com/crsmithdev/arrow
+[9]: https://github.com/chrippa/backports.shutil_get_terminal_size
+[10]: https://dateutil.readthedocs.org/
