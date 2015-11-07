@@ -49,7 +49,7 @@ def humanize_dates(p_due=None, p_start=None, p_creation=None):
         if p_start <= now:
             dates_list.append('started ' + start)
         else:
-            dates_list.append('starts in ' + start)
+            dates_list.append('starts ' + start)
 
     return ', '.join(dates_list)
 
