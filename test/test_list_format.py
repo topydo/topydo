@@ -14,11 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import unittest
-
 from collections import namedtuple
 from freezegun import freeze_time
-from six import u
 
 from test.command_testcase import CommandTest
 from test.facilities import load_file_to_todolist
@@ -232,3 +229,18 @@ just now | in 2 days | in a day |
 |  6| %
 """
         self.assertEqual(self.output, result)
+
+    def test_list_format13(self):
+        command = ListCommand(["-x", "-F", "|%I| %x %{(}p{)} %c %s %K"],
+                              self.todolist, self.out, self.error)
+        command.execute()
+
+        result = u"""|  1| (D) 2015-08-31 Bar @Context1 +Project2 due:2015-09-30 t:2015-09-29
+|  2| (Z) 2015-11-03 Lorem ipsum dolorem sit amet. Red @fox +jumped over the and jar due:2015-11-05 lazy:bar t:2015-11-04
+|  3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
+|  4| (C) Baz @Context1 +Project1 key:value
+|  5| Drink beer @ home ical:foobar id:1 p:2
+|  6| x 2014-12-12 Completed but with date:2014-12-12
+"""
+        self.assertEqual(self.output, result)
+
