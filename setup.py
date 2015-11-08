@@ -44,7 +44,7 @@ setup(
         'ical': ['icalendar'],
         'prompt-toolkit': ['prompt-toolkit >= 0.53'],
         'edit-cmd-tests': ['mock'],
-        'test': ['green', 'coverage'],
+        'test': ['coverage', 'freezegun', 'green', ],
         'test:python_version!="3.2"': ['pylint'],
     },
     entry_points= {
