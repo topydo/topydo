@@ -170,5 +170,24 @@ class SorterTest(TopydoTest):
 
         self.assertEqual(print_view(view), todolist_to_string(result))
 
+    def test_sort17(self):
+        """
+        Check sorting by project.
+        """
+        sorter = Sorter('project')
+
+        self.sort_file('test/data/SorterTest13.txt',
+                       'test/data/SorterTest13-result-project.txt', sorter)
+
+    def test_sort18(self):
+        """
+        Check sorting by context.
+        """
+        sorter = Sorter('context')
+
+        self.sort_file('test/data/SorterTest13.txt',
+                       'test/data/SorterTest13-result-context.txt', sorter)
+
+
 if __name__ == '__main__':
     unittest.main()
