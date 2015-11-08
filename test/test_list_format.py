@@ -246,6 +246,18 @@ just now | in 2 days | in a day |
 """
         self.assertEqual(self.output, result)
 
+    @mock.patch('topydo.lib.PrettyPrinterFilter.get_terminal_size')
+    def test_list_format14(self, mock_terminal_size):
+        mock_terminal_size.return_value = self.terminal_size(40, 25)
+        command = ListCommand(["-x", "-F", "|%I| %x %{(}p{)} %c %s	%K", "@Context1"],
+                              self.todolist, self.out, self.error)
+        command.execute()
+
+        result = u"""|  1| (D) 2015-08-31 Bar @Context1 +Project2 due:2015-09-30 t:2015-09-29
+|  4| (C) Baz @Context1 +Project1 key:value
+"""
+
+        self.assertEqual(self.output, result)
 
 if __name__ == '__main__':
     unittest.main()

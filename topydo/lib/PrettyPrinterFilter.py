@@ -232,7 +232,7 @@ class PrettyPrinterAlignFilter(PrettyPrinterFilter):
 
             if to_fill > 0:
                 p_todo_str = re.sub('\t', ' '*to_fill, p_todo_str)
-            elif to_fill <= 0:
+            else:
                 p_todo_str = re.sub('\t', ' ', p_todo_str)
 
         return p_todo_str
