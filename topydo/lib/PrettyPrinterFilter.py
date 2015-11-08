@@ -115,22 +115,6 @@ class PrettyPrinterNumbers(PrettyPrinterFilter):
         return u("|{:>3}| {}").format(self.todolist.number(p_todo), p_todo_str)
 
 
-class PrettyPrinterHideTagFilter(PrettyPrinterFilter):
-    """ Removes all occurrences of the given tags from the text. """
-
-    def __init__(self, p_hidden_tags):
-        super(PrettyPrinterHideTagFilter, self).__init__()
-        self.hidden_tags = p_hidden_tags
-
-    def filter(self, p_todo_str, _):
-        for hidden_tag in self.hidden_tags:
-            # inspired from remove_tag in TodoBase
-            p_todo_str = re.sub(r'\s?\b' + hidden_tag + r':\S+\b', '',
-                                p_todo_str)
-
-        return p_todo_str
-
-
 class PrettyPrinterFormatFilter(PrettyPrinterFilter):
     def __init__(self, p_todolist, p_format=None):
         super(PrettyPrinterFormatFilter, self).__init__()
@@ -226,6 +210,7 @@ class PrettyPrinterFormatFilter(PrettyPrinterFilter):
 
         # cut trailing space left when last placeholder in p_todo_str is empty and its predecessor is not
         return p_todo_str.rstrip()
+
 
 class PrettyPrinterAlignFilter(PrettyPrinterFilter):
     """
