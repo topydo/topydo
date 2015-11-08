@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import unittest
+
 from collections import namedtuple
 from freezegun import freeze_time
 
@@ -244,3 +246,6 @@ just now | in 2 days | in a day |
 """
         self.assertEqual(self.output, result)
 
+
+if __name__ == '__main__':
+    unittest.main()
