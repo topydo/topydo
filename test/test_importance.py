@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
-from datetime import date
+from datetime import date, timedelta
 
 from test.topydo_testcase import TopydoTest
 from topydo.lib.Config import config
@@ -40,6 +40,18 @@ class ImportanceTest(TopydoTest):
         today_str = date.today().isoformat()
         todo = Todo("(C) Foo " + config().tag_due() + ":" + today_str)
         self.assertEqual(importance(todo), 8)
+
+    def test_importance5(self):
+        due = date.today() + timedelta(8)
+        due_str = due.isoformat()
+        todo = Todo("(C) Foo " + config().tag_due() + ":" + due_str)
+        self.assertEqual(importance(todo), 4)
+
+    def test_importance6(self):
+        due = date.today() + timedelta(4)
+        due_str = due.isoformat()
+        todo = Todo("(C) Foo " + config().tag_due() + ":" + due_str)
+        self.assertEqual(importance(todo), 5)
 
 if __name__ == '__main__':
     unittest.main()
