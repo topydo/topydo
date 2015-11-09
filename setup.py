@@ -37,7 +37,7 @@ setup(
         ':python_version=="2.7"': ['ushlex'],
         'ical': ['icalendar'],
         'prompt-toolkit': ['prompt-toolkit >= 0.53'],
-        'test': ['green', 'coverage'],
+        'test': ['freezegun', 'coverage', 'green'],
         'test:python_version=="2.7"': ['mock'],
         'test:python_version!="3.2"': ['pylint'],
     },
