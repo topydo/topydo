@@ -163,6 +163,8 @@ When an expression is given, only the todos matching that expression are shown.
 
      E.g. %{(}p{)} will print (C) when the todo item has priority C, or ''
      (empty string) when an item has no priority set.
+
+     A tab character serves as a marker to start right alignment.
 -s : Sort the list according to a sort expression. Defaults to the expression
      in the configuration.
 -x : Show all todos (i.e. do not filter on dependencies or relevance).
