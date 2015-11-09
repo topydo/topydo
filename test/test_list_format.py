@@ -256,5 +256,229 @@ just now | in 2 days | in a day |
 
         self.assertEqual(self.output, result)
 
+    def test_list_format15(self):
+        command = ListCommand(["-x", "-F", "%c"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = u"""2015-08-31
+2015-11-03
+2015-07-12
+
+
+
+"""
+        self.assertEqual(self.output, result)
+
+    def test_list_format16(self):
+        command = ListCommand(["-x", "-F", "%C"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = u"""3 months ago
+just now
+4 months ago
+
+
+
+"""
+        self.assertEqual(self.output, result)
+
+    def test_list_format17(self):
+        command = ListCommand(["-x", "-F", "%d"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = u"""2015-09-30
+2015-11-05
+
+
+
+
+"""
+        self.assertEqual(self.output, result)
+
+    def test_list_format18(self):
+        command = ListCommand(["-x", "-F", "%D"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = u"""a month ago
+in 2 days
+
+
+
+
+"""
+        self.assertEqual(self.output, result)
+
+    def test_list_format19(self):
+        command = ListCommand(["-x", "-F", "%h"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = u"""due a month ago, started a month ago
+due in 2 days, starts in a day
+
+
+
+
+"""
+        self.assertEqual(self.output, result)
+
+    def test_list_format20(self):
+        command = ListCommand(["-x", "-F", "%H"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = u"""3 months ago, due a month ago, started a month ago
+just now, due in 2 days, starts in a day
+4 months ago
+
+
+
+"""
+        self.assertEqual(self.output, result)
+
+    def test_list_format21(self):
+        command = ListCommand(["-x", "-F", "%i"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = u"""1
+2
+3
+4
+5
+6
+"""
+        self.assertEqual(self.output, result)
+
+    def test_list_format22(self):
+        command = ListCommand(["-x", "-F", "%I"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = u"""  1
+  2
+  3
+  4
+  5
+  6
+"""
+        self.assertEqual(self.output, result)
+
+    def test_list_format23(self):
+        command = ListCommand(["-x", "-F", "%k"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = u"""
+lazy:bar
+
+key:value
+
+date:2014-12-12
+"""
+        self.assertEqual(self.output, result)
+
+    def test_list_format24(self):
+        command = ListCommand(["-x", "-F", "%K"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = u"""due:2015-09-30 t:2015-09-29
+due:2015-11-05 lazy:bar t:2015-11-04
+
+key:value
+ical:foobar id:1 p:2
+date:2014-12-12
+"""
+        self.assertEqual(self.output, result)
+
+    def test_list_format25(self):
+        command = ListCommand(["-x", "-F", "%p"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = u"""D
+Z
+C
+C
+
+
+"""
+        self.assertEqual(self.output, result)
+
+    def test_list_format26(self):
+        command = ListCommand(["-x", "-F", "%s"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = u"""Bar @Context1 +Project2
+Lorem ipsum dolorem sit amet. Red @fox +jumped over the and jar
+Foo @Context2 Not@Context +Project1 Not+Project
+Baz @Context1 +Project1
+Drink beer @ home
+Completed but with
+"""
+        self.assertEqual(self.output, result)
+
+    @mock.patch('topydo.lib.PrettyPrinterFilter.get_terminal_size')
+    def test_list_format27(self, mock_terminal_size):
+        mock_terminal_size.return_value = self.terminal_size(50, 25)
+
+        command = ListCommand(["-x", "-F", "%S"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = u"""Bar @Context1 +Project2
+Lorem ipsum dolorem sit amet. Red @fox +jumped...
+Foo @Context2 Not@Context +Project1 Not+Project
+Baz @Context1 +Project1
+Drink beer @ home
+Completed but with
+"""
+        self.assertEqual(self.output, result)
+
+    def test_list_format28(self):
+        command = ListCommand(["-x", "-F", "%t"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = u"""2015-09-29
+2015-11-04
+
+
+
+
+"""
+        self.assertEqual(self.output, result)
+
+    def test_list_format29(self):
+        command = ListCommand(["-x", "-F", "%T"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = u"""a month ago
+in a day
+
+
+
+
+"""
+        self.assertEqual(self.output, result)
+
+    def test_list_format30(self):
+        command = ListCommand(["-x", "-F", "%x"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = u"""
+
+
+
+
+x 2014-12-12
+"""
+        self.assertEqual(self.output, result)
+
+    def test_list_format31(self):
+        command = ListCommand(["-x", "-F", "%X"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = u"""
+
+
+
+
+x 11 months ago
+"""
+        self.assertEqual(self.output, result)
+
 if __name__ == '__main__':
     unittest.main()
