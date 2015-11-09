@@ -31,6 +31,7 @@ try:
 except ImportError:
     import mock
 
+@freeze_time("2015, 11, 03")
 class ListFormatTest(CommandTest):
     def setUp(self):
         super(ListFormatTest, self).setUp()
@@ -118,7 +119,6 @@ class ListFormatTest(CommandTest):
 |  6| x 2014-12-12 Completed but with                           date:2014-12-12
 """
 
-    @freeze_time("2015, 11, 03")
     @mock.patch('topydo.lib.PrettyPrinterFilter.get_terminal_size')
     def test_list_format06(self, mock_terminal_size):
         mock_terminal_size.return_value = self.terminal_size(100, 25)
@@ -136,7 +136,6 @@ class ListFormatTest(CommandTest):
 """
         self.assertEqual(self.output, result)
 
-    @freeze_time("2015, 11, 03")
     @mock.patch('topydo.lib.PrettyPrinterFilter.get_terminal_size')
     def test_list_format07(self, mock_terminal_size):
         mock_terminal_size.return_value = self.terminal_size(100, 25)
@@ -154,7 +153,6 @@ class ListFormatTest(CommandTest):
 """
         self.assertEqual(self.output, result)
 
-    @freeze_time("2015, 11, 03")
     @mock.patch('topydo.lib.PrettyPrinterFilter.get_terminal_size')
     def test_list_format08(self, mock_terminal_size):
         mock_terminal_size.return_value = self.terminal_size(100, 25)
@@ -172,7 +170,6 @@ x 2014-12-12
 """
         self.assertEqual(self.output, result)
 
-    @freeze_time("2015, 11, 03")
     @mock.patch('topydo.lib.PrettyPrinterFilter.get_terminal_size')
     def test_list_format09(self, mock_terminal_size):
         mock_terminal_size.return_value = self.terminal_size(100, 25)
