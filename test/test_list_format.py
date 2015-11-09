@@ -31,7 +31,7 @@ try:
 except ImportError:
     import mock
 
-@freeze_time("2015, 11, 03")
+@freeze_time("2015, 11, 06")
 class ListFormatTest(CommandTest):
     def setUp(self):
         super(ListFormatTest, self).setUp()
@@ -44,7 +44,7 @@ class ListFormatTest(CommandTest):
         command.execute()
 
         result = u"""|  1| (D) 2015-08-31 Bar @Context1 +Project2 due:2015-09-30 t:2015-09-29
-|  2| (Z) 2015-11-03 Lorem ipsum dolorem sit amet. Red @fox +jumped over the and jar due:2015-11-05 lazy:bar t:2015-11-04
+|  2| (Z) 2015-11-06 Lorem ipsum dolorem sit amet. Red @fox +jumped over the and jar due:2015-11-08 lazy:bar t:2015-11-07
 |  3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
 |  4| (C) Baz @Context1 +Project1 key:value
 |  5| Drink beer @ home ical:foobar id:1 p:2
@@ -61,7 +61,7 @@ class ListFormatTest(CommandTest):
         command.execute()
 
         result = u"""|  1| (D) 2015-08-31 Bar @Context1 +Project2 due:2015-09-30 t:2015-09-29
-|  2| (Z) 2015-11-03 Lorem ipsum dolore... due:2015-11-05 lazy:bar t:2015-11-04
+|  2| (Z) 2015-11-06 Lorem ipsum dolore... due:2015-11-08 lazy:bar t:2015-11-07
 |  3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
 |  4| (C) Baz @Context1 +Project1 key:value
 |  5| Drink beer @ home ical:foobar id:1 p:2
@@ -78,7 +78,7 @@ class ListFormatTest(CommandTest):
         command.execute()
 
         result = u"""|  1| (D) 2015-08-31 Bar @Context1 +Project2 due:2015-09-30 t:2015-09-29
-|  2| (Z) 2015-11-03 Lorem ipsum dolorem sit amet. Red @fox... due:2015-11-05 lazy:bar t:2015-11-04
+|  2| (Z) 2015-11-06 Lorem ipsum dolorem sit amet. Red @fox... due:2015-11-08 lazy:bar t:2015-11-07
 |  3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
 |  4| (C) Baz @Context1 +Project1 key:value
 |  5| Drink beer @ home ical:foobar id:1 p:2
@@ -95,7 +95,7 @@ class ListFormatTest(CommandTest):
         command.execute()
 
         result = u"""|  1| (D) 2015-08-31 Bar @Context1 +Project2                            due:2015-09-30 t:2015-09-29
-|  2| (Z) 2015-11-03 Lorem ipsum dolorem sit amet. Red @fox... due:2015-11-05 lazy:bar t:2015-11-04
+|  2| (Z) 2015-11-06 Lorem ipsum dolorem sit amet. Red @fox... due:2015-11-08 lazy:bar t:2015-11-07
 |  3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
 |  4| (C) Baz @Context1 +Project1                                                         key:value
 |  5| Drink beer @ home                                                        ical:foobar id:1 p:2
@@ -112,7 +112,7 @@ class ListFormatTest(CommandTest):
         command.execute()
 
         result = u"""|  1| (D) 2015-08-31 Bar @Context1 +Project2        due:2015-09-30 t:2015-09-29
-|  2| (Z) 2015-11-03 Lorem ipsum dolore... due:2015-11-05 lazy:bar t:2015-11-04
+|  2| (Z) 2015-11-06 Lorem ipsum dolore... due:2015-11-08 lazy:bar t:2015-11-07
 |  3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
 |  4| (C) Baz @Context1 +Project1                                     key:value
 |  5| Drink beer @ home                                    ical:foobar id:1 p:2
@@ -162,7 +162,7 @@ class ListFormatTest(CommandTest):
         command.execute()
 
         result = u"""2015-08-31 2015-09-30 2015-09-29
-2015-11-03 2015-11-05 2015-11-04
+2015-11-06 2015-11-08 2015-11-07
 2015-07-12
 
 
@@ -207,7 +207,7 @@ just now | in 2 days | in a day |
         command.execute()
 
         result = u"""|  1| due:2015-09-30 t:2015-09-29
-|  2| due:2015-11-05 lazy:bar t:2015-11-04
+|  2| due:2015-11-08 lazy:bar t:2015-11-07
 |  3|
 |  4| key:value
 |  5| ical:foobar id:1 p:2
@@ -235,7 +235,7 @@ just now | in 2 days | in a day |
         command.execute()
 
         result = u"""|  1| (D) 2015-08-31 Bar @Context1 +Project2 due:2015-09-30 t:2015-09-29
-|  2| (Z) 2015-11-03 Lorem ipsum dolorem sit amet. Red @fox +jumped over the and jar due:2015-11-05 lazy:bar t:2015-11-04
+|  2| (Z) 2015-11-06 Lorem ipsum dolorem sit amet. Red @fox +jumped over the and jar due:2015-11-08 lazy:bar t:2015-11-07
 |  3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
 |  4| (C) Baz @Context1 +Project1 key:value
 |  5| Drink beer @ home ical:foobar id:1 p:2
@@ -261,7 +261,7 @@ just now | in 2 days | in a day |
         command.execute()
 
         result = u"""2015-08-31
-2015-11-03
+2015-11-06
 2015-07-12
 
 
@@ -287,7 +287,7 @@ just now
         command.execute()
 
         result = u"""2015-09-30
-2015-11-05
+2015-11-08
 
 
 
@@ -378,7 +378,7 @@ date:2014-12-12
         command.execute()
 
         result = u"""due:2015-09-30 t:2015-09-29
-due:2015-11-05 lazy:bar t:2015-11-04
+due:2015-11-08 lazy:bar t:2015-11-07
 
 key:value
 ical:foobar id:1 p:2
@@ -433,7 +433,7 @@ Completed but with
         command.execute()
 
         result = u"""2015-09-29
-2015-11-04
+2015-11-07
 
 
 
