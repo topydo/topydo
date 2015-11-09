@@ -18,10 +18,14 @@
 
 import re
 
+from collections import OrderedDict
 from six import u
 
 from topydo.lib.Colors import NEUTRAL_COLOR, Colors
 from topydo.lib.Config import config
+from topydo.lib.ListFormat import (filler, humanize_date, humanize_dates,
+                                   strip_placeholder_braces)
+from topydo.lib.Utils import get_terminal_size
 
 
 class PrettyPrinterFilter(object):
@@ -61,9 +65,6 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
             except KeyError:
                 pass
 
-            # color by priority
-            p_todo_str = color + p_todo_str
-
             # color projects / contexts
             p_todo_str = re.sub(
                 r'\B(\+|@)(\S*\w)',
@@ -79,10 +80,13 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
 
             # add link_color to any valid URL specified outside of the tag.
             p_todo_str = re.sub(r'(^|\s)(\w+:){1}(//\S+)',
-                                ' ' + link_color + r'\2\3' + color,
+                                r'\1' + link_color + r'\2\3' + color,
                                 p_todo_str)
 
             p_todo_str += NEUTRAL_COLOR
+            
+            # color by priority
+            p_todo_str = color + p_todo_str
 
         return p_todo_str
 
@@ -111,17 +115,124 @@ class PrettyPrinterNumbers(PrettyPrinterFilter):
         return u("|{:>3}| {}").format(self.todolist.number(p_todo), p_todo_str)
 
 
-class PrettyPrinterHideTagFilter(PrettyPrinterFilter):
-    """ Removes all occurrences of the given tags from the text. """
+class PrettyPrinterFormatFilter(PrettyPrinterFilter):
+    def __init__(self, p_todolist, p_format=None):
+        super(PrettyPrinterFormatFilter, self).__init__()
+        self.todolist = p_todolist
+        self.format = p_format or config().list_format()
 
-    def __init__(self, p_hidden_tags):
-        super(PrettyPrinterHideTagFilter, self).__init__()
-        self.hidden_tags = p_hidden_tags
+    def filter(self, p_todo_str, p_todo):
+        placeholders = OrderedDict()
+        # absolute creation date
+        placeholders['c'] = lambda t: t.creation_date().isoformat() if t.creation_date() else ''
+
+        # relative creation date
+        placeholders['C'] = lambda t: humanize_date(t.creation_date()) if t.creation_date() else ''
+
+        # absolute due date
+        placeholders['d'] = lambda t: t.due_date().isoformat() if t.due_date() else ''
+
+        # relative due date
+        placeholders['D'] = lambda t: humanize_date(t.due_date()) if t.due_date() else ''
+
+        # relative dates:  due, start
+        placeholders['h'] = lambda t: humanize_dates(t.due_date(), t.start_date())
+
+        # relative dates in form:  creation, due, start
+        placeholders['H'] = lambda t: humanize_dates(t.due_date(), t.start_date(), t.creation_date())
+
+        # todo ID
+        placeholders['i'] = lambda t: str(self.todolist.number(t))
+
+        # todo ID pre-filled with 1 or 2 spaces if its length is <3
+        placeholders['I'] = lambda t: filler(str(self.todolist.number(t)), 3)
+
+        # list of tags (spaces) without hidden ones and due: and t:
+        placeholders['k'] = lambda t: ' '.join([u('{}:{}').format(tag, value)
+                                    for tag, value in sorted(p_todo.tags()) if
+                                    tag not in config().hidden_tags() + [config().tag_start(), config().tag_due()]])
+
+        # list of all tags (spaces)
+        placeholders['K'] = lambda t: ' '.join([u('{}:{}').format(tag, value)
+                                    for tag, value in sorted(p_todo.tags())])
+
+        # priority
+        placeholders['p'] = lambda t: t.priority() if t.priority() else ''
+
+        # text
+        placeholders['s'] = lambda t: t.text()
+
+        # absolute start date
+        placeholders['t'] = lambda t: t.start_date().isoformat() if t.start_date() else ''
+
+        # relative start date
+        placeholders['T'] = lambda t: humanize_date(t.start_date()) if t.start_date() else ''
+
+        # absolute completion date
+        placeholders['x'] = lambda t: 'x ' + t.completion_date().isoformat() if t.is_completed() else ''
+
+        # relative completion date
+        placeholders['X'] = lambda t: 'x ' + humanize_date(t.completion_date()) if t.is_completed() else ''
+
+        # literal %
+        placeholders['%'] = lambda _: '%'
+
+        # text (truncated if necessary)
+        placeholders['S'] = lambda t: t.text()
+
+
+        p_todo_str = self.format
+
+        for placeholder, getter in placeholders.items():
+            repl = getter(p_todo)
+            pattern = (r'(?P<start>.*)'
+                       r'%(?P<before>{{.+?}})?'
+                       r'(?P<placeholder>{ph}|\[{ph}\])'
+                       r'(?P<after>{{.+?}})?'
+                       r'(?P<whitespace> *)'
+                       r'(?P<end>.*)').format(ph=placeholder)
+            match = re.match(pattern, p_todo_str)
+            if match:
+                if repl == '':
+                    p_todo_str = re.sub(pattern, match.group('start') + match.group('end'), p_todo_str)
+                else:
+
+                    p_todo_str = re.sub(pattern, strip_placeholder_braces, p_todo_str)
+                    p_todo_str = re.sub(r'%({ph}|\[{ph}\])'.format(ph=placeholder), repl, p_todo_str)
+                    p_todo_str = p_todo_str.rstrip()
+
+                    if placeholder == 'S':
+                        p_todo_str = re.sub(' *\t *', '\t', p_todo_str)
+                        line_width = get_terminal_size().columns
+                        if len(p_todo_str) >= line_width:
+                            text_lim = line_width - len(p_todo_str) - 4
+                            p_todo_str = re.sub(re.escape(repl), repl[:text_lim] + '...', p_todo_str)
+
+        # cut trailing space left when last placeholder in p_todo_str is empty and its predecessor is not
+        return p_todo_str.rstrip()
+
+
+class PrettyPrinterAlignFilter(PrettyPrinterFilter):
+    """
+    Final make-up for todo item line.
+    Currently it only provides right alignment from place specified in
+    list_format config-option (subsitutes tab-character with as many spaces as
+    it is needed to fill the whole line).
+    """
+
+    def __init__(self):
+        super(PrettyPrinterAlignFilter, self).__init__()
 
     def filter(self, p_todo_str, _):
-        for hidden_tag in self.hidden_tags:
-            # inspired from remove_tag in TodoBase
-            p_todo_str = re.sub(r'\s?\b' + hidden_tag + r':\S+\b', '',
-                                p_todo_str)
+        tab = re.search('.*\t', p_todo_str)
+
+        if tab:
+            line_width = get_terminal_size().columns
+            to_fill = line_width - len(p_todo_str)
+
+            if to_fill > 0:
+                p_todo_str = re.sub('\t', ' '*to_fill, p_todo_str)
+            else:
+                p_todo_str = re.sub('\t', ' ', p_todo_str)
 
         return p_todo_str

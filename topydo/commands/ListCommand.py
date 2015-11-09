@@ -17,8 +17,9 @@
 from topydo.lib.Config import config
 from topydo.lib.ExpressionCommand import ExpressionCommand
 from topydo.lib.PrettyPrinter import pretty_printer_factory
-from topydo.lib.PrettyPrinterFilter import (PrettyPrinterHideTagFilter,
-                                            PrettyPrinterIndentFilter)
+from topydo.lib.PrettyPrinterFilter import (PrettyPrinterAlignFilter,
+                                            PrettyPrinterIndentFilter,
+                                            PrettyPrinterFormatFilter)
 
 
 class ListCommand(ExpressionCommand):
@@ -32,6 +33,7 @@ class ListCommand(ExpressionCommand):
         self.printer = None
         self.sort_expression = config().sort_string()
         self.show_all = False
+        self.format = config().list_format()
 
     def _poke_icalendar(self):
         """
@@ -47,7 +49,7 @@ class ListCommand(ExpressionCommand):
         return True
 
     def _process_flags(self):
-        opts, args = self.getopt('f:n:s:x')
+        opts, args = self.getopt('f:F:n:s:x')
 
         for opt, value in opts:
             if opt == '-x':
@@ -64,6 +66,8 @@ class ListCommand(ExpressionCommand):
                         self.printer = IcalPrinter(self.todolist)
                 else:
                     self.printer = None
+            elif opt == '-F':
+                self.format = value
             elif opt == '-n':
                 try:
                     self.limit = int(value)
@@ -86,8 +90,10 @@ class ListCommand(ExpressionCommand):
             hidden_tags = config().hidden_tags()
 
             filters = []
+            filters.append(PrettyPrinterFormatFilter(self.todolist,
+                           self.format))
+            filters.append(PrettyPrinterAlignFilter())
             filters.append(PrettyPrinterIndentFilter(indent))
-            filters.append(PrettyPrinterHideTagFilter(hidden_tags))
 
             self.printer = pretty_printer_factory(self.todolist, filters)
 
