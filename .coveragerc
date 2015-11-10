@@ -1,5 +1,6 @@
 [run]
 source = topydo
+branch = True
 
 [report]
 exclude_lines =
@@ -11,5 +12,5 @@ exclude_lines =
     if __name__ == .__main__.:
 
 omit =
-    topydo/lib/ExitCommand.py
+    topydo/commands/ExitCommand.py
     topydo/lib/Version.py
