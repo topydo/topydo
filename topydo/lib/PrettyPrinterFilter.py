@@ -174,39 +174,51 @@ class PrettyPrinterFormatFilter(PrettyPrinterFilter):
         # relative completion date
         placeholders['X'] = lambda t: 'x ' + humanize_date(t.completion_date()) if t.is_completed() else ''
 
-        # literal %
-        placeholders['%'] = lambda _: '%'
-
         # text (truncated if necessary)
         placeholders['S'] = lambda t: t.text()
 
+        p_todo_str = re.sub(r'\\t', '\t', self.format)
+        p_todo_str_list = re.split(r'(?<!\\)%', p_todo_str)
+        main_pattern = (r'^({{(?P<before>.+?)}})?'
+                        r'(?P<placeholder>{ph}|\[{ph}\])'
+                        r'({{(?P<after>.+?)}})?'
+                        r'(?P<whitespace> *)')
+        truncate = False
 
-        p_todo_str = self.format
+        for index, substr in enumerate(p_todo_str_list):
+            if index == 0:
+                continue    # first item in p_todo_str_list is surely not a placeholder
+            if not re.match(main_pattern.format(ph='['+''.join(placeholders.keys()) + ']'), substr):
+                substr = re.sub(main_pattern.format(ph='.'), '', substr) # remove nonexistent placeholder
+                p_todo_str_list[index] = substr
+                continue
+            for placeholder, getter in placeholders.items():
+                repl = getter(p_todo)
+                pattern = main_pattern.format(ph=placeholder)
+                match = re.match(pattern, substr)
+                if match:
+                    if repl == '':
+                        substr = re.sub(pattern, '', substr)
+                    else:
+                        substr = re.sub(pattern, strip_placeholder_braces, substr)
+                        substr = re.sub(r'(?<!\\)%({ph}|\[{ph}\])'.format(ph=placeholder), repl, substr)
 
-        for placeholder, getter in placeholders.items():
-            repl = getter(p_todo)
-            pattern = (r'(?P<start>.*)'
-                       r'%(?P<before>{{.+?}})?'
-                       r'(?P<placeholder>{ph}|\[{ph}\])'
-                       r'(?P<after>{{.+?}})?'
-                       r'(?P<whitespace> *)'
-                       r'(?P<end>.*)').format(ph=placeholder)
-            match = re.match(pattern, p_todo_str)
-            if match:
-                if repl == '':
-                    p_todo_str = re.sub(pattern, match.group('start') + match.group('end'), p_todo_str)
-                else:
+                        if placeholder == 'S':
+                            truncate = True
+                            repl_S = repl # copy for truncating final p_todo_str
 
-                    p_todo_str = re.sub(pattern, strip_placeholder_braces, p_todo_str)
-                    p_todo_str = re.sub(r'%({ph}|\[{ph}\])'.format(ph=placeholder), repl, p_todo_str)
-                    p_todo_str = p_todo_str.rstrip()
+                    p_todo_str_list[index] = substr
+                    break
 
-                    if placeholder == 'S':
-                        p_todo_str = re.sub(' *\t *', '\t', p_todo_str)
-                        line_width = get_terminal_size().columns
-                        if len(p_todo_str) >= line_width:
-                            text_lim = line_width - len(p_todo_str) - 4
-                            p_todo_str = re.sub(re.escape(repl), repl[:text_lim] + '...', p_todo_str)
+        p_todo_str = ''.join(p_todo_str_list)
+        p_todo_str = re.sub(r'\\%', '%', p_todo_str)
+        p_todo_str = re.sub(' *\t *', '\t', p_todo_str)
+
+        if truncate:
+            line_width = get_terminal_size().columns
+            if len(p_todo_str) >= line_width:
+                text_lim = line_width - len(p_todo_str) - 4
+                p_todo_str = re.sub(re.escape(repl_S), repl_S[:text_lim] + '...', p_todo_str)
 
         # cut trailing space left when last placeholder in p_todo_str is empty and its predecessor is not
         return p_todo_str.rstrip()
