@@ -589,12 +589,12 @@ Z   Z
         command = ListCommand(["-x", "-s", "desc:priority", "-F", "%"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""%
-%
-%
-%
-%
-%
+        result = u"""
+
+
+
+
+
 """
         self.assertEqual(self.output, result)
 
