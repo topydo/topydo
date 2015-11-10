@@ -29,6 +29,7 @@ class RelativeDateTester(TopydoTest):
         self.today = date(2015, 11, 6)
         self.tomorrow = date(2015, 11, 7)
         self.monday = date(2015, 11, 9)
+        self.friday = date(2015, 11, 13)
 
     def test_zero_days(self):
         result = relative_date_to_date('0d')
@@ -141,6 +142,14 @@ class RelativeDateTester(TopydoTest):
     def test_negative_period2(self):
         result = relative_date_to_date('-0d')
         self.assertTrue(result, self.today)
+
+    def test_weekday_next_week(self):
+        """
+        When entering "Friday" on a Friday, return next week Friday instead of
+        today.
+        """
+        result = relative_date_to_date("fri")
+        self.assertTrue(result, self.friday)
 
 if __name__ == '__main__':
     unittest.main()
