@@ -68,20 +68,9 @@ def strip_placeholder_braces(p_matchobj):
     into:
         (%B)
     """
-    try:
-        before = p_matchobj.group('before').strip('{}')
-    except AttributeError:
-        before = ''
-
+    before = p_matchobj.group('before') or ''
     placeholder = p_matchobj.group('placeholder')
-
-    try:
-        after = p_matchobj.group('after').strip('{}')
-    except AttributeError:
-        after = ''
-
+    after = p_matchobj.group('after') or ''
     whitespace = p_matchobj.group('whitespace') or ''
-    start = p_matchobj.group('start') or ''
-    end = p_matchobj.group('end') or ''
 
-    return start + before + '%' + placeholder + after + whitespace + end
+    return before + '%' + placeholder + after + whitespace
