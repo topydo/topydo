@@ -565,7 +565,7 @@ Z   Z
 """
         self.assertEqual(self.output, result)
 
-    def test_list_format38(self, mock_terminal_size):
+    def test_list_format38(self):
         """
         Invalid placeholders should expand to an empty string.
         """
@@ -581,7 +581,7 @@ Z   Z
 """
         self.assertEqual(self.output, result)
 
-    def test_list_format39(self, mock_terminal_size):
+    def test_list_format39(self):
         """
         Invalid placeholders without a character should expand to an empty
         string.
