@@ -17,6 +17,7 @@
 from topydo.lib import Filter
 from topydo.lib.Command import Command, InvalidCommandArgument
 from topydo.lib.Config import config
+from topydo.lib.DotPrinter import DotPrinter
 from topydo.lib.PrettyPrinter import pretty_printer_factory
 from topydo.lib.Sorter import Sorter
 from topydo.lib.TodoListBase import InvalidTodoException
@@ -108,6 +109,19 @@ class DepCommand(Command):
         except InvalidCommandArgument:
             self.error(self.usage())
 
+    def _handle_dot(self):
+        """ Handles the dot subsubcommand. """
+        self.printer = DotPrinter(self.todolist)
+
+        arg = self.argument(1)
+        todo = self.todolist.todo(arg)
+
+        todos = set([self.todolist.todo(arg)])
+        todos |= set(self.todolist.children(todo))
+        todos |= set(self.todolist.parents(todo))
+
+        self.out(self.printer.print_list(todos))
+
     def execute(self):
         if not super(DepCommand, self).execute():
             return False
@@ -118,6 +132,7 @@ class DepCommand(Command):
             'del':   self._handle_rm,
             'ls':    self._handle_ls,
             'clean': self.todolist.clean_dependencies,
+            'dot':   self._handle_dot,
             'gc':    self.todolist.clean_dependencies,
         }
 
@@ -132,6 +147,7 @@ class DepCommand(Command):
   dep add <NUMBER> <before|partof|after> <NUMBER>
   dep ls <NUMBER> to
   dep ls to <NUMBER>
+  dep dot <NUMBER>
   dep clean"""
 
     def help(self):
@@ -140,5 +156,6 @@ class DepCommand(Command):
                       from todo item 2 to 1.
 * rm (alias: del)   : Removes a dependency.
 * ls                : Lists all dependencies to or from a certain todo.
+* dot               : Prints a dependency tree as a Dot graph.
 * clean (alias: gc) : Removes redundant id or p tags.
 """
