@@ -156,7 +156,7 @@ When an expression is given, only the todos matching that expression are shown.
          %T: Relative creation date.
          %x: 'x' followed by absolute completion date.
          %X: 'x' followed by relative completion date.
-         %%: Literal percent sign.
+         \%: Literal percent sign.
 
      Conditional characters can be added with blocks surrounded by curly
      braces, they will only appear when a placeholder expanded to a value.
