@@ -216,7 +216,7 @@ just now | in 2 days | in a day |
         self.assertEqual(self.output, result)
 
     def test_list_format12(self):
-        config(p_overrides={('ls', 'list_format'): '|%I| %%'})
+        config(p_overrides={('ls', 'list_format'): '|%I| \%'})
         command = ListCommand(["-x"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -477,6 +477,124 @@ x 2014-12-12
 
 
 x 11 months ago
+"""
+        self.assertEqual(self.output, result)
+
+    def test_list_format32(self):
+        command = ListCommand(["-x", "-s", "desc:priority", "-F", "%{{}p{}}"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = u"""{C}
+{C}
+{D}
+{Z}
+
+
+"""
+        self.assertEqual(self.output, result)
+
+    def test_list_format33(self):
+        command = ListCommand(["-x", "-s", "desc:priority", "-F", "%{\%p}p{\%p}"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = u"""%pC%p
+%pC%p
+%pD%p
+%pZ%p
+
+
+"""
+        self.assertEqual(self.output, result)
+
+    def test_list_format34(self):
+        command = ListCommand(["-x", "-s", "desc:priority", "-F", "%p%p"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = u"""CC
+CC
+DD
+ZZ
+
+
+"""
+        self.assertEqual(self.output, result)
+
+    @mock.patch('topydo.lib.PrettyPrinterFilter.get_terminal_size')
+    def test_list_format35(self, mock_terminal_size):
+        mock_terminal_size.return_value = self.terminal_size(5, 25)
+        command = ListCommand(["-x", "-s", "desc:priority", "-F", "%p{ }	%{ }p"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = u"""C  C
+C  C
+D  D
+Z  Z
+
+
+"""
+        self.assertEqual(self.output, result)
+
+    @mock.patch('topydo.lib.PrettyPrinterFilter.get_terminal_size')
+    def test_list_format36(self, mock_terminal_size):
+        """Tab expands to 1 character."""
+        mock_terminal_size.return_value = self.terminal_size(6, 25)
+        command = ListCommand(["-x", "-s", "desc:priority", "-F", "%p{ }	%{ }p"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = u"""C   C
+C   C
+D   D
+Z   Z
+
+
+"""
+        self.assertEqual(self.output, result)
+
+    @mock.patch('topydo.lib.PrettyPrinterFilter.get_terminal_size')
+    def test_list_format37(self, mock_terminal_size):
+        mock_terminal_size.return_value = self.terminal_size(5, 25)
+        command = ListCommand(["-x", "-s", "desc:priority", "-F", "	%{ }p"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = u"""   C
+   C
+   D
+   Z
+
+
+"""
+        self.assertEqual(self.output, result)
+
+    def test_list_format38(self):
+        """
+        Invalid placeholders should expand to an empty string.
+        """
+        command = ListCommand(["-x", "-s", "desc:priority", "-F", "%&"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = u"""
+
+
+
+
+
+"""
+        self.assertEqual(self.output, result)
+
+    def test_list_format39(self):
+        """
+        Invalid placeholders without a character should expand to an empty
+        string.
+        """
+        command = ListCommand(["-x", "-s", "desc:priority", "-F", "%"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = u"""
+
+
+
+
+
 """
         self.assertEqual(self.output, result)
 
