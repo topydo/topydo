@@ -62,6 +62,9 @@ class ListCommand(ExpressionCommand):
                     if self._poke_icalendar():
                         from topydo.lib.IcalPrinter import IcalPrinter
                         self.printer = IcalPrinter(self.todolist)
+                elif value == 'dot':
+                    from topydo.lib.DotPrinter import DotPrinter
+                    self.printer = DotPrinter(self.todolist)
                 else:
                     self.printer = None
             elif opt == '-n':
