@@ -46,7 +46,11 @@ class DotPrinter(Printer):
 
         # print edges
         for todo in p_todos:
-            for child in self.todolist.children(todo, p_only_direct=True):
+            # only print the children that are actually in the list of todos
+            children = set(p_todos) & set(self.todolist.children(todo,
+                p_only_direct=True))
+
+            for child in children:
                 result += '  {} -> {}\n'.format(
                     node_name(todo),
                     node_name(child)
