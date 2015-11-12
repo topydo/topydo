@@ -32,6 +32,18 @@ class DotPrinter(Printer):
         self.todolist = p_todolist
 
     def print_list(self, p_todos):
+        def escape(p_text):
+            """ Escapes double quotes as they are special in attributes. """
+            return p_text.replace('"', '\\"')
+
+        def legend():
+            """
+            Generates a legend for each todo item thas is to be printed.
+            """
+            return '\n'.join(sorted([escape('{} {}'.format(
+                self.todolist.number(t), t.text()
+            )) for t in p_todos]))
+
         node_name = lambda t: str(self.todolist.number(t))
         node_tooltip = lambda t: escape(t.text())
 
@@ -55,6 +67,10 @@ class DotPrinter(Printer):
                     node_name(todo),
                     node_name(child)
                 )
+
+        # print legend
+        result += 'rank=sink\n'
+        result += 'legend [ fontsize=8, shape=box, label="{}" ]\n'.format(legend())
 
         result += '}\n'
         return result
