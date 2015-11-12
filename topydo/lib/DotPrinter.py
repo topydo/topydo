@@ -33,7 +33,7 @@ class DotPrinter(Printer):
 
     def print_list(self, p_todos):
         node_name = lambda t: str(self.todolist.number(t))
-        node_tooltip = lambda t: todo.text().replace('"', '\\"')
+        node_tooltip = lambda t: escape(t.text())
 
         result = 'digraph {\n'
 
