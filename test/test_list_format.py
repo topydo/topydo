@@ -52,7 +52,7 @@ class ListFormatTest(CommandTest):
 """
         self.assertEqual(self.output, result)
 
-    @mock.patch('topydo.lib.PrettyPrinterFilter.get_terminal_size')
+    @mock.patch('topydo.lib.ListFormat.get_terminal_size')
     def test_list_format02(self, mock_terminal_size):
         mock_terminal_size.return_value = self.terminal_size(80, 25)
 
@@ -69,7 +69,7 @@ class ListFormatTest(CommandTest):
 """
         self.assertEqual(self.output, result)
 
-    @mock.patch('topydo.lib.PrettyPrinterFilter.get_terminal_size')
+    @mock.patch('topydo.lib.ListFormat.get_terminal_size')
     def test_list_format03(self, mock_terminal_size):
         mock_terminal_size.return_value = self.terminal_size(100, 25)
 
@@ -86,7 +86,7 @@ class ListFormatTest(CommandTest):
 """
         self.assertEqual(self.output, result)
 
-    @mock.patch('topydo.lib.PrettyPrinterFilter.get_terminal_size')
+    @mock.patch('topydo.lib.ListFormat.get_terminal_size')
     def test_list_format04(self, mock_terminal_size):
         mock_terminal_size.return_value = self.terminal_size(100, 25)
 
@@ -103,7 +103,7 @@ class ListFormatTest(CommandTest):
 """
         self.assertEqual(self.output, result)
 
-    @mock.patch('topydo.lib.PrettyPrinterFilter.get_terminal_size')
+    @mock.patch('topydo.lib.ListFormat.get_terminal_size')
     def test_list_format05(self, mock_terminal_size):
         mock_terminal_size.return_value = self.terminal_size(80, 25)
 
@@ -119,7 +119,7 @@ class ListFormatTest(CommandTest):
 |  6| x 2014-12-12 Completed but with                           date:2014-12-12
 """
 
-    @mock.patch('topydo.lib.PrettyPrinterFilter.get_terminal_size')
+    @mock.patch('topydo.lib.ListFormat.get_terminal_size')
     def test_list_format06(self, mock_terminal_size):
         mock_terminal_size.return_value = self.terminal_size(100, 25)
 
@@ -136,7 +136,7 @@ class ListFormatTest(CommandTest):
 """
         self.assertEqual(self.output, result)
 
-    @mock.patch('topydo.lib.PrettyPrinterFilter.get_terminal_size')
+    @mock.patch('topydo.lib.ListFormat.get_terminal_size')
     def test_list_format07(self, mock_terminal_size):
         mock_terminal_size.return_value = self.terminal_size(100, 25)
 
@@ -153,7 +153,7 @@ class ListFormatTest(CommandTest):
 """
         self.assertEqual(self.output, result)
 
-    @mock.patch('topydo.lib.PrettyPrinterFilter.get_terminal_size')
+    @mock.patch('topydo.lib.ListFormat.get_terminal_size')
     def test_list_format08(self, mock_terminal_size):
         mock_terminal_size.return_value = self.terminal_size(100, 25)
 
@@ -170,7 +170,7 @@ x 2014-12-12
 """
         self.assertEqual(self.output, result)
 
-    @mock.patch('topydo.lib.PrettyPrinterFilter.get_terminal_size')
+    @mock.patch('topydo.lib.ListFormat.get_terminal_size')
     def test_list_format09(self, mock_terminal_size):
         mock_terminal_size.return_value = self.terminal_size(100, 25)
 
@@ -243,7 +243,7 @@ just now | in 2 days | in a day |
 """
         self.assertEqual(self.output, result)
 
-    @mock.patch('topydo.lib.PrettyPrinterFilter.get_terminal_size')
+    @mock.patch('topydo.lib.ListFormat.get_terminal_size')
     def test_list_format14(self, mock_terminal_size):
         mock_terminal_size.return_value = self.terminal_size(40, 25)
         command = ListCommand(["-x", "-F", "|%I| %x %{(}p{)} %c %s	%K", "@Context1"],
@@ -412,7 +412,7 @@ Completed but with
 """
         self.assertEqual(self.output, result)
 
-    @mock.patch('topydo.lib.PrettyPrinterFilter.get_terminal_size')
+    @mock.patch('topydo.lib.ListFormat.get_terminal_size')
     def test_list_format27(self, mock_terminal_size):
         mock_terminal_size.return_value = self.terminal_size(50, 25)
 
@@ -519,7 +519,7 @@ ZZ
 """
         self.assertEqual(self.output, result)
 
-    @mock.patch('topydo.lib.PrettyPrinterFilter.get_terminal_size')
+    @mock.patch('topydo.lib.ListFormat.get_terminal_size')
     def test_list_format35(self, mock_terminal_size):
         mock_terminal_size.return_value = self.terminal_size(5, 25)
         command = ListCommand(["-x", "-s", "desc:priority", "-F", "%p{ }	%{ }p"], self.todolist, self.out, self.error)
@@ -534,10 +534,10 @@ Z  Z
 """
         self.assertEqual(self.output, result)
 
-    @mock.patch('topydo.lib.PrettyPrinterFilter.get_terminal_size')
+    @mock.patch('topydo.lib.ListFormat.get_terminal_size')
     def test_list_format36(self, mock_terminal_size):
         """Tab expands to 1 character."""
-        mock_terminal_size.return_value = self.terminal_size(6, 25)
+        mock_terminal_size.return_value =  self.terminal_size(6, 25)
         command = ListCommand(["-x", "-s", "desc:priority", "-F", "%p{ }	%{ }p"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -550,7 +550,7 @@ Z   Z
 """
         self.assertEqual(self.output, result)
 
-    @mock.patch('topydo.lib.PrettyPrinterFilter.get_terminal_size')
+    @mock.patch('topydo.lib.ListFormat.get_terminal_size')
     def test_list_format37(self, mock_terminal_size):
         mock_terminal_size.return_value = self.terminal_size(5, 25)
         command = ListCommand(["-x", "-s", "desc:priority", "-F", "	%{ }p"], self.todolist, self.out, self.error)
@@ -595,6 +595,39 @@ Z   Z
 
 
 
+"""
+        self.assertEqual(self.output, result)
+
+    @mock.patch('topydo.lib.ListFormat.get_terminal_size')
+    def test_list_format40(self, mock_terminal_size):
+        mock_terminal_size.return_value = self.terminal_size(100, 25)
+
+        config('test/data/listformat.conf')
+        command = ListCommand(["-x"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = u"""|  1| (D) 2015-08-31 Bar @Context1 +Project2                            due:2015-09-30 t:2015-09-29
+|  2| (Z) 2015-11-06 Lorem ipsum dolorem sit amet. Red @fox... due:2015-11-08 lazy:bar t:2015-11-07
+|  3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
+|  4| (C) Baz @Context1 +Project1                                                         key:value
+|  5| Drink beer @ home                                                        ical:foobar id:1 p:2
+|  6| x 2014-12-12 Completed but with                                               date:2014-12-12
+"""
+        self.assertEqual(self.output, result)
+
+    @mock.patch('topydo.lib.ListFormat.get_terminal_size')
+    def test_list_format41(self, mock_terminal_size):
+        mock_terminal_size.return_value = self.terminal_size(100, 25)
+
+        command = ListCommand(["-x", "-F", "|%I| %x %{(}p{)} %c %S\\t%K"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = u"""|  1| (D) 2015-08-31 Bar @Context1 +Project2                            due:2015-09-30 t:2015-09-29
+|  2| (Z) 2015-11-06 Lorem ipsum dolorem sit amet. Red @fox... due:2015-11-08 lazy:bar t:2015-11-07
+|  3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
+|  4| (C) Baz @Context1 +Project1                                                         key:value
+|  5| Drink beer @ home                                                        ical:foobar id:1 p:2
+|  6| x 2014-12-12 Completed but with                                               date:2014-12-12
 """
         self.assertEqual(self.output, result)
 
