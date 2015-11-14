@@ -29,7 +29,11 @@ MAIN_PATTERN = (r'^({{(?P<before>.+?)}})?'
                 r'({{(?P<after>.+?)}})?'
                 r'(?P<whitespace> *)')
 
-def filler(p_str, p_len):
+def _columns():
+    """ Returns the number of columns of the terminal. """
+    return get_terminal_size().columns
+
+def _filler(p_str, p_len):
     """
     Returns p_str preceded by additional spaces if p_str is shorter than p_len.
     """
@@ -64,7 +68,7 @@ def humanize_dates(p_due=None, p_start=None, p_creation=None):
 
     return ', '.join(dates_list)
 
-def strip_placeholder_braces(p_matchobj):
+def _strip_placeholder_braces(p_matchobj):
     """
     Returns string with conditional braces around placeholder stripped and
     percent sign glued into placeholder character.
@@ -86,17 +90,45 @@ def strip_placeholder_braces(p_matchobj):
 
     return before + '%' + placeholder + after + whitespace
 
-def unescape_percent_sign(p_str):
+def _unescape_percent_sign(p_str):
     """ Strips backslashes from escaped percent signs in p_str. """
     unescaped_str = re.sub(r'\\%', '%', p_str)
 
     return unescaped_str
 
-def remove_redundant_spaces(p_str):
+def _remove_redundant_spaces(p_str):
     """ Removes spaces surrunding <TAB> character (\t) from p_str. """
     clean_str = re.sub(' *\t *', '\t', p_str)
 
     return clean_str
+
+def _truncate(p_str, p_repl):
+    """
+    Returns p_str with truncated and ended with '...' version of p_repl.
+
+    Place of the truncation is calculated depending on p_max_width.
+    """
+    # 4 is for '...' and an extra space at the end
+    text_lim = _columns() - len(p_str) - 4
+    truncated_str = re.sub(re.escape(p_repl), p_repl[:text_lim] + '...', p_str)
+
+    return truncated_str
+
+def _right_align(p_str):
+    """
+    Returns p_str with content after <TAB> character aligned right.
+
+    Right alignment is done using proper number of spaces calculated from
+    'line_width' attribute.
+    """
+    to_fill = _columns() - len(p_str)
+
+    if to_fill > 0:
+        p_str = re.sub('\t', ' '*to_fill, p_str)
+    else:
+        p_str = re.sub('\t', ' ', p_str)
+
+    return p_str
 
 class ListFormatParser(object):
     """ Parser of format string. """
@@ -104,7 +136,6 @@ class ListFormatParser(object):
         self.format_string = re.sub(r'\\t', '\t', p_format or config().list_format())
         self.todolist = p_todolist
         self.one_line = False
-        self.line_width = get_terminal_size().columns
         self.placeholders = {
             # absolute creation date
             'c': lambda t: t.creation_date().isoformat() if t.creation_date() else '',
@@ -127,7 +158,7 @@ class ListFormatParser(object):
             'i': lambda t: str(self.todolist.number(t)),
 
             # todo ID pre-filled with 1 or 2 spaces if its length is <3
-            'I': lambda t: filler(str(self.todolist.number(t)), 3),
+            'I': lambda t: _filler(str(self.todolist.number(t)), 3),
 
 
             # list of tags (spaces) without hidden ones and due: and t:
@@ -206,34 +237,6 @@ class ListFormatParser(object):
 
         return preprocessed_format
 
-    def truncate(self, p_str, p_repl):
-        """
-        Returns p_str with truncated and ended with '...' version of p_repl.
-
-        Place of the truncation is calculated depending on 'line_width'
-        attribute.
-        """
-        text_lim = self.line_width - len(p_str) - 4
-        truncated_str = re.sub(re.escape(p_repl), p_repl[:text_lim] + '...', p_str)
-
-        return truncated_str
-
-    def right_align(self, p_str):
-        """
-        Returns p_str with content after <TAB> character aligned right.
-
-        Right alignment is done using proper number of spaces calculated from
-        'line_width' attribute.
-        """
-        to_fill = self.line_width - len(p_str)
-
-        if to_fill > 0:
-            p_str = re.sub('\t', ' '*to_fill, p_str)
-        else:
-            p_str = re.sub('\t', ' ', p_str)
-
-        return p_str
-
     def parse(self, p_todo):
         """
         Returns fully parsed string from 'format_string' attribute with all
@@ -256,18 +259,18 @@ class ListFormatParser(object):
             if repl == '':
                 substr = re.sub(pattern, '', substr)
             else:
-                substr = re.sub(pattern, strip_placeholder_braces, substr)
+                substr = re.sub(pattern, _strip_placeholder_braces, substr)
                 substr = re.sub(r'(?<!\\)%({ph}|\[{ph}\])'.format(ph=placeholder), repl, substr)
 
             parsed_list.append(substr)
 
-        parsed_str = unescape_percent_sign(''.join(parsed_list))
-        parsed_str = remove_redundant_spaces(parsed_str)
+        parsed_str = _unescape_percent_sign(''.join(parsed_list))
+        parsed_str = _remove_redundant_spaces(parsed_str)
 
-        if self.one_line and len(parsed_str) >= self.line_width:
-            parsed_str = self.truncate(parsed_str, repl_trunc)
+        if self.one_line and len(parsed_str) >= _columns():
+            parsed_str = _truncate(parsed_str, repl_trunc)
 
         if re.search('.*\t', parsed_str):
-            parsed_str = self.right_align(parsed_str)
+            parsed_str = _right_align(parsed_str)
 
         return parsed_str.rstrip()
