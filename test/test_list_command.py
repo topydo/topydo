@@ -300,6 +300,20 @@ class ListCommandTest(CommandTest):
         self.assertEquals(self.output, "|t5c| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n")
         self.assertEquals(self.errors, "")
 
+    def test_list40(self):
+        command = ListCommand(["(<C)"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEquals(self.output, "|  2| (D) Bar @Context1 +Project2\n")
+        self.assertEquals(self.errors, "")
+
+    def test_list41(self):
+        command = ListCommand(["-z", "Zzz"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEquals(self.output, "")
+        self.assertEquals(self.errors, "option -z not recognized\n")
+
     def test_help(self):
         command = ListCommand(["help"], self.todolist, self.out, self.error)
         command.execute()

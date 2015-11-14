@@ -106,14 +106,14 @@ class MultiCommand(ExpressionCommand):
         Operations specific for particular command dealing with multiple todo
         IDs.
         """
-        pass
+        raise NotImplementedError
 
     def _execute_not_multi(self):
         """
         Some commands can do something else besides operating on multiple todo
         IDs. This method is a wrapper for those other operations.
         """
-        pass
+        raise NotImplementedError
 
     def execute(self):
         if not super(MultiCommand, self).execute():
