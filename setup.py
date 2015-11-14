@@ -20,6 +20,8 @@ def find_version(*file_paths):
         return version_match.group(1)
     raise RuntimeError("Unable to find version string.")
 
+_PYTHON_VERSION = sys.version_info
+_IS_PYTHON_27 = _PYTHON_VERSION.major == 2 and _PYTHON_VERSION.minor == 7
 
 setup(
     name = "topydo",
@@ -32,15 +34,12 @@ setup(
     install_requires = [
         'six >= 1.9.0',
         'arrow >= 0.7.0',
+        'colorama >= 0.2.5' if sys.platform == "win32" else '',
+        # shutil.get_terminal_size() was introduced in Python 3.3
+        'backports.shutil_get_terminal_size>=1.0.0' if _IS_PYTHON_27 else '',
+        'ushlex' if _IS_PYTHON_27 else ''
     ],
     extras_require = {
-        ':sys_platform=="win32"': ['colorama>=0.2.5'],
-        # shutil.get_terminal_size() was introduced in Python 3.3
-        ':python_version=="2.7"': [
-            'backports.shutil_get_terminal_size>=1.0.0',
-            'ushlex',
-        ],
-        ':python_version=="3.2"': ['backports.shutil_get_terminal_size>=1.0.0'],
         'ical': ['icalendar'],
         'prompt-toolkit': ['prompt-toolkit >= 0.53'],
         'test': ['coverage', 'freezegun', 'green', ],
