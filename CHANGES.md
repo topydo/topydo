@@ -1,12 +1,16 @@
 0.7
 ---
 
+A big release with many new features. Many thanks to Jacek Sowiński (@mruwek)
+for the majority of these new features.
+
 * New subcommand: `revert`. Revert the last executed command(s). The number of
   revisions can be tuned in the configuration file:
 
       [topydo]
       backup_count = 25
 
+  Set to 0 to disable this feature. (thanks to @mruwek)
 * New feature: aliases. Aliases can be defined in the configuration file:
 
         [aliases]
@@ -23,12 +27,15 @@
 
       ls -n 5
 
+* `ls` has a `-i` flag to select displaying todo items based on their ID. This
+  can be useful to have a 'clean' default view, and to gather more details for
+  a certain todo item using aliases and formatting.
 * Prompt mode no longer warns about background modifications to todo.txt when a
   read-only command is entered (e.g. `ls`).
 * Removed restriction in `edit` mode that requires keeping the same amount of
   lines in the todo.txt file.
 * `edit` only processes the todo items when edits were actually made in the
-  editor.
+  editor (thanks to @mruwek)
 * When entering today's day of the week as a relative date, it will use next
   week's date instead of today.
 * Bugfix: not all tags were properly hidden with the `hide_tags` configuration
