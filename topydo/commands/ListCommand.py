@@ -79,6 +79,9 @@ class ListCommand(ExpressionCommand):
             elif opt == '-i':
                 self.ids = value.split(',')
 
+                # when a user requests a specific ID, it should always be shown
+                self.show_all = True
+
         self.args = args
 
     def _filters(self):
