@@ -4,6 +4,21 @@
 A big release with many new features. Many thanks to Jacek Sowiński (@mruwek)
 for the majority of these new features.
 
+* `ls` output can be customized with a -F flag or a configuration option:
+
+      [ls]
+      list_format = |%I| %x %{(}p{)} %c %s %k %{due:}d %{t:}t
+
+  or `ls -F "%{(}p{)} %s %{due:}d"`.
+
+  See `help ls` for all placeholders. Each placeholder can optionally be
+  surrounded by optional texts that are only printed when the placeholder is
+  expanded to a value.
+
+  The format string may contain a tab character: all text that follows is
+  aligned to the right.
+
+  (thanks to @mruwek)
 * New subcommand: `revert`. Revert the last executed command(s). The number of
   revisions can be tuned in the configuration file:
 
