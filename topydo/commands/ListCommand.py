@@ -16,10 +16,9 @@
 
 from topydo.lib.Config import config
 from topydo.lib.ExpressionCommand import ExpressionCommand
+from topydo.lib.ListFormat import ListFormatParser
 from topydo.lib.PrettyPrinter import pretty_printer_factory
-from topydo.lib.PrettyPrinterFilter import (PrettyPrinterAlignFilter,
-                                            PrettyPrinterIndentFilter,
-                                            PrettyPrinterFormatFilter)
+from topydo.lib.PrettyPrinterFilter import PrettyPrinterFormatFilter
 
 
 class ListCommand(ExpressionCommand):
@@ -87,13 +86,11 @@ class ListCommand(ExpressionCommand):
         if self.printer is None:
             # create a standard printer with some filters
             indent = config().list_indent()
+            final_format = ' ' * indent + self.format
             hidden_tags = config().hidden_tags()
 
             filters = []
-            filters.append(PrettyPrinterFormatFilter(self.todolist,
-                           self.format))
-            filters.append(PrettyPrinterAlignFilter())
-            filters.append(PrettyPrinterIndentFilter(indent))
+            filters.append(PrettyPrinterFormatFilter(self.todolist, final_format))
 
             self.printer = pretty_printer_factory(self.todolist, filters)
 
