@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-""" Ulities for formatting output with "list_format" option."""
+""" Utilities for formatting output with "list_format" option."""
 
 import arrow
 import re
@@ -37,6 +37,7 @@ def filler(p_str, p_len):
     return to_fill*' ' + p_str
 
 def humanize_date(p_datetime):
+    """ Returns a relative date string from a datetime object. """
     now = arrow.now()
     date = now.replace(day=p_datetime.day, month=p_datetime.month, year=p_datetime.year)
     return date.humanize()
@@ -56,11 +57,10 @@ def humanize_dates(p_due=None, p_start=None, p_creation=None):
         dates_list.append('due ' + humanize_date(p_due))
     if p_start:
         now = arrow.now().date()
-        start = humanize_date(p_start)
-        if p_start <= now:
-            dates_list.append('started ' + start)
-        else:
-            dates_list.append('starts ' + start)
+        dates_list.append('{} {}'.format(
+            'started' if p_start <= now else 'starts',
+            humanize_date(p_start)
+        ))
 
     return ', '.join(dates_list)
 
@@ -132,12 +132,13 @@ class ListFormatParser(object):
 
             # list of tags (spaces) without hidden ones and due: and t:
             'k': lambda t: ' '.join([u('{}:{}').format(tag, value)
-                                        for tag, value in sorted(t.tags()) if
-                                        tag not in config().hidden_tags() + [config().tag_start(), config().tag_due()]]),
+                                     for tag, value in sorted(t.tags()) if
+                                     tag not in config().hidden_tags() +
+                                     [config().tag_start(), config().tag_due()]]),
 
             # list of all tags (spaces)
             'K': lambda t: ' '.join([u('{}:{}').format(tag, value)
-                                        for tag, value in sorted(t.tags())]),
+                                     for tag, value in sorted(t.tags())]),
 
             # priority
             'p': lambda t: t.priority() if t.priority() else '',
@@ -243,14 +244,14 @@ class ListFormatParser(object):
         attribute.
         """
         parsed_list = []
-        repl_S = None
+        repl_trunc = None
 
         for substr, placeholder, getter in self.format_list:
             repl = getter(p_todo) if getter else ''
             pattern = MAIN_PATTERN.format(ph=placeholder)
 
             if placeholder == 'S':
-                repl_S = repl
+                repl_trunc = repl
 
             if repl == '':
                 substr = re.sub(pattern, '', substr)
@@ -264,7 +265,7 @@ class ListFormatParser(object):
         parsed_str = remove_redundant_spaces(parsed_str)
 
         if self.one_line and len(parsed_str) >= self.line_width:
-            parsed_str = self.truncate(parsed_str, repl_S)
+            parsed_str = self.truncate(parsed_str, repl_trunc)
 
         if re.search('.*\t', parsed_str):
             parsed_str = self.right_align(parsed_str)
