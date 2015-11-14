@@ -17,14 +17,19 @@
 """ Entry file for the topydo Prompt interface (CLI). """
 
 import os.path
+import shlex
 import sys
 
 from topydo.cli.CLIApplicationBase import CLIApplicationBase, error, usage
 from topydo.cli.TopydoCompleter import TopydoCompleter
 from prompt_toolkit.shortcuts import prompt
 from prompt_toolkit.history import InMemoryHistory
+from six import PY2
 
 from topydo.lib.Config import config, ConfigError
+
+if PY2:
+    import ushlex as shlex
 
 # First thing is to poke the configuration and check whether it's sane
 # The modules below may already read in configuration upon import, so
@@ -94,7 +99,8 @@ class PromptApplication(CLIApplicationBase):
             try:
                 user_input = prompt(u'topydo> ', history=history,
                                     completer=self.completer,
-                                    complete_while_typing=False).split()
+                                    complete_while_typing=False)
+                user_input = shlex.split(user_input)
             except (EOFError, KeyboardInterrupt):
                 sys.exit(0)
 

@@ -15,7 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
-from datetime import date
+from datetime import date, timedelta
+from freezegun import freeze_time
 
 from test.topydo_testcase import TopydoTest
 from topydo.lib.Config import config
@@ -23,23 +24,37 @@ from topydo.lib.Importance import importance
 from topydo.lib.Todo import Todo
 
 
+@freeze_time("2015, 11, 06")
 class ImportanceTest(TopydoTest):
-    def test_importance1(self):
+    def test_importance01(self):
         todo = Todo("Foo")
         self.assertEqual(importance(todo), 2)
 
-    def test_importance2(self):
+    def test_importance02(self):
         todo = Todo("(A) Foo")
         self.assertEqual(importance(todo), 5)
 
-    def test_importance3(self):
+    def test_importance03(self):
         todo = Todo("(A) Foo " + config().tag_star() + ":1")
         self.assertEqual(importance(todo), 6)
 
-    def test_importance4(self):
+    def test_importance04(self):
         today_str = date.today().isoformat()
         todo = Todo("(C) Foo " + config().tag_due() + ":" + today_str)
         self.assertEqual(importance(todo), 8)
+
+    def test_importance05(self):
+        todo = Todo("(C) Foo " + config().tag_due() + ":" + "2015-11-14")
+        self.assertEqual(importance(todo), 4)
+
+    def test_importance06(self):
+        todo = Todo("(C) Foo " + config().tag_due() + ":" + "2015-11-10")
+        self.assertEqual(importance(todo), 5)
+
+    def test_importance07(self):
+        config(p_overrides={('sort', 'ignore_weekends'): '1'})
+        todo = Todo("(C) Foo " + config().tag_due() + ":" + "2015-11-09")
+        self.assertEqual(importance(todo), 6)
 
 if __name__ == '__main__':
     unittest.main()

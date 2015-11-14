@@ -29,6 +29,8 @@
   lines in the todo.txt file.
 * `edit` only processes the todo items when edits were actually made in the
   editor.
+* When entering today's day of the week as a relative date, it will use next
+  week's date instead of today.
 * Bugfix: not all tags were properly hidden with the `hide_tags` configuration
   option.
 * Better PEP8 compliance (thanks to @MinchinWeb)

@@ -31,13 +31,19 @@ setup(
     url = "https://github.com/bram85/topydo",
     install_requires = [
         'six >= 1.9.0',
+        'arrow >= 0.7.0',
     ],
     extras_require = {
         ':sys_platform=="win32"': ['colorama>=0.2.5'],
-        ':python_version=="2.7"': ['ushlex'],
+        # shutil.get_terminal_size() was introduced in Python 3.3
+        ':python_version=="2.7"': [
+            'backports.shutil_get_terminal_size>=1.0.0',
+            'ushlex',
+        ],
+        ':python_version=="3.2"': ['backports.shutil_get_terminal_size>=1.0.0'],
         'ical': ['icalendar'],
         'prompt-toolkit': ['prompt-toolkit >= 0.53'],
-        'test': ['green', 'coverage'],
+        'test': ['coverage', 'freezegun', 'green', ],
         'test:python_version=="2.7"': ['mock'],
         'test:python_version!="3.2"': ['pylint'],
     },

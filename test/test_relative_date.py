@@ -16,20 +16,20 @@
 
 import unittest
 from datetime import date, timedelta
+from freezegun import freeze_time
 
 from test.topydo_testcase import TopydoTest
 from topydo.lib.RelativeDate import relative_date_to_date
 
 
+@freeze_time('2015, 11, 06')
 class RelativeDateTester(TopydoTest):
     def setUp(self):
         super(RelativeDateTester, self).setUp()
-        self.today = date.today()
-        self.tomorrow = self.today + timedelta(1)
-
-        self.monday = self.today
-        if self.monday.weekday() != 0:
-            self.monday += timedelta(7 - self.today.weekday() % 7)
+        self.today = date(2015, 11, 6)
+        self.tomorrow = date(2015, 11, 7)
+        self.monday = date(2015, 11, 9)
+        self.friday = date(2015, 11, 13)
 
     def test_zero_days(self):
         result = relative_date_to_date('0d')
@@ -41,7 +41,7 @@ class RelativeDateTester(TopydoTest):
 
     def test_one_week(self):
         result = relative_date_to_date('1w')
-        self.assertEqual(result, date.today() + timedelta(weeks=1))
+        self.assertEqual(result, date(2015, 11, 13))
 
     def test_one_month(self):
         test_date = date(2015, 1, 10)
@@ -104,7 +104,7 @@ class RelativeDateTester(TopydoTest):
         self.assertEqual(result, self.today)
 
     def test_today3(self):
-        result = relative_date_to_date('today', date.today() + timedelta(1))
+        result = relative_date_to_date('today', self.tomorrow)
         self.assertEqual(result, self.today)
 
     def test_tomorrow1(self):
@@ -133,15 +133,23 @@ class RelativeDateTester(TopydoTest):
 
     def test_offset1(self):
         result = relative_date_to_date('1d', self.tomorrow)
-        self.assertEqual(result, date.today() + timedelta(2))
+        self.assertEqual(result, date(2015, 11, 8))
 
     def test_negative_period1(self):
         result = relative_date_to_date('-1d')
-        self.assertEqual(result, date.today() - timedelta(1))
+        self.assertEqual(result, date(2015, 11, 5))
 
     def test_negative_period2(self):
         result = relative_date_to_date('-0d')
         self.assertTrue(result, self.today)
+
+    def test_weekday_next_week(self):
+        """
+        When entering "Friday" on a Friday, return next week Friday instead of
+        today.
+        """
+        result = relative_date_to_date("fri")
+        self.assertTrue(result, self.friday)
 
 if __name__ == '__main__':
     unittest.main()

@@ -15,36 +15,38 @@ smoothly into topydo.
   possible. I won't be very picky about long lines, but please try to avoid
   them.
 * I strongly prefer simple and short functions, doing only one thing. I'll
-  request you to refactor functions with massive indentation or don't fit
+  ask you to refactor functions with massive indentation or don't fit
   otherwise on a screen.
 
 ### Testing
 
-* Run tests with:
+* First make sure to have the prerequisites installed to perform the tests:
 
-        green
+        pip install .[test]
+
+* Then, run the tests with:
+
+        green -r
 
   Obviously, I won't accept anything that makes the tests fail. When you submit
   a Pull Request, Travis CI will automatically run all tests for various Python
   versions, but it's better if you run the tests locally first.
-
-  Make sure you have the `mock` package installed if you test on a Python
-  version older than 3.3.
 * Add tests for your change(s):
-  * Bugfixes: add a testcase that covers your bugfix, so the bug won't happen
+  * Bugfixes: add a test case that covers your bugfix, so the bug won't happen
     ever again.
-  * Features: add testcases that checks various inputs and outputs of your
+  * Features: add test cases that checks various inputs and outputs of your
     feature. Be creative in trying to break the feature you've just implemented.
-* Check the test coverage of your contributed code, in particular if you
-  touched code in the topydo.lib or topydo.command packages:
+* Check the test coverage of your contributed code, in particular if you touched
+  code in the topydo.lib or topydo.command packages:
 
-      pip install coverage
-      coverage run setup.py test
-      coverage report
+      coverage report -m
 
   Or alternatively, for a more friendly output, run:
 
       coverage html
 
-  Which will generate annotated files in the *htmlcov* folder. The new code
+  which will generate annotated files in the *htmlcov* folder. The new code
   should be marked green (i.e. covered).
+  
+  When you create a Pull Request, code coverage will be automatically checked
+  and reported by [Codecov.io](https://codecov.io/github/bram85/topydo).

@@ -90,12 +90,33 @@ class GetSubcommandTest(TopydoTest):
         self.assertTrue(issubclass(real_cmd, DeleteCommand))
         self.assertEqual(final_args, ["-f", "test"])
 
+    def test_alias_default_cmd03(self):
+        config("test/data/aliases.conf", {('topydo', 'default_command'): 'nonexisting_default'})
+
+        args = ['nonexisting']
+        real_cmd, final_args = get_subcommand(args)
+        self.assertFalse(real_cmd)
+        self.assertEqual(final_args, ['nonexisting'])
+
+    def test_alias_default_cmd04(self):
+        config("test/data/aliases.conf", {('topydo', 'default_command'): 'nonexisting_default'})
+
+        args = []
+        real_cmd, final_args = get_subcommand(args)
+        self.assertFalse(real_cmd)
+        self.assertEqual(final_args, [])
+
     def test_wrong_alias(self):
         config("test/data/aliases.conf")
 
         args = ["baz"]
         real_cmd, final_args = get_subcommand(args)
         self.assertEqual(real_cmd, None)
+
+    def test_help(self):
+        real_cmd, final_args = get_subcommand(['help', 'nonexisting'])
+        self.assertFalse(real_cmd)
+        self.assertEqual(final_args, ['help', 'nonexisting'])
 
 if __name__ == '__main__':
     unittest.main()

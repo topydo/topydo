@@ -18,8 +18,9 @@ from topydo.lib.Config import config
 from topydo.lib.ExpressionCommand import ExpressionCommand
 from topydo.lib.Filter import InstanceFilter
 from topydo.lib.PrettyPrinter import pretty_printer_factory
-from topydo.lib.PrettyPrinterFilter import (PrettyPrinterHideTagFilter,
-                                            PrettyPrinterIndentFilter)
+from topydo.lib.ListFormat import ListFormatParser
+from topydo.lib.PrettyPrinter import pretty_printer_factory
+from topydo.lib.PrettyPrinterFilter import PrettyPrinterFormatFilter
 from topydo.lib.TodoListBase import InvalidTodoException
 
 
@@ -35,6 +36,7 @@ class ListCommand(ExpressionCommand):
         self.sort_expression = config().sort_string()
         self.show_all = False
         self.ids = None
+        self.format = config().list_format()
 
     def _poke_icalendar(self):
         """
@@ -50,7 +52,7 @@ class ListCommand(ExpressionCommand):
         return True
 
     def _process_flags(self):
-        opts, args = self.getopt('f:i:n:s:x')
+        opts, args = self.getopt('f:F:i:n:s:x')
 
         for opt, value in opts:
             if opt == '-x':
@@ -67,6 +69,8 @@ class ListCommand(ExpressionCommand):
                         self.printer = IcalPrinter(self.todolist)
                 else:
                     self.printer = None
+            elif opt == '-F':
+                self.format = value
             elif opt == '-n':
                 try:
                     self.limit = int(value)
@@ -111,11 +115,11 @@ class ListCommand(ExpressionCommand):
         if self.printer is None:
             # create a standard printer with some filters
             indent = config().list_indent()
+            final_format = ' ' * indent + self.format
             hidden_tags = config().hidden_tags()
 
             filters = []
-            filters.append(PrettyPrinterIndentFilter(indent))
-            filters.append(PrettyPrinterHideTagFilter(hidden_tags))
+            filters.append(PrettyPrinterFormatFilter(self.todolist, final_format))
 
             self.printer = pretty_printer_factory(self.todolist, filters)
 
@@ -136,7 +140,8 @@ class ListCommand(ExpressionCommand):
         return True
 
     def usage(self):
-        return """ Synopsis: ls [-x] [-s <sort_expression>] [-f <format>] [expression]"""
+        return """Synopsis: ls [-x] [-s <sort_expression>] [-f <output format>]
+[-F <format string>] [expression]"""
 
     def help(self):
         return """\
@@ -156,6 +161,36 @@ When an expression is given, only the todos matching that expression are shown.
                 an 'ical' tag with a unique ID. Completed todo items may be
                 archived.
      * 'json' - Javascript Object Notation (JSON)
+-F : Specify the format of the text ('text' format), which may contain
+     placeholders that may be expanded if the todo has such attribute. If such
+     attribute does not exist, then it expands to an empty string.
+
+         %c: Absolute creation date.
+         %C: Relative creation date.
+         %d: Absolute due date.
+         %D: Relative due date.
+         %h: Relative due and start date (due in 3 days, started 3 days ago)
+         %H: Like %h with creation date.
+         %i: Todo number.
+         %I: Todo number padded with spaces (always 3 characters wide).
+         %k: List of tags separated by spaces (excluding hidden tags).
+         %K: List of all tags separated by spaces.
+         %p: Priority.
+         %s: Todo text.
+         %S: Todo text, truncated such that an item fits on one line.
+         %t: Absolute creation date.
+         %T: Relative creation date.
+         %x: 'x' followed by absolute completion date.
+         %X: 'x' followed by relative completion date.
+         \%: Literal percent sign.
+
+     Conditional characters can be added with blocks surrounded by curly
+     braces, they will only appear when a placeholder expanded to a value.
+
+     E.g. %{(}p{)} will print (C) when the todo item has priority C, or ''
+     (empty string) when an item has no priority set.
+
+     A tab character serves as a marker to start right alignment.
 -i : Comma separated list of todo IDs to print.
 -s : Sort the list according to a sort expression. Defaults to the expression
      in the configuration.
