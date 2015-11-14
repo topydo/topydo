@@ -268,6 +268,38 @@ class ListCommandTest(CommandTest):
         self.assertEqual(self.output, "|  1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n|  3| (C) Baz @Context1 +Project1 key:value\n|  4| (C) Drink beer @ home\n|  5| (C) 13 + 29 = 42\n|  2| (D) Bar @Context1 +Project2\n|  6| x 2014-12-12 Completed but with date:2014-12-12\n")
         self.assertEqual(self.errors, "")
 
+    def test_list36(self):
+        command = ListCommand(["-i", "1"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEquals(self.output, "|  1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n")
+        self.assertEquals(self.errors, "")
+
+    def test_list37(self):
+        command = ListCommand(["-i", "1,foo,3"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEquals(self.output, "|  1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n|  3| (C) Baz @Context1 +Project1 key:value\n")
+        self.assertEquals(self.errors, "")
+
+    def test_list38(self):
+        config("test/data/todolist-uid.conf")
+
+        command = ListCommand(["-i", "1,foo,z63"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEquals(self.output, "|t5c| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n|z63| (C) 13 + 29 = 42\n")
+        self.assertEquals(self.errors, "")
+
+    def test_list39(self):
+        config("test/data/todolist-uid.conf")
+
+        command = ListCommand(["-i", "t5c,foo"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEquals(self.output, "|t5c| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n")
+        self.assertEquals(self.errors, "")
+
     def test_help(self):
         command = ListCommand(["help"], self.todolist, self.out, self.error)
         command.execute()
