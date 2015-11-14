@@ -14,15 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import configparser
 import os
 import shlex
-
-from six import iteritems, PY2
-from six.moves import configparser
-
-if PY2:
-    import ushlex as shlex
-    import codecs
 
 class ConfigError(Exception):
     def __init__(self, p_text):
@@ -121,7 +115,7 @@ class _Config:
         for section in self.defaults:
             self.cp.add_section(section)
 
-            for option, value in iteritems(self.defaults[section]):
+            for option, value in self.defaults[section].items():
                 self.cp.set(section, option, value)
 
         files = [
@@ -137,16 +131,7 @@ class _Config:
         if p_path is not None:
             files = [p_path]
 
-        if PY2:
-            for path in files:
-                try:
-                    with codecs.open(path, 'r', encoding='utf-8') as f:
-                        self.cp.readfp(f)
-                except IOError:
-                    pass
-        else:
-            self.cp.read(files)
-
+        self.cp.read(files)
         self._supplement_sections()
 
         if p_overrides:

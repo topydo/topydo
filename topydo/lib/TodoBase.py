@@ -21,8 +21,6 @@ This module contains the class that represents a single todo item.
 import re
 from datetime import date
 
-from six import u
-
 from topydo.lib.TodoParser import parse_line
 from topydo.lib.Utils import is_valid_priority
 
@@ -218,7 +216,7 @@ class TodoBase(object):
         self.src = re.sub(
             r'^(x \d{4}-\d{2}-\d{2} |\([A-Z]\) )?(\d{4}-\d{2}-\d{2} )?(.*)$',
             lambda m:
-            u("{}{} {}").format(m.group(1) or '', p_date.isoformat(),
+            u"{}{} {}".format(m.group(1) or '', p_date.isoformat(),
                                 m.group(3)), self.src)
 
     def creation_date(self):

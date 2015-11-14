@@ -18,8 +18,6 @@ import unittest
 from datetime import date
 from io import StringIO
 
-from six import u
-
 from test.command_testcase import CommandTest
 from topydo.commands import AddCommand, ListCommand
 from topydo.lib import TodoList
@@ -298,29 +296,29 @@ class AddCommandTest(CommandTest):
         self.assertEqual(self.errors, command.usage() + "\n")
 
     def test_add_unicode(self):
-        command = AddCommand.AddCommand([u("Special \u25c4")], self.todolist,
+        command = AddCommand.AddCommand([u"Special \u25c4"], self.todolist,
                                         self.out, self.error)
         command.execute()
 
         self.assertEqual(self.output,
-                         u("|  1| {} Special \u25c4\n").format(self.today))
+                         u"|  1| {} Special \u25c4\n".format(self.today))
         self.assertEqual(self.errors, "")
 
     @mock.patch("topydo.commands.AddCommand.stdin",
-                StringIO(u("Fo\u00f3 due:tod id:1\nB\u0105r before:1")))
+                StringIO(u"Fo\u00f3 due:tod id:1\nB\u0105r before:1"))
     def test_add_from_stdin(self):
         command = AddCommand.AddCommand(["-f", "-"], self.todolist, self.out,
                                         self.error)
         command.execute()
 
-        self.assertEqual(self.output, u("|  1| {tod} Fo\u00f3 due:{tod} id:1\n|  2| {tod} B\u0105r p:1\n".format(tod=self.today)))
+        self.assertEqual(self.output, u"|  1| {tod} Fo\u00f3 due:{tod} id:1\n|  2| {tod} B\u0105r p:1\n".format(tod=self.today))
         self.assertEqual(self.errors, "")
 
     def test_add_from_file(self):
         command = AddCommand.AddCommand(["-f", "test/data/AddCommandTest-from_file.txt"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEqual(self.output, u("|  1| {tod} Foo @fo\u00f3b\u0105r due:{tod} id:1\n|  2| {tod} Bar +baz t:{tod} p:1\n".format(tod=self.today)))
+        self.assertEqual(self.output, u"|  1| {tod} Foo @fo\u00f3b\u0105r due:{tod} id:1\n|  2| {tod} Bar +baz t:{tod} p:1\n".format(tod=self.today))
         self.assertEqual(self.errors, "")
 
     def test_add_task_without_date(self):

@@ -19,7 +19,6 @@
 import re
 
 from collections import OrderedDict
-from six import u
 
 from topydo.lib.Colors import NEUTRAL_COLOR, Colors
 from topydo.lib.Config import config
@@ -99,7 +98,7 @@ class PrettyPrinterNumbers(PrettyPrinterFilter):
 
     def filter(self, p_todo_str, p_todo):
         """ Prepends the number to the todo string. """
-        return u("|{:>3}| {}").format(self.todolist.number(p_todo), p_todo_str)
+        return u"|{:>3}| {}".format(self.todolist.number(p_todo), p_todo_str)
 
 
 class PrettyPrinterFormatFilter(PrettyPrinterFilter):

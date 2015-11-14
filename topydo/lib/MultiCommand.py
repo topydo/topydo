@@ -14,8 +14,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from six import u
-
 from topydo.lib.ExpressionCommand import ExpressionCommand
 from topydo.lib.TodoListBase import InvalidTodoException
 
@@ -90,7 +88,7 @@ class MultiCommand(ExpressionCommand):
 
         if len(self.invalid_numbers) > 1 or len(self.invalid_numbers) > 0 and len(self.todos) > 0:
             for number in self.invalid_numbers:
-                errors.append(u("Invalid todo number given: {}.").format(number))
+                errors.append(u"Invalid todo number given: {}.".format(number))
         elif len(self.invalid_numbers) == 1 and len(self.todos) == 0:
             errors.append("Invalid todo number given.")
         elif len(self.todos) == 0 and len(self.invalid_numbers) == 0:
