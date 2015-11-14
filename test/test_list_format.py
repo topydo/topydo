@@ -631,5 +631,22 @@ Z   Z
 """
         self.assertEqual(self.output, result)
 
+    @mock.patch('topydo.lib.ListFormat.get_terminal_size')
+    def test_list_format42(self, mock_terminal_size):
+        mock_terminal_size.return_value = self.terminal_size(100, 25)
+
+        config('test/data/listformat.conf', p_overrides={('ls', 'indent'): '3'})
+        command = ListCommand(["-x"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = u"""   |  1| (D) 2015-08-31 Bar @Context1 +Project2                         due:2015-09-30 t:2015-09-29
+   |  2| (Z) 2015-11-06 Lorem ipsum dolorem sit amet. Red @... due:2015-11-08 lazy:bar t:2015-11-07
+   |  3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
+   |  4| (C) Baz @Context1 +Project1                                                      key:value
+   |  5| Drink beer @ home                                                     ical:foobar id:1 p:2
+   |  6| x 2014-12-12 Completed but with                                            date:2014-12-12
+"""
+        self.assertEqual(self.output, result)
+
 if __name__ == '__main__':
     unittest.main()

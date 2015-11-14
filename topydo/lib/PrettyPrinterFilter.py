@@ -90,18 +90,6 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
         return p_todo_str
 
 
-class PrettyPrinterIndentFilter(PrettyPrinterFilter):
-    """ Adds indentation to the todo item. """
-
-    def __init__(self, p_indent=0):
-        super(PrettyPrinterIndentFilter, self).__init__()
-        self.indent = p_indent
-
-    def filter(self, p_todo_str, _):
-        """ Applies the indentation. """
-        return ' ' * self.indent + p_todo_str
-
-
 class PrettyPrinterNumbers(PrettyPrinterFilter):
     """ Prepends the todo's number, retrieved from the todolist. """
 
