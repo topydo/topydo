@@ -74,6 +74,7 @@ class _Config:
                 'hide_tags': 'id,p,ical',
                 'indent': '0',
                 'list_limit': '-1',
+                'list_format': '|%I| %x %{(}p{)} %c %s %k %{due:}d %{t:}t',
             },
 
             'tags': {
@@ -115,7 +116,7 @@ class _Config:
 
         self.config = {}
 
-        self.cp = configparser.ConfigParser()
+        self.cp = configparser.RawConfigParser()
 
         for section in self.defaults:
             self.cp.add_section(section)
@@ -319,6 +320,11 @@ class _Config:
             alias_dict[alias] = (real_subcommand, alias_args)
 
         return alias_dict
+
+    def list_format(self):
+        """ Returns the list format used by `ls` """
+        return self.cp.get('ls', 'list_format')
+
 
 def config(p_path=None, p_overrides=None):
     """

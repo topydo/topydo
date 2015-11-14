@@ -18,10 +18,13 @@
 
 import re
 
+from collections import OrderedDict
 from six import u
 
 from topydo.lib.Colors import NEUTRAL_COLOR, Colors
 from topydo.lib.Config import config
+from topydo.lib.ListFormat import ListFormatParser
+from topydo.lib.Utils import get_terminal_size
 
 
 class PrettyPrinterFilter(object):
@@ -61,9 +64,6 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
             except KeyError:
                 pass
 
-            # color by priority
-            p_todo_str = color + p_todo_str
-
             # color projects / contexts
             p_todo_str = re.sub(
                 r'\B(\+|@)(\S*\w)',
@@ -79,24 +79,15 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
 
             # add link_color to any valid URL specified outside of the tag.
             p_todo_str = re.sub(r'(^|\s)(\w+:){1}(//\S+)',
-                                ' ' + link_color + r'\2\3' + color,
+                                r'\1' + link_color + r'\2\3' + color,
                                 p_todo_str)
 
             p_todo_str += NEUTRAL_COLOR
+            
+            # color by priority
+            p_todo_str = color + p_todo_str
 
         return p_todo_str
-
-
-class PrettyPrinterIndentFilter(PrettyPrinterFilter):
-    """ Adds indentation to the todo item. """
-
-    def __init__(self, p_indent=0):
-        super(PrettyPrinterIndentFilter, self).__init__()
-        self.indent = p_indent
-
-    def filter(self, p_todo_str, _):
-        """ Applies the indentation. """
-        return ' ' * self.indent + p_todo_str
 
 
 class PrettyPrinterNumbers(PrettyPrinterFilter):
@@ -111,17 +102,12 @@ class PrettyPrinterNumbers(PrettyPrinterFilter):
         return u("|{:>3}| {}").format(self.todolist.number(p_todo), p_todo_str)
 
 
-class PrettyPrinterHideTagFilter(PrettyPrinterFilter):
-    """ Removes all occurrences of the given tags from the text. """
+class PrettyPrinterFormatFilter(PrettyPrinterFilter):
+    def __init__(self, p_todolist, p_format=None):
+        super(PrettyPrinterFormatFilter, self).__init__()
+        self.parser = ListFormatParser(p_todolist, p_format)
 
-    def __init__(self, p_hidden_tags):
-        super(PrettyPrinterHideTagFilter, self).__init__()
-        self.hidden_tags = p_hidden_tags
-
-    def filter(self, p_todo_str, _):
-        for hidden_tag in self.hidden_tags:
-            # inspired from remove_tag in TodoBase
-            p_todo_str = re.sub(r'\s?\b' + hidden_tag + r':\S+\b', '',
-                                p_todo_str)
+    def filter(self, p_todo_str, p_todo):
+        p_todo_str = self.parser.parse(p_todo)
 
         return p_todo_str
