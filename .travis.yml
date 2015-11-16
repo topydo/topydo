@@ -5,12 +5,10 @@ python:
   - "3.3"
   - "3.4"
   - "3.5"
-  - "pypy"
   - "pypy3"
 matrix:
   allow_failures:
     - python: "3.2"
-    - python: "pypy"
     - python: "pypy3"
 install:
   - "python -m pip install pip --upgrade"
