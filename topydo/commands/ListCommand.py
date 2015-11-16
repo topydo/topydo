@@ -18,9 +18,7 @@ from topydo.lib.Config import config
 from topydo.lib.ExpressionCommand import ExpressionCommand
 from topydo.lib.Filter import InstanceFilter
 from topydo.lib.PrettyPrinter import pretty_printer_factory
-from topydo.lib.ListFormat import ListFormatParser
-from topydo.lib.PrettyPrinter import pretty_printer_factory
-from topydo.lib.PrettyPrinterFilter import PrettyPrinterFormatFilter
+from topydo.lib.prettyprinters.Format import PrettyPrinterFormatFilter
 from topydo.lib.TodoListBase import InvalidTodoException
 
 

@@ -17,7 +17,7 @@
 import re
 
 from topydo.lib.MultiCommand import MultiCommand
-from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
+from topydo.lib.prettyprinters.Numbers import PrettyPrinterNumbers
 from topydo.lib.Utils import is_valid_priority
 
 

@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from topydo.lib.MultiCommand import MultiCommand
-from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
+from topydo.lib.prettyprinters.Numbers import PrettyPrinterNumbers
 
 
 class DepriCommand(MultiCommand):

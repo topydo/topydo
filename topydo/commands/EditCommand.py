@@ -22,7 +22,7 @@ from six import u
 
 from topydo.lib.Config import config
 from topydo.lib.MultiCommand import MultiCommand
-from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
+from topydo.lib.prettyprinters.Numbers import PrettyPrinterNumbers
 from topydo.lib.Todo import Todo
 from topydo.lib.TodoList import TodoList
 

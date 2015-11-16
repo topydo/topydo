@@ -14,19 +14,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-""" Provides a base class for pretty printer filters. """
+""" Provides a pretty printer filter that inserts todo numbers. """
+
+from six import u
+
+from topydo.lib.PrettyPrinterFilter import PrettyPrinterFilter
 
 
-class PrettyPrinterFilter(object):
-    """
-    Base class for a pretty printer filter.
+class PrettyPrinterNumbers(PrettyPrinterFilter):
+    """ Prepends the todo's number, retrieved from the todolist. """
 
-    Subclasses must re-implement the filter method.
-    """
+    def __init__(self, p_todolist):
+        super(PrettyPrinterNumbers, self).__init__()
+        self.todolist = p_todolist
 
-    def filter(self, p_todo_str, _):
-        """
-        Applies a filter to p_todo_str and returns a modified version of it.
-        """
-        raise NotImplementedError
+    def filter(self, p_todo_str, p_todo):
+        """ Prepends the number to the todo string. """
+        return u("|{:>3}| {}").format(self.todolist.number(p_todo), p_todo_str)
 
