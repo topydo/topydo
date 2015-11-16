@@ -24,7 +24,7 @@ from topydo.lib.Utils import date_string_to_date
 
 
 class DoCommand(DCommand):
-    def __init__(self, p_args, p_todolist,
+    def __init__(self, p_args, p_todolist, #pragma: no branch
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
