@@ -33,7 +33,6 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
     def filter(self, p_todo_str, p_todo):
         """ Applies the colors. """
         if config().colors():
-            color = NEUTRAL_COLOR
             colorscheme = Colors()
             priority_colors = colorscheme.get_priority_colors()
             project_color = colorscheme.get_project_color()
@@ -41,8 +40,9 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
             metadata_color = colorscheme.get_metadata_color()
             link_color = colorscheme.get_link_color()
 
+            priority_color = NEUTRAL_COLOR
             try:
-                color = priority_colors[p_todo.priority()]
+                priority_color = priority_colors[p_todo.priority()]
             except KeyError:
                 pass
 
@@ -51,23 +51,23 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
                 r'\B(\+|@)(\S*\w)',
                 lambda m: (
                     context_color if m.group(0)[0] == "@"
-                    else project_color) + m.group(0) + color,
+                    else project_color) + m.group(0) + priority_color,
                 p_todo_str)
 
             # tags
             p_todo_str = re.sub(r'\b\S+:[^/\s]\S*\b',
-                                metadata_color + r'\g<0>' + color,
+                                metadata_color + r'\g<0>' + priority_color,
                                 p_todo_str)
 
             # add link_color to any valid URL specified outside of the tag.
             p_todo_str = re.sub(r'(^|\s)(\w+:){1}(//\S+)',
-                                r'\1' + link_color + r'\2\3' + color,
+                                r'\1' + link_color + r'\2\3' + priority_color,
                                 p_todo_str)
 
             p_todo_str += NEUTRAL_COLOR
 
             # color by priority
-            p_todo_str = color + p_todo_str
+            p_todo_str = priority_color + p_todo_str
 
         return p_todo_str
 
