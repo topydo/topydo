@@ -24,7 +24,7 @@ from sys import stdin
 
 from topydo.lib.Command import Command
 from topydo.lib.Config import config
-from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
+from topydo.lib.prettyprinters.Numbers import PrettyPrinterNumbers
 from topydo.lib.RelativeDate import relative_date_to_date
 from topydo.lib.TodoListBase import InvalidTodoException
 

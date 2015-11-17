@@ -14,19 +14,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-""" Provides a base class for pretty printer filters. """
+"""
+Provides a pretty printer filter that generates a todo string based on a format
+string.
+"""
+
+from topydo.lib.PrettyPrinterFilter import PrettyPrinterFilter
+from topydo.lib.ListFormat import ListFormatParser
 
 
-class PrettyPrinterFilter(object):
-    """
-    Base class for a pretty printer filter.
+class PrettyPrinterFormatFilter(PrettyPrinterFilter):
+    def __init__(self, p_todolist, p_format=None):
+        super(PrettyPrinterFormatFilter, self).__init__()
+        self.parser = ListFormatParser(p_todolist, p_format)
 
-    Subclasses must re-implement the filter method.
-    """
+    def filter(self, p_todo_str, p_todo):
+        p_todo_str = self.parser.parse(p_todo)
 
-    def filter(self, p_todo_str, _):
-        """
-        Applies a filter to p_todo_str and returns a modified version of it.
-        """
-        raise NotImplementedError
-
+        return p_todo_str
