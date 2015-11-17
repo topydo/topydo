@@ -32,15 +32,15 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
 
     def filter(self, p_todo_str, p_todo):
         """ Applies the colors. """
-        colorscheme = Colors()
-        priority_colors = colorscheme.get_priority_colors()
-        project_color = colorscheme.get_project_color()
-        context_color = colorscheme.get_context_color()
-        metadata_color = colorscheme.get_metadata_color()
-        link_color = colorscheme.get_link_color()
-
         if config().colors():
             color = NEUTRAL_COLOR
+            colorscheme = Colors()
+            priority_colors = colorscheme.get_priority_colors()
+            project_color = colorscheme.get_project_color()
+            context_color = colorscheme.get_context_color()
+            metadata_color = colorscheme.get_metadata_color()
+            link_color = colorscheme.get_link_color()
+
             try:
                 color = priority_colors[p_todo.priority()]
             except KeyError:
