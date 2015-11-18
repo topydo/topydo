@@ -146,6 +146,16 @@ class TodoList(TodoListBase):
                 for context in p_from_todo.contexts() - p_to_todo.contexts():
                     self.append(p_to_todo, "@{}".format(context))
 
+        def set_due_date_from_parent():
+            """
+            Sets the due date of a child item to the due date of the parent.
+            """
+            from_due = p_from_todo.due_date()
+            to_due = p_to_todo.due_date()
+
+            if config().set_due_date_from_parent() and from_due and not to_due:
+                p_to_todo.set_tag(config().tag_due(), from_due.isoformat())
+
         if p_from_todo != p_to_todo and not self._depgraph.has_edge(
                 hash(p_from_todo), hash(p_to_todo)):
 
@@ -161,6 +171,7 @@ class TodoList(TodoListBase):
             self._update_parent_cache()
             append_projects_to_subtodo()
             append_contexts_to_subtodo()
+            set_due_date_from_parent()
             self.dirty = True
 
     def remove_dependency(self, p_from_todo, p_to_todo):

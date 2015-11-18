@@ -44,6 +44,13 @@ class DepCommand(Command):
         if from_todo and to_todo:
             self.todolist.add_dependency(from_todo, to_todo)
 
+            from_due = from_todo.due_date()
+            to_due = to_todo.due_date()
+
+            if from_due and to_due and from_due < to_due:
+                self.error(
+                    'Warning: due date of parent todo item is before the due date of the sub todo item.')
+
     def _handle_rm(self):
         (from_todo, to_todo) = self._get_todos()
 

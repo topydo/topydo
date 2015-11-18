@@ -92,6 +92,7 @@ class _Config:
             'dep': {
                 'append_parent_projects': '0',
                 'append_parent_contexts': '0',
+                'set_due_date_from_parent': '0',
             },
 
             'colorscheme': {
@@ -226,6 +227,12 @@ class _Config:
             return self.cp.getboolean('dep', 'append_parent_contexts')
         except ValueError:
             return self.defaults['dep']['append_parent_contexts'] == '1'
+
+    def set_due_date_from_parent(self):
+        try:
+            return self.cp.getboolean('dep', 'set_due_date_from_parent')
+        except ValueError:
+            return self.defaults['dep']['set_due_date_from_parent'] == '1'
 
     def _get_tag(self, p_tag):
         try:

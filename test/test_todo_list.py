@@ -242,6 +242,8 @@ class TodoListDependencyTester(TopydoTest):
         self.todolist.add("Another one with +Project")
         self.todolist.add("Todo with +AnotherProject")
         self.todolist.add("Todo without children id:3")
+        self.todolist.add("Todo with due:2015-11-18")
+        self.todolist.add("Another todo with due:2015-11-19")
 
     def test_check_dep(self):
         children = self.todolist.children(self.todolist.todo(1))
@@ -314,6 +316,57 @@ class TodoListDependencyTester(TopydoTest):
         self.todolist.add_dependency(todo6, todo8)
 
         self.assertEqual(set(["Project", "AnotherProject"]), todo8.projects())
+
+    def test_add_dep5(self):
+        """
+        Test that a due date is set to a child todo.
+        """
+        config(p_overrides={('dep', 'set_due_date_from_parent'): '1'})
+
+        todo8 = self.todolist.todo(8)
+        todo10 = self.todolist.todo(10)
+
+        self.todolist.add_dependency(todo10, todo8)
+
+        self.assertTrue(todo8.due_date())
+        self.assertEqual(todo8.due_date(), todo10.due_date())
+
+    def test_add_dep7(self):
+        config(p_overrides={('dep', 'set_due_date_from_parent'): '0'})
+        todo8 = self.todolist.todo(8)
+        todo10 = self.todolist.todo(10)
+
+        self.todolist.add_dependency(todo10, todo8)
+
+        self.assertFalse(todo8.due_date())
+
+    def test_add_dep8(self):
+        """
+        Test that no due date is set to the parent.
+        """
+        config(p_overrides={('dep', 'set_due_date_from_parent'): '1'})
+        todo8 = self.todolist.todo(8)
+        todo10 = self.todolist.todo(10)
+
+        self.todolist.add_dependency(todo8, todo10)
+
+        self.assertFalse(todo8.due_date())
+        self.assertEquals(todo10.tag_value('due'), '2015-11-18')
+
+    def test_add_dep9(self):
+        """
+        Test that no due date is set to the parent.
+        """
+        config(p_overrides={('dep', 'set_due_date_from_parent'): '1'})
+        todo10 = self.todolist.todo(10)
+        todo11 = self.todolist.todo(11)
+        due10 = todo10.due_date()
+        due11 = todo11.due_date()
+
+        self.todolist.add_dependency(todo10, todo11)
+
+        self.assertEquals(todo10.due_date(), due10)
+        self.assertEquals(todo11.due_date(), due11)
 
     def test_remove_dep1(self):
         from_todo = self.todolist.todo(3)

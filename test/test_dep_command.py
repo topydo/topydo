@@ -31,6 +31,8 @@ class DepCommandTest(CommandTest):
             "Fnord id:2",
             "Garbage dependency p:99",
             "Fart p:2",
+            "Blah due:2015-11-18",
+            "Boo due:2015-11-19",
         ]
 
         self.todolist = TodoList(todos)
@@ -120,6 +122,15 @@ class DepCommandTest(CommandTest):
         self.assertTrue(self.todolist.todo(4).has_tag('p', '1'))
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors, "")
+
+    def test_add10(self):
+        command = DepCommand(["add", "Blah", "to", "Boo"], self.todolist,
+                             self.out, self.error)
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEqual(self.output, "")
+        self.assertEqual(self.errors, "Warning: due date of parent todo item is before the due date of the sub todo item.\n")
 
     def rm_helper(self, p_args):
         """
