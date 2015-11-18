@@ -39,6 +39,13 @@ def progress_color_code(p_todo, p_safe=True):
         """
         result = 0
 
+        def diff_days(p_start, p_end):
+            if p_start < p_end:
+                diff = p_end - p_start
+                return diff.days
+
+            return 0
+
         if p_todo.has_tag('rec') and p_todo.due_date():
             # add negation, offset is based on due date
             recurrence_pattern = p_todo.tag_value('rec')
@@ -48,11 +55,14 @@ def progress_color_code(p_todo, p_safe=True):
                 neg_recurrence_pattern, p_todo.due_date())
             due = p_todo.due_date()
 
-            if start < due:
-                diff = due - start
-                result = diff.days
-        else:
+            result = diff_days(start, due)
+
+        elif p_todo.start_date() and p_todo.due_date():
             result = p_todo.length()
+        elif p_todo.creation_date() and p_todo.due_date():
+            start = p_todo.creation_date()
+            due = p_todo.due_date()
+            result = diff_days(start, due)
 
         return result
 
