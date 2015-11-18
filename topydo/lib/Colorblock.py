@@ -56,13 +56,8 @@ def progress_color_code(p_todo, p_safe=True):
             due = p_todo.due_date()
 
             result = diff_days(start, due)
-
-        elif p_todo.start_date() and p_todo.due_date():
+        else:
             result = p_todo.length()
-        elif p_todo.creation_date() and p_todo.due_date():
-            start = p_todo.creation_date()
-            due = p_todo.due_date()
-            result = diff_days(start, due)
 
         return result
 
