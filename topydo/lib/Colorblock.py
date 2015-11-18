@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import re
+
 from topydo.lib.Colors import int_to_ansi, NEUTRAL_COLOR
 from topydo.lib.Recurrence import relative_date_to_date
 
@@ -39,7 +41,9 @@ def progress_color_code(p_todo, p_safe=True):
 
         if p_todo.has_tag('rec') and p_todo.due_date():
             # add negation, offset is based on due date
-            neg_recurrence_pattern = '-' + p_todo.tag_value('rec')
+            recurrence_pattern = p_todo.tag_value('rec')
+            neg_recurrence_pattern = re.sub('^\+?', '-', recurrence_pattern)
+
             start = relative_date_to_date(
                 neg_recurrence_pattern, p_todo.due_date())
             due = p_todo.due_date()
