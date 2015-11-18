@@ -22,6 +22,7 @@ import re
 from six import u
 
 from topydo.lib.Config import config
+from topydo.lib.Colorblock import color_block
 from topydo.lib.Utils import get_terminal_size
 
 MAIN_PATTERN = (r'^({{(?P<before>.+?)}})?'
@@ -191,6 +192,8 @@ class ListFormatParser(object):
 
             # relative completion date
             'X': lambda t: 'x ' + humanize_date(t.completion_date()) if t.is_completed() else '',
+
+            'z': color_block
         }
         self.format_list = self._preprocess_format()
 
