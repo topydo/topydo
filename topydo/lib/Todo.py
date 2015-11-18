@@ -85,9 +85,10 @@ class Todo(TodoBase):
     def length(self):
         """
         Returns the length (in days) of the task, by considering the start date
-        and the due date. Returns 0 when one of these dates are missing.
+        and the due date. When there is no start date, its creation date is
+        used. Returns 0 when one of these dates is missing.
         """
-        start = self.start_date()
+        start = self.start_date() or self.creation_date()
         due = self.due_date()
 
         if start and due and start < due:
