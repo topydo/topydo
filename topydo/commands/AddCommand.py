@@ -93,9 +93,24 @@ class AddCommand(Command):
                         dep = self.todolist.todo(value)
 
                         if p_tag == 'after':
-                            self.todolist.add_dependency(p_todo, dep)
+                            from_todo, to_todo = p_todo, dep
                         elif p_tag == 'before' or p_tag == 'partof':
-                            self.todolist.add_dependency(dep, p_todo)
+                            from_todo, to_todo = dep, p_todo
+                        else:
+                            continue
+
+                        self.todolist.add_dependency(from_todo, to_todo)
+
+                        from_due = from_todo.due_date()
+                        to_due = to_todo.due_date()
+
+                        if from_due and to_due and from_due < to_due:
+                            self.error(
+                                'Warning: due date of todo item {} is before the due date of the sub todo item {}.'.format(
+                                    self.todolist.number(from_todo),
+                                    self.todolist.number(to_todo),
+                                ))
+
                     except InvalidTodoException:
                         pass
 
