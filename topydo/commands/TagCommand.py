@@ -15,7 +15,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from topydo.lib.Command import Command, InvalidCommandArgument
+from topydo.lib.Config import config
 from topydo.lib.prettyprinters.Numbers import PrettyPrinterNumbers
+from topydo.lib.RelativeDate import relative_date_to_date
 from topydo.lib.TodoListBase import InvalidTodoException
 
 
@@ -90,7 +92,16 @@ class TagCommand(Command):
 
         return answer
 
+    def _convert_relative_dates(self):
+        if self.tag == config().tag_start() or self.tag == config().tag_due():
+            real_date = relative_date_to_date(self.value)
+
+            if real_date:
+                self.value = real_date.isoformat()
+
     def _set_helper(self, p_old_value=""):
+        self._convert_relative_dates()
+
         old_src = self.todo.source()
         self.todo.set_tag(self.tag, self.value, self.force_add, p_old_value)
 

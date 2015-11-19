@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from freezegun import freeze_time
 import unittest
 
 from test.command_testcase import CommandTest
@@ -136,6 +137,29 @@ class TagCommandTest(CommandTest):
         self.assertTrue(self.todolist.is_dirty())
         self.assertEqual(self.output,
                          "|  4| Fnord due:2014-10-20 due:2014-10-20\n")
+        self.assertEqual(self.errors, "")
+
+    @freeze_time('2015, 11, 19')
+    def test_set_tag11(self):
+        command = TagCommand(["3", "due", "today"], self.todolist, self.out,
+                             self.error)
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEqual(self.output, "|  3| Baz due:2015-11-19\n")
+        self.assertEqual(self.errors, "")
+
+    def test_set_tag12(self):
+        """
+        Do not convert relative dates for tags that were not configured as
+        start/due date.
+        """
+        command = TagCommand(["3", "foo", "today"], self.todolist, self.out,
+                             self.error)
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEqual(self.output, "|  3| Baz due:2014-10-20 foo:today\n")
         self.assertEqual(self.errors, "")
 
     def test_rm_tag01(self):
