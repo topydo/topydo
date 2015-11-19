@@ -16,7 +16,7 @@
 
 import re
 
-from topydo.lib.Colors import int_to_ansi, NEUTRAL_COLOR
+from topydo.lib.Colors import int_to_ansi, Colors
 from topydo.lib.Recurrence import relative_date_to_date
 
 COLOR16_RANGE = [
@@ -95,6 +95,7 @@ def progress_color_code(p_todo, p_safe=True):
 def color_block(p_todo, p_safe=True):
     color_code = progress_color_code(p_todo, p_safe)
     ansi_code = int_to_ansi(color_code, p_safe=p_safe, p_background=color_code)
+    priority_color = Colors().get_priority_color(p_todo.priority())
 
-    return '{} {}'.format(ansi_code, NEUTRAL_COLOR)
+    return '{} {}'.format(ansi_code, priority_color)
 
