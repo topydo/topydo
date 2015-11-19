@@ -193,9 +193,9 @@ class ListFormatParser(object):
             # relative completion date
             'X': lambda t: 'x ' + humanize_date(t.completion_date()) if t.is_completed() else '',
 
-            'z': color_block,
+            'z': lambda t: color_block if config().colors() else ' ',
 
-            'Z': lambda t: color_block(t, p_safe=False),
+            'Z': lambda t: color_block(t, p_safe=False) if config().colors() else ' ',
         }
         self.format_list = self._preprocess_format()
 
