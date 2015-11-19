@@ -193,7 +193,7 @@ class ListFormatParser(object):
             # relative completion date
             'X': lambda t: 'x ' + humanize_date(t.completion_date()) if t.is_completed() else '',
 
-            'z': lambda t: color_block if config().colors() else ' ',
+            'z': lambda t: color_block(t) if config().colors() else ' ',
 
             'Z': lambda t: color_block(t, p_safe=False) if config().colors() else ' ',
         }
