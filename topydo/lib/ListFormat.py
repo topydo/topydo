@@ -23,7 +23,7 @@ from six import u
 
 from topydo.lib.Config import config
 from topydo.lib.Colorblock import color_block
-from topydo.lib.Utils import get_terminal_size
+from topydo.lib.Utils import get_terminal_size, escape_ansi
 
 MAIN_PATTERN = (r'^({{(?P<before>.+?)}})?'
                 r'(?P<placeholder>{ph}|\[{ph}\])'
@@ -110,7 +110,7 @@ def _truncate(p_str, p_repl):
     Place of the truncation is calculated depending on p_max_width.
     """
     # 4 is for '...' and an extra space at the end
-    text_lim = _columns() - len(p_str) - 4
+    text_lim = _columns() - len(escape_ansi(p_str)) - 4
     truncated_str = re.sub(re.escape(p_repl), p_repl[:text_lim] + '...', p_str)
 
     return truncated_str
@@ -122,7 +122,7 @@ def _right_align(p_str):
     Right alignment is done using proper number of spaces calculated from
     'line_width' attribute.
     """
-    to_fill = _columns() - len(p_str)
+    to_fill = _columns() - len(escape_ansi(p_str))
 
     if to_fill > 0:
         p_str = re.sub('\t', ' '*to_fill, p_str)
@@ -272,7 +272,7 @@ class ListFormatParser(object):
         parsed_str = _unescape_percent_sign(''.join(parsed_list))
         parsed_str = _remove_redundant_spaces(parsed_str)
 
-        if self.one_line and len(parsed_str) >= _columns():
+        if self.one_line and len(escape_ansi(parsed_str)) >= _columns():
             parsed_str = _truncate(parsed_str, repl_trunc)
 
         if re.search('.*\t', parsed_str):
