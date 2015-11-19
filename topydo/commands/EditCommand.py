@@ -18,8 +18,6 @@ import os
 import tempfile
 from subprocess import CalledProcessError, check_call
 
-from six import u
-
 from topydo.lib.Config import config
 from topydo.lib.MultiCommand import MultiCommand
 from topydo.lib.prettyprinters.Numbers import PrettyPrinterNumbers
@@ -97,7 +95,7 @@ class EditCommand(MultiCommand):
 
         if len(self.invalid_numbers) > 1 or len(self.invalid_numbers) > 0 and len(self.todos) > 0:
             for number in self.invalid_numbers:
-                errors.append(u("Invalid todo number given: {}.").format(number))
+                errors.append(u"Invalid todo number given: {}.".format(number))
         elif len(self.invalid_numbers) == 1 and len(self.todos) == 0:
             errors.append("Invalid todo number given.")
 

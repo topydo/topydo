@@ -24,12 +24,8 @@ from topydo.cli.CLIApplicationBase import CLIApplicationBase, error, usage
 from topydo.cli.TopydoCompleter import TopydoCompleter
 from prompt_toolkit.shortcuts import prompt
 from prompt_toolkit.history import InMemoryHistory
-from six import PY2
 
 from topydo.lib.Config import config, ConfigError
-
-if PY2:
-    import ushlex as shlex
 
 # First thing is to poke the configuration and check whether it's sane
 # The modules below may already read in configuration upon import, so
@@ -84,8 +80,6 @@ class PromptApplication(CLIApplicationBase):
             self.todolist = TodoList.TodoList(self.todofile.read())
             self.mtime = current_mtime
 
-            # suppress upstream issue with Python 2.7
-            # pylint: disable=no-value-for-parameter
             self.completer = TopydoCompleter(self.todolist)
 
     def run(self):

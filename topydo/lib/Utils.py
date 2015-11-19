@@ -59,10 +59,7 @@ def get_terminal_size():
     Try to determine terminal size at run time. If that is not possible,
     returns the default size of 80x24.
     """
-    try:
-        from shutil import get_terminal_size # pylint: disable=no-name-in-module
-    except ImportError:
-        from backports.shutil_get_terminal_size import get_terminal_size
+    from shutil import get_terminal_size # pylint: disable=no-name-in-module
 
     try:
         sz = get_terminal_size()

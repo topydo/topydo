@@ -16,8 +16,6 @@
 
 import unittest
 
-from six import u
-
 from test.command_testcase import CommandTest
 from topydo.commands.DepriCommand import DepriCommand
 from topydo.lib.TodoList import TodoList
@@ -152,14 +150,14 @@ class DepriCommandTest(CommandTest):
         """
         Throw an error with invalid argument containing special characters.
         """
-        command = DepriCommand([u("Fo\u00d3B\u0105r"), "Bar"], self.todolist,
+        command = DepriCommand([u"Fo\u00d3B\u0105r", "Bar"], self.todolist,
                                self.out, self.error, None)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
         self.assertFalse(self.output)
         self.assertEqual(self.errors,
-                         u("Invalid todo number given: Fo\u00d3B\u0105r.\n"))
+                         u"Invalid todo number given: Fo\u00d3B\u0105r.\n")
 
     def test_empty(self):
         command = DepriCommand([], self.todolist, self.out, self.error)

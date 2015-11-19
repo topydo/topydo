@@ -20,7 +20,6 @@ def find_version(*file_paths):
         return version_match.group(1)
     raise RuntimeError("Unable to find version string.")
 
-
 setup(
     name = "topydo",
     packages = find_packages(exclude=["test"]),
@@ -30,21 +29,13 @@ setup(
     author_email = "me@bramschoenmakers.nl",
     url = "https://github.com/bram85/topydo",
     install_requires = [
-        'six >= 1.9.0',
         'arrow >= 0.7.0',
     ],
     extras_require = {
         ':sys_platform=="win32"': ['colorama>=0.2.5'],
-        # shutil.get_terminal_size() was introduced in Python 3.3
-        ':python_version=="2.7"': [
-            'backports.shutil_get_terminal_size>=1.0.0',
-            'ushlex',
-        ],
-        ':python_version=="3.2"': ['backports.shutil_get_terminal_size>=1.0.0'],
         'ical': ['icalendar'],
         'prompt-toolkit': ['prompt-toolkit >= 0.53'],
         'test': ['coverage', 'freezegun', 'green', ],
-        'test:python_version=="2.7"': ['mock'],
         'test:python_version!="3.2"': ['pylint'],
     },
     entry_points= {
@@ -56,10 +47,12 @@ setup(
         "Intended Audience :: End Users/Desktop",
         "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
         "Natural Language :: English",
-        "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3.2",
         "Programming Language :: Python :: 3.3",
         "Programming Language :: Python :: 3.4",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: Implementation :: CPython",
+        "Programming Language :: Python :: Implementation :: PyPy",
         "Topic :: Utilities",
     ],
     long_description = """\

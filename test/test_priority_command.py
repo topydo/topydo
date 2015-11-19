@@ -16,8 +16,6 @@
 
 import unittest
 
-from six import u
-
 from test.command_testcase import CommandTest
 from topydo.commands.PriorityCommand import PriorityCommand
 from topydo.lib.TodoList import TodoList
@@ -198,14 +196,14 @@ class PriorityCommandTest(CommandTest):
         """
         Throw an error with invalid argument containing special characters.
         """
-        command = PriorityCommand([u("Fo\u00d3B\u0105r"), "Bar", "C"],
+        command = PriorityCommand([u"Fo\u00d3B\u0105r", "Bar", "C"],
                                   self.todolist, self.out, self.error, None)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors,
-                         u("Invalid todo number given: Fo\u00d3B\u0105r.\n"))
+                         u"Invalid todo number given: Fo\u00d3B\u0105r.\n")
 
     def test_invalid8(self):
         """

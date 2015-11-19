@@ -21,8 +21,6 @@ A list of todo items.
 import re
 from datetime import date
 
-from six import text_type
-
 from topydo.lib import Filter
 from topydo.lib.Config import config
 from topydo.lib.HashListValues import hash_list_values
@@ -128,7 +126,7 @@ class TodoListBase(object):
 
         if not result:
             # convert integer to text so we pass on a valid regex
-            result = todo_by_regexp(text_type(p_identifier))
+            result = todo_by_regexp(str(p_identifier))
 
         return result
 
