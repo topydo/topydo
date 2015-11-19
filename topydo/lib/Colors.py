@@ -59,80 +59,89 @@ def int_to_ansi(p_int, p_decorator='normal', p_safe=True, p_background=''):
     except ValueError:
         return None
 
+def _name_to_int(p_color_name):
+    """ Returns xterm color id from color name. """
+    color_names_dict = {
+            'black': 0,
+            'red': 1,
+            'green': 2,
+            'yellow': 3,
+            'blue': 4,
+            'magenta': 5,
+            'cyan': 6,
+            'gray': 7,
+            'darkgray': 8,
+            'light-red': 9,
+            'light-green': 10,
+            'light-yellow': 11,
+            'light-blue': 12,
+            'light-magenta': 13,
+            'light-cyan': 14,
+            'white': 15,
+    }
+
+    try:
+        return color_names_dict[p_color_name]
+    except KeyError:
+        return 404
+
+def _name_to_ansi(p_color_name, p_decorator):
+    """ Returns ansi color code from color name. """
+    number = _name_to_int(p_color_name)
+
+    return int_to_ansi(number, p_decorator)
+
+def _get_ansi(p_color, p_decorator):
+    """ Returns ansi color code from color name or xterm color id. """
+    if p_color == '':
+        ansi = ''
+    else:
+        ansi = int_to_ansi(p_color, p_decorator, False)
+
+        if not ansi:
+            ansi = _name_to_ansi(p_color, p_decorator)
+
+    return ansi
+
+def _get_priority_colors():
+    pri_ansi_colors = dict()
+    pri_colors = config().priority_colors()
+
+    for pri in pri_colors:
+        color = _get_ansi(pri_colors[pri], 'normal')
+
+        if color == '':
+            color = NEUTRAL_COLOR
+
+        pri_ansi_colors[pri] = color
+
+    return pri_ansi_colors
+
 
 class Colors(object):
     def __init__(self):
-        self.priority_colors = config().priority_colors()
+        self.priority_colors = _get_priority_colors()
         self.project_color = config().project_color()
         self.context_color = config().context_color()
         self.metadata_color = config().metadata_color()
         self.link_color = config().link_color()
 
-    def _name_to_int(self, p_color_name):
-        """ Returns xterm color id from color name. """
-        color_names_dict = {
-                'black': 0,
-                'red': 1,
-                'green': 2,
-                'yellow': 3,
-                'blue': 4,
-                'magenta': 5,
-                'cyan': 6,
-                'gray': 7,
-                'darkgray': 8,
-                'light-red': 9,
-                'light-green': 10,
-                'light-yellow': 11,
-                'light-blue': 12,
-                'light-magenta': 13,
-                'light-cyan': 14,
-                'white': 15,
-        }
-
-        try:
-            return color_names_dict[p_color_name]
-        except KeyError:
-            return 404
-
-    def _name_to_ansi(self, p_color_name, p_decorator):
-        """ Returns ansi color code from color name. """
-        number = self._name_to_int(p_color_name)
-
-        return int_to_ansi(number, p_decorator)
-
-    def _get_ansi(self, p_color, p_decorator):
-        """ Returns ansi color code from color name or xterm color id. """
-        if p_color == '':
-            ansi = ''
-        else:
-            ansi = int_to_ansi(p_color, p_decorator, False)
-
-            if not ansi:
-                ansi = self._name_to_ansi(p_color, p_decorator)
-
-        return ansi
-
-    def get_priority_colors(self):
-        pri_ansi_colors = dict()
-
-        for pri in self.priority_colors:
-            color = self._get_ansi(self.priority_colors[pri], 'normal')
-
-            if color == '':
-                color = NEUTRAL_COLOR
-
-            pri_ansi_colors[pri] = color
-
-        return pri_ansi_colors
-
     def get_project_color(self):
-        return self._get_ansi(self.project_color, 'bold')
+        return _get_ansi(self.project_color, 'bold')
 
     def get_context_color(self):
-        return self._get_ansi(self.context_color, 'bold')
+        return _get_ansi(self.context_color, 'bold')
 
     def get_metadata_color(self):
-        return self._get_ansi(self.metadata_color, 'bold')
+        return _get_ansi(self.metadata_color, 'bold')
 
     def get_link_color(self):
-        return self._get_ansi(self.link_color, 'underline')
+        return _get_ansi(self.link_color, 'underline')
+
+    def get_priority_color(self, p_priority):
+        try:
+            priority_color = self.priority_colors[p_priority]
+        except KeyError:
+            priority_color = NEUTRAL_COLOR
+
+        return priority_color
