@@ -45,7 +45,7 @@ def _to_base36(p_value):
     return base36 or alphabet[0]
 
 
-def hash_list_values(p_list, p_key=lambda i: i):
+def hash_list_values(p_list, p_key=lambda i: i):  # pragma: no branch
     """
     Calculates a unique value for each item in the list, these can be used as
     identifiers.
