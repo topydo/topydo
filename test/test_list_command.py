@@ -314,6 +314,14 @@ class ListCommandTest(CommandTest):
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors, "option -z not recognized\n")
 
+    def test_list42(self):
+        command = ListCommand(["-x", "+Project1", "-id:1"], self.todolist, self.out,
+            self.error)
+        command.execute()
+
+        self.assertEqual(self.output, "|  1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n")
+        self.assertEqual(self.errors, "")
+
     def test_help(self):
         command = ListCommand(["help"], self.todolist, self.out, self.error)
         command.execute()

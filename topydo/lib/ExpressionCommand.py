@@ -54,16 +54,19 @@ class ExpressionCommand(Command):
                 args = self.args
 
             for arg in args:
+                # when a word starts with -, it should be negated
+                is_negated = len(arg) > 1 and arg[0] == '-'
+                arg = arg[1:] if is_negated else arg
+
                 if re.match(Filter.ORDINAL_TAG_MATCH, arg):
                     argfilter = Filter.OrdinalTagFilter(arg)
                 elif re.match(Filter.PRIORITY_MATCH, arg):
                     argfilter = Filter.PriorityFilter(arg)
-                elif len(arg) > 1 and arg[0] == '-':
-                    # when a word starts with -, exclude it
-                    argfilter = Filter.GrepFilter(arg[1:])
-                    argfilter = Filter.NegationFilter(argfilter)
                 else:
                     argfilter = Filter.GrepFilter(arg)
+
+                if is_negated:
+                    argfilter = Filter.NegationFilter(argfilter)
 
                 result.append(argfilter)
 
