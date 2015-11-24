@@ -44,15 +44,17 @@ class DotPrinter(Printer):
                 self.todolist.number(t), t.text()
             )) for t in p_todos]))
 
-        node_name = lambda t: str(self.todolist.number(t))
+        node_name = lambda t: '_' + str(self.todolist.number(t))
+        node_label = lambda t: str(self.todolist.number(t))
         node_tooltip = lambda t: escape(t.text())
 
         result = 'digraph {\n'
 
         # print todos
         for todo in p_todos:
-            result += '  {} [tooltip="{}"]\n'.format(
+            result += '  {} [label="{}", tooltip="{}"]\n'.format(
                 node_name(todo),
+                node_label(todo),
                 node_tooltip(todo),
             )
 
