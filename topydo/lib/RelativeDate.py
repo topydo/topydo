@@ -91,7 +91,7 @@ def relative_date_to_date(p_date, p_offset=None):
     The following formats are understood:
 
     * [0-9][dwmy]
-    * 'today' or 'tomorrow'
+    * 'yesterday', 'today' or 'tomorrow'
     * days of the week (in full or abbreviated)
     """
     result = None
@@ -125,5 +125,8 @@ def relative_date_to_date(p_date, p_offset=None):
 
     elif re.match('tom(orrow)?$', p_date):
         result = _convert_pattern('1', 'd')
+
+    elif re.match('yes(terday)?$', p_date):
+        result = _convert_pattern('-1', 'd')
 
     return result
