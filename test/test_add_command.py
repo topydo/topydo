@@ -340,6 +340,7 @@ class AddCommandTest(CommandTest):
             self.todolist, self.out, self.error)
         command.execute()
 
+        self.assertTrue(self.todolist.todo(1).is_completed())
         self.assertEqual(self.output,
             "|  1| x 2015-01-01 {} Already completed\n".format(self.today))
         self.assertEqual(self.errors, "")
