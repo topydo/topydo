@@ -304,6 +304,32 @@ class DoCommandTest(CommandTest):
         self.assertEqual(self.output, "| 12| {today} Strict due:2014-01-02 rec:1d\nCompleted: x {yesterday} Strict due:2014-01-01 rec:1d\n".format(today=self.today, yesterday=self.yesterday))
         self.assertEqual(self.errors, "")
 
+    def test_do_custom_date8(self):
+        """
+        Convert relative completion dates to an absolute date (yesterday).
+        """
+        command = DoCommand(["-d", "yesterday", "3"], self.todolist, self.out,
+                            self.error)
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEqual(self.output,
+                         "Completed: x {} Baz p:1\n".format(self.yesterday))
+        self.assertEqual(self.errors, "")
+
+    def test_do_custom_date9(self):
+        """
+        Convert relative completion dates to an absolute date (-1d)
+        """
+        command = DoCommand(["-d", "-1d", "3"], self.todolist, self.out,
+                            self.error)
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEqual(self.output,
+                         "Completed: x {} Baz p:1\n".format(self.yesterday))
+        self.assertEqual(self.errors, "")
+
     def test_multi_do1(self):
         command = DoCommand(["1", "3"], self.todolist, self.out, self.error,
                             _yes_prompt)
