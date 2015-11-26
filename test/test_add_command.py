@@ -334,6 +334,16 @@ class AddCommandTest(CommandTest):
         self.assertEqual(self.todolist.todo(1).source(), "New todo")
         self.assertEqual(self.errors, "")
 
+    def test_add_completed(self):
+        """ Add a command that is completed automatically. """
+        command = AddCommand.AddCommand(["x 2015-01-01 Already completed"],
+            self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEqual(self.output,
+            "|  1| x 2015-01-01 {} Already completed\n".format(self.today))
+        self.assertEqual(self.errors, "")
+
     def test_help(self):
         command = AddCommand.AddCommand(["help"], self.todolist, self.out,
                                         self.error)
