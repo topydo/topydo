@@ -73,7 +73,7 @@ class ListCommand(ExpressionCommand):
                 try:
                     self.limit = int(value)
                 except ValueError:
-                    pass # use default value in configuration
+                    pass  # use default value in configuration
             elif opt == '-i':
                 self.ids = value.split(',')
 
@@ -142,7 +142,7 @@ class ListCommand(ExpressionCommand):
 
     def usage(self):
         return """Synopsis: ls [-x] [-s <sort_expression>] [-f <output format>]
-[-F <format string>] [expression]"""
+[-F <format string>] [-i <item numbers>] [-n <integer>] [expression]"""
 
     def help(self):
         return """\
@@ -193,6 +193,7 @@ When an expression is given, only the todos matching that expression are shown.
 
      A tab character serves as a marker to start right alignment.
 -i : Comma separated list of todo IDs to print.
+-n : Number of items to display. Defaults to the value in the configuration.
 -s : Sort the list according to a sort expression. Defaults to the expression
      in the configuration.
 -x : Show all todos (i.e. do not filter on dependencies or relevance).
