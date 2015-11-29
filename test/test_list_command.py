@@ -18,8 +18,6 @@ import codecs
 import re
 import unittest
 
-from six import u
-
 from test.command_testcase import CommandTest
 from test.facilities import load_file_to_todolist
 from topydo.commands.ListCommand import ListCommand
@@ -338,13 +336,13 @@ class ListCommandUnicodeTest(CommandTest):
 
     def test_list_unicode1(self):
         """ Unicode filters."""
-        command = ListCommand([u("\u25c4")], self.todolist, self.out,
+        command = ListCommand([u"\u25c4"], self.todolist, self.out,
                               self.error)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
 
-        expected = u("|  1| (C) And some sp\u00e9cial tag:\u25c4\n")
+        expected = u"|  1| (C) And some sp\u00e9cial tag:\u25c4\n"
 
         self.assertEqual(self.output, expected)
 

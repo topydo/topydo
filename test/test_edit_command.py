@@ -17,8 +17,6 @@
 import os
 import unittest
 
-from six import u
-
 from test.command_testcase import CommandTest
 from topydo.commands.EditCommand import EditCommand
 from topydo.lib.Config import config
@@ -40,7 +38,7 @@ class EditCommandTest(CommandTest):
             "Foo id:1",
             "Bar p:1 @test",
             "Baz @test",
-            u("Fo\u00f3B\u0105\u017a"),
+            u"Fo\u00f3B\u0105\u017a",
         ]
 
         self.todolist = TodoList(todos)
@@ -59,7 +57,7 @@ class EditCommandTest(CommandTest):
 
         self.assertEqual(self.errors, "")
         self.assertTrue(self.todolist.is_dirty())
-        self.assertEqual(self.todolist.print_todos(), u("Bar p:1 @test\nBaz @test\nFo\u00f3B\u0105\u017a\nFoo id:1"))
+        self.assertEqual(self.todolist.print_todos(), u"Bar p:1 @test\nBaz @test\nFo\u00f3B\u0105\u017a\nFoo id:1")
 
     @mock.patch('topydo.commands.EditCommand._is_edited')
     @mock.patch('topydo.commands.EditCommand.EditCommand._todos_from_temp')
@@ -76,7 +74,7 @@ class EditCommandTest(CommandTest):
 
         self.assertTrue(self.todolist.is_dirty())
         self.assertEqual(self.errors, "")
-        self.assertEqual(self.todolist.print_todos(), u("Foo id:1\nBaz @test\nFo\u00f3B\u0105\u017a\nLazy Cat"))
+        self.assertEqual(self.todolist.print_todos(), u"Foo id:1\nBaz @test\nFo\u00f3B\u0105\u017a\nLazy Cat")
 
     def test_edit03(self):
         """ Throw an error after invalid todo number given as argument. """
@@ -100,13 +98,13 @@ class EditCommandTest(CommandTest):
         """
         Throw an error with invalid argument containing special characters.
         """
-        command = EditCommand([u("Fo\u00d3B\u0105r"), "Bar"], self.todolist,
+        command = EditCommand([u"Fo\u00d3B\u0105r", "Bar"], self.todolist,
                               self.out, self.error, None)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
         self.assertEqual(self.errors,
-                         u("Invalid todo number given: Fo\u00d3B\u0105r.\n"))
+                         u"Invalid todo number given: Fo\u00d3B\u0105r.\n")
 
     @mock.patch('topydo.commands.EditCommand._is_edited')
     @mock.patch('topydo.commands.EditCommand.EditCommand._todos_from_temp')
@@ -117,14 +115,14 @@ class EditCommandTest(CommandTest):
         mock_todos_from_temp.return_value = [Todo('Lazy Cat')]
         mock_is_edited.return_value = True
 
-        command = EditCommand([u("Fo\u00f3B\u0105\u017a")], self.todolist,
+        command = EditCommand([u"Fo\u00f3B\u0105\u017a"], self.todolist,
                               self.out, self.error, None)
         command.execute()
 
         self.assertTrue(self.todolist.is_dirty())
         self.assertEqual(self.errors, "")
         self.assertEqual(self.todolist.print_todos(),
-                         u("Foo id:1\nBar p:1 @test\nBaz @test\nLazy Cat"))
+                         u"Foo id:1\nBar p:1 @test\nBaz @test\nLazy Cat")
 
     @mock.patch('topydo.commands.EditCommand._is_edited')
     @mock.patch('topydo.commands.EditCommand.EditCommand._todos_from_temp')
@@ -141,7 +139,7 @@ class EditCommandTest(CommandTest):
 
         self.assertFalse(self.todolist.is_dirty())
         self.assertEqual(self.errors, "Editing aborted. Nothing to do.\n")
-        self.assertEqual(self.todolist.print_todos(), u("Foo id:1\nBar p:1 @test\nBaz @test\nFo\u00f3B\u0105\u017a"))
+        self.assertEqual(self.todolist.print_todos(), u"Foo id:1\nBar p:1 @test\nBaz @test\nFo\u00f3B\u0105\u017a")
 
     @mock.patch('topydo.commands.EditCommand._is_edited')
     @mock.patch('topydo.commands.EditCommand.EditCommand._todos_from_temp')
@@ -157,12 +155,12 @@ class EditCommandTest(CommandTest):
                               self.error, None)
         command.execute()
 
-        expected = u("|  3| Lazy Cat\n|  4| Lazy Dog\n")
+        expected = u"|  3| Lazy Cat\n|  4| Lazy Dog\n"
 
         self.assertEqual(self.errors, "")
         self.assertTrue(self.todolist.is_dirty())
         self.assertEqual(self.output, expected)
-        self.assertEqual(self.todolist.print_todos(), u("Foo id:1\nFo\u00f3B\u0105\u017a\nLazy Cat\nLazy Dog"))
+        self.assertEqual(self.todolist.print_todos(), u"Foo id:1\nFo\u00f3B\u0105\u017a\nLazy Cat\nLazy Dog")
 
     @mock.patch('topydo.commands.EditCommand.check_call')
     def test_edit_archive(self, mock_call):

@@ -16,8 +16,6 @@
 
 """ Provides a pretty printer filter that inserts todo numbers. """
 
-from six import u
-
 from topydo.lib.PrettyPrinterFilter import PrettyPrinterFilter
 
 
@@ -30,5 +28,5 @@ class PrettyPrinterNumbers(PrettyPrinterFilter):
 
     def filter(self, p_todo_str, p_todo):
         """ Prepends the number to the todo string. """
-        return u("|{:>3}| {}").format(self.todolist.number(p_todo), p_todo_str)
+        return "|{:>3}| {}".format(self.todolist.number(p_todo), p_todo_str)
 

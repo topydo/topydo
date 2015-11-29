@@ -17,8 +17,6 @@
 import unittest
 from datetime import date, timedelta
 
-from six import u
-
 from test.command_testcase import CommandTest
 from topydo.commands.DoCommand import DoCommand
 from topydo.lib.TodoList import TodoList
@@ -383,13 +381,13 @@ class DoCommandTest(CommandTest):
         """
         Throw an error with invalid argument containing special characters.
         """
-        command = DoCommand([u("Fo\u00d3B\u0105r"), "Bar"], self.todolist,
+        command = DoCommand([u"Fo\u00d3B\u0105r", "Bar"], self.todolist,
                             self.out, self.error, None)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
         self.assertEqual(self.errors,
-                         u("Invalid todo number given: Fo\u00d3B\u0105r.\n"))
+                         u"Invalid todo number given: Fo\u00d3B\u0105r.\n")
 
     def test_expr_do1(self):
         command = DoCommand(["-e", "@test"], self.todolist, self.out,

@@ -19,8 +19,6 @@
 import arrow
 import re
 
-from six import u
-
 from topydo.lib.Config import config
 from topydo.lib.Utils import get_terminal_size
 
@@ -162,13 +160,13 @@ class ListFormatParser(object):
 
 
             # list of tags (spaces) without hidden ones and due: and t:
-            'k': lambda t: ' '.join([u('{}:{}').format(tag, value)
+            'k': lambda t: ' '.join([u'{}:{}'.format(tag, value)
                                      for tag, value in sorted(t.tags()) if
                                      tag not in config().hidden_tags() +
                                      [config().tag_start(), config().tag_due()]]),
 
             # list of all tags (spaces)
-            'K': lambda t: ' '.join([u('{}:{}').format(tag, value)
+            'K': lambda t: ' '.join([u'{}:{}'.format(tag, value)
                                      for tag, value in sorted(t.tags())]),
 
             # priority
