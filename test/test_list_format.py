@@ -119,6 +119,8 @@ class ListFormatTest(CommandTest):
 |  6| x 2014-12-12 Completed but with                           date:2014-12-12
 """
 
+        self.assertEqual(self.output, result)
+
     @mock.patch('topydo.lib.ListFormat.get_terminal_size')
     def test_list_format06(self, mock_terminal_size):
         mock_terminal_size.return_value = self.terminal_size(100, 25)
@@ -647,6 +649,33 @@ Z   Z
    |  6| x 2014-12-12 Completed but with                                            date:2014-12-12
 """
         self.assertEqual(self.output, result)
+
+    def test_list_format43(self):
+        command = ListCommand(["-x", "-F", "%P -"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = """D -
+Z -
+C -
+C -
+  -
+  -
+"""
+        self.assertEqual(self.output, result)
+
+    def test_list_format44(self):
+        command = ListCommand(["-x", "-F", "%i %{(}P{)}"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = """1 (D)
+2 (Z)
+3 (C)
+4 (C)
+5 ( )
+6 ( )
+"""
+        self.assertEqual(self.output, result)
+
 
 if __name__ == '__main__':
     unittest.main()

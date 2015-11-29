@@ -152,6 +152,7 @@ class ListFormatParser(object):
 
             # relative dates in form:  creation, due, start
             'H': lambda t: humanize_dates(t.due_date(), t.start_date(), t.creation_date()),
+
             # todo ID
             'i': lambda t: str(self.todolist.number(t)),
 
@@ -171,6 +172,9 @@ class ListFormatParser(object):
 
             # priority
             'p': lambda t: t.priority() if t.priority() else '',
+
+            # priority (or placeholder space)
+            'P': lambda t: t.priority() if t.priority() else ' ',
 
             # text
             's': lambda t: t.text(),

@@ -177,6 +177,7 @@ When an expression is given, only the todos matching that expression are shown.
          %k: List of tags separated by spaces (excluding hidden tags).
          %K: List of all tags separated by spaces.
          %p: Priority.
+         %P: Priority or placeholder space if no priority.
          %s: Todo text.
          %S: Todo text, truncated such that an item fits on one line.
          %t: Absolute creation date.
