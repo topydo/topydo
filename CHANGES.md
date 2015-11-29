@@ -1,3 +1,18 @@
+0.8
+---
+
+* `do -d` understands relative dates.
+
+* Introduced `yesterday` as a relative date (abbrev. `yes`).
+
+* `tag` command understands relative dates when setting due or t tags.
+
+* Fix install of wheels (unnecessarily installed dependencies). Issue #79.
+
+* Bugfix: the negation of ordinal tag filters did not work.
+
+* Some improvements in test coverage (a.o. thanks to @mruwek).
+
 0.7
 ---
 
