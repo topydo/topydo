@@ -91,6 +91,16 @@ class PriorityCommandTest(CommandTest):
         self.assertEqual(self.output, "Priority changed from A to C\n|  1| (C) Foo\nPriority set to C.\n|  2| (C) Bar\n")
         self.assertEqual(self.errors, "")
 
+    def test_set_prio7(self):
+        """ Allow lowercase priority to be set. """
+        command = PriorityCommand(["Foo", "2", "c"], self.todolist, self.out,
+                                  self.error)
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEqual(self.output, "Priority changed from A to C\n|  1| (C) Foo\nPriority set to C.\n|  2| (C) Bar\n")
+        self.assertEqual(self.errors, "")
+
     def test_expr_prio1(self):
         command = PriorityCommand(["-e", "@test", "C"], self.todolist,
                                   self.out, self.error, None)
