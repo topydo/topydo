@@ -62,6 +62,10 @@ class ListCommand(ExpressionCommand):
                     if self._poke_icalendar():
                         from topydo.lib.IcalPrinter import IcalPrinter
                         self.printer = IcalPrinter(self.todolist)
+
+                        # a graph without dependencies is not so useful, hence
+                        # show all
+                        self.show_all = True
                 elif value == 'dot':
                     from topydo.lib.DotPrinter import DotPrinter
                     self.printer = DotPrinter(self.todolist)
