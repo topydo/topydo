@@ -203,19 +203,39 @@ class TodoList(TodoListBase):
         graph and removing unused dependency ids from the graph (in that
         order).
         """
-        def clean_by_tag(tag_name):
-            """ Generic function to handle 'p' and 'id' tags. """
-            for todo in [todo for todo in self._todos
-                         if todo.has_tag(tag_name)]:
+        def remove_tag(p_todo, p_tag, p_value):
+            """
+            Removes a tag from a todo item.
+            """
+            p_todo.remove_tag(p_tag, p_value)
+            self.dirty = True
 
-                value = todo.tag_value(tag_name)
+        def clean_parent_relations():
+            """
+            Remove id: tags for todos without child todo items.
+            """
+
+            for todo in [todo for todo in self._todos if todo.has_tag('id')]:
+                value = todo.tag_value('id')
                 if not self._depgraph.has_edge_id(value):
-                    todo.remove_tag(tag_name, value)
-                    self.dirty = True
+                    remove_tag(todo, 'id', value)
+
+        def clean_orphan_relations():
+            """
+            Remove p: tags for todos referring to a parent that is not in the
+            dependency graph anymore.
+            """
+
+            for todo in [todo for todo in self._todos if todo.has_tag('p')]:
+                value = todo.tag_value('p')
+                parent = self.todo_by_dep_id(value)
+
+                if not self._depgraph.has_edge(hash(parent), hash(todo)):
+                    remove_tag(todo, 'p', value)
 
         self._depgraph.transitively_reduce()
-        clean_by_tag('p')
-        clean_by_tag('id')
+        clean_parent_relations()
+        clean_orphan_relations()
 
     def _update_parent_cache(self):
         """

@@ -367,19 +367,31 @@ class TodoListDependencyTester(TopydoTest):
 class TodoListCleanDependencyTester(TopydoTest):
     def setUp(self):
         super(TodoListCleanDependencyTester, self).setUp()
-
         self.todolist = TodoList([])
+
+    def test_clean_dependencies1(self):
         self.todolist.add("Bar p:1")
         self.todolist.add("Baz p:1 id:2")
         self.todolist.add("Buzz p:2")
 
-    def test_clean_dependencies(self):
         self.todolist.clean_dependencies()
 
         self.assertFalse(self.todolist.todo(1).has_tag('p'))
         self.assertFalse(self.todolist.todo(2).has_tag('p'))
         self.assertTrue(self.todolist.todo(2).has_tag('id', '2'))
         self.assertTrue(self.todolist.todo(3).has_tag('p', '2'))
+
+    def test_clean_dependencies2(self):
+        self.todolist.add("Foo id:1")
+        self.todolist.add("Bar p:1")
+        self.todolist.add("Baz p:1 id:2")
+        self.todolist.add("Buzz p:1 p:2")
+
+        self.todolist.clean_dependencies()
+
+        self.assertFalse(self.todolist.todo(4).has_tag('p', '1'))
+        self.assertTrue(self.todolist.todo(1).has_tag('id', '1'))
+        self.assertTrue(self.todolist.todo(2).has_tag('p', '1'))
 
 if __name__ == '__main__':
     unittest.main()
