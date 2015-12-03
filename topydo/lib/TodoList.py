@@ -227,11 +227,11 @@ class TodoList(TodoListBase):
             """
 
             for todo in [todo for todo in self._todos if todo.has_tag('p')]:
-                value = todo.tag_value('p')
-                parent = self.todo_by_dep_id(value)
+                for value in todo.tag_values('p'):
+                    parent = self.todo_by_dep_id(value)
 
-                if not self._depgraph.has_edge(hash(parent), hash(todo)):
-                    remove_tag(todo, 'p', value)
+                    if not self._depgraph.has_edge(hash(parent), hash(todo)):
+                        remove_tag(todo, 'p', value)
 
         self._depgraph.transitively_reduce()
         clean_parent_relations()

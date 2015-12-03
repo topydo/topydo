@@ -420,5 +420,19 @@ class TodoListCleanDependencyTester(TopydoTest):
 
         self.assertFalse(self.todolist.todo(1).has_tag('id'))
 
+    def test_clean_dependencies4(self):
+        """ Clean p: items when siblings are still connected to parent. """
+        self.todolist.add("Foo id:1")
+        self.todolist.add("Bar p:1")
+        self.todolist.add("Baz p:1 id:2")
+        self.todolist.add("Buzz p:2 p:1")
+
+        self.todolist.clean_dependencies()
+
+        self.assertFalse(self.todolist.todo(4).has_tag('p', '1'))
+        self.assertTrue(self.todolist.todo(1).has_tag('id', '1'))
+        self.assertTrue(self.todolist.todo(2).has_tag('p', '1'))
+
+
 if __name__ == '__main__':
     unittest.main()
