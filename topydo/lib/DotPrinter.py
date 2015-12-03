@@ -45,6 +45,9 @@ class DotPrinter(Printer):
             """
             node_result = '<<TABLE CELLBORDER="0">'
 
+            def print_row(p_value1, p_value2):
+                return '<TR><TD ALIGN="LEFT">{}</TD><TD ALIGN="LEFT">{}</TD></TR>'.format(p_value1, p_value2)
+
             node_result += '<TR><TD><B>{}</B></TD><TD BALIGN="LEFT"><B>{}{}{}</B></TD></TR>'.format(
                 self.todolist.number(p_todo),
                 "<S>" if todo.is_completed() else "",
@@ -52,14 +55,14 @@ class DotPrinter(Printer):
                 "</S>" if todo.is_completed() else "",
             )
             node_result += '<HR/>'
-            node_result += '<TR><TD ALIGN="LEFT">Prio:</TD><TD ALIGN="LEFT">{}</TD></TR>'.format(p_todo.priority())
+            node_result += print_row('Prio:', p_todo.priority())
 
             due_date = p_todo.due_date()
             if due_date:
-                node_result += '<TR><TD ALIGN="LEFT">Due:</TD><TD ALIGN="LEFT">{} ({})</TD></TR>'.format(
+                node_result += print_row('Due:', "{} ({})".format(
                     due_date.isoformat(),
                     humanize_date(due_date)
-                )
+                ))
 
             node_result += '</TABLE>>'
 
