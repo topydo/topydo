@@ -44,10 +44,10 @@ class DotPrinter(Printer):
             """
             Prints an HTML table for a node label with some todo details.
             """
-            node_result = '<<TABLE CELLBORDER="0">'
+            node_result = '<<TABLE CELLBORDER="0" CELLSPACING="1" VALIGN="top">'
 
             def print_row(p_value1, p_value2):
-                return '<TR><TD ALIGN="LEFT">{}</TD><TD ALIGN="LEFT">{}</TD></TR>'.format(p_value1, p_value2)
+                return '<TR><TD ALIGN="RIGHT">{}</TD><TD ALIGN="LEFT">{}</TD></TR>'.format(p_value1, p_value2)
 
             node_result += '<TR><TD><B>{}</B></TD><TD BALIGN="LEFT"><B>{}{}{}</B></TD></TR>'.format(
                 self.todolist.number(p_todo),
@@ -85,7 +85,7 @@ class DotPrinter(Printer):
         node_name = lambda t: '_' + str(self.todolist.number(t))
 
         result = 'digraph topydo {\n'
-        result += 'node [ shape=plaintext ]\n';
+        result += 'node [ shape="none" margin="0" fontsize="9" fontname="Helvetica" ]\n';
 
         # print todos
         for todo in p_todos:
