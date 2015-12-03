@@ -55,20 +55,23 @@ class DotPrinter(Printer):
                 "<BR />".join(wrap(p_todo.text(), 35)),
                 "</S>" if todo.is_completed() else "",
             )
-            node_result += '<HR/>'
 
             priority = p_todo.priority()
+            start_date = p_todo.start_date()
+            due_date = p_todo.due_date()
+
+            if priority or start_date or due_date:
+                node_result += '<HR/>'
+
             if priority:
                 node_result += print_row('Prio:', p_todo.priority())
 
-            start_date = p_todo.start_date()
             if start_date:
                 node_result += print_row('Starts:', "{} ({})".format(
                     start_date.isoformat(),
                     humanize_date(start_date)
                 ))
 
-            due_date = p_todo.due_date()
             if due_date:
                 node_result += print_row('Due:', "{} ({})".format(
                     due_date.isoformat(),
