@@ -89,6 +89,12 @@ class DotPrinter(Printer):
                     node_name(child)
                 )
 
+        todos_without_dependencies = [todo for todo in p_todos if not self.todolist.children(todo) and not self.todolist.parents(todo)]
+        for index in range(0, len(todos_without_dependencies) - 1):
+            this_todo = todos_without_dependencies[index]
+            next_todo = todos_without_dependencies[index + 1]
+            result += '  {} -> {} [style="invis"]\n'.format(node_name(this_todo), node_name(next_todo))
+
         # print legend
         result += 'rank=sink\n'
 
