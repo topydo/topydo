@@ -17,8 +17,6 @@
 import unittest
 from datetime import date, timedelta
 
-from six import u
-
 from test.command_testcase import CommandTest
 from topydo.commands.DoCommand import DoCommand
 from topydo.lib.TodoList import TodoList
@@ -304,6 +302,32 @@ class DoCommandTest(CommandTest):
         self.assertEqual(self.output, "| 12| {today} Strict due:2014-01-02 rec:1d\nCompleted: x {yesterday} Strict due:2014-01-01 rec:1d\n".format(today=self.today, yesterday=self.yesterday))
         self.assertEqual(self.errors, "")
 
+    def test_do_custom_date8(self):
+        """
+        Convert relative completion dates to an absolute date (yesterday).
+        """
+        command = DoCommand(["-d", "yesterday", "3"], self.todolist, self.out,
+                            self.error)
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEqual(self.output,
+                         "Completed: x {} Baz p:1\n".format(self.yesterday))
+        self.assertEqual(self.errors, "")
+
+    def test_do_custom_date9(self):
+        """
+        Convert relative completion dates to an absolute date (-1d)
+        """
+        command = DoCommand(["-d", "-1d", "3"], self.todolist, self.out,
+                            self.error)
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEqual(self.output,
+                         "Completed: x {} Baz p:1\n".format(self.yesterday))
+        self.assertEqual(self.errors, "")
+
     def test_multi_do1(self):
         command = DoCommand(["1", "3"], self.todolist, self.out, self.error,
                             _yes_prompt)
@@ -357,13 +381,13 @@ class DoCommandTest(CommandTest):
         """
         Throw an error with invalid argument containing special characters.
         """
-        command = DoCommand([u("Fo\u00d3B\u0105r"), "Bar"], self.todolist,
+        command = DoCommand([u"Fo\u00d3B\u0105r", "Bar"], self.todolist,
                             self.out, self.error, None)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
         self.assertEqual(self.errors,
-                         u("Invalid todo number given: Fo\u00d3B\u0105r.\n"))
+                         u"Invalid todo number given: Fo\u00d3B\u0105r.\n")
 
     def test_expr_do1(self):
         command = DoCommand(["-e", "@test"], self.todolist, self.out,

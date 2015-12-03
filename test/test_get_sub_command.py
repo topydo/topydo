@@ -16,8 +16,6 @@
 
 import unittest
 
-from six import u
-
 from test.topydo_testcase import TopydoTest
 from topydo.Commands import get_subcommand
 from topydo.commands.AddCommand import AddCommand
@@ -60,7 +58,7 @@ class GetSubcommandTest(TopydoTest):
         args = ["smile"]
         real_cmd, final_args = get_subcommand(args)
         self.assertTrue(issubclass(real_cmd, ListCommand))
-        self.assertEqual(final_args, [u("\u263b")])
+        self.assertEqual(final_args, [u"\u263b"])
 
     def test_default_cmd01(self):
         args = ["bar"]

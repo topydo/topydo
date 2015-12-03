@@ -185,10 +185,10 @@ class DirectedGraph(object):
             childpairs = \
                 [(c1, c2) for c1 in neighbors for c2 in neighbors if c1 != c2]
 
-            for pair in childpairs:
-                if self.has_path(pair[0], pair[1]) \
-                   and not self.has_path(pair[0], from_node):
-                    removals.add((from_node, pair[1]))
+            for child1, child2 in childpairs:
+                if self.has_path(child1, child2) \
+                   and not self.has_path(child1, from_node):
+                    removals.add((from_node, child2))
 
         for edge in removals:
             self.remove_edge(edge[0], edge[1])

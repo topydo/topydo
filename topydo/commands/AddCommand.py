@@ -24,13 +24,13 @@ from sys import stdin
 
 from topydo.lib.Command import Command
 from topydo.lib.Config import config
-from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
+from topydo.lib.prettyprinters.Numbers import PrettyPrinterNumbers
 from topydo.lib.RelativeDate import relative_date_to_date
 from topydo.lib.TodoListBase import InvalidTodoException
 
 
 class AddCommand(Command):
-    def __init__(self, p_args, p_todolist,
+    def __init__(self, p_args, p_todolist, # pragma: no branch
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):

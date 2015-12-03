@@ -14,15 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import configparser
 import os
 import shlex
-
-from six import iteritems, PY2
-from six.moves import configparser
-
-if PY2:
-    import ushlex as shlex
-    import codecs
 
 class ConfigError(Exception):
     def __init__(self, p_text):
@@ -74,6 +68,7 @@ class _Config:
                 'hide_tags': 'id,p,ical',
                 'indent': '0',
                 'list_limit': '-1',
+                'list_format': '|%I| %x %{(}p{)} %c %s %k %{due:}d %{t:}t',
             },
 
             'tags': {
@@ -115,12 +110,12 @@ class _Config:
 
         self.config = {}
 
-        self.cp = configparser.ConfigParser()
+        self.cp = configparser.RawConfigParser()
 
         for section in self.defaults:
             self.cp.add_section(section)
 
-            for option, value in iteritems(self.defaults[section]):
+            for option, value in self.defaults[section].items():
                 self.cp.set(section, option, value)
 
         files = [
@@ -136,16 +131,7 @@ class _Config:
         if p_path is not None:
             files = [p_path]
 
-        if PY2:
-            for path in files:
-                try:
-                    with codecs.open(path, 'r', encoding='utf-8') as f:
-                        self.cp.readfp(f)
-                except IOError:
-                    pass
-        else:
-            self.cp.read(files)
-
+        self.cp.read(files)
         self._supplement_sections()
 
         if p_overrides:
@@ -319,6 +305,11 @@ class _Config:
             alias_dict[alias] = (real_subcommand, alias_args)
 
         return alias_dict
+
+    def list_format(self):
+        """ Returns the list format used by `ls` """
+        return self.cp.get('ls', 'list_format')
+
 
 def config(p_path=None, p_overrides=None):
     """

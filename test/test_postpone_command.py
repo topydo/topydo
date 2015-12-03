@@ -17,8 +17,6 @@
 import unittest
 from datetime import date, timedelta
 
-from six import u
-
 from test.command_testcase import CommandTest
 from topydo.commands.PostponeCommand import PostponeCommand
 from topydo.lib.TodoList import TodoList
@@ -252,14 +250,14 @@ class PostponeCommandTest(CommandTest):
 
     def test_postpone20(self):
         """ Throw an error with invalid argument containing special characters. """
-        command = PostponeCommand([u("Fo\u00d3B\u0105r"), "Bar", "1d"],
+        command = PostponeCommand([u"Fo\u00d3B\u0105r", "Bar", "1d"],
                                   self.todolist, self.out, self.error, None)
         command.execute()
 
         self.assertFalse(self.todolist.is_dirty())
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors,
-                         u("Invalid todo number given: Fo\u00d3B\u0105r.\n"))
+                         u"Invalid todo number given: Fo\u00d3B\u0105r.\n")
 
     def test_expr_postpone1(self):
         command = PostponeCommand(["-e", "due:tod", "2w"], self.todolist,

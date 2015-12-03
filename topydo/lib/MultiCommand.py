@@ -14,8 +14,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from six import u
-
 from topydo.lib.ExpressionCommand import ExpressionCommand
 from topydo.lib.TodoListBase import InvalidTodoException
 
@@ -25,7 +23,7 @@ class MultiCommand(ExpressionCommand):
     A common class for operations that can work with multiple todo IDs.
     """
 
-    def __init__(self, p_args, p_todolist,
+    def __init__(self, p_args, p_todolist, #pragma: no branch
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
@@ -90,7 +88,7 @@ class MultiCommand(ExpressionCommand):
 
         if len(self.invalid_numbers) > 1 or len(self.invalid_numbers) > 0 and len(self.todos) > 0:
             for number in self.invalid_numbers:
-                errors.append(u("Invalid todo number given: {}.").format(number))
+                errors.append(u"Invalid todo number given: {}.".format(number))
         elif len(self.invalid_numbers) == 1 and len(self.todos) == 0:
             errors.append("Invalid todo number given.")
         elif len(self.todos) == 0 and len(self.invalid_numbers) == 0:
@@ -106,14 +104,14 @@ class MultiCommand(ExpressionCommand):
         Operations specific for particular command dealing with multiple todo
         IDs.
         """
-        pass
+        raise NotImplementedError
 
     def _execute_not_multi(self):
         """
         Some commands can do something else besides operating on multiple todo
         IDs. This method is a wrapper for those other operations.
         """
-        pass
+        raise NotImplementedError
 
     def execute(self):
         if not super(MultiCommand, self).execute():

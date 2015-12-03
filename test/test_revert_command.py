@@ -20,7 +20,6 @@ import unittest
 
 from datetime import date
 from glob import glob
-from six import u
 from uuid import uuid4
 
 from test.command_testcase import CommandTest

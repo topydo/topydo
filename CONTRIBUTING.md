@@ -31,6 +31,31 @@ smoothly into topydo.
   Obviously, I won't accept anything that makes the tests fail. When you submit
   a Pull Request, Travis CI will automatically run all tests for various Python
   versions, but it's better if you run the tests locally first.
+* Travis CI will also run `pylint` and fail when new errors are introduced. You
+  may want to add a `pre-push` script to your topydo clone before pushing to
+  Github (.git/hooks/pre-push):
+
+       #!/bin/sh
+       remote="$1"
+
+       if [ $remote = "origin" ]; then
+           if ! green; then
+               exit 1
+           fi
+      
+          if ! python2 -m pylint --errors-only topydo test; then
+              exit 1
+          fi
+      
+          if ! python3 -m pylint --errors-only topydo test; then
+              exit 1
+          fi
+      fi
+      
+      exit 0
+
+  Make sure to run `chmod +x .git/hooks/pre-push` to activate the hook.
+
 * Add tests for your change(s):
   * Bugfixes: add a test case that covers your bugfix, so the bug won't happen
     ever again.

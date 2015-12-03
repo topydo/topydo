@@ -1,23 +1,17 @@
 sudo: false  # run on new infrastructure
 language: python
 python:
-  - "2.7"
-  - "3.2"
   - "3.3"
   - "3.4"
   - "3.5"
-  - "pypy"
   - "pypy3"
-matrix:
-  allow_failures:
-    - python: "3.2"
-    - python: "pypy"
-    - python: "pypy3"
 install:
   - "python -m pip install pip --upgrade"
   - "pip install ."
   - "pip install .[ical]"
+  - "pip install .[prompt-toolkit]"
   - "pip install .[test]"
+  - "pip install pylint"
   - "pip install codecov"
 script:
   - "green -vvr"

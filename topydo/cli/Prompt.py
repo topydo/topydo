@@ -17,6 +17,7 @@
 """ Entry file for the topydo Prompt interface (CLI). """
 
 import os.path
+import shlex
 import sys
 
 from topydo.cli.CLIApplicationBase import CLIApplicationBase, error, usage
@@ -79,8 +80,6 @@ class PromptApplication(CLIApplicationBase):
             self.todolist = TodoList.TodoList(self.todofile.read())
             self.mtime = current_mtime
 
-            # suppress upstream issue with Python 2.7
-            # pylint: disable=no-value-for-parameter
             self.completer = TopydoCompleter(self.todolist)
 
     def run(self):
@@ -94,7 +93,8 @@ class PromptApplication(CLIApplicationBase):
             try:
                 user_input = prompt(u'topydo> ', history=history,
                                     completer=self.completer,
-                                    complete_while_typing=False).split()
+                                    complete_while_typing=False)
+                user_input = shlex.split(user_input)
             except (EOFError, KeyboardInterrupt):
                 sys.exit(0)
 

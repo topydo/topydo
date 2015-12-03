@@ -21,8 +21,6 @@ I/O on the command-line.
 
 import getopt
 import sys
-from six import PY2
-from six.moves import input
 
 MAIN_OPTS = "ac:d:ht:v"
 READ_ONLY_COMMANDS = ('List', 'ListContext', 'ListProject')
@@ -128,9 +126,6 @@ class CLIApplicationBase(object):
     def _process_flags(self):
         args = sys.argv[1:]
 
-        if PY2:
-            args = [arg.decode('utf-8') for arg in args]
-
         try:
             opts, args = getopt.getopt(args, MAIN_OPTS)
         except getopt.GetoptError as e:
@@ -188,12 +183,6 @@ class CLIApplicationBase(object):
         else:
             pass  # TODO
 
-    def _input(self):
-        """
-        Returns a function that retrieves user input.
-        """
-        return input
-
     def is_read_only(self, p_command):
         """ Returns True when the given command class is read-only. """
         read_only_commands = tuple(cmd + 'Command' for cmd in ('Revert', ) +
@@ -216,7 +205,7 @@ class CLIApplicationBase(object):
             self.todolist,
             lambda o: write(sys.stdout, o),
             error,
-            self._input())
+            input)
 
         if command.execute() != False:
             return True

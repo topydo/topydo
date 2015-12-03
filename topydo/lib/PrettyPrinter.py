@@ -14,8 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from topydo.lib.PrettyPrinterFilter import (PrettyPrinterColorFilter,
-                                            PrettyPrinterNumbers)
+from topydo.lib.prettyprinters.Colors import PrettyPrinterColorFilter
+from topydo.lib.prettyprinters.Numbers import PrettyPrinterNumbers
 
 
 class Printer(object):

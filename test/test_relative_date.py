@@ -26,6 +26,7 @@ from topydo.lib.RelativeDate import relative_date_to_date
 class RelativeDateTester(TopydoTest):
     def setUp(self):
         super(RelativeDateTester, self).setUp()
+        self.yesterday = date(2015, 11, 5)
         self.today = date(2015, 11, 6)
         self.tomorrow = date(2015, 11, 7)
         self.monday = date(2015, 11, 9)
@@ -114,6 +115,14 @@ class RelativeDateTester(TopydoTest):
     def test_tomorrow2(self):
         result = relative_date_to_date('tom')
         self.assertEqual(result, self.tomorrow)
+
+    def test_yesterday1(self):
+        result = relative_date_to_date('yesterday')
+        self.assertEqual(result, self.yesterday)
+
+    def test_yesterday2(self):
+        result = relative_date_to_date('yes')
+        self.assertEqual(result, self.yesterday)
 
     def test_monday1(self):
         result = relative_date_to_date('monday')

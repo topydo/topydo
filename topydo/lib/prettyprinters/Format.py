@@ -14,23 +14,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import unittest
+"""
+Provides a pretty printer filter that generates a todo string based on a format
+string.
+"""
 
-from test.facilities import load_file
-from test.topydo_testcase import TopydoTest
+from topydo.lib.PrettyPrinterFilter import PrettyPrinterFilter
+from topydo.lib.ListFormat import ListFormatParser
 
 
-class TodoFileTest(TopydoTest):
-    def test_empty_file(self):
-        todofile = load_file('test/data/TodoFileTest1.txt')
+class PrettyPrinterFormatFilter(PrettyPrinterFilter):
+    def __init__(self, p_todolist, p_format=None):
+        super(PrettyPrinterFormatFilter, self).__init__()
+        self.parser = ListFormatParser(p_todolist, p_format)
 
-        self.assertEqual(len(todofile), 0)
+    def filter(self, p_todo_str, p_todo):
+        p_todo_str = self.parser.parse(p_todo)
 
-    def test_utf_8(self):
-        todofile = load_file('test/data/utf-8.txt')
-
-        self.assertEqual(todofile[0].source(),
-                         u'(C) \u25ba UTF-8 test \u25c4')
-
-if __name__ == '__main__':
-    unittest.main()
+        return p_todo_str

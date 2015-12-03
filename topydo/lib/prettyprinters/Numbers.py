@@ -14,23 +14,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import unittest
+""" Provides a pretty printer filter that inserts todo numbers. """
 
-from test.facilities import load_file
-from test.topydo_testcase import TopydoTest
+from topydo.lib.PrettyPrinterFilter import PrettyPrinterFilter
 
 
-class TodoFileTest(TopydoTest):
-    def test_empty_file(self):
-        todofile = load_file('test/data/TodoFileTest1.txt')
+class PrettyPrinterNumbers(PrettyPrinterFilter):
+    """ Prepends the todo's number, retrieved from the todolist. """
 
-        self.assertEqual(len(todofile), 0)
+    def __init__(self, p_todolist):
+        super(PrettyPrinterNumbers, self).__init__()
+        self.todolist = p_todolist
 
-    def test_utf_8(self):
-        todofile = load_file('test/data/utf-8.txt')
+    def filter(self, p_todo_str, p_todo):
+        """ Prepends the number to the todo string. """
+        return "|{:>3}| {}".format(self.todolist.number(p_todo), p_todo_str)
 
-        self.assertEqual(todofile[0].source(),
-                         u'(C) \u25ba UTF-8 test \u25c4')
-
-if __name__ == '__main__':
-    unittest.main()
