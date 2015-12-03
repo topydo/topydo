@@ -66,17 +66,15 @@ class DotPrinter(Printer):
             return node_result
 
         node_name = lambda t: '_' + str(self.todolist.number(t))
-        node_tooltip = lambda t: escape(t.text())
 
         result = 'digraph {\n'
         result += 'node [ shape=plaintext ]\n';
 
         # print todos
         for todo in p_todos:
-            result += '  {} [label={}, tooltip="{}"]\n'.format(
+            result += '  {} [label={}]\n'.format(
                 node_name(todo),
                 node_label(todo),
-                node_tooltip(todo),
             )
 
         # print edges
