@@ -19,6 +19,8 @@ Provides a printer that transforms a list of Todo items to a graph in Dot
 notation. Useful for displaying dependencies.
 """
 
+from textwrap import wrap
+
 from topydo.lib.PrettyPrinter import Printer
 
 
@@ -36,23 +38,37 @@ class DotPrinter(Printer):
             """ Escapes double quotes as they are special in attributes. """
             return p_text.replace('"', '\\"')
 
-        def legend():
+        def node_label(p_todo):
             """
-            Generates a legend for each todo item thas is to be printed.
+            Prints an HTML table for a node label with some todo details.
             """
-            return '\n'.join(sorted([escape('{} {}'.format(
-                self.todolist.number(t), t.text()
-            )) for t in p_todos]))
+            node_result = '<<TABLE CELLBORDER="0">'
+
+            node_result += '<TR><TD><B>{}</B></TD><TD BALIGN="LEFT"><B>{}{}{}</B></TD></TR>'.format(
+                self.todolist.number(p_todo),
+                "<S>" if todo.is_completed() else "",
+                "<BR />".join(wrap(p_todo.text(), 35)),
+                "</S>" if todo.is_completed() else "",
+            )
+            node_result += '<HR/>'
+            node_result += '<TR><TD ALIGN="LEFT">Prio:</TD><TD ALIGN="LEFT">{}</TD></TR>'.format(p_todo.priority())
+
+            if p_todo.due_date():
+                node_result += '<TR><TD ALIGN="LEFT">Due:</TD><TD ALIGN="LEFT">{}</TD></TR>'.format(p_todo.due_date().isoformat())
+
+            node_result += '</TABLE>>'
+
+            return node_result
 
         node_name = lambda t: '_' + str(self.todolist.number(t))
-        node_label = lambda t: str(self.todolist.number(t))
         node_tooltip = lambda t: escape(t.text())
 
         result = 'digraph {\n'
+        result += 'node [ shape=plaintext ]\n';
 
         # print todos
         for todo in p_todos:
-            result += '  {} [label="{}", tooltip="{}"]\n'.format(
+            result += '  {} [label={}, tooltip="{}"]\n'.format(
                 node_name(todo),
                 node_label(todo),
                 node_tooltip(todo),
@@ -72,7 +88,6 @@ class DotPrinter(Printer):
 
         # print legend
         result += 'rank=sink\n'
-        result += 'legend [ fontsize=8, shape=box, label="{}" ]\n'.format(legend())
 
         result += '}\n'
         return result
