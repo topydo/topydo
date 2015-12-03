@@ -22,7 +22,7 @@ from topydo.lib.Utils import is_valid_priority
 
 
 class PriorityCommand(MultiCommand):
-    def __init__(self, p_args, p_todolist, #pragma: no branch
+    def __init__(self, p_args, p_todolist,  # pragma: no branch
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
@@ -33,7 +33,7 @@ class PriorityCommand(MultiCommand):
 
     def _execute_multi_specific(self):
         def normalize_priority(p_priority):
-            match = re.search(r'\b([A-Z])\b', p_priority)
+            match = re.search(r'\b([A-Z])\b', p_priority.upper())
             return match.group(1) if match else p_priority
 
         priority = normalize_priority(self.args[-1])
