@@ -67,7 +67,7 @@ class DotPrinter(Printer):
 
         node_name = lambda t: '_' + str(self.todolist.number(t))
 
-        result = 'digraph {\n'
+        result = 'digraph topydo {\n'
         result += 'node [ shape=plaintext ]\n';
 
         # print todos
