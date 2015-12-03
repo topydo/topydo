@@ -22,6 +22,7 @@ notation. Useful for displaying dependencies.
 from textwrap import wrap
 
 from topydo.lib.PrettyPrinter import Printer
+from topydo.lib.Utils import humanize_date
 
 
 class DotPrinter(Printer):
@@ -54,7 +55,7 @@ class DotPrinter(Printer):
             node_result += '<TR><TD ALIGN="LEFT">Prio:</TD><TD ALIGN="LEFT">{}</TD></TR>'.format(p_todo.priority())
 
             if p_todo.due_date():
-                node_result += '<TR><TD ALIGN="LEFT">Due:</TD><TD ALIGN="LEFT">{}</TD></TR>'.format(p_todo.due_date().isoformat())
+                node_result += '<TR><TD ALIGN="LEFT">Due:</TD><TD ALIGN="LEFT">{} ({})</TD></TR>'.format(p_todo.due_date().isoformat(), humanize_date(p_todo.due_date()))
 
             node_result += '</TABLE>>'
 

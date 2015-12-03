@@ -18,6 +18,7 @@
 Various utility functions.
 """
 
+import arrow
 import re
 
 from collections import namedtuple
@@ -72,3 +73,10 @@ def get_terminal_size():
         sz = terminal_size((80, 24))
 
     return sz
+
+def humanize_date(p_datetime):
+    """ Returns a relative date string from a datetime object. """
+    now = arrow.now()
+    date = now.replace(day=p_datetime.day, month=p_datetime.month, year=p_datetime.year)
+    return date.humanize()
+
