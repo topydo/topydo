@@ -95,8 +95,5 @@ class DotPrinter(Printer):
             next_todo = todos_without_dependencies[index + 1]
             result += '  {} -> {} [style="invis"]\n'.format(node_name(this_todo), node_name(next_todo))
 
-        # print legend
-        result += 'rank=sink\n'
-
         result += '}\n'
         return result
