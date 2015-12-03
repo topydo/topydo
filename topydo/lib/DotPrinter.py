@@ -55,7 +55,17 @@ class DotPrinter(Printer):
                 "</S>" if todo.is_completed() else "",
             )
             node_result += '<HR/>'
-            node_result += print_row('Prio:', p_todo.priority())
+
+            priority = p_todo.priority()
+            if priority:
+                node_result += print_row('Prio:', p_todo.priority())
+
+            start_date = p_todo.start_date()
+            if start_date:
+                node_result += print_row('Starts:', "{} ({})".format(
+                    start_date.isoformat(),
+                    humanize_date(start_date)
+                ))
 
             due_date = p_todo.due_date()
             if due_date:
