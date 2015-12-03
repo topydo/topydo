@@ -54,8 +54,12 @@ class DotPrinter(Printer):
             node_result += '<HR/>'
             node_result += '<TR><TD ALIGN="LEFT">Prio:</TD><TD ALIGN="LEFT">{}</TD></TR>'.format(p_todo.priority())
 
-            if p_todo.due_date():
-                node_result += '<TR><TD ALIGN="LEFT">Due:</TD><TD ALIGN="LEFT">{} ({})</TD></TR>'.format(p_todo.due_date().isoformat(), humanize_date(p_todo.due_date()))
+            due_date = p_todo.due_date()
+            if due_date:
+                node_result += '<TR><TD ALIGN="LEFT">Due:</TD><TD ALIGN="LEFT">{} ({})</TD></TR>'.format(
+                    due_date.isoformat(),
+                    humanize_date(due_date)
+                )
 
             node_result += '</TABLE>>'
 
