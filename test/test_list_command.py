@@ -17,6 +17,8 @@
 import codecs
 import re
 import unittest
+from collections import namedtuple
+from unittest import mock
 
 from test.command_testcase import CommandTest
 from test.facilities import load_file_to_todolist
@@ -28,6 +30,7 @@ class ListCommandTest(CommandTest):
     def setUp(self):
         super(ListCommandTest, self).setUp()
         self.todolist = load_file_to_todolist("test/data/ListCommandTest.txt")
+        self.terminal_size = namedtuple('terminal_size', ['columns', 'lines'])
 
     def test_list01(self):
         command = ListCommand([""], self.todolist, self.out, self.error)
@@ -313,11 +316,60 @@ class ListCommandTest(CommandTest):
         self.assertEqual(self.errors, "option -z not recognized\n")
 
     def test_list42(self):
-        command = ListCommand(["-x", "+Project1", "-id:1"], self.todolist, self.out,
-            self.error)
+        command = ListCommand(["-x", "+Project1", "-id:1"], self.todolist,
+                              self.out, self.error)
         command.execute()
 
         self.assertEqual(self.output, "|  1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n")
+        self.assertEqual(self.errors, "")
+
+    def test_list43(self):
+        """Test basic 'N' parameter."""
+        command = ListCommand(["-N"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEqual(self.output, "|  1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n|  4| (C) Drink beer @ home\n|  5| (C) 13 + 29 = 42\n|  2| (D) Bar @Context1 +Project2\n")
+        self.assertEqual(self.errors, "")
+
+    @mock.patch('topydo.commands.ListCommand.get_terminal_size')
+    def test_list44(self, mock_terminal_size):
+        """
+        Test 'N' parameter with output longer than available terminal lines.
+        """
+        self.todolist = load_file_to_todolist("test/data/ListCommand_50_items.txt")
+        mock_terminal_size.return_value = self.terminal_size(80, 23)
+
+        command = ListCommand(["-N"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEqual(self.output, "|  1| (A) item 1\n| 27| (A) item 27\n|  2| (B) item 2\n| 28| (B) item 28\n|  3| (C) item 3\n| 29| (C) item 29\n|  4| (D) item 4\n| 30| (D) item 30\n|  5| (E) item 5\n| 31| (E) item 31\n|  6| (F) item 6\n| 32| (F) item 32\n|  7| (G) item 7\n| 33| (G) item 33\n|  8| (H) item 8\n| 34| (H) item 34\n|  9| (I) item 9\n| 35| (I) item 35\n| 10| (J) item 10\n| 36| (J) item 36\n| 11| (K) item 11\n")
+        self.assertEqual(self.errors, "")
+
+    @mock.patch('topydo.commands.ListCommand.get_terminal_size')
+    def test_list45(self, mock_terminal_size):
+        """Test basic 'N' parameter with nine line terminal."""
+        # have 9 lines on the terminal will print 7 items and leave 2 lines
+        # for the next prompt
+        mock_terminal_size.return_value = self.terminal_size(100, 9)
+        self.todolist = load_file_to_todolist("test/data/ListCommand_50_items.txt")
+
+        command = ListCommand(["-N"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEqual(self.output, "|  1| (A) item 1\n| 27| (A) item 27\n|  2| (B) item 2\n| 28| (B) item 28\n|  3| (C) item 3\n| 29| (C) item 29\n|  4| (D) item 4\n")
+        self.assertEqual(self.errors, "")
+
+    @mock.patch('topydo.commands.ListCommand.get_terminal_size')
+    def test_list46(self, mock_terminal_size):
+        """Test basic 'N' parameter with zero height terminal."""
+        # we still print at least 1 item
+        mock_terminal_size.return_value = self.terminal_size(100, 0)
+        self.todolist = load_file_to_todolist("test/data/ListCommand_50_items.txt")
+
+        command = ListCommand(["-N"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEqual(self.output, "|  1| (A) item 1\n")
         self.assertEqual(self.errors, "")
 
     def test_help(self):

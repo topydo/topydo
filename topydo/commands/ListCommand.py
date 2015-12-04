@@ -20,6 +20,7 @@ from topydo.lib.Filter import InstanceFilter
 from topydo.lib.PrettyPrinter import pretty_printer_factory
 from topydo.lib.prettyprinters.Format import PrettyPrinterFormatFilter
 from topydo.lib.TodoListBase import InvalidTodoException
+from topydo.lib.Utils import get_terminal_size
 
 
 class ListCommand(ExpressionCommand):
@@ -50,7 +51,7 @@ class ListCommand(ExpressionCommand):
         return True
 
     def _process_flags(self):
-        opts, args = self.getopt('f:F:i:n:s:x')
+        opts, args = self.getopt('f:F:i:n:Ns:x')
 
         for opt, value in opts:
             if opt == '-x':
@@ -69,6 +70,10 @@ class ListCommand(ExpressionCommand):
                     self.printer = None
             elif opt == '-F':
                 self.format = value
+            elif opt == '-N':
+                # 2 lines are assumed to be taken up by printing the next prompt
+                # display at least one item
+                self.limit = max(get_terminal_size().lines - 2, 1)
             elif opt == '-n':
                 try:
                     self.limit = int(value)
@@ -142,7 +147,7 @@ class ListCommand(ExpressionCommand):
 
     def usage(self):
         return """Synopsis: ls [-x] [-s <sort_expression>] [-f <output format>]
-[-F <format string>] [-i <item numbers>] [-n <integer>] [expression]"""
+[-F <format string>] [-i <item numbers>] [-N | -n <integer>] [expression]"""
 
     def help(self):
         return """\
@@ -195,6 +200,7 @@ When an expression is given, only the todos matching that expression are shown.
      A tab character serves as a marker to start right alignment.
 -i : Comma separated list of todo IDs to print.
 -n : Number of items to display. Defaults to the value in the configuration.
+-N : Limit number of items displayed such that they fit on the terminal.
 -s : Sort the list according to a sort expression. Defaults to the expression
      in the configuration.
 -x : Show all todos (i.e. do not filter on dependencies or relevance).
