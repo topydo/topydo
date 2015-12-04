@@ -219,6 +219,13 @@ class TodoListTester(TopydoTest):
         config("test/data/todolist-uid.conf")
         self.assertRaises(InvalidTodoException, self.todolist.todo, 1)
 
+    def test_uid4(self):
+        """
+        Handle UIDs properly when line numbers are configured.
+        """
+        config(p_overrides={('topydo', 'identifiers'): 'linenumber'})
+        self.assertRaises(InvalidTodoException, self.todolist.todo, '11a')
+
     def test_new_uid(self):
         """ Make sure that item has new text ID after append. """
         config("test/data/todolist-uid.conf")
