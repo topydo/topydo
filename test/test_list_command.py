@@ -18,12 +18,19 @@ import codecs
 import re
 import unittest
 from collections import namedtuple
-from unittest import mock
 
 from test.command_testcase import CommandTest
 from test.facilities import load_file_to_todolist
 from topydo.commands.ListCommand import ListCommand
 from topydo.lib.Config import config
+
+# We're searching for 'mock'
+# 'mock' was added as 'unittest.mock' in Python 3.3, but PyPy 3 is based on Python 3.2
+# pylint: disable=no-name-in-module
+try:
+    from unittest import mock
+except ImportError:
+    import mock
 
 
 class ListCommandTest(CommandTest):
