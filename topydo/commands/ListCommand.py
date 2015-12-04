@@ -161,7 +161,8 @@ Lists all relevant todos. A todo is relevant when:
 
 When an expression is given, only the todos matching that expression are shown.
 
--f : Specify the output format, being 'text' (default), 'ical' or 'json'.
+-f : Specify the output format, being 'text' (default), 'dot' or 'ical' or
+     'json'.
 
      * 'text' - Text output with colors and indentation if applicable.
      * 'dot'  - Prints a dependency graph for the selected items in GraphViz
