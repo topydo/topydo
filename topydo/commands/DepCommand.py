@@ -114,13 +114,17 @@ class DepCommand(Command):
         self.printer = DotPrinter(self.todolist)
 
         arg = self.argument(1)
-        todo = self.todolist.todo(arg)
 
-        todos = set([self.todolist.todo(arg)])
-        todos |= set(self.todolist.children(todo))
-        todos |= set(self.todolist.parents(todo))
+        try:
+            todo = self.todolist.todo(arg)
+            todos = set([self.todolist.todo(arg)])
+            todos |= set(self.todolist.children(todo))
+            todos |= set(self.todolist.parents(todo))
 
-        self.out(self.printer.print_list(todos))
+            self.out(self.printer.print_list(todos))
+        except InvalidTodoException:
+            self.error("Invalid todo number given.")
+
 
     def execute(self):
         if not super(DepCommand, self).execute():
