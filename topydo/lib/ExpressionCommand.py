@@ -58,11 +58,12 @@ class ExpressionCommand(Command):
                 is_negated = len(arg) > 1 and arg[0] == '-'
                 arg = arg[1:] if is_negated else arg
 
-                if re.match(Filter.ORDINAL_TAG_MATCH, arg):
-                    argfilter = Filter.OrdinalTagFilter(arg)
-                elif re.match(Filter.PRIORITY_MATCH, arg):
-                    argfilter = Filter.PriorityFilter(arg)
-                else:
+                argfilter = None
+                for match, _filter in Filter.MATCHES:
+                    if re.match(match, arg):
+                        argfilter = _filter(arg)
+
+                if not argfilter:
                     argfilter = Filter.GrepFilter(arg)
 
                 if is_negated:

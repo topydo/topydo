@@ -379,6 +379,84 @@ class OrdinalTagFilterTest(TopydoTest):
         self.assertEqual(result[0].source(), self.todo3)
 
 
+class CreationFilterTest(TopydoTest):
+    def setUp(self):
+        super(CreationFilterTest, self).setUp()
+
+        self.todo1 = "2015-12-19 With creation date."
+        self.todo2 = "Without creation date."
+
+        self.todos = [Todo(self.todo1), Todo(self.todo2)]
+
+    def test_filter1(self):
+        cf = Filter.CreationFilter('create:2015-12-19')
+
+        result = cf.filter(self.todos)
+
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0].source(), self.todo1)
+
+    def test_filter2(self):
+        cf = Filter.CreationFilter('creation:2015-12-19')
+
+        result = cf.filter(self.todos)
+
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0].source(), self.todo1)
+
+    def test_filter3(self):
+        cf = Filter.CreationFilter('created:2015-12-19')
+
+        result = cf.filter(self.todos)
+
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0].source(), self.todo1)
+
+
+class CompletionFilterTest(TopydoTest):
+    def setUp(self):
+        super(CompletionFilterTest, self).setUp()
+
+        self.todo1 = "2015-12-19 With creation date."
+        self.todo2 = "x 2015-12-19 2015-12-18 Without creation date."
+        self.todo3 = "x 2015-12-18 Without creation date."
+
+        self.todos = [Todo(self.todo1), Todo(self.todo2), Todo(self.todo3)]
+
+    def test_filter1(self):
+        cf = Filter.CompletionFilter('complete:2015-12-19')
+
+        result = cf.filter(self.todos)
+
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0].source(), self.todo2)
+
+    def test_filter2(self):
+        cf = Filter.CompletionFilter('completed:2015-12-19')
+
+        result = cf.filter(self.todos)
+
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0].source(), self.todo2)
+
+    def test_filter3(self):
+        cf = Filter.CompletionFilter('completion:2015-12-19')
+
+        result = cf.filter(self.todos)
+
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0].source(), self.todo2)
+
+    def test_filter4(self):
+        cf = Filter.CompletionFilter('completion:<=2015-12-19')
+
+        result = cf.filter(self.todos)
+
+        self.assertEqual(len(result), 2)
+        self.assertEqual(result[0].source(), self.todo2)
+        self.assertEqual(result[1].source(), self.todo3)
+
+
 class PriorityFilterTest(TopydoTest):
     def setUp(self):
         super(PriorityFilterTest, self).setUp()
