@@ -62,6 +62,7 @@ class ExpressionCommand(Command):
                 for match, _filter in Filter.MATCHES:
                     if re.match(match, arg):
                         argfilter = _filter(arg)
+                        break
 
                 if not argfilter:
                     argfilter = Filter.GrepFilter(arg)
