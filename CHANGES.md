@@ -13,7 +13,7 @@
 * `ls -N` prints enough todo items such that it fits on one screen (thanks to
   @MinchinWeb).
 * Aliases can have a `{}` placeholder which is substituted with the alias'
-  arguments.
+  arguments (thanks to @mruwek).
 * `pri` accepts priorities in lowercase (thanks to @MinchinWeb).
 * Several bugfixes for `dep gc`.
 * Various test/CI improvements.
