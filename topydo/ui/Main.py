@@ -230,7 +230,7 @@ class UIApplication(CLIApplicationBase):
             filters.append(DependencyFilter(self.todolist))
             filters.append(RelevanceFilter())
 
-        filters += get_filter_list(p_data['filterexpr'])
+        filters += get_filter_list(p_data['filterexpr'].split())
 
         return UIView(sorter, filters, self.todolist, p_data)
 
