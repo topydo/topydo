@@ -311,7 +311,6 @@ class _Config:
         """ Returns the list format used by `ls` """
         return self.cp.get('ls', 'list_format')
 
-
 def config(p_path=None, p_overrides=None):
     """
     Retrieve the config instance.
