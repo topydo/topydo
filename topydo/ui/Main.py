@@ -24,6 +24,7 @@ from topydo.ui.CommandLineWidget import CommandLineWidget
 from topydo.ui.ConsoleWidget import ConsoleWidget
 from topydo.ui.TodoListWidget import TodoListWidget
 from topydo.ui.ViewWidget import ViewWidget
+from topydo.lib.ColumnLayout import ColumnLayout
 from topydo.lib.Config import config
 from topydo.lib.Sorter import Sorter
 from topydo.lib.Filter import get_filter_list, RelevanceFilter, DependencyFilter
@@ -317,13 +318,18 @@ class UIApplication(CLIApplicationBase):
         return user_input[0]
 
     def run(self):
-        dummy = {
-            "title": "View 1",
-            "sortexpr": "desc:prio",
-            "filterexpr": "",
-            "show_all": True,
-        }
-        self._add_column(self._viewdata_to_view(dummy))
+        columns = ColumnLayout().columns()
+        if len(columns) > 0:
+            for column in columns:
+                self._add_column(self._viewdata_to_view(column))
+        else:
+            dummy = {
+                "title": "All tasks",
+                "sortexpr": "desc:prio",
+                "filterexpr": "",
+                "show_all": True,
+            }
+            self._add_column(self._viewdata_to_view(dummy))
 
         self.mainloop.run()
 
