@@ -1,5 +1,5 @@
 # Topydo - A todo.txt client written in Python.
-# Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
+# Copyright (C) 2014 - 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,8 +22,10 @@ from topydo.lib.Config import config
 from topydo.lib.RelativeDate import relative_date_to_date
 from topydo.lib.Todo import Todo
 
+
 class NoRecurrenceException(Exception):
     pass
+
 
 def advance_recurring_todo(p_todo, p_offset=None, p_strict=False):
     """

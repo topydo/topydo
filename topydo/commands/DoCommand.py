@@ -18,12 +18,14 @@ from datetime import date
 
 from topydo.lib.DCommand import DCommand
 from topydo.lib.PrettyPrinter import PrettyPrinter
-from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
-from topydo.lib.Recurrence import advance_recurring_todo, NoRecurrenceException
+from topydo.lib.prettyprinters.Numbers import PrettyPrinterNumbers
+from topydo.lib.Recurrence import NoRecurrenceException, advance_recurring_todo
+from topydo.lib.RelativeDate import relative_date_to_date
 from topydo.lib.Utils import date_string_to_date
 
+
 class DoCommand(DCommand):
-    def __init__(self, p_args, p_todolist,
+    def __init__(self, p_args, p_todolist, #pragma: no branch
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
@@ -47,7 +49,10 @@ class DoCommand(DCommand):
             self.strict_recurrence = True
         elif p_opt == "-d" or p_opt == "--date":
             try:
-                self.completion_date = date_string_to_date(p_value)
+                self.completion_date = relative_date_to_date(p_value)
+
+                if not self.completion_date:
+                    self.completion_date = date_string_to_date(p_value)
             except ValueError:
                 self.completion_date = date.today()
 

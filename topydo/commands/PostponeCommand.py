@@ -16,14 +16,15 @@
 
 from datetime import date, timedelta
 
-from topydo.lib.MultiCommand import MultiCommand
 from topydo.lib.Config import config
-from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
+from topydo.lib.MultiCommand import MultiCommand
+from topydo.lib.prettyprinters.Numbers import PrettyPrinterNumbers
 from topydo.lib.RelativeDate import relative_date_to_date
 from topydo.lib.Utils import date_string_to_date
 
+
 class PostponeCommand(MultiCommand):
-    def __init__(self, p_args, p_todolist,
+    def __init__(self, p_args, p_todolist, #pragma: no branch
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
@@ -84,8 +85,8 @@ Synopsis: postpone [-s] <NUMBER> [<NUMBER2> ...] <PATTERN>"
         return """\
 Postpone the todo item(s) with the given number(s) and the given pattern.
 
-Postponing is done by adjusting the due date(s) of the todo(s), and if the -s flag is
-given, the start date accordingly.
+Postponing is done by adjusting the due date(s) of the todo(s), and if the -s
+flag is given, the start date accordingly.
 
 It is also possible to postpone items as complete with an expression using
 the -e flag. Use -x to also process todo items that are normally invisible

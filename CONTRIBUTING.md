@@ -5,11 +5,9 @@ smoothly into topydo.
 
 ### General
 
-* This Github page defaults to the **stable** branch which is for **bug fixes
-  only**. If you would like to add a new feature, make sure to make a Pull
-  Request on the `master` branch.
-
-* Use descriptive commit messages.
+* Use descriptive commit messages. The post
+  [How to write a commit message](http://chris.beams.io/posts/git-commit/) by
+  Chris Beams has some good guidelines.
 
 ### Coding style
 
@@ -17,37 +15,63 @@ smoothly into topydo.
   possible. I won't be very picky about long lines, but please try to avoid
   them.
 * I strongly prefer simple and short functions, doing only one thing. I'll
-  request you to refactor functions with massive indentation or don't fit
+  ask you to refactor functions with massive indentation or don't fit
   otherwise on a screen.
 
 ### Testing
 
-* Run tests with:
+* First make sure to have the prerequisites installed to perform the tests:
 
-        ./run-tests.sh [python2|python3]
+        pip install .[test]
+
+* Then, run the tests with:
+
+        green -r
 
   Obviously, I won't accept anything that makes the tests fail. When you submit
   a Pull Request, Travis CI will automatically run all tests for various Python
   versions, but it's better if you run the tests locally first.
+* Travis CI will also run `pylint` and fail when new errors are introduced. You
+  may want to add a `pre-push` script to your topydo clone before pushing to
+  Github (.git/hooks/pre-push):
 
-  Make sure you have the `mock` package installed if you test on a Python
-  version older than 3.3.
+       #!/bin/sh
+       remote="$1"
+
+       if [ $remote = "origin" ]; then
+           if ! green; then
+               exit 1
+           fi
+      
+          if ! python2 -m pylint --errors-only topydo test; then
+              exit 1
+          fi
+      
+          if ! python3 -m pylint --errors-only topydo test; then
+              exit 1
+          fi
+      fi
+      
+      exit 0
+
+  Make sure to run `chmod +x .git/hooks/pre-push` to activate the hook.
+
 * Add tests for your change(s):
-  * Bugfixes: add a testcase that covers your bugfix, so the bug won't happen
+  * Bugfixes: add a test case that covers your bugfix, so the bug won't happen
     ever again.
-  * Features: add testcases that checks various inputs and outputs of your
+  * Features: add test cases that checks various inputs and outputs of your
     feature. Be creative in trying to break the feature you've just implemented.
-* Check the test coverage of your contributed code, in particular if you
-  touched code in the topydo.lib or topydo.command packages:
+* Check the test coverage of your contributed code, in particular if you touched
+  code in the topydo.lib or topydo.command packages:
 
-      pip install coverage
-      coverage run setup.py test
-      coverage report
+      coverage report -m
 
   Or alternatively, for a more friendly output, run:
 
       coverage html
 
-  Which will generate annotated files in the *htmlcov* folder. The new code
+  which will generate annotated files in the *htmlcov* folder. The new code
   should be marked green (i.e. covered).
-
+  
+  When you create a Pull Request, code coverage will be automatically checked
+  and reported by [Codecov.io](https://codecov.io/github/bram85/topydo).

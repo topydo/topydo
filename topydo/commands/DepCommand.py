@@ -1,5 +1,5 @@
 # Topydo - A todo.txt client written in Python.
-# Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
+# Copyright (C) 2014 - 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,16 +14,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from topydo.lib import Filter
 from topydo.lib.Command import Command, InvalidCommandArgument
 from topydo.lib.Config import config
-from topydo.lib import Filter
 from topydo.lib.PrettyPrinter import pretty_printer_factory
 from topydo.lib.Sorter import Sorter
 from topydo.lib.TodoListBase import InvalidTodoException
 from topydo.lib.View import View
 
+
 class DepCommand(Command):
-    def __init__(self, p_args, p_todolist,
+    def __init__(self, p_args, p_todolist, #pragma: no branch
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
@@ -135,9 +136,9 @@ class DepCommand(Command):
 
     def help(self):
         return """\
-* add              : Adds a dependency. Using 1 before 2 creates a dependency
-                     from todo item 2 to 1.
-* rm (alias: del)  : Removes a dependency.
-* ls               : Lists all dependencies to or from a certain todo.
-* clean (alias: gc): Removes redundant id or p tags.
+* add               : Adds a dependency. Using 1 before 2 creates a dependency
+                      from todo item 2 to 1.
+* rm (alias: del)   : Removes a dependency.
+* ls                : Lists all dependencies to or from a certain todo.
+* clean (alias: gc) : Removes redundant id or p tags.
 """

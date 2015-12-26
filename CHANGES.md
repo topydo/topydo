@@ -1,3 +1,100 @@
+0.9
+---
+
+* Dropped support for Python 2.7.
+* Add ability to filter on creation/completion dates:
+
+      topydo ls created:today
+      topydo ls completed:today
+      topydo -t done.txt completed:today # if auto-archiving is set
+
+* `ls -F` supports `%P` that expands to a single space when no priority is set,
+  in contrast to `%p` which expands to an empty string (thanks to @MinchinWeb).
+* `ls -N` prints enough todo items such that it fits on one screen (thanks to
+  @MinchinWeb).
+* Aliases can have a `{}` placeholder which is substituted with the alias'
+  arguments (thanks to @mruwek).
+* `pri` accepts priorities in lowercase (thanks to @MinchinWeb).
+* Several bugfixes for `dep gc`.
+* Various test/CI improvements.
+
+0.8
+---
+
+* `do -d` understands relative dates.
+
+* Introduced `yesterday` as a relative date (abbrev. `yes`).
+
+* `tag` command understands relative dates when setting due or t tags.
+
+* Fix install of wheels (unnecessarily installed dependencies). Issue #79.
+
+* Bugfix: the negation of ordinal tag filters did not work.
+
+* Some improvements in test coverage (a.o. thanks to @mruwek).
+
+0.7
+---
+
+A big release with many new features. Many thanks to Jacek Sowiński (@mruwek)
+for the majority of these new features.
+
+* `ls` output can be customized with a -F flag or a configuration option:
+
+      [ls]
+      list_format = |%I| %x %{(}p{)} %c %s %k %{due:}d %{t:}t
+
+  or `ls -F "%{(}p{)} %s %{due:}d"`.
+
+  See `help ls` for all placeholders. Each placeholder can optionally be
+  surrounded by optional texts that are only printed when the placeholder is
+  expanded to a value.
+
+  The format string may contain a tab character: all text that follows is
+  aligned to the right.
+
+  (thanks to @mruwek)
+* New subcommand: `revert`. Revert the last executed command(s). The number of
+  revisions can be tuned in the configuration file:
+
+      [topydo]
+      backup_count = 25
+
+  Set to 0 to disable this feature. (thanks to @mruwek)
+* New feature: aliases. Aliases can be defined in the configuration file:
+
+        [aliases]
+        showall = ls -x
+
+  (thanks to @mruwek)
+* Filter based on priorities (thanks to @mruwek)
+
+      ls (A)
+      ls (<A)
+
+* `ls` has a `-n` flag to limit the number of todo items (similar to the
+  list_limit option in the configuration file:
+
+      ls -n 5
+
+* `ls` has a `-i` flag to select displaying todo items based on their ID. This
+  can be useful to have a 'clean' default view, and to gather more details for
+  a certain todo item using aliases and formatting.
+* Prompt mode no longer warns about background modifications to todo.txt when a
+  read-only command is entered (e.g. `ls`).
+* Removed restriction in `edit` mode that requires keeping the same amount of
+  lines in the todo.txt file.
+* `edit` only processes the todo items when edits were actually made in the
+  editor (thanks to @mruwek)
+* When entering today's day of the week as a relative date, it will use next
+  week's date instead of today.
+* Bugfix: not all tags were properly hidden with the `hide_tags` configuration
+  option.
+* Better PEP8 compliance (thanks to @MinchinWeb)
+* Various test/CI improvements (thanks to @MinchinWeb)
+* Support for Python 3.2 removed.
+* Many other minor improvements (a.o. thanks to @MinchinWeb)
+
 0.6
 ---
 
@@ -16,7 +113,9 @@
 ---
 
 * Remove 'ical' subcommand in favor of 'topydo ls -f ical'
-* Remove options highlight_projects_colors in favor of colorscheme options. In case you wish to disable the project/context colors, assign an empty value in the configuration file:
+* Remove options highlight_projects_colors in favor of colorscheme options. In
+  case you wish to disable the project/context colors, assign an empty value in
+  the configuration file:
 
       [colorscheme]
       project_color =

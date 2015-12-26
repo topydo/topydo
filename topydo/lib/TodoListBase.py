@@ -18,19 +18,20 @@
 A list of todo items.
 """
 
-from datetime import date
 import re
-from six import text_type
+from datetime import date
 
-from topydo.lib.Config import config
 from topydo.lib import Filter
+from topydo.lib.Config import config
 from topydo.lib.HashListValues import hash_list_values
 from topydo.lib.PrettyPrinter import PrettyPrinter
 from topydo.lib.Todo import Todo
 from topydo.lib.View import View
 
+
 class InvalidTodoException(Exception):
     pass
+
 
 class TodoListBase(object):
     """
@@ -75,7 +76,7 @@ class TodoListBase(object):
                 try:
                     result = self._id_todo_map[p_identifier]
                 except KeyError:
-                    pass # we'll try something else
+                    pass  # we'll try something else
 
             return result
 
@@ -83,10 +84,9 @@ class TodoListBase(object):
             """
             Attempts to find the todo on the given line number.
 
-            When the identifier is a number but has leading zeroes, the result
+            When the identifier is a number but has leading zeros, the result
             will be None.
             """
-
             result = None
 
             if config().identifiers() != 'text':
@@ -126,12 +126,14 @@ class TodoListBase(object):
 
         if not result:
             # convert integer to text so we pass on a valid regex
-            result = todo_by_regexp(text_type(p_identifier))
+            result = todo_by_regexp(str(p_identifier))
 
         return result
 
     def add(self, p_src):
-        """ Given a todo string, parse it and put it to the end of the list. """
+        """
+        Given a todo string, parse it and put it to the end of the list.
+        """
         todos = self.add_list([p_src])
 
         return todos[0] if len(todos) else None
@@ -167,6 +169,12 @@ class TodoListBase(object):
     def erase(self):
         """ Erases all todos from the list. """
         self._todos = []
+        self.dirty = True
+
+    def replace(self, p_todos):
+        """ Replaces whole todolist with todo objects supplied as p_todos. """
+        self.erase()
+        self.add_todos(p_todos)
         self.dirty = True
 
     def count(self):
@@ -246,8 +254,8 @@ class TodoListBase(object):
 
     def _update_todo_ids(self):
         # the idea is to have a hash that is independent of the position of the
-        # todo. Use the text (without tags) of the todo to keep the id as stable
-        # as possible (not influenced by priorities or due dates, etc.)
+        # todo. Use the text (without tags) of the todo to keep the id as
+        # stable as possible (not influenced by priorities or due dates, etc.)
         self._todo_id_map = {}
         self._id_todo_map = {}
 

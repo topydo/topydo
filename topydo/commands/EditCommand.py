@@ -1,5 +1,5 @@
 # Topydo - A todo.txt client written in Python.
-# Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
+# Copyright (C) 2014 - 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,17 +15,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-from subprocess import call, check_call, CalledProcessError
 import tempfile
+from subprocess import CalledProcessError, check_call
 
-from six import u
-
-from topydo.lib.ExpressionCommand import ExpressionCommand
-from topydo.lib.MultiCommand import MultiCommand
 from topydo.lib.Config import config
+from topydo.lib.MultiCommand import MultiCommand
+from topydo.lib.prettyprinters.Numbers import PrettyPrinterNumbers
 from topydo.lib.Todo import Todo
 from topydo.lib.TodoList import TodoList
-from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
 
 # the true and only editor
 DEFAULT_EDITOR = 'vi'
@@ -34,10 +31,16 @@ DEFAULT_EDITOR = 'vi'
 # cannot use super() inside the class itself
 BASE_TODOLIST = lambda tl: super(TodoList, tl)
 
+def _get_file_mtime(p_file):
+    return os.stat(p_file.name).st_mtime
+
+def _is_edited(p_orig_mtime, p_file):
+    return p_orig_mtime < _get_file_mtime(p_file)
+
 class EditCommand(MultiCommand):
     def __init__(self, p_args, p_todolist, p_output, p_error, p_input):
         super(EditCommand, self).__init__(p_args, p_todolist, p_output,
-            p_error, p_input)
+                                          p_error, p_input)
 
         if len(self.args) == 0:
             self.multi_mode = False
@@ -85,14 +88,14 @@ class EditCommand(MultiCommand):
             return 1
         except(OSError):
             self.error('There is no such editor as: ' + editor + '. '
-                        'Check your $EDITOR and/or $PATH')
+                       'Check your $EDITOR and/or $PATH')
 
     def _catch_todo_errors(self):
         errors = []
 
         if len(self.invalid_numbers) > 1 or len(self.invalid_numbers) > 0 and len(self.todos) > 0:
             for number in self.invalid_numbers:
-                errors.append(u("Invalid todo number given: {}.").format(number))
+                errors.append(u"Invalid todo number given: {}.".format(number))
         elif len(self.invalid_numbers) == 1 and len(self.todos) == 0:
             errors.append("Invalid todo number given.")
 
@@ -105,10 +108,12 @@ class EditCommand(MultiCommand):
         self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
 
         temp_todos = self._todos_to_temp()
+        orig_mtime = _get_file_mtime(temp_todos)
 
         if not self._open_in_editor(temp_todos.name):
             new_todos = self._todos_from_temp(temp_todos)
-            if len(new_todos) == len(self.todos):
+
+            if _is_edited(orig_mtime, temp_todos):
                 for todo in self.todos:
                     BASE_TODOLIST(self.todolist).delete(todo)
 
@@ -116,8 +121,7 @@ class EditCommand(MultiCommand):
                     self.todolist.add_todo(todo)
                     self.out(self.printer.print_todo(todo))
             else:
-                self.error('Number of edited todos is not equal to '
-                            'number of supplied todo IDs.')
+                self.error('Editing aborted. Nothing to do.')
         else:
             self.error(self.usage())
 

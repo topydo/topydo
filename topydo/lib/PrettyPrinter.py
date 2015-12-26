@@ -14,10 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from topydo.lib.PrettyPrinterFilter import (
-    PrettyPrinterColorFilter,
-    PrettyPrinterNumbers
-)
+from topydo.lib.prettyprinters.Colors import PrettyPrinterColorFilter
+from topydo.lib.prettyprinters.Numbers import PrettyPrinterNumbers
+
 
 class Printer(object):
     """
@@ -25,6 +24,7 @@ class Printer(object):
 
     Subclasses must at least implement the print_todo method.
     """
+
     def print_todo(self, p_todo):
         raise NotImplementedError
 
@@ -35,6 +35,7 @@ class Printer(object):
         """
         return "\n".join([self.print_todo(todo) for todo in p_todos])
 
+
 class PrettyPrinter(Printer):
     """
     Prints todo items on a single line, decorated by the filters passed by
@@ -44,6 +45,7 @@ class PrettyPrinter(Printer):
     add colors, indentation, etc. These filters are found in the
     PrettyPrinterFilter module.
     """
+
     def __init__(self):
         """
         Constructor.
@@ -68,9 +70,9 @@ class PrettyPrinter(Printer):
 
         return todo_str
 
+
 def pretty_printer_factory(p_todolist, p_additional_filters=None):
     """ Returns a pretty printer suitable for the ls and dep subcommands. """
-
     p_additional_filters = p_additional_filters or []
 
     printer = PrettyPrinter()

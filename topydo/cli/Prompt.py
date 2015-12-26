@@ -17,11 +17,12 @@
 """ Entry file for the topydo Prompt interface (CLI). """
 
 import os.path
+import shlex
 import sys
 
 from topydo.cli.CLIApplicationBase import CLIApplicationBase, error, usage
 from topydo.cli.TopydoCompleter import TopydoCompleter
-from prompt_toolkit.shortcuts import get_input
+from prompt_toolkit.shortcuts import prompt
 from prompt_toolkit.history import InMemoryHistory
 
 from topydo.lib.Config import config, ConfigError
@@ -39,6 +40,7 @@ from topydo.Commands import get_subcommand
 from topydo.lib import TodoFile
 from topydo.lib import TodoList
 
+
 def _todotxt_mtime():
     """
     Returns the mtime for the configured todo.txt file.
@@ -49,11 +51,13 @@ def _todotxt_mtime():
         # file not found
         return None
 
+
 class PromptApplication(CLIApplicationBase):
     """
     This class implements a variant of topydo's CLI showing a shell and
     offering auto-completion thanks to the prompt toolkit.
     """
+
     def __init__(self):
         super(PromptApplication, self).__init__()
 
@@ -69,7 +73,6 @@ class PromptApplication(CLIApplicationBase):
         If the modification time of the todo.txt file is equal to the last time
         it was checked, nothing will be done.
         """
-
         current_mtime = _todotxt_mtime()
 
         if not self.todofile or self.mtime != current_mtime:
@@ -77,8 +80,6 @@ class PromptApplication(CLIApplicationBase):
             self.todolist = TodoList.TodoList(self.todofile.read())
             self.mtime = current_mtime
 
-            # suppress upstream issue with Python 2.7
-            # pylint: disable=no-value-for-parameter
             self.completer = TopydoCompleter(self.todolist)
 
     def run(self):
@@ -90,21 +91,21 @@ class PromptApplication(CLIApplicationBase):
             self._load_file()
 
             try:
-                user_input = get_input(u'topydo> ', history=history,
-                                       completer=self.completer,
-                                       complete_while_typing=False).split()
+                user_input = prompt(u'topydo> ', history=history,
+                                    completer=self.completer,
+                                    complete_while_typing=False)
+                user_input = shlex.split(user_input)
             except (EOFError, KeyboardInterrupt):
                 sys.exit(0)
 
             mtime_after = _todotxt_mtime()
+            (subcommand, args) = get_subcommand(user_input)
 
-            if self.mtime != mtime_after:
-                # refuse to perform operations such as 'del' and 'do' if the
-                # todo.txt file has been changed in the background.
+            # refuse to perform operations such as 'del' and 'do' if the
+            # todo.txt file has been changed in the background.
+            if subcommand and not self.is_read_only(subcommand) and self.mtime != mtime_after:
                 error("WARNING: todo.txt file was modified by another application.\nTo prevent unintended changes, this operation was not executed.")
                 continue
-
-            (subcommand, args) = get_subcommand(user_input)
 
             try:
                 if self._execute(subcommand, args) != False:
@@ -112,10 +113,10 @@ class PromptApplication(CLIApplicationBase):
             except TypeError:
                 usage()
 
+
 def main():
     """ Main entry point of the prompt interface. """
     PromptApplication().run()
 
 if __name__ == '__main__':
     main()
-
