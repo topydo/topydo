@@ -189,16 +189,19 @@ class CLIApplicationBase(object):
                 READ_ONLY_COMMANDS)
         return p_command.__module__.endswith(read_only_commands)
 
-    def _execute(self, p_command, p_args):
-        """
-        Execute a subcommand with arguments. p_command is a class (not an
-        object).
-        """
+    def _backup(self, p_command, p_args):
         if config().backup_count() > 0 and p_command and not self.is_read_only(p_command):
             call = [p_command.__module__.lower()[16:-7]] + p_args # strip "topydo.commands" and "Command"
 
             from topydo.lib.ChangeSet import ChangeSet
             self.backup = ChangeSet(self.todolist, p_call=call)
+
+    def _execute(self, p_command, p_args):
+        """
+        Execute a subcommand with arguments. p_command is a class (not an
+        object).
+        """
+        self._backup(p_command, p_args)
 
         command = p_command(
             p_args,

@@ -125,6 +125,8 @@ class UIApplication(CLIApplicationBase):
         p_command = shlex.split(p_command)
         (subcommand, args) = get_subcommand(p_command)
 
+        self._backup(subcommand, args)
+
         try:
             command = subcommand(
                 args,
