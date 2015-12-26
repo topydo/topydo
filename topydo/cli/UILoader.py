@@ -45,6 +45,12 @@ def main():
                 PromptApplication().run()
             except ImportError:
                 error("You have to install prompt-toolkit to run prompt mode.")
+        elif args[0] == 'columns':
+            try:
+                from topydo.ui.Main import UIApplication
+                UIApplication().run()
+            except ImportError:
+                error("You have to install urwid to run column UI.")
         else:
             CLIApplication().run()
     except IndexError:
