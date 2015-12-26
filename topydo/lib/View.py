@@ -25,14 +25,14 @@ class View(object):
     """
 
     def __init__(self, p_sorter, p_filters, p_todolist):
-        self._todolist = p_todolist
+        self.todolist = p_todolist
         self._sorter = p_sorter
         self._filters = p_filters
 
     @property
     def todos(self):
         """ Returns a sorted and filtered list of todos in this view. """
-        result = self._sorter.sort(self._todolist.todos())
+        result = self._sorter.sort(self.todolist.todos())
 
         for _filter in self._filters:
             result = _filter.filter(result)
