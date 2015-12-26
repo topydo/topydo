@@ -45,40 +45,12 @@ class ExpressionCommand(Command):
     def _filters(self):
         filters = []
 
-        def arg_filters():
-            result = []
-
-            if self.last_argument:
-                args = self.args[:-1]
-            else:
-                args = self.args
-
-            for arg in args:
-                # when a word starts with -, it should be negated
-                is_negated = len(arg) > 1 and arg[0] == '-'
-                arg = arg[1:] if is_negated else arg
-
-                argfilter = None
-                for match, _filter in Filter.MATCHES:
-                    if re.match(match, arg):
-                        argfilter = _filter(arg)
-                        break
-
-                if not argfilter:
-                    argfilter = Filter.GrepFilter(arg)
-
-                if is_negated:
-                    argfilter = Filter.NegationFilter(argfilter)
-
-                result.append(argfilter)
-
-            return result
-
         if not self.show_all:
             filters.append(Filter.DependencyFilter(self.todolist))
             filters.append(Filter.RelevanceFilter())
 
-        filters += arg_filters()
+        args = self.args[:-1] if self.last_argument else self.args
+        filters += Filter.get_filter_list(args)
 
         if not self.show_all:
             filters.append(Filter.LimitFilter(self.limit))

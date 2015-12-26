@@ -35,6 +35,7 @@ setup(
         ':sys_platform=="win32"': ['colorama>=0.2.5'],
         ':python_version=="3.2"': ['backports.shutil_get_terminal_size>=1.0.0'],
         'ical': ['icalendar'],
+        'urwid': ['urwid >= 1.3.0'],
         'prompt-toolkit': ['prompt-toolkit >= 0.53'],
         'test': ['coverage', 'freezegun', 'green', ],
         'test:python_version=="3.2"': ['mock'],
