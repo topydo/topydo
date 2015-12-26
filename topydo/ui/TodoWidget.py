@@ -17,7 +17,7 @@
 from six import text_type, u
 
 from topydo.lib.Config import config
-from topydo.ui.Colors import COLOR_MAP
+from topydo.ui.Colors import color_map256
 
 import urwid
 
@@ -58,19 +58,20 @@ class TodoWidget(urwid.WidgetWrap):
 
     def _markup(self, p_todo, p_focus):
         priority_colors = config().priority_colors()
+        color_map = color_map256()
 
         try:
             # retrieve the assigned value in the config file
             fg_color = priority_colors[p_todo.priority()]
 
             # convert to a color that urwid understands
-            fg_color = COLOR_MAP[fg_color]
+            fg_color = color_map[fg_color]
         except KeyError:
             fg_color = 'black' if p_focus else 'default'
 
         bg_color = 'light gray' if p_focus else 'default'
 
-        return urwid.AttrSpec(fg_color, bg_color, 16)
+        return urwid.AttrSpec(fg_color, bg_color, 256)
 
     def keypress(self, p_size, p_key):
         """

@@ -34,3 +34,12 @@ COLOR_MAP = {
     'light-cyan': 'light cyan',
     'white': 'white',
 }
+
+def color_map256():
+    color_map = dict()
+    for i in range(256):
+        color_map[str(i)] = 'h' + str(i)
+
+    color_map.update(COLOR_MAP)
+
+    return color_map
