@@ -316,3 +316,32 @@ MATCHES = [
     (_ORDINAL_TAG_MATCH, OrdinalTagFilter),
     (_PRIORITY_MATCH, PriorityFilter),
 ]
+
+def get_filter_list(p_expression):
+    """
+    Returns a list of GrepFilters, OrdinalTagFilters or NegationFilters based
+    on the given filter expression.
+
+    The filter expression is a list of strings.
+    """
+    result = []
+    for arg in p_expression:
+        # when a word starts with -, it should be negated
+        is_negated = len(arg) > 1 and arg[0] == '-'
+        arg = arg[1:] if is_negated else arg
+
+        argfilter = None
+        for match, _filter in MATCHES:
+            if re.match(match, arg):
+                argfilter = _filter(arg)
+                break
+
+        if not argfilter:
+            argfilter = GrepFilter(arg)
+
+        if is_negated:
+            argfilter = NegationFilter(argfilter)
+
+        result.append(argfilter)
+
+    return result
