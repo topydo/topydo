@@ -18,6 +18,9 @@ import configparser
 import os
 import shlex
 
+def home_config_path(p_filename):
+    return os.path.join(os.path.expanduser('~'), p_filename)
+
 class ConfigError(Exception):
     def __init__(self, p_text):
         self.text = p_text
@@ -120,7 +123,8 @@ class _Config:
 
         files = [
             "/etc/topydo.conf",
-            self._home_config_path(),
+            home_config_path('.config/topydo/config'),
+            home_config_path('.topydo'),
             ".topydo",
             "topydo.conf",
             "topydo.ini",
@@ -142,9 +146,6 @@ class _Config:
         for section in self.sections:
             if not self.cp.has_section(section):
                 self.cp.add_section(section)
-
-    def _home_config_path(self):
-        return os.path.join(os.path.expanduser('~'), '.topydo')
 
     def default_command(self):
         return self.cp.get('topydo', 'default_command')
