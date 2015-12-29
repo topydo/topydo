@@ -116,8 +116,7 @@ class TodoListWidget(urwid.LineBox):
         elif p_key == 'g':
             self.keystate = 'g'
         else:
-            if self.listbox.keypress(p_size, p_key):
-                return super(TodoListWidget, self).keypress(p_size, p_key)
+            self.listbox.keypress(p_size, p_key)
 
     def selectable(self):
         return True

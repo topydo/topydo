@@ -75,5 +75,3 @@ class ViewWidget(urwid.LineBox):
     def keypress(self, p_size, p_key):
         if p_key == 'esc':
             self.close()
-        else:
-            return super(ViewWidget, self).keypress(p_size, p_key)
