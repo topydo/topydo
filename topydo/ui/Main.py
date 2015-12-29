@@ -16,7 +16,6 @@
 
 import shlex
 import urwid
-from six import u
 
 from topydo.cli.CLIApplicationBase import CLIApplicationBase
 from topydo.Commands import get_subcommand
@@ -74,7 +73,7 @@ class UIApplication(CLIApplicationBase):
         self.todolist = TodoList.TodoList(self.todofile.read())
 
         self.columns = urwid.Columns([], dividechars=0, min_width=COLUMN_WIDTH)
-        self.commandline = CommandLineWidget(u('topydo> '))
+        self.commandline = CommandLineWidget('topydo> ')
 
         # console widget
         self.console = ConsoleWidget()

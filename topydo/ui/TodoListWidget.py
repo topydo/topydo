@@ -14,7 +14,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from six import text_type, u
 import urwid
 
 from topydo.ui.TodoWidget import TodoWidget
@@ -34,7 +33,7 @@ class TodoListWidget(urwid.LineBox):
 
         pile = urwid.Pile([
             (1, urwid.Filler(self._title_widget)),
-            (1, urwid.Filler(urwid.Divider(u('\u2500')))),
+            (1, urwid.Filler(urwid.Divider('\u2500'))),
             ('weight', 1, self.listbox),
         ])
 
@@ -73,7 +72,7 @@ class TodoListWidget(urwid.LineBox):
         for todo in self.view.todos:
             todowidget = TodoWidget(todo, self.view.todolist.number(todo))
             self.todolist.append(todowidget)
-            self.todolist.append(urwid.Divider(u('-')))
+            self.todolist.append(urwid.Divider('-'))
 
         if old_focus_position:
             self.todolist.set_focus(old_focus_position)
@@ -132,7 +131,7 @@ class TodoListWidget(urwid.LineBox):
             self.view.todolist.number(todo)
 
             urwid.emit_signal(self, 'execute_command', "do {}".format(
-                text_type(self.view.todolist.number(todo))))
+                str(self.view.todolist.number(todo))))
         except AttributeError:
             # No todo item selected
             pass

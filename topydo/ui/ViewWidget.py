@@ -15,19 +15,18 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import urwid
-from six import u
 
 class ViewWidget(urwid.LineBox):
     def __init__(self, p_todolist):
         self._todolist = p_todolist
 
-        self.titleedit = urwid.Edit(u("Title: "), u(""))
-        self.sortedit = urwid.Edit(u("Sort expression: "), u(""))
-        self.filteredit = urwid.Edit(u("Filter expression: "), u(""))
+        self.titleedit = urwid.Edit("Title: ", "")
+        self.sortedit = urwid.Edit("Sort expression: ", "")
+        self.filteredit = urwid.Edit("Filter expression: ", "")
 
         group = []
-        self.relevantradio = urwid.RadioButton(group, u("Only show relevant todo items"), True)
-        self.allradio = urwid.RadioButton(group, u("Show all todo items"))
+        self.relevantradio = urwid.RadioButton(group, "Only show relevant todo items", True)
+        self.allradio = urwid.RadioButton(group, "Show all todo items")
 
         self.pile = urwid.Pile([
             self.titleedit,
@@ -35,8 +34,8 @@ class ViewWidget(urwid.LineBox):
             self.filteredit,
             self.relevantradio,
             self.allradio,
-            urwid.Button(u("Save"), lambda _: urwid.emit_signal(self, 'save')),
-            urwid.Button(u("Cancel"), lambda _: self.close()),
+            urwid.Button("Save", lambda _: urwid.emit_signal(self, 'save')),
+            urwid.Button("Cancel", lambda _: self.close()),
         ])
 
         self.reset()
@@ -64,9 +63,9 @@ class ViewWidget(urwid.LineBox):
 
     def reset(self):
         """ Resets the form. """
-        self.titleedit.set_edit_text(u(""))
-        self.sortedit.set_edit_text(u(""))
-        self.filteredit.set_edit_text(u(""))
+        self.titleedit.set_edit_text("")
+        self.sortedit.set_edit_text("")
+        self.filteredit.set_edit_text("")
         self.relevantradio.set_state(True)
         self.pile.focus_item = 0
 

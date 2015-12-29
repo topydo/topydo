@@ -14,8 +14,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from six import text_type, u
-
 from topydo.lib.Config import config
 from topydo.ui.Colors import COLOR_MAP
 
@@ -26,7 +24,7 @@ class TodoWidget(urwid.WidgetWrap):
         self.todo = p_todo
 
         priority = self.todo.priority()
-        priority_text = u("")
+        priority_text = ""
         todo_text = self.todo.source()
 
         if priority:
@@ -35,7 +33,7 @@ class TodoWidget(urwid.WidgetWrap):
             # strip the first characters off
             todo_text = todo_text[4:]
 
-        id_widget = urwid.Text(text_type(p_number), align='right')
+        id_widget = urwid.Text(str(p_number), align='right')
         priority_widget = urwid.Text(priority_text)
         self.text_widget = urwid.Text(todo_text)
 
