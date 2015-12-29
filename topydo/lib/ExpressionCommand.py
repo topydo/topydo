@@ -16,17 +16,19 @@
 
 import re
 
+from topydo.lib import Filter
 from topydo.lib.Command import Command
 from topydo.lib.Config import config
-from topydo.lib import Filter
 from topydo.lib.Sorter import Sorter
 from topydo.lib.View import View
+
 
 class ExpressionCommand(Command):
     """
     A common class for commands operating on todos selected by expressions.
     """
-    def __init__(self, p_args, p_todolist,
+
+    def __init__(self, p_args, p_todolist, #pragma: no branch
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
@@ -35,6 +37,7 @@ class ExpressionCommand(Command):
 
         self.sort_expression = config().sort_string()
         self.show_all = False
+        self.limit = config().list_limit()
         # Commands using last argument differently (i.e as something other than
         # todo ID/expression) have to set attribute below to True.
         self.last_argument = False
@@ -50,7 +53,7 @@ class ExpressionCommand(Command):
         filters += Filter.get_filter_list(args)
 
         if not self.show_all:
-            filters.append(Filter.LimitFilter(config().list_limit()))
+            filters.append(Filter.LimitFilter(self.limit))
 
         return filters
 

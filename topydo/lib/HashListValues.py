@@ -1,5 +1,5 @@
 # Topydo - A todo.txt client written in Python.
-# Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
+# Copyright (C) 2014 - 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,9 +23,10 @@ from hashlib import sha1
 
 _TABLE_SIZES = {
     # we choose a large table size to reduce the chance of collisions.
-    3: 46649, # largest prime under zzz_36
-    4: 1679609 # largest prime under zzzz_36
+    3: 46649,   # largest prime under zzz_36
+    4: 1679609  # largest prime under zzzz_36
 }
+
 
 def _to_base36(p_value):
     """
@@ -43,7 +44,8 @@ def _to_base36(p_value):
 
     return base36 or alphabet[0]
 
-def hash_list_values(p_list, p_key=lambda i: i):
+
+def hash_list_values(p_list, p_key=lambda i: i):  # pragma: no branch
     """
     Calculates a unique value for each item in the list, these can be used as
     identifiers.
@@ -79,4 +81,3 @@ def hash_list_values(p_list, p_key=lambda i: i):
         result.append((item, _to_base36(hash_value)))
 
     return result
-

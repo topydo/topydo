@@ -15,7 +15,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import urwid
-from six import u
 
 class CommandLineWidget(urwid.Edit):
     def __init__(self, *args, **kwargs):
@@ -23,7 +22,7 @@ class CommandLineWidget(urwid.Edit):
         urwid.register_signal(CommandLineWidget, ['blur', 'execute_command'])
 
     def clear(self):
-        self.set_edit_text(u(""))
+        self.set_edit_text("")
 
     def _blur(self):
         self.clear()

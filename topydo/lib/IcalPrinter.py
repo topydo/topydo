@@ -19,11 +19,12 @@ Provides a printer that transforms a list of Todo items to an iCalendar
 file according to RFC 2445.
 """
 
-from datetime import datetime, time
 import random
 import string
+from datetime import datetime, time
 
 from topydo.lib.PrettyPrinter import Printer
+
 
 def _convert_priority(p_priority):
     """
@@ -55,6 +56,7 @@ def _convert_priority(p_priority):
 
     return result
 
+
 class IcalPrinter(Printer):
     """
     A printer that converts a list of Todo items to a string in iCalendar
@@ -62,6 +64,7 @@ class IcalPrinter(Printer):
 
     https://www.rfc-editor.org/rfc/rfc2445.txt
     """
+
     def __init__(self, p_todolist):
         super(IcalPrinter, self).__init__()
         self.todolist = p_todolist
@@ -69,10 +72,7 @@ class IcalPrinter(Printer):
         try:
             import icalendar
             self.icalendar = icalendar
-        except (SyntaxError, ImportError): # pragma: no cover
-            # icalendar does not support Python 3.2 resulting in a SyntaxError. Since
-            # this is an optional dependency, dropping Python 3.2 support altogether is
-            # too much. Therefore just disable the iCalendar functionality
+        except ImportError:  # pragma: no cover
             self.icalendar = None
 
     def print_list(self, p_todos):
@@ -98,6 +98,7 @@ class IcalPrinter(Printer):
             Gets a unique ID from a todo item, stored by the ical tag. If the
             tag is not present, a random value is assigned to it and returned.
             """
+
             def generate_uid(p_length=4):
                 """
                 Generates a random string of the given length, used as

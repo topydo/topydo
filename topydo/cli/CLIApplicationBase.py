@@ -21,10 +21,10 @@ I/O on the command-line.
 
 import getopt
 import sys
-from six import PY2
-from six.moves import input
 
 MAIN_OPTS = "ac:d:ht:v"
+READ_ONLY_COMMANDS = ('List', 'ListContext', 'ListProject')
+
 
 def usage():
     """ Prints the command-line usage of topydo. """
@@ -55,11 +55,13 @@ Available commands:
 * listprojects (lsprj)
 * postpone
 * pri
+* revert
 * sort
 * tag
 
 Run `topydo help <subcommand>` for command-specific help.
 """)
+
 
 def write(p_file, p_string):
     """
@@ -73,10 +75,11 @@ def write(p_file, p_string):
     if p_string:
         p_file.write(p_string + "\n")
 
+
 def error(p_string):
     """ Writes an error on the standard error. """
-
     write(sys.stderr, p_string)
+
 
 def version():
     """ Print the current version and exit. """
@@ -96,12 +99,11 @@ except ConfigError as config_error:
     error(str(config_error))
     sys.exit(1)
 
-from topydo.commands.ArchiveCommand import ArchiveCommand
-from topydo.commands.SortCommand import SortCommand
 from topydo.lib import TodoFile
 from topydo.lib import TodoList
 from topydo.lib import TodoListBase
 from topydo.lib.Utils import escape_ansi
+
 
 class CLIApplicationBase(object):
     """
@@ -110,10 +112,12 @@ class CLIApplicationBase(object):
 
     Handles input/output of the various subcommands.
     """
+
     def __init__(self):
         self.todolist = TodoList.TodoList([])
         self.todofile = None
         self.do_archive = True
+        self.backup = None
 
     def _usage(self):
         usage()
@@ -121,9 +125,6 @@ class CLIApplicationBase(object):
 
     def _process_flags(self):
         args = sys.argv[1:]
-
-        if PY2:
-            args = [arg.decode('utf-8') for arg in args]
 
         try:
             opts, args = getopt.getopt(args, MAIN_OPTS)
@@ -165,7 +166,11 @@ class CLIApplicationBase(object):
         archive_file = TodoFile.TodoFile(config().archive())
         archive = TodoListBase.TodoListBase(archive_file.read())
 
+        if self.backup:
+            self.backup.add_archive(archive)
+
         if archive:
+            from topydo.commands.ArchiveCommand import ArchiveCommand
             command = ArchiveCommand(self.todolist, archive)
             command.execute()
 
@@ -173,28 +178,34 @@ class CLIApplicationBase(object):
                 archive_file.write(archive.print_todos())
 
     def _help(self, args):
-        if args == None:
-            pass # TODO
+        if args is None:
+            pass  # TODO
         else:
-            pass # TODO
+            pass  # TODO
 
-    def _input(self):
-        """
-        Returns a function that retrieves user input.
-        """
-        return input
+    def is_read_only(self, p_command):
+        """ Returns True when the given command class is read-only. """
+        read_only_commands = tuple(cmd + 'Command' for cmd in ('Revert', ) +
+                READ_ONLY_COMMANDS)
+        return p_command.__module__.endswith(read_only_commands)
 
     def _execute(self, p_command, p_args):
         """
         Execute a subcommand with arguments. p_command is a class (not an
         object).
         """
+        if config().backup_count() > 0 and p_command and not self.is_read_only(p_command):
+            call = [p_command.__module__.lower()[16:-7]] + p_args # strip "topydo.commands" and "Command"
+
+            from topydo.lib.ChangeSet import ChangeSet
+            self.backup = ChangeSet(self.todolist, p_call=call)
+
         command = p_command(
             p_args,
             self.todolist,
             lambda o: write(sys.stdout, o),
             error,
-            self._input())
+            input)
 
         if command.execute() != False:
             return True
@@ -215,10 +226,15 @@ class CLIApplicationBase(object):
                 self._archive()
 
             if config().keep_sorted():
+                from topydo.commands.SortCommand import SortCommand
                 self._execute(SortCommand, [])
+
+            if self.backup:
+                self.backup.save(self.todolist)
 
             self.todofile.write(self.todolist.print_todos())
 
+        self.backup = None
+
     def run(self):
         raise NotImplementedError
-

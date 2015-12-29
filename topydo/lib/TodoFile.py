@@ -1,5 +1,5 @@
 # Topydo - A todo.txt client written in Python.
-# Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
+# Copyright (C) 2014 - 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@ This module deals with todo.txt files.
 """
 
 import codecs
+
 
 class TodoFile(object):
     """
@@ -48,7 +49,6 @@ class TodoFile(object):
         p_todos can be a list of todo items, or a string that is just written
         to the file.
         """
-
         todofile = codecs.open(self.path, 'w', encoding="utf-8")
 
         if p_todos is list:

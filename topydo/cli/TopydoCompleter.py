@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-This module provides a completer class that can be used by get_input provided
+This module provides a completer class that can be used by the prompt provided
 by the prompt toolkit.
 """
 
@@ -23,17 +23,20 @@ import datetime
 import re
 
 from prompt_toolkit.completion import Completer, Completion
-
-from topydo.lib.Config import config
 from topydo.Commands import _SUBCOMMAND_MAP
+from topydo.lib.Config import config
 from topydo.lib.RelativeDate import relative_date_to_date
+
 
 def _subcommands(p_word_before_cursor):
     """ Generator for subcommand name completion. """
-    subcommands = [sc for sc in sorted(_SUBCOMMAND_MAP.keys()) if
+    sc_map = config().aliases()
+    sc_map.update(_SUBCOMMAND_MAP)
+    subcommands = [sc for sc in sorted(sc_map.keys()) if
                    sc.startswith(p_word_before_cursor)]
     for command in subcommands:
         yield Completion(command, -len(p_word_before_cursor))
+
 
 def _dates(p_word_before_cursor):
     """ Generator for date completion. """
@@ -79,11 +82,13 @@ def _dates(p_word_before_cursor):
 
         yield Completion(reldate, -len(value), display_meta=to_absolute(reldate))
 
+
 class TopydoCompleter(Completer):
     """
     Completer class that completes projects, contexts, dates and
     subcommands.
     """
+
     def __init__(self, p_todolist):
         self.todolist = p_todolist
 
@@ -106,7 +111,8 @@ class TopydoCompleter(Completer):
     def get_completions(self, p_document, _):
         # include all characters except whitespaces (for + and @)
         word_before_cursor = p_document.get_word_before_cursor(True)
-        is_first_word = not re.match(r'\s*\S+\s', p_document.current_line_before_cursor)
+        is_first_word = not re.match(r'\s*\S+\s',
+                                     p_document.current_line_before_cursor)
 
         if is_first_word:
             return _subcommands(word_before_cursor)

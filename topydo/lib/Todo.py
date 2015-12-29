@@ -1,5 +1,5 @@
 # Topydo - A todo.txt client written in Python.
-# Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
+# Copyright (C) 2014 - 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@ from datetime import date
 from topydo.lib.Config import config
 from topydo.lib.TodoBase import TodoBase
 from topydo.lib.Utils import date_string_to_date
+
 
 class Todo(TodoBase):
     """
@@ -84,9 +85,10 @@ class Todo(TodoBase):
     def length(self):
         """
         Returns the length (in days) of the task, by considering the start date
-        and the due date. Returns 0 when one of these dates are missing.
+        and the due date. When there is no start date, its creation date is
+        used. Returns 0 when one of these dates is missing.
         """
-        start = self.start_date()
+        start = self.start_date() or self.creation_date()
         due = self.due_date()
 
         if start and due and start < due:
@@ -94,4 +96,3 @@ class Todo(TodoBase):
             return diff.days
         else:
             return 0
-

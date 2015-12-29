@@ -22,6 +22,7 @@ from topydo.lib.Config import config
 from topydo.lib.Graph import DirectedGraph
 from topydo.lib.TodoListBase import TodoListBase
 
+
 class TodoList(TodoListBase):
     """
     Provides operations for a todo list, such as adding items, removing them,
@@ -37,7 +38,7 @@ class TodoList(TodoListBase):
         The string will be parsed.
         """
         # initialize these first because the constructor calls add_list
-        self._tododict = {} # hash(todo) to todo lookup
+        self._tododict = {}  # hash(todo) to todo lookup
         self._depgraph = DirectedGraph()
 
         super(TodoList, self).__init__(p_todostrings)
@@ -57,7 +58,6 @@ class TodoList(TodoListBase):
         Makes sure that the dependency graph is consistent according to the
         given todo.
         """
-
         dep_id = p_todo.tag_value('id')
         # maintain dependency graph
         if dep_id:
@@ -66,7 +66,7 @@ class TodoList(TodoListBase):
             # connect all tasks we have in memory so far that refer to this
             # task
             for dep in \
-                [dep for dep in self._todos if dep.has_tag('p', dep_id)]:
+                    [dep for dep in self._todos if dep.has_tag('p', dep_id)]:
 
                 self._depgraph.add_edge(hash(p_todo), hash(dep), dep_id)
 
@@ -114,8 +114,7 @@ class TodoList(TodoListBase):
             """
             def id_exists(p_id):
                 """
-                Returns True if there exists a todo with the given parent
-                ID.
+                Returns True if there exists a todo with the given parent ID.
                 """
                 for todo in self._todos:
                     if todo.has_tag('id', str(p_id)):
@@ -148,7 +147,7 @@ class TodoList(TodoListBase):
                     self.append(p_to_todo, "@{}".format(context))
 
         if p_from_todo != p_to_todo and not self._depgraph.has_edge(
-            hash(p_from_todo), hash(p_to_todo)):
+                hash(p_from_todo), hash(p_to_todo)):
 
             dep_id = None
             if p_from_todo.has_tag('id'):
@@ -204,19 +203,39 @@ class TodoList(TodoListBase):
         graph and removing unused dependency ids from the graph (in that
         order).
         """
-        def clean_by_tag(tag_name):
-            """ Generic function to handle 'p' and 'id' tags. """
-            for todo in [todo for todo in self._todos
-                if todo.has_tag(tag_name)]:
+        def remove_tag(p_todo, p_tag, p_value):
+            """
+            Removes a tag from a todo item.
+            """
+            p_todo.remove_tag(p_tag, p_value)
+            self.dirty = True
 
-                value = todo.tag_value(tag_name)
+        def clean_parent_relations():
+            """
+            Remove id: tags for todos without child todo items.
+            """
+
+            for todo in [todo for todo in self._todos if todo.has_tag('id')]:
+                value = todo.tag_value('id')
                 if not self._depgraph.has_edge_id(value):
-                    todo.remove_tag(tag_name, value)
-                    self.dirty = True
+                    remove_tag(todo, 'id', value)
+
+        def clean_orphan_relations():
+            """
+            Remove p: tags for todos referring to a parent that is not in the
+            dependency graph anymore.
+            """
+
+            for todo in [todo for todo in self._todos if todo.has_tag('p')]:
+                for value in todo.tag_values('p'):
+                    parent = self.todo_by_dep_id(value)
+
+                    if not self._depgraph.has_edge(hash(parent), hash(todo)):
+                        remove_tag(todo, 'p', value)
 
         self._depgraph.transitively_reduce()
-        clean_by_tag('p')
-        clean_by_tag('id')
+        clean_parent_relations()
+        clean_orphan_relations()
 
     def _update_parent_cache(self):
         """
@@ -225,6 +244,5 @@ class TodoList(TodoListBase):
         This is used for calculating the average importance, that requires
         access to a todo's parents.
         """
-
         for todo in self._todos:
             todo.attributes['parents'] = self.parents(todo)

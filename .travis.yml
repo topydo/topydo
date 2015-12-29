@@ -1,17 +1,25 @@
 sudo: false  # run on new infrastructure
 language: python
 python:
-  - "2.7"
-  - "3.2"
   - "3.3"
   - "3.4"
+  - "3.5"
+  - "pypy3"
 install:
+  - "python -m pip install pip --upgrade"
   - "pip install ."
   - "pip install urwid"
-  - "pip install icalendar"
+  - "pip install .[ical]"
+  - "pip install .[prompt-toolkit]"
+  - "pip install .[test]"
   - "pip install pylint"
-script: "./run-tests.sh"
+  - "pip install codecov"
+script:
+  - "green -vvr"
+  - "python -m pylint --errors-only topydo test"
 # Cache Dependencies
+after_script:
+  - codecov
 cache:
   directories:
     - $HOME/travis/.cache/pip

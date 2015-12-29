@@ -15,16 +15,17 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from topydo.lib.Command import Command, InvalidCommandArgument
-from topydo.lib.PrettyPrinterFilter import PrettyPrinterNumbers
+from topydo.lib.prettyprinters.Numbers import PrettyPrinterNumbers
 from topydo.lib.TodoListBase import InvalidTodoException
 
+
 class AppendCommand(Command):
-    def __init__(self, p_args, p_todolist,
+    def __init__(self, p_args, p_todolist, #pragma: no branch
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
-        super(AppendCommand, self).__init__(
-            p_args, p_todolist, p_out, p_err, p_prompt=lambda a: None)
+        super(AppendCommand, self).__init__(p_args, p_todolist, p_out, p_err,
+                p_prompt)
 
     def execute(self):
         if not super(AppendCommand, self).execute():

@@ -18,11 +18,13 @@ import getopt
 
 from topydo.lib.PrettyPrinter import PrettyPrinter
 
+
 class InvalidCommandArgument(Exception):
     pass
 
+
 class Command(object):
-    def __init__(self, p_args, p_todolist,
+    def __init__(self, p_args, p_todolist, #pragma: no branch
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
@@ -90,4 +92,3 @@ class Command(object):
     def help(self):
         """ Returns the help text for this command. """
         raise NotImplementedError
-

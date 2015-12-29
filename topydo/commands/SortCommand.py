@@ -1,5 +1,5 @@
 # Topydo - A todo.txt client written in Python.
-# Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
+# Copyright (C) 2014 - 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,8 +18,9 @@ from topydo.lib.Command import Command, InvalidCommandArgument
 from topydo.lib.Config import config
 from topydo.lib.Sorter import Sorter
 
+
 class SortCommand(Command):
-    def __init__(self, p_args, p_todolist,
+    def __init__(self, p_args, p_todolist, #pragma: no branch
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
@@ -35,11 +36,10 @@ class SortCommand(Command):
         except InvalidCommandArgument:
             expression = config().sort_string()
 
-        sorter = Sorter(expression) # TODO: validate
+        sorter = Sorter(expression)  # TODO: validate
         sorted_todos = sorter.sort(self.todolist.todos())
 
-        self.todolist.erase()
-        self.todolist.add_todos(sorted_todos)
+        self.todolist.replace(sorted_todos)
 
     def usage(self):
         return """Synopsis: sort [expression]"""

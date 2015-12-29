@@ -1,5 +1,5 @@
 # Topydo - A todo.txt client written in Python.
-# Copyright (C) 2014 Bram Schoenmakers <me@bramschoenmakers.nl>
+# Copyright (C) 2014 - 2015 Bram Schoenmakers <me@bramschoenmakers.nl>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,17 +19,18 @@ import re
 from topydo.lib.RelativeDate import relative_date_to_date
 from topydo.lib.Utils import date_string_to_date
 
+
 class Filter(object):
     def filter(self, p_todos):
         """
         Filters a list of todos. Truncates the list after p_limit todo
         items (or no maximum limit if omitted).
         """
-
         return [t for t in p_todos if self.match(t)]
 
     def match(self, _):
         raise NotImplementedError
+
 
 class NegationFilter(Filter):
     def __init__(self, p_filter):
@@ -37,6 +38,7 @@ class NegationFilter(Filter):
 
     def match(self, p_todo):
         return not self._filter.match(p_todo)
+
 
 class AndFilter(Filter):
     def __init__(self, p_filter1, p_filter2):
@@ -46,6 +48,7 @@ class AndFilter(Filter):
     def match(self, p_todo):
         return self._filter1.match(p_todo) and self._filter2.match(p_todo)
 
+
 class OrFilter(Filter):
     def __init__(self, p_filter1, p_filter2):
         self._filter1 = p_filter1
@@ -53,6 +56,7 @@ class OrFilter(Filter):
 
     def match(self, p_todo):
         return self._filter1.match(p_todo) or self._filter2.match(p_todo)
+
 
 class GrepFilter(Filter):
     """ Matches when the todo text contains a text. """
@@ -63,7 +67,7 @@ class GrepFilter(Filter):
         # convert to string in case we receive integers
         self.expression = p_expression
 
-        if p_case_sensitive != None:
+        if p_case_sensitive is not None:
             self.case_sensitive = p_case_sensitive
         else:
             # only be case sensitive when the expression contains at least one
@@ -79,6 +83,7 @@ class GrepFilter(Filter):
             string = string.lower()
 
         return string.find(expr) != -1
+
 
 class RelevanceFilter(Filter):
     """
@@ -99,8 +104,10 @@ class RelevanceFilter(Filter):
 
         return p_todo.is_active() and is_due
 
+
 class DependencyFilter(Filter):
     """ Matches when a todo has no unfinished child tasks.  """
+
     def __init__(self, p_todolist):
         """
         Constructor.
@@ -119,6 +126,7 @@ class DependencyFilter(Filter):
         uncompleted = [todo for todo in children if not todo.is_completed()]
 
         return not uncompleted
+
 
 class InstanceFilter(Filter):
     def __init__(self, p_todos):
@@ -143,6 +151,7 @@ class InstanceFilter(Filter):
         except ValueError:
             return False
 
+
 class LimitFilter(Filter):
     def __init__(self, p_limit):
         super(LimitFilter, self).__init__()
@@ -151,19 +160,53 @@ class LimitFilter(Filter):
     def filter(self, p_todos):
         return p_todos[:self.limit] if self.limit >= 0 else p_todos
 
-ORDINAL_TAG_MATCH = r"(?P<key>[^:]*):(?P<operator><=?|=|>=?|!)?(?P<value>\S+)"
+_OPERATOR_MATCH = r"(?P<operator><=?|=|>=?|!)?"
 
-class OrdinalTagFilter(Filter):
-    def __init__(self, p_expression):
-        super(OrdinalTagFilter, self).__init__()
+
+class OrdinalFilter(Filter):
+    """ Base class for ordinal filters. """
+
+    def __init__(self, p_expression, p_pattern):
+        super(OrdinalFilter, self).__init__()
 
         self.expression = p_expression
 
-        match = re.match(ORDINAL_TAG_MATCH, self.expression)
+        match = re.match(p_pattern, self.expression)
         if match:
-            self.key = match.group('key')
+            try:
+                self.key = match.group('key')
+            except IndexError:
+                pass
             self.operator = match.group('operator') or '='
             self.value = match.group('value')
+
+    def compare_operands(self, p_operand1, p_operand2):
+        """
+        Returns True if conditional constructed from both operands and
+        self.operator is valid. Returns False otherwise.
+        """
+        if self.operator == '<':
+            return p_operand1 < p_operand2
+        elif self.operator == '<=':
+            return p_operand1 <= p_operand2
+        elif self.operator == '=':
+            return p_operand1 == p_operand2
+        elif self.operator == '>=':
+            return p_operand1 >= p_operand2
+        elif self.operator == '>':
+            return p_operand1 > p_operand2
+        elif self.operator == '!':
+            return p_operand1 != p_operand2
+
+        return False
+
+_VALUE_MATCH = r"(?P<value>\S+)"
+_ORDINAL_TAG_MATCH = r"(?P<key>[^:]*):" + _OPERATOR_MATCH + _VALUE_MATCH
+
+
+class OrdinalTagFilter(OrdinalFilter):
+    def __init__(self, p_expression):
+        super(OrdinalTagFilter, self).__init__(p_expression, _ORDINAL_TAG_MATCH)
 
     def match(self, p_todo):
         """
@@ -199,20 +242,80 @@ class OrdinalTagFilter(Filter):
                 grep = GrepFilter(self.expression)
                 return grep.match(p_todo)
 
-        if self.operator == '<':
-            return operand1 < operand2
-        elif self.operator == '<=':
-            return operand1 <= operand2
-        elif self.operator == '=':
-            return operand1 == operand2
-        elif self.operator == '>=':
-            return operand1 >= operand2
-        elif self.operator == '>':
-            return operand1 > operand2
-        elif self.operator == '!':
-            return operand1 != operand2
+        return self.compare_operands(operand1, operand2)
 
-        return False
+
+class _DateAttributeFilter(OrdinalFilter):
+    def __init__(self, p_expression, p_match, p_getter):
+        super(_DateAttributeFilter, self).__init__(p_expression, p_match)
+        self.getter = p_getter
+
+    def match(self, p_todo):
+        operand1 = self.getter(p_todo)
+        operand2 = relative_date_to_date(self.value)
+
+        if not operand2:
+            operand2 = date_string_to_date(self.value)
+
+        if operand1 and operand2:
+            return self.compare_operands(operand1, operand2)
+        else:
+            return False
+
+
+_CREATED_MATCH = r'creat(ion|ed?):' + _OPERATOR_MATCH + _VALUE_MATCH
+
+
+class CreationFilter(_DateAttributeFilter):
+    def __init__(self, p_expression):
+        super(CreationFilter, self).__init__(
+            p_expression,
+            _CREATED_MATCH,
+            lambda t: t.creation_date()  # pragma: no branch
+        )
+
+
+_COMPLETED_MATCH = r'complet(ed?|ion):' + _OPERATOR_MATCH + _VALUE_MATCH
+
+
+class CompletionFilter(_DateAttributeFilter):
+    def __init__(self, p_expression):
+        super(CompletionFilter, self).__init__(
+            p_expression,
+            _COMPLETED_MATCH,
+            lambda t: t.completion_date()  # pragma: no branch
+        )
+
+
+_PRIORITY_MATCH = r"\(" + _OPERATOR_MATCH + r"(?P<value>[A-Z]{1})\)"
+
+
+class PriorityFilter(OrdinalFilter):
+    def __init__(self, p_expression):
+        super(PriorityFilter, self).__init__(p_expression, _PRIORITY_MATCH)
+
+    def match(self, p_todo):
+        """
+        Performs a match on a priority in the todo.
+
+        It gets priority from p_todo and compares it with user-entered
+        expression based on the given operator (default ==). It does that however
+        in reversed order to obtain more intuitive result. Example: (>B) will
+        match todos with priority (A).
+        Items without priority are designated with corresponding operand set to
+        'ZZ', because python doesn't allow NoneType() and str() comparisons.
+        """
+        operand1 = self.value
+        operand2 = p_todo.priority() or 'ZZ'
+
+        return self.compare_operands(operand1, operand2)
+
+MATCHES = [
+    (_CREATED_MATCH, CreationFilter),
+    (_COMPLETED_MATCH, CompletionFilter),
+    (_ORDINAL_TAG_MATCH, OrdinalTagFilter),
+    (_PRIORITY_MATCH, PriorityFilter),
+]
 
 def get_filter_list(p_expression):
     """
@@ -223,14 +326,21 @@ def get_filter_list(p_expression):
     """
     result = []
     for arg in p_expression:
-        if re.match(ORDINAL_TAG_MATCH, arg):
-            argfilter = OrdinalTagFilter(arg)
-        elif len(arg) > 1 and arg[0] == '-':
-            # when a word starts with -, exclude it
-            argfilter = GrepFilter(arg[1:])
-            argfilter = NegationFilter(argfilter)
-        else:
+        # when a word starts with -, it should be negated
+        is_negated = len(arg) > 1 and arg[0] == '-'
+        arg = arg[1:] if is_negated else arg
+
+        argfilter = None
+        for match, _filter in MATCHES:
+            if re.match(match, arg):
+                argfilter = _filter(arg)
+                break
+
+        if not argfilter:
             argfilter = GrepFilter(arg)
+
+        if is_negated:
+            argfilter = NegationFilter(argfilter)
 
         result.append(argfilter)
 

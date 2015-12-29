@@ -1,4 +1,4 @@
-*.pyc
+*.py[cod]
 *.sw?
 install
 .coverage
@@ -11,6 +11,7 @@ build/
 develop-eggs/
 dist/
 eggs/
+htmlcov/
 lib/
 lib64/
 parts/
@@ -19,6 +20,9 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+.eggs/
 
 # Sublime Text
 *.sublime-*
+
+!/topydo/lib/
