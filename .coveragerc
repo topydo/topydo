@@ -12,5 +12,6 @@ exclude_lines =
     if __name__ == .__main__.:
 
 omit =
+    topydo/ui/*.py
     topydo/commands/ExitCommand.py
     topydo/lib/Version.py
