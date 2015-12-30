@@ -17,7 +17,7 @@
 from topydo.lib.Config import config
 from topydo.lib.ExpressionCommand import ExpressionCommand
 from topydo.lib.Filter import InstanceFilter
-from topydo.lib.PrettyPrinter import pretty_printer_factory
+from topydo.lib.printers.PrettyPrinter import pretty_printer_factory
 from topydo.lib.prettyprinters.Format import PrettyPrinterFormatFilter
 from topydo.lib.TodoListBase import InvalidTodoException
 
@@ -59,18 +59,18 @@ class ListCommand(ExpressionCommand):
                 self.sort_expression = value
             elif opt == '-f':
                 if value == 'json':
-                    from topydo.lib.JsonPrinter import JsonPrinter
+                    from topydo.lib.printers.Json import JsonPrinter
                     self.printer = JsonPrinter()
                 elif value == 'ical':
                     if self._poke_icalendar():
-                        from topydo.lib.IcalPrinter import IcalPrinter
+                        from topydo.lib.printers.Ical import IcalPrinter
                         self.printer = IcalPrinter(self.todolist)
 
                         # a graph without dependencies is not so useful, hence
                         # show all
                         self.show_all = True
                 elif value == 'dot':
-                    from topydo.lib.DotPrinter import DotPrinter
+                    from topydo.lib.printers.Dot import DotPrinter
                     self.printer = DotPrinter(self.todolist)
                 else:
                     self.printer = None

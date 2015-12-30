@@ -22,7 +22,7 @@ notation. Useful for displaying dependencies.
 from textwrap import wrap
 
 from topydo.lib.Colorblock import progress_html_color
-from topydo.lib.PrettyPrinter import Printer
+from topydo.lib.printers.PrettyPrinter import Printer
 from topydo.lib.Utils import humanize_date
 
 
