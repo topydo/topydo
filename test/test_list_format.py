@@ -36,7 +36,7 @@ except ImportError:
 @freeze_time("2015, 11, 06")
 class ListFormatTest(CommandTest):
     def setUp(self):
-        super(ListFormatTest, self).setUp()
+        super().setUp()
         self.todolist = load_file_to_todolist("test/data/ListFormat.txt")
         self.terminal_size = namedtuple('terminal_size', ['columns', 'lines'])
 

@@ -35,7 +35,7 @@ except ImportError:
 
 class ListCommandTest(CommandTest):
     def setUp(self):
-        super(ListCommandTest, self).setUp()
+        super().setUp()
         self.todolist = load_file_to_todolist("test/data/ListCommandTest.txt")
         self.terminal_size = namedtuple('terminal_size', ['columns', 'lines'])
 
@@ -397,7 +397,7 @@ class ListCommandTest(CommandTest):
 
 class ListCommandUnicodeTest(CommandTest):
     def setUp(self):
-        super(ListCommandUnicodeTest, self).setUp()
+        super().setUp()
         self.todolist = load_file_to_todolist("test/data/ListCommandUnicodeTest.txt")
 
     def test_list_unicode1(self):

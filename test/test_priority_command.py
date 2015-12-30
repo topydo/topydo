@@ -23,7 +23,7 @@ from topydo.lib.TodoList import TodoList
 
 class PriorityCommandTest(CommandTest):
     def setUp(self):
-        super(PriorityCommandTest, self).setUp()
+        super().setUp()
         todos = [
             "(A) Foo",
             "Bar",

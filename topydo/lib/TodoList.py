@@ -41,7 +41,7 @@ class TodoList(TodoListBase):
         self._tododict = {}  # hash(todo) to todo lookup
         self._depgraph = DirectedGraph()
 
-        super(TodoList, self).__init__(p_todostrings)
+        super().__init__(p_todostrings)
 
     def todo_by_dep_id(self, p_dep_id):
         """

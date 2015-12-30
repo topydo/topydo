@@ -28,7 +28,7 @@ class ListCommand(ExpressionCommand):
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
-        super(ListCommand, self).__init__(
+        super().__init__(
             p_args, p_todolist, p_out, p_err, p_prompt)
 
         self.printer = None
@@ -92,7 +92,7 @@ class ListCommand(ExpressionCommand):
         Additional filters to select particular todo items given with the -i
         flag.
         """
-        filters = super(ListCommand, self)._filters()
+        filters = super()._filters()
 
         if self.ids:
             def get_todo(p_id):
@@ -132,7 +132,7 @@ class ListCommand(ExpressionCommand):
         self.out(self.printer.print_list(self._view().todos))
 
     def execute(self):
-        if not super(ListCommand, self).execute():
+        if not super().execute():
             return False
 
         try:

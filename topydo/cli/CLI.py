@@ -41,7 +41,7 @@ class CLIApplication(CLIApplicationBase):
     """
 
     def __init__(self):
-        super(CLIApplication, self).__init__()
+        super().__init__()
 
     def run(self):
         """ Main entry function. """

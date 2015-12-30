@@ -26,11 +26,11 @@ class ExitCommand(Command):
     """
 
     def __init__(self, p_args, p_todolist, p_output, p_error, p_input):
-        super(ExitCommand, self).__init__(p_args, p_todolist, p_output, p_error,
+        super().__init__(p_args, p_todolist, p_output, p_error,
                                           p_input)
 
     def execute(self):
-        if not super(ExitCommand, self).execute():
+        if not super().execute():
             return False
 
         sys.exit(0)

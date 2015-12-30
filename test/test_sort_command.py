@@ -24,7 +24,7 @@ from topydo.lib.Config import config
 
 class SortCommandTest(CommandTest):
     def setUp(self):
-        super(SortCommandTest, self).setUp()
+        super().setUp()
         self.todolist = load_file_to_todolist("test/data/SorterTest1.txt")
 
     def test_sort1(self):
