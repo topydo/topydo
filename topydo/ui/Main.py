@@ -38,7 +38,7 @@ class UIView(View):
     the sort expression and the filter expression, etc.)
     """
     def __init__(self, p_sorter, p_filter, p_todolist, p_data):
-        super(UIView, self).__init__(p_sorter, p_filter, p_todolist)
+        super().__init__(p_sorter, p_filter, p_todolist)
         self.data = p_data
 
 _NEW_COLUMN = 1
@@ -67,7 +67,7 @@ class MainPile(urwid.Pile):
 
 class UIApplication(CLIApplicationBase):
     def __init__(self):
-        super(UIApplication, self).__init__()
+        super().__init__()
 
         self.todofile = TodoFile.TodoFile(config().todotxt())
         self.todolist = TodoList.TodoList(self.todofile.read())
@@ -144,7 +144,7 @@ class UIApplication(CLIApplicationBase):
             pass
 
     def _post_execute(self):
-        super(UIApplication, self)._post_execute()
+        super()._post_execute()
 
         for column, _ in self.columns.contents:
             column.update()

@@ -39,7 +39,7 @@ class TodoListWidget(urwid.LineBox):
 
         pile.focus_position = 2
 
-        super(TodoListWidget, self).__init__(pile)
+        super().__init__(pile)
 
         urwid.register_signal(TodoListWidget, ['execute_command'])
 

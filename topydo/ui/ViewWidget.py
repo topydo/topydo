@@ -40,7 +40,7 @@ class ViewWidget(urwid.LineBox):
 
         self.reset()
 
-        super(ViewWidget, self).__init__(self.pile)
+        super().__init__(self.pile)
 
         urwid.register_signal(ViewWidget, ['save', 'close'])
 
@@ -76,4 +76,4 @@ class ViewWidget(urwid.LineBox):
         if p_key == 'esc':
             self.close()
         else:
-            return super(ViewWidget, self).keypress(p_size, p_key)  # pylint: disable=E1102
+            return super().keypress(p_size, p_key)  # pylint: disable=E1102

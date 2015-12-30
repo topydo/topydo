@@ -21,7 +21,7 @@ class ConsoleWidget(urwid.LineBox):
         urwid.register_signal(ConsoleWidget, ['close'])
 
         self.text = urwid.Text(p_text)
-        super(ConsoleWidget, self).__init__(self.text)
+        super().__init__(self.text)
 
     def keypress(self, p_size, p_key):
         if p_key == 'enter' or p_key == 'q' or p_key == 'esc':

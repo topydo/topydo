@@ -52,7 +52,7 @@ class TodoWidget(urwid.WidgetWrap):
             self._markup(p_todo, True) # focus
         )
 
-        super(TodoWidget, self).__init__(self.widget)
+        super().__init__(self.widget)
 
     def _markup(self, p_todo, p_focus):
         priority_colors = config().priority_colors()

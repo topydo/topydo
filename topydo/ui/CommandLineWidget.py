@@ -18,7 +18,7 @@ import urwid
 
 class CommandLineWidget(urwid.Edit):
     def __init__(self, *args, **kwargs):
-        super(CommandLineWidget, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         urwid.register_signal(CommandLineWidget, ['blur', 'execute_command'])
 
     def clear(self):
@@ -41,4 +41,4 @@ class CommandLineWidget(urwid.Edit):
         try:
             dispatch[p_key]()
         except KeyError:
-            super(CommandLineWidget, self).keypress(p_size, p_key)
+            super().keypress(p_size, p_key)
