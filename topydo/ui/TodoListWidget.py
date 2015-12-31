@@ -124,6 +124,8 @@ class TodoListWidget(urwid.LineBox):
             self.keystate = 'p'
         elif p_key == 'd':
             self._remove_selected_item()
+        elif p_key == 'u':
+            urwid.emit_signal(self, 'execute_command', "revert")
         elif p_key == 'j':
             self.listbox.keypress(p_size, 'down')
         elif p_key == 'k':
