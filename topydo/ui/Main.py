@@ -96,6 +96,8 @@ class UIApplication(CLIApplicationBase):
         self.todofile = TodoFile.TodoFile(config().todotxt())
         self.todolist = TodoList.TodoList(self.todofile.read())
 
+        self.pending_todos = []
+
         self.columns = urwid.Columns([], dividechars=0, min_width=COLUMN_WIDTH)
         self.commandline = CommandLineWidget('topydo> ')
         self.keystate_widget = KeystateWidget()
@@ -169,6 +171,9 @@ class UIApplication(CLIApplicationBase):
         """
         Executes a command, given as a string.
         """
+        if '{}' in p_command:
+            todos = ' '.join(self.pending_todos)
+            p_command = p_command.format(todos)
         p_output = p_output or self._output
         p_command = shlex.split(p_command)
         (subcommand, args) = get_subcommand(p_command)
@@ -186,6 +191,8 @@ class UIApplication(CLIApplicationBase):
 
             if command.execute() != False:
                 self._post_execute()
+
+            self._clear_pending_todos()
 
         except TypeError:
             # TODO: show error message
@@ -277,6 +284,7 @@ class UIApplication(CLIApplicationBase):
     def _handle_input(self, p_input):
         dispatch = {
             ':': self._focus_commandline,
+            'esc': self._clear_pending_todos,
         }
 
         try:
@@ -334,6 +342,9 @@ class UIApplication(CLIApplicationBase):
         urwid.connect_signal(todolist, 'remove_pending_action', self._remove_alarm)
         urwid.connect_signal(todolist, 'column_action', self._column_action_handler)
         urwid.connect_signal(todolist, 'show_keystate', self._print_keystate)
+        urwid.connect_signal(todolist, 'append_pending_todos', self._pending_todos_handler)
+        urwid.connect_signal(todolist, 'check_pending_todos', self._is_pending)
+        urwid.connect_signal(todolist, 'clear_pending_todos', self._clear_pending_todos)
 
         options = self.columns.options(
             width_type='given',
@@ -449,6 +460,25 @@ class UIApplication(CLIApplicationBase):
         sz = terminal_size(width, 1)
 
         return sz
+
+    def _clear_pending_todos(self, p_refresh=True):
+        self.pending_todos = []
+        if p_refresh:
+            self._update_all_columns()
+
+    def _is_pending(self):
+        if len(self.pending_todos) > 0:
+            return True
+        else:
+            return False
+
+    def _pending_todos_handler(self, p_todo_id):
+        if p_todo_id not in self.pending_todos:
+            self.pending_todos.append(p_todo_id)
+            return True
+        else:
+            self.pending_todos.remove(p_todo_id)
+            return False
 
     def run(self):
         layout = columns()

@@ -125,6 +125,7 @@ class _Config:
                 'e': 'cmd edit {}',
                 'u': 'cmd revert',
                 'x': 'cmd do {}',
+                'm': 'mark',
                 'pp': 'postpone',
                 'ps': 'postpone_s',
                 'pr': 'pri',

@@ -16,7 +16,7 @@
 
 import urwid
 
-from topydo.ui.TodoWidget import TodoWidget
+from topydo.ui.TodoWidget import TodoWidget, markup
 from topydo.lib.Utils import translate_key_to_config
 
 
@@ -62,6 +62,9 @@ class TodoListWidget(urwid.LineBox):
                                                'remove_pending_action',
                                                'column_action',
                                                'show_keystate',
+                                               'append_pending_todos',
+                                               'check_pending_todos',
+                                               'clear_pending_todos',
                                                ])
 
     @property
@@ -199,6 +202,17 @@ class TodoListWidget(urwid.LineBox):
     def selectable(self):
         return True
 
+    def _append_pending_todos(self):
+        try:
+            todo = self.listbox.focus.todo
+            todo_id = str(self.view.todolist.number(todo))
+            result = urwid.emit_signal(self, 'append_pending_todos', todo_id)
+            attr_spec = {None: markup(todo, result)}
+            self.listbox.focus.widget.set_attr_map(attr_spec)
+        except AttributeError:
+            # No todo item selected
+            pass
+
     def _execute_on_selected(self, p_cmd_str, p_execute_signal):
         """
         Executes command specified by p_cmd_str on selected todo item.
@@ -213,7 +227,13 @@ class TodoListWidget(urwid.LineBox):
             todo = self.listbox.focus.todo
             todo_id = str(self.view.todolist.number(todo))
 
-            urwid.emit_signal(self, p_execute_signal, p_cmd_str.format(todo_id))
+            result = urwid.emit_signal(self, 'check_pending_todos')
+            if result:
+                cmd = p_cmd_str
+            else:
+                cmd = p_cmd_str.format(todo_id)
+
+            urwid.emit_signal(self, p_execute_signal, cmd)
 
             # force screen redraw after editing
             if p_cmd_str.startswith('edit'):
@@ -250,8 +270,8 @@ class TodoListWidget(urwid.LineBox):
         Currently supported actions are: 'up', 'down', 'home', 'end',
         'first_column', 'last_column', 'prev_column', 'next_column',
         'append_column', 'insert_column', 'edit_column', 'delete_column',
-        'copy_column', swap_right', 'swap_left', 'postpone', 'postpone_s' and
-        'pri'.
+        'copy_column', swap_right', 'swap_left', 'postpone', 'postpone_s', 'pri'
+        and 'mark'.
         """
         column_actions = ['first_column',
                           'last_column',
@@ -278,6 +298,8 @@ class TodoListWidget(urwid.LineBox):
             pass
         elif p_action_str == 'pri':
             pass
+        elif p_action_str == 'mark':
+            self._append_pending_todos()
 
     def _add_pending_action(self, p_action, p_size):
         """
