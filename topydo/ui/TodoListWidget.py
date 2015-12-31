@@ -117,6 +117,11 @@ class TodoListWidget(urwid.LineBox):
                 self.keystate = None
 
             return
+        elif self.keystate == 'r':
+            if p_key.isalpha():
+                self._pri_selected_item(p_key)
+            self.keystate = None
+            return
 
         if p_key == 'x':
             self._complete_selected_item()
@@ -128,6 +133,8 @@ class TodoListWidget(urwid.LineBox):
             self._edit_selected_item()
             # force screen redraw after editing
             return self.listbox.keypress(p_size, 'ctrl l')
+        elif p_key == 'r':
+            self.keystate = 'r'
         elif p_key == 'u':
             urwid.emit_signal(self, 'execute_command', "revert")
         elif p_key == 'j':
@@ -204,3 +211,19 @@ class TodoListWidget(urwid.LineBox):
         except AttributeError:
             # No todo item selected
             pass
+
+    def _pri_selected_item(self, p_priority):
+        """
+        Sets the priority of the highlighted todo item with value from
+        p_priority.
+        """
+        try:
+            todo = self.listbox.focus.todo
+            self.view.todolist.number(todo)
+
+            urwid.emit_signal(self, 'execute_command', "pri {} {}".format(
+                str(self.view.todolist.number(todo)), p_priority))
+        except AttributeError:
+            # No todo item selected
+            pass
+
