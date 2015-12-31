@@ -75,7 +75,12 @@ class TodoListWidget(urwid.LineBox):
             self.todolist.append(urwid.Divider('-'))
 
         if old_focus_position:
-            self.todolist.set_focus(old_focus_position)
+            try:
+                self.todolist.set_focus(old_focus_position)
+            except IndexError:
+                # scroll to the bottom if the last item disappeared from column
+                # -2 for the same reason as in self._scroll_to_bottom()
+                self.todolist.set_focus(len(self.todolist) - 2)
 
     def _scroll_to_top(self, p_size):
         self.listbox.set_focus(0)
