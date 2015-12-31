@@ -122,6 +122,8 @@ class TodoListWidget(urwid.LineBox):
             self._complete_selected_item()
         elif p_key == 'p':
             self.keystate = 'p'
+        elif p_key == 'd':
+            self._remove_selected_item()
         elif p_key == 'j':
             self.listbox.keypress(p_size, 'down')
         elif p_key == 'k':
@@ -165,6 +167,20 @@ class TodoListWidget(urwid.LineBox):
 
             urwid.emit_signal(self, 'execute_command', "postpone {} {}".format(
                 str(self.view.todolist.number(todo)), self._pp_offset + p_pattern))
+        except AttributeError:
+            # No todo item selected
+            pass
+
+    def _remove_selected_item(self):
+        """
+        Removes the highlighted todo item.
+        """
+        try:
+            todo = self.listbox.focus.todo
+            self.view.todolist.number(todo)
+
+            urwid.emit_signal(self, 'execute_command', "del {}".format(
+                str(self.view.todolist.number(todo))))
         except AttributeError:
             # No todo item selected
             pass
