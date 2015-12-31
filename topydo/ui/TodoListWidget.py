@@ -153,19 +153,27 @@ class TodoListWidget(urwid.LineBox):
     def selectable(self):
         return True
 
+    def _command_on_selected(self, p_cmd_str):
+        """
+        Executes command specified by p_cmd_str on selected todo item.
+
+        p_cmd_str should be string with one replacement field ('{}') which will
+        be substituted by id of selected todo item.
+        """
+        try:
+            todo = self.listbox.focus.todo
+            todo_id = str(self.view.todolist.number(todo))
+
+            urwid.emit_signal(self, 'execute_command', p_cmd_str.format(todo_id))
+        except AttributeError:
+            # No todo item selected
+            pass
+
     def _complete_selected_item(self):
         """
         Marks the highlighted todo item as complete.
         """
-        try:
-            todo = self.listbox.focus.todo
-            self.view.todolist.number(todo)
-
-            urwid.emit_signal(self, 'execute_command', "do {}".format(
-                str(self.view.todolist.number(todo))))
-        except AttributeError:
-            # No todo item selected
-            pass
+        self._command_on_selected('do {}')
 
     def _postpone_selected_item(self, p_pattern):
         """
@@ -174,56 +182,29 @@ class TodoListWidget(urwid.LineBox):
         """
         if self._pp_offset == '':
             self._pp_offset = '1'
-        try:
-            todo = self.listbox.focus.todo
-            self.view.todolist.number(todo)
 
-            urwid.emit_signal(self, 'execute_command', "postpone {} {}".format(
-                str(self.view.todolist.number(todo)), self._pp_offset + p_pattern))
-        except AttributeError:
-            # No todo item selected
-            pass
+        pattern = self._pp_offset + p_pattern
+        cmd_str = 'postpone {t_id} {pattern}'.format(t_id='{}', pattern=pattern)
+
+        self._command_on_selected(cmd_str)
 
     def _remove_selected_item(self):
         """
         Removes the highlighted todo item.
         """
-        try:
-            todo = self.listbox.focus.todo
-            self.view.todolist.number(todo)
-
-            urwid.emit_signal(self, 'execute_command', "del {}".format(
-                str(self.view.todolist.number(todo))))
-        except AttributeError:
-            # No todo item selected
-            pass
+        self._command_on_selected('del {}')
 
     def _edit_selected_item(self):
         """
         Opens the highlighted todo item in $EDITOR for editing.
         """
-        try:
-            todo = self.listbox.focus.todo
-            self.view.todolist.number(todo)
-
-            urwid.emit_signal(self, 'execute_command', "edit {}".format(
-                str(self.view.todolist.number(todo))))
-        except AttributeError:
-            # No todo item selected
-            pass
+        self._command_on_selected('edit {}')
 
     def _pri_selected_item(self, p_priority):
         """
         Sets the priority of the highlighted todo item with value from
         p_priority.
         """
-        try:
-            todo = self.listbox.focus.todo
-            self.view.todolist.number(todo)
+        cmd_str = 'pri {t_id} {priority}'.format(t_id='{}', priority=p_priority)
 
-            urwid.emit_signal(self, 'execute_command', "pri {} {}".format(
-                str(self.view.todolist.number(todo)), p_priority))
-        except AttributeError:
-            # No todo item selected
-            pass
-
+        self._command_on_selected(cmd_str)
