@@ -124,6 +124,10 @@ class TodoListWidget(urwid.LineBox):
             self.keystate = 'p'
         elif p_key == 'd':
             self._remove_selected_item()
+        elif p_key == 'e':
+            self._edit_selected_item()
+            # force screen redraw after editing
+            return self.listbox.keypress(p_size, 'ctrl l')
         elif p_key == 'u':
             urwid.emit_signal(self, 'execute_command', "revert")
         elif p_key == 'j':
@@ -182,6 +186,20 @@ class TodoListWidget(urwid.LineBox):
             self.view.todolist.number(todo)
 
             urwid.emit_signal(self, 'execute_command', "del {}".format(
+                str(self.view.todolist.number(todo))))
+        except AttributeError:
+            # No todo item selected
+            pass
+
+    def _edit_selected_item(self):
+        """
+        Opens the highlighted todo item in $EDITOR for editing.
+        """
+        try:
+            todo = self.listbox.focus.todo
+            self.view.todolist.number(todo)
+
+            urwid.emit_signal(self, 'execute_command', "edit {}".format(
                 str(self.view.todolist.number(todo))))
         except AttributeError:
             # No todo item selected
