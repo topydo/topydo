@@ -24,6 +24,8 @@ class TodoListWidget(urwid.LineBox):
 
         # store a state for multi-key shortcuts (e.g. 'gg')
         self.keystate = None
+        # store offset length for postpone command (e.g. '3' for 'p3w')
+        self._pp_offset = ''
 
         self._title_widget = urwid.Text(p_title, align='center')
 
@@ -102,9 +104,24 @@ class TodoListWidget(urwid.LineBox):
             # make sure to accept normal shortcuts again
             self.keystate = None
             return
+        elif self.keystate == 'p':
+            if p_key not in ['d', 'w', 'm', 'y']:
+                if p_key.isdigit():
+                    self._pp_offset += p_key
+                else:
+                    self._pp_offset = ''
+                    self.keystate = None
+            else:
+                self._postpone_selected_item(p_key)
+                self._pp_offset = ''
+                self.keystate = None
+
+            return
 
         if p_key == 'x':
             self._complete_selected_item()
+        elif p_key == 'p':
+            self.keystate = 'p'
         elif p_key == 'j':
             self.listbox.keypress(p_size, 'down')
         elif p_key == 'k':
@@ -131,6 +148,23 @@ class TodoListWidget(urwid.LineBox):
 
             urwid.emit_signal(self, 'execute_command', "do {}".format(
                 str(self.view.todolist.number(todo))))
+        except AttributeError:
+            # No todo item selected
+            pass
+
+    def _postpone_selected_item(self, p_pattern):
+        """
+        Postpones highlighted todo item by p_pattern with optional offset from
+        _pp_offset attribute.
+        """
+        if self._pp_offset == '':
+            self._pp_offset = '1'
+        try:
+            todo = self.listbox.focus.todo
+            self.view.todolist.number(todo)
+
+            urwid.emit_signal(self, 'execute_command', "postpone {} {}".format(
+                str(self.view.todolist.number(todo)), self._pp_offset + p_pattern))
         except AttributeError:
             # No todo item selected
             pass
