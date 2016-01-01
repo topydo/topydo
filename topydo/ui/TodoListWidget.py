@@ -104,10 +104,12 @@ class TodoListWidget(urwid.LineBox):
             # make sure to accept normal shortcuts again
             self.keystate = None
             return
-        elif self.keystate == 'p':
+        elif self.keystate in ['p', 'ps']:
             if p_key not in ['d', 'w', 'm', 'y']:
                 if p_key.isdigit():
                     self._pp_offset += p_key
+                elif self.keystate == 'p' and p_key == 's':
+                    self.keystate = 'ps'
                 else:
                     self._pp_offset = ''
                     self.keystate = None
@@ -184,7 +186,11 @@ class TodoListWidget(urwid.LineBox):
             self._pp_offset = '1'
 
         pattern = self._pp_offset + p_pattern
-        cmd_str = 'postpone {t_id} {pattern}'.format(t_id='{}', pattern=pattern)
+
+        if self.keystate == 'ps':
+            cmd_str = 'postpone -s {t_id} {pattern}'.format(t_id='{}', pattern=pattern)
+        else:
+            cmd_str = 'postpone {t_id} {pattern}'.format(t_id='{}', pattern=pattern)
 
         self._command_on_selected(cmd_str)
 
