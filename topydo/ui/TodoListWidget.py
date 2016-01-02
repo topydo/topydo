@@ -24,6 +24,8 @@ class TodoListWidget(urwid.LineBox):
 
         # store a state for multi-key shortcuts (e.g. 'gg')
         self.keystate = None
+        # store offset length for postpone command (e.g. '3' for 'p3w')
+        self._pp_offset = ''
 
         self._title_widget = urwid.Text(p_title, align='center')
 
@@ -41,7 +43,7 @@ class TodoListWidget(urwid.LineBox):
 
         super().__init__(pile)
 
-        urwid.register_signal(TodoListWidget, ['execute_command'])
+        urwid.register_signal(TodoListWidget, ['execute_command', 'refresh'])
 
     @property
     def view(self):
@@ -107,9 +109,41 @@ class TodoListWidget(urwid.LineBox):
             # make sure to accept normal shortcuts again
             self.keystate = None
             return
+        elif self.keystate in ['p', 'ps']:
+            if p_key not in ['d', 'w', 'm', 'y']:
+                if p_key.isdigit():
+                    self._pp_offset += p_key
+                elif self.keystate == 'p' and p_key == 's':
+                    self.keystate = 'ps'
+                else:
+                    self._pp_offset = ''
+                    self.keystate = None
+            else:
+                self._postpone_selected_item(p_key)
+                self._pp_offset = ''
+                self.keystate = None
+
+            return
+        elif self.keystate == 'r':
+            if p_key.isalpha():
+                self._pri_selected_item(p_key)
+            self.keystate = None
+            return
 
         if p_key == 'x':
             self._complete_selected_item()
+        elif p_key == 'p':
+            self.keystate = 'p'
+        elif p_key == 'd':
+            self._remove_selected_item()
+        elif p_key == 'e':
+            self._edit_selected_item()
+            # force screen redraw after editing
+            urwid.emit_signal(self, 'refresh')
+        elif p_key == 'r':
+            self.keystate = 'r'
+        elif p_key == 'u':
+            urwid.emit_signal(self, 'execute_command', "revert")
         elif p_key == 'j':
             self.listbox.keypress(p_size, 'down')
         elif p_key == 'k':
@@ -126,16 +160,62 @@ class TodoListWidget(urwid.LineBox):
     def selectable(self):
         return True
 
+    def _command_on_selected(self, p_cmd_str):
+        """
+        Executes command specified by p_cmd_str on selected todo item.
+
+        p_cmd_str should be string with one replacement field ('{}') which will
+        be substituted by id of selected todo item.
+        """
+        try:
+            todo = self.listbox.focus.todo
+            todo_id = str(self.view.todolist.number(todo))
+
+            urwid.emit_signal(self, 'execute_command', p_cmd_str.format(todo_id))
+        except AttributeError:
+            # No todo item selected
+            pass
+
     def _complete_selected_item(self):
         """
         Marks the highlighted todo item as complete.
         """
-        try:
-            todo = self.listbox.focus.todo
-            self.view.todolist.number(todo)
+        self._command_on_selected('do {}')
 
-            urwid.emit_signal(self, 'execute_command', "do {}".format(
-                str(self.view.todolist.number(todo))))
-        except AttributeError:
-            # No todo item selected
-            pass
+    def _postpone_selected_item(self, p_pattern):
+        """
+        Postpones highlighted todo item by p_pattern with optional offset from
+        _pp_offset attribute.
+        """
+        if self._pp_offset == '':
+            self._pp_offset = '1'
+
+        pattern = self._pp_offset + p_pattern
+
+        if self.keystate == 'ps':
+            cmd_str = 'postpone -s {t_id} {pattern}'.format(t_id='{}', pattern=pattern)
+        else:
+            cmd_str = 'postpone {t_id} {pattern}'.format(t_id='{}', pattern=pattern)
+
+        self._command_on_selected(cmd_str)
+
+    def _remove_selected_item(self):
+        """
+        Removes the highlighted todo item.
+        """
+        self._command_on_selected('del {}')
+
+    def _edit_selected_item(self):
+        """
+        Opens the highlighted todo item in $EDITOR for editing.
+        """
+        self._command_on_selected('edit {}')
+
+    def _pri_selected_item(self, p_priority):
+        """
+        Sets the priority of the highlighted todo item with value from
+        p_priority.
+        """
+        cmd_str = 'pri {t_id} {priority}'.format(t_id='{}', priority=p_priority)
+
+        self._command_on_selected(cmd_str)

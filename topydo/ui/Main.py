@@ -258,6 +258,7 @@ class UIApplication(CLIApplicationBase):
         no_output = lambda _: None
         urwid.connect_signal(todolist, 'execute_command',
                              lambda cmd: self._execute_handler(cmd, no_output))
+        urwid.connect_signal(todolist, 'refresh', self.mainloop.screen.clear)
 
         options = self.columns.options(
             width_type='given',
