@@ -43,7 +43,7 @@ class TodoListWidget(urwid.LineBox):
 
         super().__init__(pile)
 
-        urwid.register_signal(TodoListWidget, ['execute_command'])
+        urwid.register_signal(TodoListWidget, ['execute_command', 'refresh'])
 
     @property
     def view(self):
@@ -134,7 +134,7 @@ class TodoListWidget(urwid.LineBox):
         elif p_key == 'e':
             self._edit_selected_item()
             # force screen redraw after editing
-            return self.listbox.keypress(p_size, 'ctrl l')
+            urwid.emit_signal(self, 'refresh')
         elif p_key == 'r':
             self.keystate = 'r'
         elif p_key == 'u':
