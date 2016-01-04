@@ -34,7 +34,7 @@ class AddCommand(Command):
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
-        super(AddCommand, self).__init__(
+        super().__init__(
             p_args, p_todolist, p_out, p_err, p_prompt)
         self.text = ' '.join(p_args)
         self.from_file = None
@@ -119,7 +119,7 @@ class AddCommand(Command):
 
     def execute(self):
         """ Adds a todo item to the list. """
-        if not super(AddCommand, self).execute():
+        if not super().execute():
             return False
 
         self.printer.add_filter(PrettyPrinterNumbers(self.todolist))

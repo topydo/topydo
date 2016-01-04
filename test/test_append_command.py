@@ -23,7 +23,7 @@ from topydo.lib.TodoList import TodoList
 
 class AppendCommandTest(CommandTest):
     def setUp(self):
-        super(AppendCommandTest, self).setUp()
+        super().setUp()
         self.todolist = TodoList([])
         self.todolist.add("Foo")
 

@@ -71,6 +71,18 @@ def get_subcommand(p_args):
         __import__(modulename, globals(), locals(), [classname], 0)
         return getattr(sys.modules[modulename], classname)
 
+    def join_args(p_cli_args, p_alias_args):
+        """
+        Returns properly joined args from alias definition and from user input.
+        """
+        if '{}' in p_alias_args:
+            pos = p_alias_args.index('{}')
+            args = p_alias_args[:pos] + p_cli_args + p_alias_args[pos+1:]
+        else:
+            args = p_alias_args + p_cli_args
+
+        return args
+
     def resolve_alias(p_alias, p_args):
         """
         Resolves a subcommand alias and returns a tuple (Command, args).
@@ -81,7 +93,7 @@ def get_subcommand(p_args):
         real_subcommand, alias_args = alias_map[p_alias]
         try:
             result = import_subcommand(real_subcommand)
-            args = alias_args + p_args
+            args = join_args(p_args, alias_args)
             return (result, args)
         except KeyError:
             return get_subcommand(['help'])

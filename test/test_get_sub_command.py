@@ -22,6 +22,7 @@ from topydo.commands.AddCommand import AddCommand
 from topydo.commands.DeleteCommand import DeleteCommand
 from topydo.commands.ListCommand import ListCommand
 from topydo.commands.ListProjectCommand import ListProjectCommand
+from topydo.commands.TagCommand import TagCommand
 from topydo.lib.Config import config
 
 class GetSubcommandTest(TopydoTest):
@@ -59,6 +60,14 @@ class GetSubcommandTest(TopydoTest):
         real_cmd, final_args = get_subcommand(args)
         self.assertTrue(issubclass(real_cmd, ListCommand))
         self.assertEqual(final_args, [u"\u263b"])
+
+    def test_alias04(self):
+        config("test/data/aliases.conf")
+
+        args = ["star", "foo"]
+        real_cmd, final_args = get_subcommand(args)
+        self.assertTrue(issubclass(real_cmd, TagCommand))
+        self.assertEqual(final_args, ["foo", "star", "1"])
 
     def test_default_cmd01(self):
         args = ["bar"]

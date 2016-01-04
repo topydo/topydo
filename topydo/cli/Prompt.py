@@ -59,7 +59,7 @@ class PromptApplication(CLIApplicationBase):
     """
 
     def __init__(self):
-        super(PromptApplication, self).__init__()
+        super().__init__()
 
         self._process_flags()
         self.mtime = None

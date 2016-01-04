@@ -29,9 +29,18 @@ Simply install with:
 ### Optional dependencies
 
 * [icalendar][7]      : To print your todo.txt file as an iCalendar file
-                        (not supported for Python 3.2).
+                        (not supported for PyPy3).
 * [prompt-toolkit][6] : For topydo's _prompt_ mode, which offers a shell-like
                         interface with auto-completion.
+* [arrow][8]          : Used to turn dates into a human readable version.
+* [backports.shutil_get_terminal_size][9] : Used to determine your terminal
+                                            window size. This function was
+                                            added to the standard library in
+                                            Python 3.3 and so is only
+                                            required for PyPy3.
+* [python-dateutil][10]: A dependency of *arrow*.
+* [mock][11]          : Used for testing. This was added to the standard
+                        library in Python 3.3.
 
 Demo
 ----
@@ -46,3 +55,7 @@ Demo
 [5]: https://raw.githubusercontent.com/bram85/topydo/master/doc/topydo.gif
 [6]: https://github.com/jonathanslenders/python-prompt-toolkit
 [7]: https://github.com/collective/icalendar
+[8]: https://github.com/crsmithdev/arrow
+[9]: https://github.com/chrippa/backports.shutil_get_terminal_size
+[10]: https://dateutil.readthedocs.org/
+[11]: https://github.com/testing-cabal/mock

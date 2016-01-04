@@ -62,7 +62,7 @@ class GrepFilter(Filter):
     """ Matches when the todo text contains a text. """
 
     def __init__(self, p_expression, p_case_sensitive=None):
-        super(GrepFilter, self).__init__()
+        super().__init__()
 
         # convert to string in case we receive integers
         self.expression = p_expression
@@ -115,7 +115,7 @@ class DependencyFilter(Filter):
         Pass on a TodoList instance such that the dependencies can be
         looked up.
         """
-        super(DependencyFilter, self).__init__()
+        super().__init__()
         self.todolist = p_todolist
 
     def match(self, p_todo):
@@ -138,7 +138,7 @@ class InstanceFilter(Filter):
 
         This is handy for constructing a view given a plain list of Todo items.
         """
-        super(InstanceFilter, self).__init__()
+        super().__init__()
         self.todos = p_todos
 
     def match(self, p_todo):
@@ -154,20 +154,20 @@ class InstanceFilter(Filter):
 
 class LimitFilter(Filter):
     def __init__(self, p_limit):
-        super(LimitFilter, self).__init__()
+        super().__init__()
         self.limit = p_limit
 
     def filter(self, p_todos):
         return p_todos[:self.limit] if self.limit >= 0 else p_todos
 
-OPERATOR_MATCH = r"(?P<operator><=?|=|>=?|!)?"
+_OPERATOR_MATCH = r"(?P<operator><=?|=|>=?|!)?"
 
 
 class OrdinalFilter(Filter):
     """ Base class for ordinal filters. """
 
     def __init__(self, p_expression, p_pattern):
-        super(OrdinalFilter, self).__init__()
+        super().__init__()
 
         self.expression = p_expression
 
@@ -200,12 +200,13 @@ class OrdinalFilter(Filter):
 
         return False
 
-ORDINAL_TAG_MATCH = r"(?P<key>[^:]*):" + OPERATOR_MATCH + r"(?P<value>\S+)"
+_VALUE_MATCH = r"(?P<value>\S+)"
+_ORDINAL_TAG_MATCH = r"(?P<key>[^:]*):" + _OPERATOR_MATCH + _VALUE_MATCH
 
 
 class OrdinalTagFilter(OrdinalFilter):
     def __init__(self, p_expression):
-        super(OrdinalTagFilter, self).__init__(p_expression, ORDINAL_TAG_MATCH)
+        super().__init__(p_expression, _ORDINAL_TAG_MATCH)
 
     def match(self, p_todo):
         """
@@ -243,12 +244,55 @@ class OrdinalTagFilter(OrdinalFilter):
 
         return self.compare_operands(operand1, operand2)
 
-PRIORITY_MATCH = r"\(" + OPERATOR_MATCH + r"(?P<value>[A-Z]{1})\)"
+
+class _DateAttributeFilter(OrdinalFilter):
+    def __init__(self, p_expression, p_match, p_getter):
+        super().__init__(p_expression, p_match)
+        self.getter = p_getter
+
+    def match(self, p_todo):
+        operand1 = self.getter(p_todo)
+        operand2 = relative_date_to_date(self.value)
+
+        if not operand2:
+            operand2 = date_string_to_date(self.value)
+
+        if operand1 and operand2:
+            return self.compare_operands(operand1, operand2)
+        else:
+            return False
+
+
+_CREATED_MATCH = r'creat(ion|ed?):' + _OPERATOR_MATCH + _VALUE_MATCH
+
+
+class CreationFilter(_DateAttributeFilter):
+    def __init__(self, p_expression):
+        super().__init__(
+            p_expression,
+            _CREATED_MATCH,
+            lambda t: t.creation_date()  # pragma: no branch
+        )
+
+
+_COMPLETED_MATCH = r'complet(ed?|ion):' + _OPERATOR_MATCH + _VALUE_MATCH
+
+
+class CompletionFilter(_DateAttributeFilter):
+    def __init__(self, p_expression):
+        super().__init__(
+            p_expression,
+            _COMPLETED_MATCH,
+            lambda t: t.completion_date()  # pragma: no branch
+        )
+
+
+_PRIORITY_MATCH = r"\(" + _OPERATOR_MATCH + r"(?P<value>[A-Z]{1})\)"
 
 
 class PriorityFilter(OrdinalFilter):
     def __init__(self, p_expression):
-        super(PriorityFilter, self).__init__(p_expression, PRIORITY_MATCH)
+        super().__init__(p_expression, _PRIORITY_MATCH)
 
     def match(self, p_todo):
         """
@@ -265,3 +309,10 @@ class PriorityFilter(OrdinalFilter):
         operand2 = p_todo.priority() or 'ZZ'
 
         return self.compare_operands(operand1, operand2)
+
+MATCHES = [
+    (_CREATED_MATCH, CreationFilter),
+    (_COMPLETED_MATCH, CompletionFilter),
+    (_ORDINAL_TAG_MATCH, OrdinalTagFilter),
+    (_PRIORITY_MATCH, PriorityFilter),
+]

@@ -22,7 +22,7 @@ from topydo.lib.Graph import DirectedGraph
 
 class GraphTest(TopydoTest):
     def setUp(self):
-        super(GraphTest, self).setUp()
+        super().setUp()
 
         self.graph = DirectedGraph()
 

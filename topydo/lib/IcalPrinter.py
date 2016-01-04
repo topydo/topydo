@@ -66,7 +66,7 @@ class IcalPrinter(Printer):
     """
 
     def __init__(self, p_todolist):
-        super(IcalPrinter, self).__init__()
+        super().__init__()
         self.todolist = p_todolist
 
         try:

@@ -52,7 +52,7 @@ class JsonPrinter(Printer):
     """
 
     def __init__(self):
-        super(JsonPrinter, self).__init__()
+        super().__init__()
 
     def print_todo(self, p_todo):
         return json.dumps(_convert_todo(p_todo), ensure_ascii=False,

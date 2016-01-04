@@ -1,3 +1,23 @@
+0.9
+---
+
+* Dropped support for Python 2.7.
+* Add ability to filter on creation/completion dates:
+
+      topydo ls created:today
+      topydo ls completed:today
+      topydo -t done.txt completed:today # if auto-archiving is set
+
+* `ls -F` supports `%P` that expands to a single space when no priority is set,
+  in contrast to `%p` which expands to an empty string (thanks to @MinchinWeb).
+* `ls -N` prints enough todo items such that it fits on one screen (thanks to
+  @MinchinWeb).
+* Aliases can have a `{}` placeholder which is substituted with the alias'
+  arguments (thanks to @mruwek).
+* `pri` accepts priorities in lowercase (thanks to @MinchinWeb).
+* Several bugfixes for `dep gc`.
+* Various test/CI improvements.
+
 0.8
 ---
 

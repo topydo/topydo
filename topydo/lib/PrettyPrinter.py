@@ -50,7 +50,7 @@ class PrettyPrinter(Printer):
         """
         Constructor.
         """
-        super(PrettyPrinter, self).__init__()
+        super().__init__()
         self.filters = []
 
     def add_filter(self, p_filter):

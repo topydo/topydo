@@ -25,16 +25,18 @@ from topydo.commands.ListCommand import ListCommand
 from topydo.lib.Config import config
 
 # We're searching for 'mock'
+# 'mock' was added as 'unittest.mock' in Python 3.3, but PyPy 3 is based on Python 3.2
 # pylint: disable=no-name-in-module
 try:
     from unittest import mock
 except ImportError:
     import mock
 
+
 @freeze_time("2015, 11, 06")
 class ListFormatTest(CommandTest):
     def setUp(self):
-        super(ListFormatTest, self).setUp()
+        super().setUp()
         self.todolist = load_file_to_todolist("test/data/ListFormat.txt")
         self.terminal_size = namedtuple('terminal_size', ['columns', 'lines'])
 
@@ -43,7 +45,7 @@ class ListFormatTest(CommandTest):
         command = ListCommand(["-x"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""|  1| (D) 2015-08-31 Bar @Context1 +Project2 due:2015-09-30 t:2015-09-29
+        result = """|  1| (D) 2015-08-31 Bar @Context1 +Project2 due:2015-09-30 t:2015-09-29
 |  2| (Z) 2015-11-06 Lorem ipsum dolorem sit amet. Red @fox +jumped over the and jar due:2015-11-08 lazy:bar t:2015-11-07
 |  3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
 |  4| (C) Baz @Context1 +Project1 key:value
@@ -60,7 +62,7 @@ class ListFormatTest(CommandTest):
         command = ListCommand(["-x"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""|  1| (D) 2015-08-31 Bar @Context1 +Project2 due:2015-09-30 t:2015-09-29
+        result = """|  1| (D) 2015-08-31 Bar @Context1 +Project2 due:2015-09-30 t:2015-09-29
 |  2| (Z) 2015-11-06 Lorem ipsum dolore... due:2015-11-08 lazy:bar t:2015-11-07
 |  3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
 |  4| (C) Baz @Context1 +Project1 key:value
@@ -77,7 +79,7 @@ class ListFormatTest(CommandTest):
         command = ListCommand(["-x"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""|  1| (D) 2015-08-31 Bar @Context1 +Project2 due:2015-09-30 t:2015-09-29
+        result = """|  1| (D) 2015-08-31 Bar @Context1 +Project2 due:2015-09-30 t:2015-09-29
 |  2| (Z) 2015-11-06 Lorem ipsum dolorem sit amet. Red @fox... due:2015-11-08 lazy:bar t:2015-11-07
 |  3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
 |  4| (C) Baz @Context1 +Project1 key:value
@@ -94,7 +96,7 @@ class ListFormatTest(CommandTest):
         command = ListCommand(["-x"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""|  1| (D) 2015-08-31 Bar @Context1 +Project2                            due:2015-09-30 t:2015-09-29
+        result = """|  1| (D) 2015-08-31 Bar @Context1 +Project2                            due:2015-09-30 t:2015-09-29
 |  2| (Z) 2015-11-06 Lorem ipsum dolorem sit amet. Red @fox... due:2015-11-08 lazy:bar t:2015-11-07
 |  3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
 |  4| (C) Baz @Context1 +Project1                                                         key:value
@@ -111,13 +113,15 @@ class ListFormatTest(CommandTest):
         command = ListCommand(["-x"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""|  1| (D) 2015-08-31 Bar @Context1 +Project2        due:2015-09-30 t:2015-09-29
+        result = """|  1| (D) 2015-08-31 Bar @Context1 +Project2        due:2015-09-30 t:2015-09-29
 |  2| (Z) 2015-11-06 Lorem ipsum dolore... due:2015-11-08 lazy:bar t:2015-11-07
 |  3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
 |  4| (C) Baz @Context1 +Project1                                     key:value
 |  5| Drink beer @ home                                    ical:foobar id:1 p:2
 |  6| x 2014-12-12 Completed but with                           date:2014-12-12
 """
+
+        self.assertEqual(self.output, result)
 
     @mock.patch('topydo.lib.ListFormat.get_terminal_size')
     def test_list_format06(self, mock_terminal_size):
@@ -127,7 +131,7 @@ class ListFormatTest(CommandTest):
         command = ListCommand(["-x"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""|  1| D Bar @Context1 +Project2                (3 months ago, due a month ago, started a month ago)
+        result = """|  1| D Bar @Context1 +Project2                (3 months ago, due a month ago, started a month ago)
 |  2| Z Lorem ipsum dolorem sit amet. Red @f... lazy:bar (just now, due in 2 days, starts in a day)
 |  3| C Foo @Context2 Not@Context +Project1 Not+Project                              (4 months ago)
 |  4| C Baz @Context1 +Project1 key:value
@@ -144,7 +148,7 @@ class ListFormatTest(CommandTest):
         command = ListCommand(["-x"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""|  1| D Bar @Context1 +Project2                              (due a month ago, started a month ago)
+        result = """|  1| D Bar @Context1 +Project2                              (due a month ago, started a month ago)
 |  2| Z Lorem ipsum dolorem sit amet. Red @fox +jumped... lazy:bar (due in 2 days, starts in a day)
 |  3| C Foo @Context2 Not@Context +Project1 Not+Project
 |  4| C Baz @Context1 +Project1 key:value
@@ -161,7 +165,7 @@ class ListFormatTest(CommandTest):
         command = ListCommand(["-x"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""2015-08-31 2015-09-30 2015-09-29
+        result = """2015-08-31 2015-09-30 2015-09-29
 2015-11-06 2015-11-08 2015-11-07
 2015-07-12
 
@@ -178,7 +182,7 @@ x 2014-12-12
         command = ListCommand(["-x"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""3 months ago | a month ago | a month ago |
+        result = """3 months ago | a month ago | a month ago |
 just now | in 2 days | in a day |
 4 months ago | | |
 | | |
@@ -192,7 +196,7 @@ just now | in 2 days | in a day |
         command = ListCommand(["-x"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""|1|
+        result = """|1|
 |2| lazy:bar
 |3|
 |4| key:value
@@ -206,7 +210,7 @@ just now | in 2 days | in a day |
         command = ListCommand(["-x"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""|  1| due:2015-09-30 t:2015-09-29
+        result = """|  1| due:2015-09-30 t:2015-09-29
 |  2| due:2015-11-08 lazy:bar t:2015-11-07
 |  3|
 |  4| key:value
@@ -220,7 +224,7 @@ just now | in 2 days | in a day |
         command = ListCommand(["-x"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""|  1| %
+        result = """|  1| %
 |  2| %
 |  3| %
 |  4| %
@@ -234,7 +238,7 @@ just now | in 2 days | in a day |
                               self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""|  1| (D) 2015-08-31 Bar @Context1 +Project2 due:2015-09-30 t:2015-09-29
+        result = """|  1| (D) 2015-08-31 Bar @Context1 +Project2 due:2015-09-30 t:2015-09-29
 |  2| (Z) 2015-11-06 Lorem ipsum dolorem sit amet. Red @fox +jumped over the and jar due:2015-11-08 lazy:bar t:2015-11-07
 |  3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
 |  4| (C) Baz @Context1 +Project1 key:value
@@ -250,7 +254,7 @@ just now | in 2 days | in a day |
                               self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""|  1| (D) 2015-08-31 Bar @Context1 +Project2 due:2015-09-30 t:2015-09-29
+        result = """|  1| (D) 2015-08-31 Bar @Context1 +Project2 due:2015-09-30 t:2015-09-29
 |  4| (C) Baz @Context1 +Project1 key:value
 """
 
@@ -260,7 +264,7 @@ just now | in 2 days | in a day |
         command = ListCommand(["-x", "-F", "%c"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""2015-08-31
+        result = """2015-08-31
 2015-11-06
 2015-07-12
 
@@ -273,7 +277,7 @@ just now | in 2 days | in a day |
         command = ListCommand(["-x", "-F", "%C"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""3 months ago
+        result = """3 months ago
 just now
 4 months ago
 
@@ -286,7 +290,7 @@ just now
         command = ListCommand(["-x", "-F", "%d"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""2015-09-30
+        result = """2015-09-30
 2015-11-08
 
 
@@ -299,7 +303,7 @@ just now
         command = ListCommand(["-x", "-F", "%D"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""a month ago
+        result = """a month ago
 in 2 days
 
 
@@ -312,7 +316,7 @@ in 2 days
         command = ListCommand(["-x", "-F", "%h"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""due a month ago, started a month ago
+        result = """due a month ago, started a month ago
 due in 2 days, starts in a day
 
 
@@ -325,7 +329,7 @@ due in 2 days, starts in a day
         command = ListCommand(["-x", "-F", "%H"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""3 months ago, due a month ago, started a month ago
+        result = """3 months ago, due a month ago, started a month ago
 just now, due in 2 days, starts in a day
 4 months ago
 
@@ -338,7 +342,7 @@ just now, due in 2 days, starts in a day
         command = ListCommand(["-x", "-F", "%i"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""1
+        result = """1
 2
 3
 4
@@ -351,7 +355,7 @@ just now, due in 2 days, starts in a day
         command = ListCommand(["-x", "-F", "%I"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""  1
+        result = """  1
   2
   3
   4
@@ -364,7 +368,7 @@ just now, due in 2 days, starts in a day
         command = ListCommand(["-x", "-F", "%k"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""
+        result = """
 lazy:bar
 
 key:value
@@ -377,7 +381,7 @@ date:2014-12-12
         command = ListCommand(["-x", "-F", "%K"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""due:2015-09-30 t:2015-09-29
+        result = """due:2015-09-30 t:2015-09-29
 due:2015-11-08 lazy:bar t:2015-11-07
 
 key:value
@@ -390,7 +394,7 @@ date:2014-12-12
         command = ListCommand(["-x", "-F", "%p"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""D
+        result = """D
 Z
 C
 C
@@ -419,7 +423,7 @@ Completed but with
         command = ListCommand(["-x", "-F", "%S"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""Bar @Context1 +Project2
+        result = """Bar @Context1 +Project2
 Lorem ipsum dolorem sit amet. Red @fox +jumped...
 Foo @Context2 Not@Context +Project1 Not+Project
 Baz @Context1 +Project1
@@ -432,7 +436,7 @@ Completed but with
         command = ListCommand(["-x", "-F", "%t"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""2015-09-29
+        result = """2015-09-29
 2015-11-07
 
 
@@ -445,7 +449,7 @@ Completed but with
         command = ListCommand(["-x", "-F", "%T"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""a month ago
+        result = """a month ago
 in a day
 
 
@@ -458,7 +462,7 @@ in a day
         command = ListCommand(["-x", "-F", "%x"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""
+        result = """
 
 
 
@@ -471,7 +475,7 @@ x 2014-12-12
         command = ListCommand(["-x", "-F", "%X"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""
+        result = """
 
 
 
@@ -484,7 +488,7 @@ x 11 months ago
         command = ListCommand(["-x", "-s", "desc:priority", "-F", "%{{}p{}}"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""{C}
+        result = """{C}
 {C}
 {D}
 {Z}
@@ -497,7 +501,7 @@ x 11 months ago
         command = ListCommand(["-x", "-s", "desc:priority", "-F", "%{\%p}p{\%p}"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""%pC%p
+        result = """%pC%p
 %pC%p
 %pD%p
 %pZ%p
@@ -510,7 +514,7 @@ x 11 months ago
         command = ListCommand(["-x", "-s", "desc:priority", "-F", "%p%p"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""CC
+        result = """CC
 CC
 DD
 ZZ
@@ -525,7 +529,7 @@ ZZ
         command = ListCommand(["-x", "-s", "desc:priority", "-F", "%p{ }	%{ }p"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""C  C
+        result = """C  C
 C  C
 D  D
 Z  Z
@@ -541,7 +545,7 @@ Z  Z
         command = ListCommand(["-x", "-s", "desc:priority", "-F", "%p{ }	%{ }p"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""C   C
+        result = """C   C
 C   C
 D   D
 Z   Z
@@ -556,7 +560,7 @@ Z   Z
         command = ListCommand(["-x", "-s", "desc:priority", "-F", "	%{ }p"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""   C
+        result = """   C
    C
    D
    Z
@@ -572,7 +576,7 @@ Z   Z
         command = ListCommand(["-x", "-s", "desc:priority", "-F", "%&"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""
+        result = """
 
 
 
@@ -589,7 +593,7 @@ Z   Z
         command = ListCommand(["-x", "-s", "desc:priority", "-F", "%"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""
+        result = """
 
 
 
@@ -606,7 +610,7 @@ Z   Z
         command = ListCommand(["-x"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""|  1| (D) 2015-08-31 Bar @Context1 +Project2                            due:2015-09-30 t:2015-09-29
+        result = """|  1| (D) 2015-08-31 Bar @Context1 +Project2                            due:2015-09-30 t:2015-09-29
 |  2| (Z) 2015-11-06 Lorem ipsum dolorem sit amet. Red @fox... due:2015-11-08 lazy:bar t:2015-11-07
 |  3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
 |  4| (C) Baz @Context1 +Project1                                                         key:value
@@ -622,7 +626,7 @@ Z   Z
         command = ListCommand(["-x", "-F", "|%I| %x %{(}p{)} %c %S\\t%K"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""|  1| (D) 2015-08-31 Bar @Context1 +Project2                            due:2015-09-30 t:2015-09-29
+        result = """|  1| (D) 2015-08-31 Bar @Context1 +Project2                            due:2015-09-30 t:2015-09-29
 |  2| (Z) 2015-11-06 Lorem ipsum dolorem sit amet. Red @fox... due:2015-11-08 lazy:bar t:2015-11-07
 |  3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
 |  4| (C) Baz @Context1 +Project1                                                         key:value
@@ -639,7 +643,7 @@ Z   Z
         command = ListCommand(["-x"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u"""   |  1| (D) 2015-08-31 Bar @Context1 +Project2                         due:2015-09-30 t:2015-09-29
+        result = """   |  1| (D) 2015-08-31 Bar @Context1 +Project2                         due:2015-09-30 t:2015-09-29
    |  2| (Z) 2015-11-06 Lorem ipsum dolorem sit amet. Red @... due:2015-11-08 lazy:bar t:2015-11-07
    |  3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
    |  4| (C) Baz @Context1 +Project1                                                      key:value
@@ -647,6 +651,33 @@ Z   Z
    |  6| x 2014-12-12 Completed but with                                            date:2014-12-12
 """
         self.assertEqual(self.output, result)
+
+    def test_list_format43(self):
+        command = ListCommand(["-x", "-F", "%P -"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = """D -
+Z -
+C -
+C -
+  -
+  -
+"""
+        self.assertEqual(self.output, result)
+
+    def test_list_format44(self):
+        command = ListCommand(["-x", "-F", "%i %{(}P{)}"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = """1 (D)
+2 (Z)
+3 (C)
+4 (C)
+5 ( )
+6 ( )
+"""
+        self.assertEqual(self.output, result)
+
 
 if __name__ == '__main__':
     unittest.main()

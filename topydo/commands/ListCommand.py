@@ -20,6 +20,7 @@ from topydo.lib.Filter import InstanceFilter
 from topydo.lib.PrettyPrinter import pretty_printer_factory
 from topydo.lib.prettyprinters.Format import PrettyPrinterFormatFilter
 from topydo.lib.TodoListBase import InvalidTodoException
+from topydo.lib.Utils import get_terminal_size
 
 
 class ListCommand(ExpressionCommand):
@@ -27,7 +28,7 @@ class ListCommand(ExpressionCommand):
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
-        super(ListCommand, self).__init__(
+        super().__init__(
             p_args, p_todolist, p_out, p_err, p_prompt)
 
         self.printer = None
@@ -50,7 +51,7 @@ class ListCommand(ExpressionCommand):
         return True
 
     def _process_flags(self):
-        opts, args = self.getopt('f:F:i:n:s:x')
+        opts, args = self.getopt('f:F:i:n:Ns:x')
 
         for opt, value in opts:
             if opt == '-x':
@@ -69,11 +70,15 @@ class ListCommand(ExpressionCommand):
                     self.printer = None
             elif opt == '-F':
                 self.format = value
+            elif opt == '-N':
+                # 2 lines are assumed to be taken up by printing the next prompt
+                # display at least one item
+                self.limit = max(get_terminal_size().lines - 2, 1)
             elif opt == '-n':
                 try:
                     self.limit = int(value)
                 except ValueError:
-                    pass # use default value in configuration
+                    pass  # use default value in configuration
             elif opt == '-i':
                 self.ids = value.split(',')
 
@@ -87,7 +92,7 @@ class ListCommand(ExpressionCommand):
         Additional filters to select particular todo items given with the -i
         flag.
         """
-        filters = super(ListCommand, self)._filters()
+        filters = super()._filters()
 
         if self.ids:
             def get_todo(p_id):
@@ -127,7 +132,7 @@ class ListCommand(ExpressionCommand):
         self.out(self.printer.print_list(self._view().todos))
 
     def execute(self):
-        if not super(ListCommand, self).execute():
+        if not super().execute():
             return False
 
         try:
@@ -142,7 +147,7 @@ class ListCommand(ExpressionCommand):
 
     def usage(self):
         return """Synopsis: ls [-x] [-s <sort_expression>] [-f <output format>]
-[-F <format string>] [expression]"""
+[-F <format string>] [-i <item numbers>] [-N | -n <integer>] [expression]"""
 
     def help(self):
         return """\
@@ -177,6 +182,7 @@ When an expression is given, only the todos matching that expression are shown.
          %k: List of tags separated by spaces (excluding hidden tags).
          %K: List of all tags separated by spaces.
          %p: Priority.
+         %P: Priority or placeholder space if no priority.
          %s: Todo text.
          %S: Todo text, truncated such that an item fits on one line.
          %t: Absolute creation date.
@@ -193,6 +199,8 @@ When an expression is given, only the todos matching that expression are shown.
 
      A tab character serves as a marker to start right alignment.
 -i : Comma separated list of todo IDs to print.
+-n : Number of items to display. Defaults to the value in the configuration.
+-N : Limit number of items displayed such that they fit on the terminal.
 -s : Sort the list according to a sort expression. Defaults to the expression
      in the configuration.
 -x : Show all todos (i.e. do not filter on dependencies or relevance).

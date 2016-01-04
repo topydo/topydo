@@ -23,7 +23,7 @@ class PrettyPrinterNumbers(PrettyPrinterFilter):
     """ Prepends the todo's number, retrieved from the todolist. """
 
     def __init__(self, p_todolist):
-        super(PrettyPrinterNumbers, self).__init__()
+        super().__init__()
         self.todolist = p_todolist
 
     def filter(self, p_todo_str, p_todo):

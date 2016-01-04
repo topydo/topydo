@@ -33,7 +33,7 @@ def _no_prompt(self):
 
 class DeleteCommandTest(CommandTest):
     def setUp(self):
-        super(DeleteCommandTest, self).setUp()
+        super().setUp()
         todos = [
             "Foo id:1",
             "Bar p:1",

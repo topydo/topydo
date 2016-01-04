@@ -33,17 +33,17 @@ class DoCommand(DCommand):
         self.strict_recurrence = False
         self.completion_date = date.today()
 
-        super(DoCommand, self).__init__(
+        super().__init__(
             p_args, p_todolist, p_out, p_err, p_prompt)
 
     def get_flags(self):
         """ Additional flags. """
-        opts, long_opts = super(DoCommand, self).get_flags()
+        opts, long_opts = super().get_flags()
 
         return ("d:s" + opts, ["date=", "strict"] + long_opts)
 
     def process_flag(self, p_opt, p_value):
-        super(DoCommand, self).process_flag(p_opt, p_value)
+        super().process_flag(p_opt, p_value)
 
         if p_opt == "-s" or p_opt == "--strict":
             self.strict_recurrence = True

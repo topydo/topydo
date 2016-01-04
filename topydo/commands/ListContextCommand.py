@@ -22,11 +22,11 @@ class ListContextCommand(Command):
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
-        super(ListContextCommand, self).__init__(
+        super().__init__(
             p_args, p_todolist, p_out, p_err, p_prompt)
 
     def execute(self):
-        if not super(ListContextCommand, self).execute():
+        if not super().execute():
             return False
 
         for context in sorted(self.todolist.contexts(), key=lambda s: s.lower()):

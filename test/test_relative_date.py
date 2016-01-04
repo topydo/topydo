@@ -25,7 +25,7 @@ from topydo.lib.RelativeDate import relative_date_to_date
 @freeze_time('2015, 11, 06')
 class RelativeDateTester(TopydoTest):
     def setUp(self):
-        super(RelativeDateTester, self).setUp()
+        super().setUp()
         self.yesterday = date(2015, 11, 5)
         self.today = date(2015, 11, 6)
         self.tomorrow = date(2015, 11, 7)

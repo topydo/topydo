@@ -32,7 +32,7 @@ class ExpressionCommand(Command):
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
-        super(ExpressionCommand, self).__init__(
+        super().__init__(
             p_args, p_todolist, p_out, p_err, p_prompt)
 
         self.sort_expression = config().sort_string()
@@ -58,11 +58,13 @@ class ExpressionCommand(Command):
                 is_negated = len(arg) > 1 and arg[0] == '-'
                 arg = arg[1:] if is_negated else arg
 
-                if re.match(Filter.ORDINAL_TAG_MATCH, arg):
-                    argfilter = Filter.OrdinalTagFilter(arg)
-                elif re.match(Filter.PRIORITY_MATCH, arg):
-                    argfilter = Filter.PriorityFilter(arg)
-                else:
+                argfilter = None
+                for match, _filter in Filter.MATCHES:
+                    if re.match(match, arg):
+                        argfilter = _filter(arg)
+                        break
+
+                if not argfilter:
                     argfilter = Filter.GrepFilter(arg)
 
                 if is_negated:

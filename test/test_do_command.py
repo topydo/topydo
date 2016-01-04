@@ -32,7 +32,7 @@ def _no_prompt(self):
 
 class DoCommandTest(CommandTest):
     def setUp(self):
-        super(DoCommandTest, self).setUp()
+        super().setUp()
         todos = [
             "Foo id:1",
             "Bar p:1",

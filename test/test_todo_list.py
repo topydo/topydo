@@ -29,7 +29,7 @@ from topydo.lib.TodoListBase import InvalidTodoException, TodoListBase
 
 class TodoListTester(TopydoTest):
     def setUp(self):
-        super(TodoListTester, self).setUp()
+        super().setUp()
 
         self.todofile = TodoFile('test/data/TodoListTest.txt')
         lines = [line for line in self.todofile.read()
@@ -237,7 +237,7 @@ class TodoListTester(TopydoTest):
 
 class TodoListDependencyTester(TopydoTest):
     def setUp(self):
-        super(TodoListDependencyTester, self).setUp()
+        super().setUp()
 
         self.todolist = TodoList([])
         self.todolist.add("Foo id:1")
@@ -391,7 +391,7 @@ class TodoListCleanDependencyTester(TopydoTest):
     """
 
     def setUp(self):
-        super(TodoListCleanDependencyTester, self).setUp()
+        super().setUp()
         self.todolist = TodoList([])
 
     def test_clean_dependencies1(self):
