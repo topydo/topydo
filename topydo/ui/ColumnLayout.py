@@ -16,7 +16,7 @@
 
 import configparser
 
-from topydo.lib.Config import home_config_path
+from topydo.lib.Config import home_config_path, config
 
 def columns():
     """
@@ -35,7 +35,7 @@ def columns():
     defaults = {
             'title':  'Yet another column',
             'filterexpr': '',
-            'sortexpr': 'desc:prio',
+            'sortexpr': config().sort_string(),
             'show_all': '0',
     }
 

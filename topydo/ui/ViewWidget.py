@@ -16,6 +16,8 @@
 
 import urwid
 
+from topydo.lib.Config import config
+
 class ViewWidget(urwid.LineBox):
     def __init__(self, p_todolist):
         self._todolist = p_todolist
@@ -48,7 +50,7 @@ class ViewWidget(urwid.LineBox):
     def data(self):
         return {
             'title': self.titleedit.edit_text,
-            'sortexpr': self.sortedit.edit_text,
+            'sortexpr': self.sortedit.edit_text or config().sort_string(),
             'filterexpr': self.filteredit.edit_text,
             'show_all': self.allradio.state,
         }
