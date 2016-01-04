@@ -16,7 +16,7 @@
 
 import getopt
 
-from topydo.lib.PrettyPrinter import PrettyPrinter
+from topydo.lib.printers.PrettyPrinter import PrettyPrinter
 
 
 class InvalidCommandArgument(Exception):

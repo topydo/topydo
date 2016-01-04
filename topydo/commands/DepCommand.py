@@ -17,8 +17,8 @@
 from topydo.lib import Filter
 from topydo.lib.Command import Command, InvalidCommandArgument
 from topydo.lib.Config import config
-from topydo.lib.DotPrinter import DotPrinter
-from topydo.lib.PrettyPrinter import pretty_printer_factory
+from topydo.lib.printers.Dot import DotPrinter
+from topydo.lib.printers.PrettyPrinter import pretty_printer_factory
 from topydo.lib.Sorter import Sorter
 from topydo.lib.TodoListBase import InvalidTodoException
 from topydo.lib.View import View

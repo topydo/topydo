@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from topydo.lib.PrettyPrinter import PrettyPrinter
+from topydo.lib.printers.PrettyPrinter import PrettyPrinter
 from topydo.lib.Todo import Todo
 from topydo.lib.TodoFile import TodoFile
 from topydo.lib.TodoList import TodoList
