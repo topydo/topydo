@@ -327,7 +327,7 @@ def config(p_path=None, p_overrides=None):
         try:
             config.instance = _Config(p_path, p_overrides)
         except configparser.ParsingError as perr:
-            raise ConfigError(str(perr))
+            raise ConfigError(str(perr)) from perr
 
     return config.instance
 
