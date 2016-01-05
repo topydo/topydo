@@ -70,6 +70,8 @@ class UIApplication(CLIApplicationBase):
     def __init__(self):
         super().__init__()
 
+        config(p_overrides={('topydo', 'colors'): '0'}) # disable color in output
+
         self.todofile = TodoFile.TodoFile(config().todotxt())
         self.todolist = TodoList.TodoList(self.todofile.read())
 
