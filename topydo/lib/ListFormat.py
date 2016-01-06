@@ -42,7 +42,7 @@ def humanize_date(p_datetime):
     """ Returns a relative date string from a datetime object. """
     now = arrow.now()
     date = now.replace(day=p_datetime.day, month=p_datetime.month, year=p_datetime.year)
-    return date.humanize()
+    return date.humanize().replace('just now', 'today')
 
 def humanize_dates(p_due=None, p_start=None, p_creation=None):
     """

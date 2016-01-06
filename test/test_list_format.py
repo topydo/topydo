@@ -132,7 +132,7 @@ class ListFormatTest(CommandTest):
         command.execute()
 
         result = """|  1| D Bar @Context1 +Project2                (3 months ago, due a month ago, started a month ago)
-|  2| Z Lorem ipsum dolorem sit amet. Red @f... lazy:bar (just now, due in 2 days, starts in a day)
+|  2| Z Lorem ipsum dolorem sit amet. Red @fox ... lazy:bar (today, due in 2 days, starts in a day)
 |  3| C Foo @Context2 Not@Context +Project1 Not+Project                              (4 months ago)
 |  4| C Baz @Context1 +Project1 key:value
 |  5| Drink beer @ home
@@ -183,7 +183,7 @@ x 2014-12-12
         command.execute()
 
         result = """3 months ago | a month ago | a month ago |
-just now | in 2 days | in a day |
+today | in 2 days | in a day |
 4 months ago | | |
 | | |
 | | |
@@ -278,7 +278,7 @@ just now | in 2 days | in a day |
         command.execute()
 
         result = """3 months ago
-just now
+today
 4 months ago
 
 
@@ -330,7 +330,7 @@ due in 2 days, starts in a day
         command.execute()
 
         result = """3 months ago, due a month ago, started a month ago
-just now, due in 2 days, starts in a day
+today, due in 2 days, starts in a day
 4 months ago
 
 
