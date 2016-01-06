@@ -22,7 +22,6 @@ import urwid
 
 class TodoWidget(urwid.WidgetWrap):
     def __init__(self, p_todo, p_number):
-        self.todo = p_todo
         # pass a None todo list, since we won't use %i or %I here
         prio_formatter = ListFormatParser(None, "%{(}p{)}")
         text_formatter = ListFormatParser(None, "%s %k")
