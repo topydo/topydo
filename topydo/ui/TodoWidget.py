@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from topydo.lib.Config import config
+from topydo.lib.ListFormat import ListFormatParser
 from topydo.ui.Colors import color_map256
 
 import urwid
@@ -22,16 +23,12 @@ import urwid
 class TodoWidget(urwid.WidgetWrap):
     def __init__(self, p_todo, p_number):
         self.todo = p_todo
+        # pass a None todo list, since we won't use %i or %I here
+        prio_formatter = ListFormatParser(None, "%{(}p{)}")
+        text_formatter = ListFormatParser(None, "%s %k")
 
-        priority = self.todo.priority()
-        priority_text = ""
-        todo_text = self.todo.source()
-
-        if priority:
-            priority_text = "({})".format(priority)
-
-            # strip the first characters off
-            todo_text = todo_text[4:]
+        todo_text = text_formatter.parse(p_todo)
+        priority_text = prio_formatter.parse(p_todo)
 
         id_widget = urwid.Text(str(p_number), align='right')
         priority_widget = urwid.Text(priority_text)
