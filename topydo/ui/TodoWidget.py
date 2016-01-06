@@ -46,7 +46,7 @@ class TodoWidget(urwid.WidgetWrap):
     def __init__(self, p_todo, p_number):
         # pass a None todo list, since we won't use %i or %I here
         prio_formatter = ListFormatParser(None, "%{(}p{)}")
-        text_formatter = ListFormatParser(None, "%s %k")
+        text_formatter = ListFormatParser(None, "%s %k\n%h")
 
         todo_text = text_formatter.parse(p_todo)
         priority_text = prio_formatter.parse(p_todo)
