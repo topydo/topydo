@@ -44,6 +44,9 @@ def _markup(p_todo, p_focus):
 
 class TodoWidget(urwid.WidgetWrap):
     def __init__(self, p_todo, p_number):
+        # clients use this to associate this widget with the given todo item
+        self.todo = p_todo
+
         # pass a None todo list, since we won't use %i or %I here
         prio_formatter = ListFormatParser(None, "%{(}p{)}")
         text_formatter = ListFormatParser(None, "%s %k\n%h")
