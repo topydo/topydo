@@ -215,6 +215,8 @@ class UIApplication(CLIApplicationBase):
             'E': self._edit_column,
             'D': self._delete_column,
             'Y': self._copy_column,
+            'L': self._swap_column_left,
+            'R': self._swap_column_right,
         }
 
         try:
@@ -272,6 +274,20 @@ class UIApplication(CLIApplicationBase):
         self.columns.contents.append(item)
         self.columns.focus_position = len(self.columns.contents) - 1
         self._blur_commandline()
+
+    def _swap_column_left(self):
+        pos = self.columns.focus_position
+        if pos > 0:
+            _columns = self.columns.contents
+            _columns[pos], _columns[pos - 1] = _columns[pos - 1], _columns[pos]
+            self.columns.focus_position -= 1
+
+    def _swap_column_right(self):
+        pos = self.columns.focus_position
+        _columns = self.columns.contents
+        if pos < len(_columns) - 1:
+            _columns[pos], _columns[pos + 1] = _columns[pos + 1], _columns[pos]
+            self.columns.focus_position += 1
 
     @property
     def _console_visible(self):
