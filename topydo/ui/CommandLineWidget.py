@@ -18,6 +18,12 @@ import urwid
 
 class CommandLineWidget(urwid.Edit):
     def __init__(self, *args, **kwargs):
+
+        self.history = None
+        self.history_pos = None
+        # temporary history storage for edits before cmd execution
+        self.history_tmp = None
+
         super().__init__(*args, **kwargs)
         urwid.register_signal(CommandLineWidget, ['blur', 'execute_command'])
 
@@ -30,12 +36,47 @@ class CommandLineWidget(urwid.Edit):
 
     def _emit_command(self):
         urwid.emit_signal(self, 'execute_command', self.edit_text)
+        self._save_to_history()
         self.clear()
+
+    def _save_to_history(self):
+        if len(self.edit_text) > 0:
+            if self.history is None:
+                self.history = []
+            self.history.append(self.edit_text)
+        self.history_pos = len(self.history)
+        self.history_tmp = self.history[:] # sync temporary storage with real history
+        self.history_tmp.append('')
+
+    def _history_move(self, p_step):
+        """
+        Changes current value of the command-line to the value obtained from
+        history_tmp list with index calculated by addition of p_step to the
+        current position in the command history (history_pos attribute).
+
+        Also saves value of the command-line (before changing it) to history_tmp
+        for potential later access.
+        """
+        if self.history is not None:
+            # don't pollute real history - use temporary storage
+            self.history_tmp[self.history_pos] = self.edit_text
+            self.history_pos = self.history_pos + p_step
+            self.set_edit_text(self.history_tmp[self.history_pos])
+
+    def _history_next(self):
+        if self.history_pos != len(self.history):
+            self._history_move(1)
+
+    def _history_back(self):
+        if self.history_pos != 0:
+            self._history_move(-1)
 
     def keypress(self, p_size, p_key):
         dispatch = {
             'enter': self._emit_command,
             'esc': self._blur,
+            'up': self._history_back,
+            'down': self._history_next
         }
 
         try:
