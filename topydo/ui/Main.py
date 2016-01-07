@@ -369,6 +369,9 @@ class UIApplication(CLIApplicationBase):
             }
             self._add_column(self._viewdata_to_view(dummy))
 
+        # make sure that the first column is focused on startup
+        self.columns.focus_position = 0
+
         self.mainloop.run()
 
 if __name__ == '__main__':
