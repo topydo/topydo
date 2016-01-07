@@ -41,15 +41,18 @@ def columns():
 
     cp = configparser.RawConfigParser(defaults)
     files = [
-        "/etc/topydo_columns.conf",
-        home_config_path('.config/topydo/columns'),
-        home_config_path('.topydo_columns'),
-        ".topydo_columns",
-        "topydo_columns.conf",
         "topydo_columns.ini",
+        "topydo_columns.conf",
+        ".topydo_columns",
+        home_config_path('.topydo_columns'),
+        home_config_path('.config/topydo/columns'),
+        "/etc/topydo_columns.conf",
     ]
 
-    cp.read(files)
+    for filename in files:
+        if cp.read(filename):
+            break
+
     column_list = []
 
     for column in cp.sections():
