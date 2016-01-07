@@ -42,9 +42,10 @@ class UIView(View):
         super().__init__(p_sorter, p_filter, p_todolist)
         self.data = p_data
 
-_NEW_COLUMN = 1
+_APPEND_COLUMN = 1
 _EDIT_COLUMN = 2
 _COPY_COLUMN = 3
+_INSERT_COLUMN = 4
 
 class MainPile(urwid.Pile):
     """
@@ -115,7 +116,7 @@ class UIApplication(CLIApplicationBase):
             pop_ups=True
         )
 
-        self.column_mode = _NEW_COLUMN
+        self.column_mode = _APPEND_COLUMN
 
     def _output(self, p_text):
         self._print_to_console(p_text + "\n")
@@ -174,9 +175,14 @@ class UIApplication(CLIApplicationBase):
         if self.columns.focus_position > 0:
             self.columns.focus_position -= 1
 
-    def _new_column(self):
+    def _append_column(self):
         self.viewwidget.reset()
-        self.column_mode = _NEW_COLUMN
+        self.column_mode = _APPEND_COLUMN
+        self._viewwidget_visible = True
+
+    def _insert_column(self):
+        self.viewwidget.reset()
+        self.column_mode = _INSERT_COLUMN
         self._viewwidget_visible = True
 
     def _edit_column(self):
@@ -211,7 +217,8 @@ class UIApplication(CLIApplicationBase):
             'h': self._focus_previous_column,
             'right': self._focus_next_column,
             'l': self._focus_next_column,
-            'N': self._new_column,
+            'A': self._append_column,
+            'I': self._insert_column,
             'E': self._edit_column,
             'D': self._delete_column,
             'Y': self._copy_column,
@@ -244,8 +251,10 @@ class UIApplication(CLIApplicationBase):
         """ Creates a view from the data entered in the view widget. """
         view = self._viewdata_to_view(p_data)
 
-        if self.column_mode == _NEW_COLUMN or self.column_mode == _COPY_COLUMN:
+        if self.column_mode == _APPEND_COLUMN or self.column_mode == _COPY_COLUMN:
             self._add_column(view)
+        elif self.column_mode == _INSERT_COLUMN:
+            self._add_column(view, self.columns.focus_position)
         elif self.column_mode == _EDIT_COLUMN:
             current_column = self.columns.focus
 
@@ -254,10 +263,14 @@ class UIApplication(CLIApplicationBase):
 
         self._viewwidget_visible = False
 
-    def _add_column(self, p_view):
+    def _add_column(self, p_view, p_pos=None):
         """
         Given an UIView, adds a new column widget with the todos in that view.
+
+        When no position is given, it is added to the end, otherwise inserted
+        before that position.
         """
+
         todolist = TodoListWidget(p_view, p_view.data['title'])
         no_output = lambda _: None
         urwid.connect_signal(todolist, 'execute_command',
@@ -271,8 +284,13 @@ class UIApplication(CLIApplicationBase):
         )
 
         item = (todolist, options)
-        self.columns.contents.append(item)
-        self.columns.focus_position = len(self.columns.contents) - 1
+
+        if p_pos == None:
+            p_pos = len(self.columns.contents)
+
+        self.columns.contents.insert(p_pos, item)
+
+        self.columns.focus_position = p_pos
         self._blur_commandline()
 
     def _swap_column_left(self):
