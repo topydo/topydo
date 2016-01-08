@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from collections import namedtuple
 import shlex
 import urwid
 
@@ -27,6 +28,7 @@ from topydo.ui.ColumnLayout import columns
 from topydo.lib.Config import config
 from topydo.lib.Sorter import Sorter
 from topydo.lib.Filter import get_filter_list, RelevanceFilter, DependencyFilter
+from topydo.lib.Utils import get_terminal_size
 from topydo.lib.View import View
 from topydo.lib import TodoFile
 from topydo.lib import TodoList
@@ -81,6 +83,7 @@ class UIApplication(CLIApplicationBase):
 
         # console widget
         self.console = ConsoleWidget()
+        get_terminal_size(self._console_width)
 
         urwid.connect_signal(self.commandline, 'blur', self._blur_commandline)
         urwid.connect_signal(self.commandline, 'execute_command',
@@ -354,6 +357,13 @@ class UIApplication(CLIApplicationBase):
         self._console_visible = False
 
         return user_input[0]
+
+    def _console_width(self):
+        terminal_size = namedtuple('Terminal_Size', 'columns lines')
+        width = self.console.console_width() - 2
+        sz = terminal_size(width, 1)
+
+        return sz
 
     def run(self):
         layout = columns()

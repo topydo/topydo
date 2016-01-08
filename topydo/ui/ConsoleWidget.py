@@ -21,6 +21,8 @@ class ConsoleWidget(urwid.LineBox):
         urwid.register_signal(ConsoleWidget, ['close'])
 
         self.text = urwid.Text(p_text)
+        self.width = 0
+
         super().__init__(self.text)
 
     def keypress(self, p_size, p_key):
@@ -28,6 +30,14 @@ class ConsoleWidget(urwid.LineBox):
             urwid.emit_signal(self, 'close')
 
         # don't return the key, 'enter', 'escape' or 'q' are your only escape.
+
+    def render(self, p_size, focus):
+        """
+        This override intercepts the width of the widget such that it can be
+        stored. The width is used for rendering `ls` output.
+        """
+        self.width = p_size[0]
+        return super().render(p_size, focus)
 
     def selectable(self):
         return True
@@ -37,3 +47,7 @@ class ConsoleWidget(urwid.LineBox):
 
     def clear(self):
         self.text.set_text("")
+
+    def console_width(self):
+        # return the last known width (last render)
+        return self.width
