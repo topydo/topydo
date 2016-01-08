@@ -161,8 +161,12 @@ class TodoListWidget(urwid.LineBox):
         if p_event == 'mouse press':
             if p_button == 4:  # up
                 self.listbox.keypress(p_size, 'up')
+                return
             elif p_button == 5:  #down:
                 self.listbox.keypress(p_size, 'down')
+                return
+
+        return super().mouse_event(p_size, p_event, p_button, p_column, p_row, p_focus)
 
     def selectable(self):
         return True
