@@ -74,6 +74,6 @@ def get_terminal_size():
         occurs during running the unittest on Windows (but not on Linux?)
         """
         terminal_size = namedtuple('Terminal_Size', 'columns lines')
-        sz = terminal_size((80, 24))
+        sz = terminal_size(80, 24)
 
     return sz
