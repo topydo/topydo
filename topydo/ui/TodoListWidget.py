@@ -166,7 +166,7 @@ class TodoListWidget(urwid.LineBox):
                 self.listbox.keypress(p_size, 'down')
                 return
 
-        return super().mouse_event(p_size, p_event, p_button, p_column, p_row, p_focus)
+        return super().mouse_event(p_size, p_event, p_button, p_column, p_row, p_focus)  # pylint: disable=E1102
 
     def selectable(self):
         return True
