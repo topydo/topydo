@@ -92,6 +92,9 @@ class UIApplication(CLIApplicationBase):
         self.columns = urwid.Columns([], dividechars=0, min_width=COLUMN_WIDTH)
         self.commandline = CommandLineWidget('topydo> ')
 
+        self.keymap = config().column_keymap()
+        self._alarm = None
+
         # console widget
         self.console = ConsoleWidget()
         get_terminal_size(self._console_width)
@@ -290,11 +293,14 @@ class UIApplication(CLIApplicationBase):
         before that position.
         """
 
-        todolist = TodoListWidget(p_view, p_view.data['title'])
+        todolist = TodoListWidget(p_view, p_view.data['title'], self.keymap)
         no_output = lambda _: None
-        urwid.connect_signal(todolist, 'execute_command',
+        urwid.connect_signal(todolist, 'execute_command_silent',
                              lambda cmd: self._execute_handler(cmd, no_output))
+        urwid.connect_signal(todolist, 'execute_command', self._execute_handler)
         urwid.connect_signal(todolist, 'refresh', self.mainloop.screen.clear)
+        urwid.connect_signal(todolist, 'add_pending_action', self._set_alarm)
+        urwid.connect_signal(todolist, 'remove_pending_action', self._remove_alarm)
 
         options = self.columns.options(
             width_type='given',
@@ -311,6 +317,22 @@ class UIApplication(CLIApplicationBase):
 
         self.columns.focus_position = p_pos
         self._blur_commandline()
+
+    def _set_alarm(self, p_action):
+        """
+        Sets alarm to execute p_action specified in 0.5 sec.
+
+        Handle for this alarm is stored as _alarm attribute.
+        p_action must be an object with 'execute' method.
+        """
+        self._alarm = self.mainloop.set_alarm_in(0.5, p_action.execute)
+
+    def _remove_alarm(self):
+        """
+        Removes pending action alarm stored in _alarm attribute.
+        """
+        self.mainloop.remove_alarm(self._alarm)
+        self._alarm = None
 
     def _swap_column_left(self):
         pos = self.columns.focus_position
