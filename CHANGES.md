@@ -4,9 +4,9 @@
 * Dropped support for Python 2.7.
 * Add ability to filter on creation/completion dates:
 
-      topydo ls created:today
-      topydo ls completed:today
-      topydo -t done.txt completed:today # if auto-archiving is set
+        topydo ls created:today
+        topydo ls completed:today
+        topydo -t done.txt completed:today # if auto-archiving is set
 
 * `ls -F` supports `%P` that expands to a single space when no priority is set,
   in contrast to `%p` which expands to an empty string (thanks to @MinchinWeb).
@@ -41,8 +41,8 @@ for the majority of these new features.
 
 * `ls` output can be customized with a -F flag or a configuration option:
 
-      [ls]
-      list_format = |%I| %x %{(}p{)} %c %s %k %{due:}d %{t:}t
+        [ls]
+        list_format = |%I| %x %{(}p{)} %c %s %k %{due:}d %{t:}t
 
   or `ls -F "%{(}p{)} %s %{due:}d"`.
 
