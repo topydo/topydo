@@ -51,9 +51,20 @@ _INSERT_COLUMN = 4
 
 class MainPile(urwid.Pile):
     """
-    This subclass of Pile doesn't change focus on cursor up/down events. The
-    implementation was taken from its base class.
+    This subclass of Pile doesn't change focus on cursor up/down / mouse press
+    events. The implementation was taken from its base class.
     """
+    def __init__(self, p_widget_list, p_focus_item=None):
+        urwid.register_signal(MainPile, ['blur_console'])
+
+        super().__init__(p_widget_list, p_focus_item)
+
+    def mouse_event(self, p_size, p_event, p_button, p_col, p_row, p_focus):
+        if self.focus_position != 2:
+            urwid.emit_signal(self, 'blur_console')
+
+        return super().mouse_event(p_size, p_event, p_button, p_col, p_row, p_focus)  # pylint: disable=E1102
+
     def keypress(self, p_size, p_key):
         if not self.contents:
             return p_key
@@ -109,6 +120,8 @@ class UIApplication(CLIApplicationBase):
             ('weight', 1, self.columns),
             (1, urwid.Filler(self.commandline)),
         ])
+
+        urwid.connect_signal(self.mainwindow, 'blur_console', hide_console)
 
         # the columns should have keyboard focus
         self._blur_commandline()
