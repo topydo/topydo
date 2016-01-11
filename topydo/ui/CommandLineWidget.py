@@ -19,10 +19,10 @@ import urwid
 class CommandLineWidget(urwid.Edit):
     def __init__(self, *args, **kwargs):
 
-        self.history = None
+        self.history = []
         self.history_pos = None
         # temporary history storage for edits before cmd execution
-        self.history_tmp = None
+        self.history_tmp = []
 
         super().__init__(*args, **kwargs)
         urwid.register_signal(CommandLineWidget, ['blur', 'execute_command'])
@@ -35,15 +35,15 @@ class CommandLineWidget(urwid.Edit):
         urwid.emit_signal(self, 'blur')
 
     def _emit_command(self):
-        urwid.emit_signal(self, 'execute_command', self.edit_text)
-        self._save_to_history()
-        self.clear()
+        if len(self.edit_text) > 0:
+            urwid.emit_signal(self, 'execute_command', self.edit_text)
+            self._save_to_history()
+            self.clear()
 
     def _save_to_history(self):
         if len(self.edit_text) > 0:
-            if self.history is None:
-                self.history = []
             self.history.append(self.edit_text)
+
         self.history_pos = len(self.history)
         self.history_tmp = self.history[:] # sync temporary storage with real history
         self.history_tmp.append('')
@@ -57,7 +57,7 @@ class CommandLineWidget(urwid.Edit):
         Also saves value of the command-line (before changing it) to history_tmp
         for potential later access.
         """
-        if self.history is not None:
+        if len(self.history) > 0:
             # don't pollute real history - use temporary storage
             self.history_tmp[self.history_pos] = self.edit_text
             self.history_pos = self.history_pos + p_step
