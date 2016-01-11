@@ -16,6 +16,7 @@
 
 import urwid
 
+
 class ConsoleWidget(urwid.LineBox):
     def __init__(self, p_text=""):
         urwid.register_signal(ConsoleWidget, ['close'])
@@ -29,7 +30,10 @@ class ConsoleWidget(urwid.LineBox):
         if p_key == 'enter' or p_key == 'q' or p_key == 'esc':
             urwid.emit_signal(self, 'close')
 
-        # don't return the key, 'enter', 'escape' or 'q' are your only escape.
+        # don't return the key, 'enter', 'escape', 'q' or ':' are your only
+        # escape. ':' will reenter to the cmdline.
+        elif p_key == ':':
+            urwid.emit_signal(self, 'close', True)
 
     def render(self, p_size, focus):
         """

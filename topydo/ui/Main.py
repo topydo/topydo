@@ -103,8 +103,10 @@ class UIApplication(CLIApplicationBase):
         urwid.connect_signal(self.commandline, 'execute_command',
                              self._execute_handler)
 
-        def hide_console():
+        def hide_console(p_focus_commandline=False):
             self._console_visible = False
+            if p_focus_commandline:
+                self._focus_commandline()
         urwid.connect_signal(self.console, 'close', hide_console)
 
         # view widget
@@ -363,6 +365,7 @@ class UIApplication(CLIApplicationBase):
         elif p_enabled == False and self._console_visible:
             self.console.clear()
             del contents[2]
+            self.mainwindow.focus_position = 0
 
     @property
     def _viewwidget_visible(self):
