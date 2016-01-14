@@ -31,9 +31,9 @@ class ViewWidget(urwid.LineBox):
         self.allradio = urwid.RadioButton(group, "Show all todo items")
 
         self.pile = urwid.Pile([
+            self.filteredit,
             self.titleedit,
             self.sortedit,
-            self.filteredit,
             self.relevantradio,
             self.allradio,
             urwid.Button("Save", lambda _: urwid.emit_signal(self, 'save')),
