@@ -49,7 +49,7 @@ class ViewWidget(urwid.LineBox):
     @property
     def data(self):
         return {
-            'title': self.titleedit.edit_text,
+            'title': self.titleedit.edit_text or self.filteredit.edit_text,
             'sortexpr': self.sortedit.edit_text or config().sort_string(),
             'filterexpr': self.filteredit.edit_text,
             'show_all': self.allradio.state,
