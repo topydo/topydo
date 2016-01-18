@@ -124,7 +124,18 @@ class _Config:
                 'x': 'cmd do {}',
                 'pp': 'postpone',
                 'ps': 'postpone_s',
-                'pr': 'pri'
+                'pr': 'pri',
+                '0': 'first_column',
+                '$': 'last_column',
+                'h': 'prev_column',
+                'l': 'next_column',
+                'A': 'append_column',
+                'I': 'insert_column',
+                'E': 'edit_column',
+                'D': 'delete_column',
+                'Y': 'copy_column',
+                'L': 'swap_left',
+                'R': 'swap_right',
             },
         }
 

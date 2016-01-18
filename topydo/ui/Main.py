@@ -232,22 +232,28 @@ class UIApplication(CLIApplicationBase):
         self.column_mode = _COPY_COLUMN
         self._viewwidget_visible = True
 
+
+    def _column_action_handler(self, p_action):
+        dispatch = {
+            'first_column': self._focus_first_column,
+            'last_column': self._focus_last_column,
+            'prev_column': self._focus_previous_column,
+            'next_column': self._focus_next_column,
+            'append_column': self._append_column,
+            'insert_column': self._insert_column,
+            'edit_column': self._edit_column,
+            'delete_column': self._delete_column,
+            'copy_column': self._copy_column,
+            'swap_left': self._swap_column_left,
+            'swap_right': self._swap_column_right,
+        }
+        dispatch[p_action]()
+
     def _handle_input(self, p_input):
         dispatch = {
             ':': self._focus_commandline,
-            '0': self._focus_first_column,
-            '$': self._focus_last_column,
             'left': self._focus_previous_column,
-            'h': self._focus_previous_column,
             'right': self._focus_next_column,
-            'l': self._focus_next_column,
-            'A': self._append_column,
-            'I': self._insert_column,
-            'E': self._edit_column,
-            'D': self._delete_column,
-            'Y': self._copy_column,
-            'L': self._swap_column_left,
-            'R': self._swap_column_right,
         }
 
         try:
@@ -303,6 +309,7 @@ class UIApplication(CLIApplicationBase):
         urwid.connect_signal(todolist, 'refresh', self.mainloop.screen.clear)
         urwid.connect_signal(todolist, 'add_pending_action', self._set_alarm)
         urwid.connect_signal(todolist, 'remove_pending_action', self._remove_alarm)
+        urwid.connect_signal(todolist, 'column_action', self._column_action_handler)
 
         options = self.columns.options(
             width_type='given',

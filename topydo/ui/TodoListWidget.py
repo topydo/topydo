@@ -71,6 +71,7 @@ class TodoListWidget(urwid.LineBox):
                                                'refresh',
                                                'add_pending_action',
                                                'remove_pending_action',
+                                               'column_action',
                                                ])
 
     @property
@@ -238,9 +239,27 @@ class TodoListWidget(urwid.LineBox):
         Executes built-in action specified in p_action_str.
 
         Currently supported actions are: 'up', 'down', 'home', 'end',
-        'postpone', 'postpone_s' and 'pri'.
+        'first_column', 'last_column', 'prev_column', 'next_column',
+        'append_column', 'insert_column', 'edit_column', 'delete_column',
+        'copy_column', swap_right', 'swap_left', 'postpone', 'postpone_s' and
+        'pri'.
         """
-        if p_action_str in ['up', 'down']:
+        column_actions = ['first_column',
+                          'last_column',
+                          'prev_column',
+                          'next_column',
+                          'append_column',
+                          'insert_column',
+                          'edit_column',
+                          'delete_column',
+                          'copy_column',
+                          'swap_left',
+                          'swap_right',
+                          ]
+
+        if p_action_str in column_actions:
+            urwid.emit_signal(self, 'column_action', p_action_str)
+        elif p_action_str in ['up', 'down']:
             self.listbox.keypress(p_size, p_action_str)
         elif p_action_str == 'home':
             self._scroll_to_top(p_size)
