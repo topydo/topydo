@@ -232,7 +232,6 @@ class UIApplication(CLIApplicationBase):
         self.column_mode = _COPY_COLUMN
         self._viewwidget_visible = True
 
-
     def _column_action_handler(self, p_action):
         dispatch = {
             'first_column': self._focus_first_column,
@@ -252,8 +251,6 @@ class UIApplication(CLIApplicationBase):
     def _handle_input(self, p_input):
         dispatch = {
             ':': self._focus_commandline,
-            'left': self._focus_previous_column,
-            'right': self._focus_next_column,
         }
 
         try:

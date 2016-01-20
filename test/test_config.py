@@ -159,5 +159,12 @@ class ConfigTest(TopydoTest):
         self.assertEqual(keymap['up'], 'up')
         self.assertIn('u', keystates)
 
+        self.assertEqual(keymap['<Left>'], 'prev_column')
+        self.assertNotIn('<Lef', keystates)
+
+        self.assertEqual(keymap['<Esc>d'], 'delete_column')
+        self.assertNotIn('<Esc', keystates)
+        self.assertIn('<Esc>', keystates)
+
 if __name__ == '__main__':
     unittest.main()

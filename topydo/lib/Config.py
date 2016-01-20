@@ -16,6 +16,7 @@
 
 import configparser
 import os
+import re
 import shlex
 
 from itertools import accumulate
@@ -136,6 +137,8 @@ class _Config:
                 'Y': 'copy_column',
                 'L': 'swap_left',
                 'R': 'swap_right',
+                '<Left>': 'prev_column',
+                '<Right>': 'next_column',
             },
         }
 
@@ -350,8 +353,9 @@ class _Config:
 
         for combo, action in shortcuts:
             # add all possible prefixes to keystates
-            if len(combo) > 1:
-                keystates |= set(accumulate(combo[:-1]))
+            combo_as_list = re.split('(<[A-Z].+?>|.)', combo)[1::2]
+            if len(combo_as_list) > 1:
+                keystates |= set(accumulate(combo_as_list[:-1]))
 
             if action in ['pri', 'postpone', 'postpone_s']:
                 keystates.add(combo)

@@ -17,6 +17,7 @@
 import urwid
 
 from topydo.ui.TodoWidget import TodoWidget
+from topydo.lib.Utils import translate_key_to_config
 
 
 class PendingAction(object):
@@ -135,7 +136,7 @@ class TodoListWidget(urwid.LineBox):
         keymap, keystates = self.keymap
 
         shortcut = self.keystate or ''
-        shortcut += p_key
+        shortcut += translate_key_to_config(p_key)
 
         try:
             action = keymap[shortcut]
