@@ -192,8 +192,6 @@ class UIApplication(CLIApplicationBase):
             if command.execute() != False:
                 self._post_execute()
 
-            self._clear_pending_todos()
-
         except TypeError:
             # TODO: show error message
             pass
@@ -201,14 +199,19 @@ class UIApplication(CLIApplicationBase):
     def _update_all_columns(self):
         for column, _ in self.columns.contents:
             column.update()
+            column.keystate = None
 
     def _post_execute(self):
         # store dirty flag because base _post_execute will reset it after flush
         dirty = self.todolist.dirty
         super()._post_execute()
 
-        if dirty:
-            self._update_all_columns()
+        if dirty or self.pending_todos:
+            self._reset_state()
+
+    def _reset_state(self):
+        self.pending_todos = []
+        self._update_all_columns()
 
     def _blur_commandline(self):
         self.mainwindow.focus_item = 0
@@ -278,13 +281,13 @@ class UIApplication(CLIApplicationBase):
             'copy_column': self._copy_column,
             'swap_left': self._swap_column_left,
             'swap_right': self._swap_column_right,
+            'reset': self._reset_state,
         }
         dispatch[p_action]()
 
     def _handle_input(self, p_input):
         dispatch = {
             ':': self._focus_commandline,
-            'esc': self._clear_pending_todos,
         }
 
         try:
@@ -344,7 +347,6 @@ class UIApplication(CLIApplicationBase):
         urwid.connect_signal(todolist, 'show_keystate', self._print_keystate)
         urwid.connect_signal(todolist, 'append_pending_todos', self._pending_todos_handler)
         urwid.connect_signal(todolist, 'check_pending_todos', self._is_pending)
-        urwid.connect_signal(todolist, 'clear_pending_todos', self._clear_pending_todos)
 
         options = self.columns.options(
             width_type='given',
@@ -460,11 +462,6 @@ class UIApplication(CLIApplicationBase):
         sz = terminal_size(width, 1)
 
         return sz
-
-    def _clear_pending_todos(self, p_refresh=True):
-        self.pending_todos = []
-        if p_refresh:
-            self._update_all_columns()
 
     def _is_pending(self):
         if len(self.pending_todos) > 0:

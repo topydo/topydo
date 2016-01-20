@@ -64,7 +64,6 @@ class TodoListWidget(urwid.LineBox):
                                                'show_keystate',
                                                'append_pending_todos',
                                                'check_pending_todos',
-                                               'clear_pending_todos',
                                                ])
 
     @property
@@ -270,8 +269,8 @@ class TodoListWidget(urwid.LineBox):
         Currently supported actions are: 'up', 'down', 'home', 'end',
         'first_column', 'last_column', 'prev_column', 'next_column',
         'append_column', 'insert_column', 'edit_column', 'delete_column',
-        'copy_column', swap_right', 'swap_left', 'postpone', 'postpone_s', 'pri'
-        and 'mark'.
+        'copy_column', swap_right', 'swap_left', 'postpone', 'postpone_s',
+        'pri', 'mark' and 'reset'.
         """
         column_actions = ['first_column',
                           'last_column',
@@ -284,6 +283,7 @@ class TodoListWidget(urwid.LineBox):
                           'copy_column',
                           'swap_left',
                           'swap_right',
+                          'reset',
                           ]
 
         if p_action_str in column_actions:
