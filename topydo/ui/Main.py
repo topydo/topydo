@@ -108,6 +108,8 @@ class UIApplication(CLIApplicationBase):
         self.keymap = config().column_keymap()
         self._alarm = None
 
+        self._last_cmd = None
+
         # console widget
         self.console = ConsoleWidget()
         get_terminal_size(self._console_width)
@@ -208,6 +210,30 @@ class UIApplication(CLIApplicationBase):
 
         if dirty or self.pending_todos:
             self._reset_state()
+
+    def _save_cmd(self, p_cmd, p_execute_signal):
+        verbosity = False
+        if p_execute_signal == 'execute_command':
+            verbosity = True
+        self._last_cmd = (p_cmd, verbosity)
+
+    def _repeat_last_cmd(self, p_todo_id=None):
+        try:
+            cmd, verbosity = self._last_cmd
+        except TypeError:
+            return
+
+        if verbosity:
+            output = self._output
+        else:
+            output = lambda _: None
+
+        if '{}' in cmd:
+            if not p_todo_id:
+                p_todo_id = ' '.join(self.pending_todos)
+            cmd = cmd.format(p_todo_id)
+
+        self._execute_handler(cmd, output)
 
     def _reset_state(self):
         self.pending_todos = []
@@ -340,6 +366,8 @@ class UIApplication(CLIApplicationBase):
         urwid.connect_signal(todolist, 'execute_command_silent',
                              lambda cmd: self._execute_handler(cmd, no_output))
         urwid.connect_signal(todolist, 'execute_command', self._execute_handler)
+        urwid.connect_signal(todolist, 'save_cmd', self._save_cmd)
+        urwid.connect_signal(todolist, 'repeat_cmd', self._repeat_last_cmd)
         urwid.connect_signal(todolist, 'refresh', self.mainloop.screen.clear)
         urwid.connect_signal(todolist, 'add_pending_action', self._set_alarm)
         urwid.connect_signal(todolist, 'remove_pending_action', self._remove_alarm)

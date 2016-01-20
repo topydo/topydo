@@ -60,6 +60,8 @@ class TodoListWidget(urwid.LineBox):
                                                'refresh',
                                                'add_pending_action',
                                                'remove_pending_action',
+                                               'save_cmd',
+                                               'repeat_cmd',
                                                'column_action',
                                                'show_keystate',
                                                'append_pending_todos',
@@ -259,6 +261,8 @@ class TodoListWidget(urwid.LineBox):
                 self._execute_on_selected(cmd, execute_signal)
             else:
                 urwid.emit_signal(self, execute_signal, cmd)
+
+            urwid.emit_signal(self, 'save_cmd', cmd, execute_signal)
         else:
             self.execute_builtin_action(p_action_str, p_size)
 
@@ -270,7 +274,7 @@ class TodoListWidget(urwid.LineBox):
         'first_column', 'last_column', 'prev_column', 'next_column',
         'append_column', 'insert_column', 'edit_column', 'delete_column',
         'copy_column', swap_right', 'swap_left', 'postpone', 'postpone_s',
-        'pri', 'mark' and 'reset'.
+        'pri', 'mark', 'reset' and 'repeat'.
         """
         column_actions = ['first_column',
                           'last_column',
@@ -300,6 +304,8 @@ class TodoListWidget(urwid.LineBox):
             pass
         elif p_action_str == 'mark':
             self._append_pending_todos()
+        elif p_action_str == 'repeat':
+            self._repeat_cmd()
 
     def _add_pending_action(self, p_action, p_size):
         """
@@ -350,3 +356,15 @@ class TodoListWidget(urwid.LineBox):
             self._pp_offset = None
             result = False
         return result
+
+    def _repeat_cmd(self):
+        try:
+            todo = self.listbox.focus.todo
+            todo_id = str(self.view.todolist.number(todo))
+        except AttributeError:
+            todo_id = None
+
+        result = urwid.emit_signal(self, 'check_pending_todos')
+        if result:
+            todo_id = None
+        urwid.emit_signal(self, 'repeat_cmd', todo_id)

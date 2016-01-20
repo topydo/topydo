@@ -126,6 +126,7 @@ class _Config:
                 'u': 'cmd revert',
                 'x': 'cmd do {}',
                 'm': 'mark',
+                '.': 'repeat',
                 'pp': 'postpone',
                 'ps': 'postpone_s',
                 'pr': 'pri',
