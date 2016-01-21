@@ -20,6 +20,15 @@ from topydo.ui.TodoWidget import TodoWidget
 from topydo.lib.Utils import translate_key_to_config
 
 
+def get_execute_signal(p_prefix):
+    if p_prefix == 'cmdv':
+        signal = 'execute_command'
+    else:
+        signal = 'execute_command_silent'
+
+    return signal
+
+
 class PendingAction(object):
     """
     Object class for storing TodoListWidget action waiting for execution.
@@ -193,20 +202,21 @@ class TodoListWidget(urwid.LineBox):
     def selectable(self):
         return True
 
-    def _execute_on_selected(self, p_cmd_str):
+    def _execute_on_selected(self, p_cmd_str, p_execute_signal):
         """
         Executes command specified by p_cmd_str on selected todo item.
 
         p_cmd_str should be a string with one replacement field ('{}') which
         will be substituted by id of the selected todo item.
+
+        p_execute_signal is the signal name passed to the main loop. It should
+        be one of 'execute_command' or 'execute_command_silent'.
         """
         try:
             todo = self.listbox.focus.todo
             todo_id = str(self.view.todolist.number(todo))
 
-            urwid.emit_signal(self,
-                              'execute_command_silent',
-                              p_cmd_str.format(todo_id))
+            urwid.emit_signal(self, p_execute_signal, p_cmd_str.format(todo_id))
 
             # force screen redraw after editing
             if p_cmd_str.startswith('edit'):
@@ -225,13 +235,14 @@ class TodoListWidget(urwid.LineBox):
         'home' as they can interact with urwid.ListBox.keypress or
         urwid.ListBox.calculate_visible.
         """
-        if p_action_str.startswith('cmd '):
-            # cut 'cmd' word from command string
-            cmd = p_action_str[4:]
+        if p_action_str.startswith(('cmd ', 'cmdv ')):
+            prefix, cmd = p_action_str.split(' ', 1)
+            execute_signal = get_execute_signal(prefix)
+
             if '{}' in cmd:
-                self._execute_on_selected(cmd)
+                self._execute_on_selected(cmd, execute_signal)
             else:
-                urwid.emit_signal(self, 'execute_command', cmd)
+                urwid.emit_signal(self, execute_signal, cmd)
         else:
             self.execute_builtin_action(p_action_str, p_size)
 
