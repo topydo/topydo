@@ -61,7 +61,7 @@ class DoCommandTest(CommandTest):
                             _no_prompt)
         command.execute()
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertTrue(self.todolist.todo(3).is_completed())
         self.assertEqual(self.output,
                          "Completed: x {} Baz p:1\n".format(self.today))
@@ -77,7 +77,7 @@ class DoCommandTest(CommandTest):
         for number in [1, 2, 3]:
             self.assertTrue(self.todolist.todo(number).is_completed())
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertFalse(self.todolist.todo(4).is_completed())
         self.assertEqual(self.output, result)
         self.assertEqual(self.errors, "")
@@ -89,7 +89,7 @@ class DoCommandTest(CommandTest):
 
         result = "|  2| Bar p:1\n|  3| Baz p:1\nCompleted: x {} Foo id:1\n".format(self.today)
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertTrue(self.todolist.todo(1).is_completed())
         self.assertFalse(self.todolist.todo(2).is_completed())
         self.assertFalse(self.todolist.todo(3).is_completed())
@@ -130,7 +130,7 @@ class DoCommandTest(CommandTest):
         command = DoCommand(p_flags, self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.errors, "")
         self.assertEqual(self.todolist.count(), 12)
 
@@ -162,7 +162,7 @@ class DoCommandTest(CommandTest):
         command = DoCommand(["99"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
         self.assertFalse(self.output)
         self.assertEqual(self.errors, "Invalid todo number given.\n")
 
@@ -170,7 +170,7 @@ class DoCommandTest(CommandTest):
         command = DoCommand(["AAA"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
         self.assertFalse(self.output)
         self.assertEqual(self.errors, "Invalid todo number given.\n")
 
@@ -179,7 +179,7 @@ class DoCommandTest(CommandTest):
                             _yes_prompt)
         command.execute()
 
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
         self.assertFalse(self.output)
         self.assertEqual(self.errors, "Invalid todo number given.\n")
 
@@ -209,7 +209,7 @@ class DoCommandTest(CommandTest):
         command = DoCommand(["5"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
         self.assertEqual(self.todolist.todo(5).completion_date(),
                          date(2014, 10, 18))
         self.assertFalse(self.output)
@@ -219,7 +219,7 @@ class DoCommandTest(CommandTest):
         command = DoCommand(["baz"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertTrue(self.todolist.todo(3).is_completed())
         self.assertEqual(self.output,
                          "Completed: x {} Baz p:1\n".format(self.today))
@@ -230,7 +230,7 @@ class DoCommandTest(CommandTest):
                             self.error)
         command.execute()
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.output, "Completed: x 2014-11-18 Baz p:1\n")
         self.assertEqual(self.errors, "")
 
@@ -239,7 +239,7 @@ class DoCommandTest(CommandTest):
                             self.error, _yes_prompt)
         command.execute()
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.output, "|  2| Bar p:1\n|  3| Baz p:1\nCompleted: x 2014-11-18 Bar p:1\nCompleted: x 2014-11-18 Baz p:1\nCompleted: x 2014-11-18 Foo id:1\n")
         self.assertEqual(self.errors, "")
 
@@ -248,7 +248,7 @@ class DoCommandTest(CommandTest):
                             self.out, self.error)
         command.execute()
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.output, "Completed: x 2014-11-18 Baz p:1\n")
         self.assertEqual(self.errors, "")
 
@@ -257,7 +257,7 @@ class DoCommandTest(CommandTest):
                             self.error)
         command.execute()
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.output,
                          "Completed: x {} Baz p:1\n".format(self.today))
         self.assertEqual(self.errors, "")
@@ -271,7 +271,7 @@ class DoCommandTest(CommandTest):
                             self.out, self.error)
         command.execute()
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.output, "| 12| {today} Recurring! rec:1d due:{today}\nCompleted: x {yesterday} Recurring! rec:1d\n".format(today=self.today, yesterday=self.yesterday))
         self.assertEqual(self.errors, "")
 
@@ -285,7 +285,7 @@ class DoCommandTest(CommandTest):
                             self.out, self.error)
         command.execute()
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.output, "| 12| {today} Recurring! rec:1d due:{today}\nCompleted: x {yesterday} Recurring! rec:1d\n".format(today=self.today, yesterday=self.yesterday))
         self.assertEqual(self.errors, "")
 
@@ -298,7 +298,7 @@ class DoCommandTest(CommandTest):
                             self.out, self.error)
         command.execute()
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.output, "| 12| {today} Strict due:2014-01-02 rec:1d\nCompleted: x {yesterday} Strict due:2014-01-01 rec:1d\n".format(today=self.today, yesterday=self.yesterday))
         self.assertEqual(self.errors, "")
 
@@ -310,7 +310,7 @@ class DoCommandTest(CommandTest):
                             self.error)
         command.execute()
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.output,
                          "Completed: x {} Baz p:1\n".format(self.yesterday))
         self.assertEqual(self.errors, "")
@@ -323,7 +323,7 @@ class DoCommandTest(CommandTest):
                             self.error)
         command.execute()
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.output,
                          "Completed: x {} Baz p:1\n".format(self.yesterday))
         self.assertEqual(self.errors, "")
@@ -385,7 +385,7 @@ class DoCommandTest(CommandTest):
                             self.out, self.error, None)
         command.execute()
 
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
         self.assertEqual(self.errors,
                          u"Invalid todo number given: Fo\u00d3B\u0105r.\n")
 
@@ -394,7 +394,7 @@ class DoCommandTest(CommandTest):
                             self.error, None)
         command.execute()
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.output, "Completed: x {t} a @test with due:2015-06-03\nCompleted: x {t} a @test with +project\n".format(t=self.today))
         self.assertEqual(self.errors, "")
 
@@ -403,7 +403,7 @@ class DoCommandTest(CommandTest):
                             self.out, self.error, None)
         command.execute()
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.output, "Completed: x {} a @test with due:2015-06-03\n".format(self.today))
         self.assertEqual(self.errors, "")
 
@@ -412,7 +412,7 @@ class DoCommandTest(CommandTest):
                             self.todolist, self.out, self.error, None)
         command.execute()
 
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
 
     def test_expr_do4(self):
         """ Don't do anything with unrelevant todo items. """
@@ -420,7 +420,7 @@ class DoCommandTest(CommandTest):
                             None)
         command.execute()
 
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
 
     def test_expr_do5(self):
         """ Force marking unrelevant items as done with additional -x flag. """
@@ -430,7 +430,7 @@ class DoCommandTest(CommandTest):
 
         result = "|  2| Bar p:1\n|  3| Baz p:1\nCompleted: x {t} Bar p:1\nCompleted: x {t} Baz p:1\nCompleted: x {t} Foo id:1\n".format(t=self.today)
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.output, result)
         self.assertEqual(self.errors, "")
 
@@ -450,7 +450,7 @@ class DoCommandTest(CommandTest):
         command = DoCommand([], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
         self.assertFalse(self.output)
         self.assertEqual(self.errors, command.usage() + "\n")
 

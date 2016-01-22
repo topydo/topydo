@@ -52,7 +52,7 @@ class TodoListBase(object):
         self._id_todo_map = {}
 
         self.add_list(p_todostrings)
-        self.dirty = False
+        self._dirty = False
 
     def todo(self, p_identifier):
         """
@@ -221,11 +221,13 @@ class TodoListBase(object):
         """
         return View(p_sorter, p_filters, self)
 
-    def is_dirty(self):
-        return self.dirty
+    @property
+    def dirty(self):
+        return self._dirty
 
-    def set_dirty(self):
-        self.dirty = True
+    @dirty.setter
+    def dirty(self, p_flag):
+        self._dirty = p_flag
 
     def todos(self):
         return self._todos

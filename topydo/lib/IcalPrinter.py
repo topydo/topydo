@@ -112,7 +112,7 @@ class IcalPrinter(Printer):
             if not uid:
                 uid = generate_uid()
                 p_todo.set_tag('ical', uid)
-                self.todolist.set_dirty()
+                self.todolist.dirty = True
 
             return uid
 

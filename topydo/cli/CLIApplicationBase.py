@@ -174,7 +174,7 @@ class CLIApplicationBase(object):
             command = ArchiveCommand(self.todolist, archive)
             command.execute()
 
-            if archive.is_dirty():
+            if archive.dirty:
                 archive_file.write(archive.print_todos())
 
     def _help(self, args):
@@ -224,7 +224,7 @@ class CLIApplicationBase(object):
 
         # do not archive when the value of the filename is an empty string
         # (i.e. explicitly left empty in the configuration
-        if self.todolist.is_dirty():
+        if self.todolist.dirty:
             if self.do_archive and config().archive():
                 self._archive()
 
