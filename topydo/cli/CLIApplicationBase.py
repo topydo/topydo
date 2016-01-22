@@ -236,6 +236,7 @@ class CLIApplicationBase(object):
                 self.backup.save(self.todolist)
 
             self.todofile.write(self.todolist.print_todos())
+            self.todolist.dirty = False
 
         self.backup = None
 

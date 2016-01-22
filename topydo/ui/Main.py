@@ -164,10 +164,13 @@ class UIApplication(CLIApplicationBase):
             pass
 
     def _post_execute(self):
+        # store dirty flag because base _post_execute will reset it after flush
+        dirty = self.todolist.dirty
         super()._post_execute()
 
-        for column, _ in self.columns.contents:
-            column.update()
+        if dirty:
+            for column, _ in self.columns.contents:
+                column.update()
 
     def _blur_commandline(self):
         self.mainwindow.focus_item = 0
