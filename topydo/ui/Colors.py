@@ -35,16 +35,6 @@ COLOR_MAP = {
     'white': 'white',
 }
 
-def color_map256():
-    """
-    Returns dict where topydo colorscheme config values are linked to values
-    supported by urwid. 16 standard color names and 256-color indexes are
-    supported.
-    """
-    color_map = dict()
-    for i in range(256):
-        color_map[str(i)] = 'h' + str(i)
-
-    color_map.update(COLOR_MAP)
-
-    return color_map
+# Add 256 urwid-like colors
+for i in range(256):
+    COLOR_MAP[str(i)] = 'h' + str(i)

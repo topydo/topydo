@@ -16,7 +16,7 @@
 
 from topydo.lib.Config import config
 from topydo.lib.ListFormat import ListFormatParser
-from topydo.ui.Colors import color_map256
+from topydo.ui.Colors import COLOR_MAP
 
 import urwid
 
@@ -31,14 +31,13 @@ def _markup(p_todo, p_focus):
     """
 
     priority_colors = config().priority_colors()
-    color_map = color_map256()
 
     try:
         # retrieve the assigned value in the config file
         fg_color = priority_colors[p_todo.priority()]
 
         # convert to a color that urwid understands
-        fg_color = color_map[fg_color]
+        fg_color = COLOR_MAP[fg_color]
     except KeyError:
         fg_color = 'black' if p_focus else 'default'
 
