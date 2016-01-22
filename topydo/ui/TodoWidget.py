@@ -20,6 +20,10 @@ from topydo.ui.Colors import color_map256
 
 import urwid
 
+# pass a None todo list, since we won't use %i or %I here
+PRIO_FORMATTER = ListFormatParser(None, "%{(}p{)}")
+TEXT_FORMATTER = ListFormatParser(None, "%s %k\n%h")
+
 def _markup(p_todo, p_focus):
     """
     Returns an attribute spec for the colors that correspond to the given todo
@@ -47,12 +51,8 @@ class TodoWidget(urwid.WidgetWrap):
         # clients use this to associate this widget with the given todo item
         self.todo = p_todo
 
-        # pass a None todo list, since we won't use %i or %I here
-        prio_formatter = ListFormatParser(None, "%{(}p{)}")
-        text_formatter = ListFormatParser(None, "%s %k\n%h")
-
-        todo_text = text_formatter.parse(p_todo)
-        priority_text = prio_formatter.parse(p_todo)
+        todo_text = TEXT_FORMATTER.parse(p_todo)
+        priority_text = PRIO_FORMATTER.parse(p_todo)
 
         id_widget = urwid.Text(str(p_number), align='right')
         priority_widget = urwid.Text(priority_text)
