@@ -141,6 +141,7 @@ class TodoListWidget(urwid.LineBox):
 
     def keypress(self, p_size, p_key):
         urwid.emit_signal(self, 'remove_pending_action')
+        requires_further_input = ['postpone', 'postpone_s', 'pri']
 
         keymap, keystates = self.keymap
 
@@ -158,7 +159,8 @@ class TodoListWidget(urwid.LineBox):
                 # keystate in case user will hit another key and add an action
                 # waiting for execution if user won't type anything further.
                 self.keystate = shortcut
-                self._add_pending_action(action, p_size)
+                if action not in requires_further_input:
+                    self._add_pending_action(action, p_size)
             else:
                 # Only action is matched. Handle it and reset keystate.
                 self.resolve_action(action, p_size)
