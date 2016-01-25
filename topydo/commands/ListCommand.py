@@ -122,7 +122,6 @@ class ListCommand(ExpressionCommand):
             # create a standard printer with some filters
             indent = config().list_indent()
             final_format = ' ' * indent + self.format
-            hidden_tags = config().hidden_tags()
 
             filters = []
             filters.append(PrettyPrinterFormatFilter(self.todolist, final_format))
