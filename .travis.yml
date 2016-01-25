@@ -13,9 +13,12 @@ install:
   - "pip install .[test]"
   - "pip install pylint"
   - "pip install codecov"
+  - "pip install flake8"
+  - "pip install mccabe"
 script:
   - "green -vvr"
   - "python -m pylint --errors-only topydo test"
+  - "flake8 topydo test"
 # Cache Dependencies
 after_script:
   - codecov
