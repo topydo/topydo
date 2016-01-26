@@ -15,7 +15,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from collections import namedtuple
+import datetime
 import shlex
+import time
 import urwid
 
 from topydo.cli.CLIApplicationBase import CLIApplicationBase
@@ -133,6 +135,18 @@ class UIApplication(CLIApplicationBase):
         )
 
         self.column_mode = _APPEND_COLUMN
+        self._set_alarm_for_next_midnight_update()
+
+    def _set_alarm_for_next_midnight_update(self):
+        def callback(p_loop, p_data):
+            self._update_all_columns()
+            self._set_alarm_for_next_midnight_update()
+
+        tomorrow = datetime.datetime.now() + datetime.timedelta(days=1)
+        # turn it into midnight
+        tomorrow = tomorrow.replace(hour=0, minute=0, second=0, microsecond=0)
+
+        self.mainloop.set_alarm_at(time.mktime(tomorrow.timetuple()), callback)
 
     def _output(self, p_text):
         self._print_to_console(p_text + "\n")
@@ -163,14 +177,17 @@ class UIApplication(CLIApplicationBase):
             # TODO: show error message
             pass
 
+    def _update_all_columns(self):
+        for column, _ in self.columns.contents:
+            column.update()
+
     def _post_execute(self):
         # store dirty flag because base _post_execute will reset it after flush
         dirty = self.todolist.dirty
         super()._post_execute()
 
         if dirty:
-            for column, _ in self.columns.contents:
-                column.update()
+            self._update_all_columns()
 
     def _blur_commandline(self):
         self.mainwindow.focus_item = 0
