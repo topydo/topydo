@@ -324,19 +324,12 @@ class UIApplication(CLIApplicationBase):
         self.columns.focus_position = p_pos
         self._blur_commandline()
 
-    def _set_alarm(self, p_action):
-        """
-        Sets alarm to execute p_action specified in 0.5 sec.
-
-        Handle for this alarm is stored as _alarm attribute.
-        p_action must be an object with 'execute' method.
-        """
-        self._alarm = self.mainloop.set_alarm_in(0.5, p_action.execute)
+    def _set_alarm(self, p_callback):
+        """ Sets alarm to execute p_action specified in 0.5 sec. """
+        self._alarm = self.mainloop.set_alarm_in(0.5, p_callback)
 
     def _remove_alarm(self):
-        """
-        Removes pending action alarm stored in _alarm attribute.
-        """
+        """ Removes pending action alarm stored in _alarm attribute. """
         self.mainloop.remove_alarm(self._alarm)
         self._alarm = None
 

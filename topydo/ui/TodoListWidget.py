@@ -29,27 +29,6 @@ def get_execute_signal(p_prefix):
     return signal
 
 
-class PendingAction(object):
-    """
-    Object class for storing TodoListWidget action waiting for execution.
-    """
-    def __init__(self, p_tlw, p_action_str, p_size):
-        self.todolist = p_tlw
-        self.action_str = p_action_str
-        self.size = p_size
-
-    def execute(self, p_loop, p_user_data=None):
-        """
-        Executes action stored in action_str attribute from within p_loop
-        (typically urwid.MainLoop).
-
-        Since this method is primarily used as callback for
-        urwid.MainLoop.set_alarm_in it has to accept 3rd parameter: p_user_data.
-        """
-        self.todolist.resolve_action(self.action_str, self.size)
-        self.todolist.keystate = None
-
-
 class TodoListWidget(urwid.LineBox):
     def __init__(self, p_view, p_title, p_keymap):
         self._view = None
@@ -288,9 +267,14 @@ class TodoListWidget(urwid.LineBox):
         """
         Creates action waiting for execution and forwards it to the mainloop.
         """
-        urwid.emit_signal(self, 'add_pending_action', PendingAction(self,
-                                                                    p_action,
-                                                                    p_size))
+        def generate_callback():
+            def callback(*args):
+                self.resolve_action(p_action, p_size)
+                self.keystate = None
+
+            return callback
+
+        urwid.emit_signal(self, 'add_pending_action', generate_callback())
 
     def _postpone_selected(self, p_pattern, p_mode):
         """
