@@ -33,7 +33,7 @@ _NORMAL_HEAD_MATCH = re.compile(
     r'(\((?P<priority>[A-Z])\) )?' + '((?P<creationDate>' + _DATE_MATCH +
     ') )?(?P<rest>.*)')
 
-_TAG_MATCH = re.compile('(?P<key>[^:]+):(?P<value>.+)')
+_TAG_MATCH = re.compile('(?P<tag>[^:]+):(?P<value>.+)')
 _PROJECT_MATCH = re.compile(r'\+(\S*\w)')
 _CONTEXT_MATCH = re.compile(r'@(\S*\w)')
 
@@ -57,7 +57,7 @@ def parse_line(p_string):
         'text': "",
         'projects': [],
         'contexts': [],
-        'tags': []
+        'tags': {},
     }
 
     completed_head = _COMPLETED_HEAD_MATCH.match(p_string)
@@ -94,10 +94,14 @@ def parse_line(p_string):
 
         tag = _TAG_MATCH.match(word)
         if tag:
-            result['tags'].append((tag.group('key'), tag.group('value')))
-            continue
-
-        result['text'] += word + ' '
+            tag_name = tag.group('tag')
+            tag_value = tag.group('value')
+            try:
+                result['tags'][tag_name].append(tag_value)
+            except KeyError:
+                result['tags'][tag_name] = [tag_value]
+        else:
+            result['text'] += word + ' '
 
     # strip trailing space from resulting text
     result['text'] = result['text'][:-1]

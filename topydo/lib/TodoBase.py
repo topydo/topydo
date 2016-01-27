@@ -48,17 +48,20 @@ class TodoBase(object):
         Returns a tag value associated with p_key. Returns p_default if p_key
         does not exist (which defaults to None).
         """
-        values = self.tag_values(p_key)
-        return values[0] if len(values) else p_default
+        try:
+            return self.tag_values(p_key)[0]
+        except IndexError:
+            return p_default
 
     def tag_values(self, p_key):
         """
         Returns a list of all tag values associated with p_key. Returns
         empty list if p_key does not exist.
         """
-        tags = self.fields['tags']
-        matches = [tag[1] for tag in tags if tag[0] == p_key]
-        return matches if len(matches) else []
+        try:
+            return self.fields['tags'][p_key]
+        except KeyError:
+            return []
 
     def has_tag(self, p_key, p_value=""):
         """
@@ -66,13 +69,27 @@ class TodoBase(object):
         value is passed, it will only return true when there exists a tag with
         the given key-value combination.
         """
-        result = [t for t in self.tag_values(p_key)
-                  if p_value == "" or t == p_value]
-        return len(result) > 0
+        tags = self.fields['tags']
+        return p_key in tags and (p_value == "" or p_value in tags[p_key])
 
     def add_tag(self, p_key, p_value):
         """ Adds a tag to the todo. """
         self.set_tag(p_key, p_value, True)
+
+    def _remove_tag_helper(self, p_key, p_value):
+        """
+        Removes a tag from the internal todo dictionary. Only those instances
+        with the given value are removed. If the value is empty, all tags with
+        the given key are removed.
+        """
+        tags = self.fields['tags']
+
+        try:
+            tags[p_key] = [t for t in tags[p_key] if p_value != "" and t != p_value]
+            if len(tags[p_key]) == 0:
+                del tags[p_key]
+        except KeyError:
+            pass
 
     def set_tag(self, p_key, p_value="", p_force_add=False, p_old_value=""):
         """
@@ -92,12 +109,11 @@ class TodoBase(object):
             self.remove_tag(p_key, p_old_value)
             return
 
+        tags = self.fields['tags']
         value = p_old_value if p_old_value else self.tag_value(p_key)
 
         if not p_force_add and value:
-            # remove old value from the tags
-            self.fields['tags'] = [t for t in self.fields['tags']
-                                   if not (t[0] == p_key and t[1] == value)]
+            self._remove_tag_helper(p_key, value)
 
             self.src = re.sub(
                 r'\b' + p_key + ':' + value + r'\b',
@@ -107,7 +123,10 @@ class TodoBase(object):
         else:
             self.src += ' ' + p_key + ':' + p_value
 
-        self.fields['tags'].append((p_key, p_value))
+        try:
+            tags[p_key].append(p_value)
+        except KeyError:
+            tags[p_key] = [p_value]
 
     def remove_tag(self, p_key, p_value=""):
         """
@@ -116,12 +135,7 @@ class TodoBase(object):
         removed.
         Else, only those tags with the value will be removed.
         """
-
-        # Build a new list that excludes the specified tag, match by value when
-        # p_value is given.
-        self.fields['tags'] = [t for t in self.fields['tags']
-                               if not (t[0] == p_key and (p_value == "" or
-                                                          t[1] == p_value))]
+        self._remove_tag_helper(p_key, p_value)
 
         # when value == "", match any value having key p_key
         value = p_value if p_value != "" else r'\S+'
@@ -132,7 +146,8 @@ class TodoBase(object):
         Returns a list of tuples with key-value pairs representing tags in
         this todo item.
         """
-        return self.fields['tags']
+        tags = self.fields['tags']
+        return [(t, v) for t in tags for v in tags[t]]
 
     def set_priority(self, p_priority):
         """
