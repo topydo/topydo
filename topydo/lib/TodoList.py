@@ -70,10 +70,10 @@ class TodoList(TodoListBase):
 
                 self._depgraph.add_edge(hash(p_todo), hash(dep), dep_id)
 
-        for child in p_todo.tag_values('p'):
-            parent = self.todo_by_dep_id(child)
+        for dep_id in p_todo.tag_values('p'):
+            parent = self.todo_by_dep_id(dep_id)
             if parent:
-                self._depgraph.add_edge(hash(parent), hash(p_todo), child)
+                self._depgraph.add_edge(hash(parent), hash(p_todo), dep_id)
 
     def add_todos(self, p_todos):
         for todo in p_todos:
