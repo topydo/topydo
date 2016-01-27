@@ -48,20 +48,14 @@ class TodoBase(object):
         Returns a tag value associated with p_key. Returns p_default if p_key
         does not exist (which defaults to None).
         """
-        try:
-            return self.tag_values(p_key)[0]
-        except IndexError:
-            return p_default
+        return self.tag_values(p_key)[0] if p_key in self.fields['tags'] else p_default
 
     def tag_values(self, p_key):
         """
         Returns a list of all tag values associated with p_key. Returns
         empty list if p_key does not exist.
         """
-        try:
-            return self.fields['tags'][p_key]
-        except KeyError:
-            return []
+        return self.fields['tags'][p_key] if p_key in self.fields['tags'] else []
 
     def has_tag(self, p_key, p_value=""):
         """
