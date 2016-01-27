@@ -46,8 +46,8 @@ class TodoList(TodoListBase):
     def todo_by_dep_id(self, p_dep_id):
         """
         Returns the todo that has the id tag set to the value p_dep_id.
-        There is only one such task, the behavior is undefined when a tag has
-        more than one id tag.
+        There is only one such task, the behavior is undefined when a todo item
+        has more than one id tag.
         """
         hits = [t for t in self._todos if t.tag_value('id') == p_dep_id]
 
