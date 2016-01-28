@@ -96,13 +96,15 @@ class RelevanceFilter(Filter):
     """
 
     def match(self, p_todo):
-        is_due = p_todo.is_active()
-        is_due |= p_todo.due_date() == None
-        is_due |= p_todo.priority() == 'A'
-        is_due |= p_todo.priority() == 'B' and p_todo.days_till_due() <= 30
-        is_due |= p_todo.priority() == 'C' and p_todo.days_till_due() <= 14
+        active = p_todo.is_active()
 
-        return p_todo.is_active() and is_due
+        is_due = active
+        is_due = is_due or p_todo.due_date() == None
+        is_due = is_due or p_todo.priority() == 'A'
+        is_due = is_due or (p_todo.priority() == 'B' and p_todo.days_till_due() <= 30)
+        is_due = is_due or (p_todo.priority() == 'C' and p_todo.days_till_due() <= 14)
+
+        return active and is_due
 
 
 class DependencyFilter(Filter):
