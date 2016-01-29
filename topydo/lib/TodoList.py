@@ -21,7 +21,6 @@ A list of todo items.
 import types
 
 from topydo.lib.Config import config
-from topydo.lib.Graph import DirectedGraph
 from topydo.lib.TodoListBase import TodoListBase
 
 
@@ -38,6 +37,10 @@ def _needs_dependencies(p_function):
     def inner(self, *args, **kwargs):
         if not self._initialized:
             self._initialized = True
+
+            from topydo.lib.Graph import DirectedGraph
+            self._depgraph = DirectedGraph()
+
             build_dependency_information(self)
 
         return p_function(self, *args, **kwargs)
@@ -64,7 +67,7 @@ class TodoList(TodoListBase):
         # initialize these first because the constructor calls add_list
         self._tododict = {}  # hash(todo) to todo lookup
         self._parentdict = {}  # dependency id => parent todo
-        self._depgraph = DirectedGraph()
+        self._depgraph = None
 
         super().__init__(p_todostrings)
 
