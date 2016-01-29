@@ -330,6 +330,7 @@ class TodoListDependencyTester(TopydoTest):
 
         self.assertFalse(from_todo.has_tag('id'))
         self.assertFalse(to_todo.has_tag('p'))
+        self.assertFalse(self.todolist.todo_by_dep_id('2'))
 
     def test_remove_dep2(self):
         old = str(self.todolist)
@@ -338,6 +339,9 @@ class TodoListDependencyTester(TopydoTest):
         self.todolist.remove_dependency(from_todo, to_todo)
 
         self.assertEqual(str(self.todolist), old)
+        self.assertTrue(self.todolist.todo_by_dep_id('1'))
+        self.assertTrue(self.todolist.todo_by_dep_id('2'))
+        self.assertTrue(self.todolist.todo_by_dep_id('3'))
 
     def test_remove_dep3(self):
         """ Try to remove non-existing dependency. """
@@ -347,6 +351,9 @@ class TodoListDependencyTester(TopydoTest):
         self.todolist.remove_dependency(from_todo, to_todo)
 
         self.assertEqual(str(self.todolist), old)
+        self.assertTrue(self.todolist.todo_by_dep_id('1'))
+        self.assertTrue(self.todolist.todo_by_dep_id('2'))
+        self.assertTrue(self.todolist.todo_by_dep_id('3'))
 
     def test_remove_todo_check_children(self):
         todo = self.todolist.todo(2)
@@ -359,6 +366,7 @@ class TodoListDependencyTester(TopydoTest):
         todo = self.todolist.todo(3)
         self.todolist.delete(todo)
         self.assertFalse(todo.has_tag('p', '2'))
+        self.assertFalse(self.todolist.todo_by_dep_id('2'))
 
         todo = self.todolist.todo(1)
         children = self.todolist.children(todo)
@@ -427,19 +435,7 @@ class TodoListCleanDependencyTester(TopydoTest):
         self.todolist.clean_dependencies()
 
         self.assertFalse(self.todolist.todo(1).has_tag('id'))
-
-    def test_clean_dependencies4(self):
-        """ Clean p: items when siblings are still connected to parent. """
-        self.todolist.add("Foo id:1")
-        self.todolist.add("Bar p:1")
-        self.todolist.add("Baz p:1 id:2")
-        self.todolist.add("Buzz p:2 p:1")
-
-        self.todolist.clean_dependencies()
-
-        self.assertFalse(self.todolist.todo(4).has_tag('p', '1'))
-        self.assertTrue(self.todolist.todo(1).has_tag('id', '1'))
-        self.assertTrue(self.todolist.todo(2).has_tag('p', '1'))
+        self.assertFalse(self.todolist.todo_by_dep_id('1'))
 
 
 if __name__ == '__main__':

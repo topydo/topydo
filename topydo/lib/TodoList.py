@@ -39,6 +39,7 @@ class TodoList(TodoListBase):
         """
         # initialize these first because the constructor calls add_list
         self._tododict = {}  # hash(todo) to todo lookup
+        self._parentdict = {}  # dependency id => parent todo
         self._depgraph = DirectedGraph()
 
         super().__init__(p_todostrings)
@@ -49,9 +50,10 @@ class TodoList(TodoListBase):
         There is only one such task, the behavior is undefined when a todo item
         has more than one id tag.
         """
-        hits = [t for t in self._todos if t.tag_value('id') == p_dep_id]
-
-        return hits[0] if len(hits) else None
+        try:
+            return self._parentdict[p_dep_id]
+        except KeyError:
+            return None
 
     def _maintain_dep_graph(self, p_todo):
         """
@@ -61,6 +63,7 @@ class TodoList(TodoListBase):
         dep_id = p_todo.tag_value('id')
         # maintain dependency graph
         if dep_id:
+            self._parentdict[dep_id] = p_todo
             self._depgraph.add_node(hash(p_todo))
 
             # connect all tasks we have in memory so far that refer to this
@@ -175,6 +178,7 @@ class TodoList(TodoListBase):
 
             if not self.children(p_from_todo, True):
                 p_from_todo.remove_tag('id')
+                del self._parentdict[dep_id]
 
             self.dirty = True
 
@@ -220,6 +224,7 @@ class TodoList(TodoListBase):
                 value = todo.tag_value('id')
                 if not self._depgraph.has_edge_id(value):
                     remove_tag(todo, 'id', value)
+                    del self._parentdict[value]
 
         def clean_orphan_relations():
             """
