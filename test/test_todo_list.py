@@ -388,6 +388,19 @@ class TodoListDependencyTester(TopydoTest):
         self.assertTrue(todolist.todo_by_dep_id('1'))
         self.assertFalse(todolist.todo_by_dep_id('2'))
 
+    def test_add_after_dependencies(self):
+        """
+        Test that information is properly stored after dependency related
+        information was retrieved from the todo list.
+        """
+        todo = self.todolist.todo(1)
+        self.todolist.parents(todo)
+
+        self.todolist.add('New dependency id:99')
+        self.todolist.add('Child p:99')
+
+        self.assertTrue(self.todolist.dirty)
+        self.assertTrue(self.todolist.todo_by_dep_id('99'))
 
 class TodoListCleanDependencyTester(TopydoTest):
     """

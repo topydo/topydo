@@ -83,12 +83,14 @@ def average_importance(p_todo, p_ignore_weekend=config().ignore_weekends()):
     average = 0
     parents = []
 
-    if 'parents' in p_todo.attributes:
+    try:
         sum_importance = own_importance
-        parents = p_todo.attributes['parents']
+        parents = p_todo.parents()
         for parent in parents:
             sum_importance += importance(parent, p_ignore_weekend)
 
         average = float(sum_importance) / float(1 + len(parents))
+    except AttributeError:
+        pass
 
     return max(own_importance, average)
