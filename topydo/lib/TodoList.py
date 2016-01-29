@@ -129,10 +129,11 @@ class TodoList(TodoListBase):
         try:
             number = self._todos.index(p_todo)
 
-            if p_todo.has_tag('p') or p_todo.has_tag('id'):
+            if p_todo.has_tag('id'):
                 for child in self.children(p_todo):
                     self.remove_dependency(p_todo, child)
 
+            if p_todo.has_tag('p'):
                 for parent in self.parents(p_todo):
                     self.remove_dependency(parent, p_todo)
 
