@@ -22,6 +22,7 @@ from topydo.cli.CLIApplicationBase import CLIApplicationBase
 from topydo.Commands import get_subcommand
 from topydo.ui.CommandLineWidget import CommandLineWidget
 from topydo.ui.ConsoleWidget import ConsoleWidget
+from topydo.ui.KeystateWidget import KeystateWidget
 from topydo.ui.TodoListWidget import TodoListWidget
 from topydo.ui.ViewWidget import ViewWidget
 from topydo.ui.ColumnLayout import columns
@@ -34,6 +35,7 @@ from topydo.lib import TodoFile
 from topydo.lib import TodoList
 
 COLUMN_WIDTH = 40
+
 
 class UIView(View):
     """
@@ -48,6 +50,7 @@ _APPEND_COLUMN = 1
 _EDIT_COLUMN = 2
 _COPY_COLUMN = 3
 _INSERT_COLUMN = 4
+
 
 class MainPile(urwid.Pile):
     """
@@ -80,6 +83,7 @@ class MainPile(urwid.Pile):
             if self._command_map[key] not in ('cursor up', 'cursor down'):
                 return key
 
+
 class UIApplication(CLIApplicationBase):
     def __init__(self):
         super().__init__()
@@ -91,6 +95,10 @@ class UIApplication(CLIApplicationBase):
 
         self.columns = urwid.Columns([], dividechars=0, min_width=COLUMN_WIDTH)
         self.commandline = CommandLineWidget('topydo> ')
+        self.keystate_widget = KeystateWidget()
+        self.status_line = urwid.Columns([
+            ('weight', 1, urwid.Filler(self.commandline)),
+        ])
 
         self.keymap = config().column_keymap()
         self._alarm = None
@@ -123,7 +131,7 @@ class UIApplication(CLIApplicationBase):
 
         self.mainwindow = MainPile([
             ('weight', 1, self.columns),
-            (1, urwid.Filler(self.commandline)),
+            (1, self.status_line),
         ])
 
         urwid.connect_signal(self.mainwindow, 'blur_console', hide_console)
@@ -307,6 +315,7 @@ class UIApplication(CLIApplicationBase):
         urwid.connect_signal(todolist, 'add_pending_action', self._set_alarm)
         urwid.connect_signal(todolist, 'remove_pending_action', self._remove_alarm)
         urwid.connect_signal(todolist, 'column_action', self._column_action_handler)
+        urwid.connect_signal(todolist, 'show_keystate', self._print_keystate)
 
         options = self.columns.options(
             width_type='given',
@@ -323,6 +332,10 @@ class UIApplication(CLIApplicationBase):
 
         self.columns.focus_position = p_pos
         self._blur_commandline()
+
+    def _print_keystate(self, p_keystate):
+        self.keystate_widget.set_text(p_keystate)
+        self._keystate_visible = len(p_keystate) > 0
 
     def _set_alarm(self, p_callback):
         """ Sets alarm to execute p_action specified in 0.5 sec. """
@@ -363,6 +376,22 @@ class UIApplication(CLIApplicationBase):
             self.console.clear()
             del contents[2]
             self.mainwindow.focus_position = 0
+
+    @property
+    def _keystate_visible(self):
+        contents = self.status_line.contents
+        return len(contents) == 2 and isinstance(contents[1][0].original_widget,
+                                                 KeystateWidget)
+
+    @_keystate_visible.setter
+    def _keystate_visible(self, p_enabled):
+        contents = self.status_line.contents
+
+        if p_enabled and len(contents) == 1:
+            contents.append((urwid.Filler(self.keystate_widget),
+                             ('weight', 1, True)))
+        elif not p_enabled and self._keystate_visible:
+            del contents[1]
 
     @property
     def _viewwidget_visible(self):

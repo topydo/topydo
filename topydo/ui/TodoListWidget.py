@@ -61,6 +61,7 @@ class TodoListWidget(urwid.LineBox):
                                                'add_pending_action',
                                                'remove_pending_action',
                                                'column_action',
+                                               'show_keystate',
                                                ])
 
     @property
@@ -118,6 +119,16 @@ class TodoListWidget(urwid.LineBox):
         # deals with pending focus changes.
         self.listbox.calculate_visible(p_size)
 
+    @property
+    def keystate(self):
+        return self._keystate
+
+    @keystate.setter
+    def keystate(self, p_keystate):
+        self._keystate = p_keystate
+        keystate_to_show = p_keystate if p_keystate else ''
+        urwid.emit_signal(self, 'show_keystate', keystate_to_show)
+
     def keypress(self, p_size, p_key):
         urwid.emit_signal(self, 'remove_pending_action')
         requires_further_input = ['postpone', 'postpone_s', 'pri']
@@ -156,6 +167,11 @@ class TodoListWidget(urwid.LineBox):
                     if mode in ['postpone', 'postpone_s']:
                         if self._postpone_selected(p_key, mode) is not None:
                             self.keystate = None
+                        else:
+                            urwid.emit_signal(self, 'show_keystate',
+                                              self.keystate + self._pp_offset)
+                    else:
+                        self.keystate = None
                     return
                 except KeyError:
                     if not self.keystate:
