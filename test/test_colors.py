@@ -122,49 +122,49 @@ class ColorsTest(TopydoTest):
 
     def test_priority_color1(self):
         config("test/data/ColorsTest1.conf")
-        color = Colors().get_priority_colors()
+        colors = Colors()
 
-        self.assertEqual(color['A'], '\033[0;38;5;1m')
-        self.assertEqual(color['B'], '\033[0;38;5;2m')
-        self.assertEqual(color['C'], '\033[0;38;5;3m')
+        self.assertEqual(colors.get_priority_color('A'), '\033[0;38;5;1m')
+        self.assertEqual(colors.get_priority_color('B'), '\033[0;38;5;2m')
+        self.assertEqual(colors.get_priority_color('C'), '\033[0;38;5;3m')
 
     def test_priority_color2(self):
         config("test/data/ColorsTest2.conf")
-        color = Colors().get_priority_colors()
+        colors = Colors()
 
-        self.assertEqual(color['A'], '\033[0;35m')
-        self.assertEqual(color['B'], '\033[0;1;36m')
-        self.assertEqual(color['C'], '\033[0;37m')
+        self.assertEqual(colors.get_priority_color('A'), '\033[0;35m')
+        self.assertEqual(colors.get_priority_color('B'), '\033[0;1;36m')
+        self.assertEqual(colors.get_priority_color('C'), '\033[0;37m')
 
     def test_priority_color3(self):
         config("test/data/ColorsTest3.conf")
-        color = Colors().get_priority_colors()
+        colors = Colors()
 
-        self.assertEqual(color['A'], '\033[0;35m')
-        self.assertEqual(color['B'], '\033[0;1;36m')
-        self.assertEqual(color['Z'], NEUTRAL_COLOR)
-        self.assertEqual(color['D'], '\033[0;31m')
-        self.assertEqual(color['C'], '\033[0;38;5;7m')
+        self.assertEqual(colors.get_priority_color('A'), '\033[0;35m')
+        self.assertEqual(colors.get_priority_color('B'), '\033[0;1;36m')
+        self.assertEqual(colors.get_priority_color('Z'), NEUTRAL_COLOR)
+        self.assertEqual(colors.get_priority_color('D'), '\033[0;31m')
+        self.assertEqual(colors.get_priority_color('C'), '\033[0;38;5;7m')
 
     def test_priority_color4(self):
         config("test/data/ColorsTest4.conf")
-        color = Colors().get_priority_colors()
+        colors = Colors()
 
-        self.assertEqual(color['A'], NEUTRAL_COLOR)
-        self.assertEqual(color['B'], NEUTRAL_COLOR)
-        self.assertEqual(color['C'], NEUTRAL_COLOR)
+        self.assertEqual(colors.get_priority_color('A'), NEUTRAL_COLOR)
+        self.assertEqual(colors.get_priority_color('B'), NEUTRAL_COLOR)
+        self.assertEqual(colors.get_priority_color('C'), NEUTRAL_COLOR)
 
     def test_empty_color_values(self):
         config("test/data/ColorsTest5.conf")
-        pri_color = Colors().get_priority_colors()
-        project_color = Colors().get_project_color()
-        context_color = Colors().get_context_color()
-        link_color = Colors().get_link_color()
-        metadata_color = Colors().get_metadata_color()
+        colors = Colors()
+        project_color = colors.get_project_color()
+        context_color = colors.get_context_color()
+        link_color = colors.get_link_color()
+        metadata_color = colors.get_metadata_color()
 
-        self.assertEqual(pri_color['A'], NEUTRAL_COLOR)
-        self.assertEqual(pri_color['B'], NEUTRAL_COLOR)
-        self.assertEqual(pri_color['C'], NEUTRAL_COLOR)
+        self.assertEqual(colors.get_priority_color('A'), NEUTRAL_COLOR)
+        self.assertEqual(colors.get_priority_color('B'), NEUTRAL_COLOR)
+        self.assertEqual(colors.get_priority_color('C'), NEUTRAL_COLOR)
         self.assertEqual(project_color, '')
         self.assertEqual(context_color, '')
         self.assertEqual(link_color, '')
@@ -172,15 +172,15 @@ class ColorsTest(TopydoTest):
 
     def test_empty_colorscheme(self):
         config("test/data/config1")
-        pri_color = Colors().get_priority_colors()
-        project_color = Colors().get_project_color()
-        context_color = Colors().get_context_color()
-        link_color = Colors().get_link_color()
-        metadata_color = Colors().get_metadata_color()
+        colors = Colors()
+        project_color = colors.get_project_color()
+        context_color = colors.get_context_color()
+        link_color = colors.get_link_color()
+        metadata_color = colors.get_metadata_color()
 
-        self.assertEqual(pri_color['A'], '\033[0;36m')
-        self.assertEqual(pri_color['B'], '\033[0;33m')
-        self.assertEqual(pri_color['C'], '\033[0;34m')
+        self.assertEqual(colors.get_priority_color('A'), '\033[0;36m')
+        self.assertEqual(colors.get_priority_color('B'), '\033[0;33m')
+        self.assertEqual(colors.get_priority_color('C'), '\033[0;34m')
         self.assertEqual(project_color, '\033[1;31m')
         self.assertEqual(context_color, '\033[1;35m')
         self.assertEqual(link_color, '\033[4;36m')

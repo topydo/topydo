@@ -678,6 +678,28 @@ C -
 """
         self.assertEqual(self.output, result)
 
+    @mock.patch('topydo.lib.ListFormat.get_terminal_size')
+    def test_list_format44(self, mock_terminal_size):
+        """ Colorblocks should not affect truncating or right_alignment. """
+        self.maxDiff = None
+        mock_terminal_size.return_value = self.terminal_size(100, 25)
+
+        config(p_overrides={('ls', 'list_format'): '%Z|%I| %x %p %S %k\\t%{(}h{)}'})
+        command1 = ListCommand(["-x"], self.todolist, self.out, self.error)
+        command1.execute()
+
+        config(p_overrides={('ls', 'list_format'): '%z|%I| %x %p %S %k\\t%{(}h{)}'})
+        command2 = ListCommand(["-x"], self.todolist, self.out, self.error)
+        command2.execute()
+
+        result = u""" |  1| D Bar @Context1 +Project2                             (due a month ago, started a month ago)
+ |  2| Z Lorem ipsum dolorem sit amet. Red @fox +jumpe... lazy:bar (due in 2 days, starts in a day)
+ |  3| C Foo @Context2 Not@Context +Project1 Not+Project
+ |  4| C Baz @Context1 +Project1 key:value
+ |  5| Drink beer @ home
+ |  6| x 2014-12-12 Completed but with date:2014-12-12
+"""
+        self.assertEqual(self.output, result * 2)
 
 if __name__ == '__main__':
     unittest.main()
