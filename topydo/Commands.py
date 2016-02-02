@@ -21,7 +21,7 @@ instance based on an argument list.
 
 import sys
 
-from topydo.lib.Config import config
+from topydo.lib.Config import config, ConfigError
 
 _SUBCOMMAND_MAP = {
     'add': 'AddCommand',
@@ -90,7 +90,11 @@ def get_subcommand(p_args):
         If alias resolves to non-existent command, main help message is
         returned.
         """
-        real_subcommand, alias_args = alias_map[p_alias]
+        try:
+            real_subcommand, alias_args = alias_map[p_alias]
+        except ValueError as ve:
+            raise ConfigError(alias_map[p_alias]) from ve
+
         try:
             result = import_subcommand(real_subcommand)
             args = join_args(p_args, alias_args)
