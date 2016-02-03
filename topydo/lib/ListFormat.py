@@ -20,7 +20,7 @@ import arrow
 import re
 
 from topydo.lib.Config import config
-from topydo.lib.Colorblock import color_block
+from topydo.lib.ProgressColor import progress_color
 from topydo.lib.Utils import get_terminal_size, escape_ansi
 
 MAIN_PATTERN = (r'^({{(?P<before>.+?)}})?'
@@ -129,6 +129,12 @@ def _right_align(p_str):
 
     return p_str
 
+def color_block(p_todo, p_256_color):
+    return '{} {}'.format(
+        progress_color(p_todo, p_256_color).as_ansi(p_background=True),
+        config().priority_color(p_todo.priority()).as_ansi(),
+    )
+
 class ListFormatParser(object):
     """ Parser of format string. """
     def __init__(self, p_todolist, p_format=None):
@@ -195,9 +201,9 @@ class ListFormatParser(object):
             # relative completion date
             'X': lambda t: 'x ' + humanize_date(t.completion_date()) if t.is_completed() else '',
 
-            'z': lambda t: color_block(t) if config().colors() else ' ',
+            'z': lambda t: color_block(t, p_256_color=False) if config().colors() else ' ',
 
-            'Z': lambda t: color_block(t, p_safe=False) if config().colors() else ' ',
+            'Z': lambda t: color_block(t, p_256_color=True) if config().colors() else ' ',
         }
         self.format_list = self._preprocess_format()
 

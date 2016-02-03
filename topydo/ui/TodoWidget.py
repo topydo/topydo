@@ -16,7 +16,6 @@
 
 from topydo.lib.Config import config
 from topydo.lib.ListFormat import ListFormatParser
-from topydo.ui.Colors import COLOR_MAP
 
 import urwid
 
@@ -30,16 +29,21 @@ def _markup(p_todo, p_focus):
     item.
     """
 
-    priority_colors = config().priority_colors()
+    def to_urwid_color(p_color):
+        """
+        Given a Color object, transform it to a color that urwid understands.
+        """
+        if not p_color.is_valid():
+            return 'black'
+        elif p_color.is_neutral():
+            return 'default'
+        else:
+            return 'h{}'.format(p_color.color)
 
-    try:
-        # retrieve the assigned value in the config file
-        fg_color = priority_colors[p_todo.priority()]
-
-        # convert to a color that urwid understands
-        fg_color = COLOR_MAP[fg_color]
-    except KeyError:
-        fg_color = 'black' if p_focus else 'default'
+    # retrieve the assigned value in the config file
+    fg_color = config().priority_color(p_todo.priority())
+    fg_color = 'black' if p_focus and fg_color.is_neutral() else to_urwid_color(
+        fg_color)
 
     bg_color = 'light gray' if p_focus else 'default'
 

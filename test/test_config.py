@@ -122,23 +122,19 @@ class ConfigTest(TopydoTest):
 
     def test_config20(self):
         """ No project color value. """
-        self.assertEqual(config("test/data/ConfigTest5.conf").project_color(),
-                         config().defaults["colorscheme"]["project_color"])
+        self.assertEqual(config("test/data/ConfigTest5.conf").project_color().color, 1)
 
     def test_config21(self):
         """ No context color value. """
-        self.assertEqual(config("test/data/ConfigTest5.conf").context_color(),
-                         config().defaults["colorscheme"]["context_color"])
+        self.assertEqual(config("test/data/ConfigTest5.conf").context_color().color, 5)
 
     def test_config22(self):
         """ No metadata color value. """
-        self.assertEqual(config("test/data/ConfigTest5.conf").metadata_color(),
-                         config().defaults["colorscheme"]["metadata_color"])
+        self.assertEqual(config("test/data/ConfigTest5.conf").metadata_color().color, 2)
 
     def test_config23(self):
         """ No link color value. """
-        self.assertEqual(config("test/data/ConfigTest5.conf").link_color(),
-                         config().defaults["colorscheme"]["link_color"])
+        self.assertEqual(config("test/data/ConfigTest5.conf").link_color().color, 6)
 
 if __name__ == '__main__':
     unittest.main()

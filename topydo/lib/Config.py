@@ -18,6 +18,8 @@ import configparser
 import os
 import shlex
 
+from topydo.lib.Color import Color
+
 def home_config_path(p_filename):
     return os.path.join(os.path.expanduser('~'), p_filename)
 
@@ -237,53 +239,53 @@ class _Config:
         return [] if hidden_tags == '' else [tag.strip() for tag in
                                              hidden_tags.split(',')]
 
-    def priority_colors(self):
+    def priority_color(self, p_priority):
         """
         Returns a dict with priorities as keys and color numbers as value.
         """
-        pri_colors_str = self.cp.get('colorscheme', 'priority_colors')
-
         def _str_to_dict(p_string):
             pri_colors_dict = dict()
             for pri_color in p_string.split(','):
                 pri, color = pri_color.split(':')
-                pri_colors_dict[pri] = color
+                pri_colors_dict[pri] = Color(color)
 
             return pri_colors_dict
 
         try:
+            pri_colors_str = self.cp.get('colorscheme', 'priority_colors')
+
             if pri_colors_str == '':
-                pri_colors_dict = {'A': '', 'B': '', 'C': ''}
+                pri_colors_dict = _str_to_dict('A:-1,B:-1,C:-1')
             else:
                 pri_colors_dict = _str_to_dict(pri_colors_str)
         except ValueError:
             pri_colors_dict = _str_to_dict(self.defaults['colorscheme']['priority_colors'])
 
-        return pri_colors_dict
+        return pri_colors_dict[p_priority] if p_priority in pri_colors_dict else Color('NEUTRAL')
 
     def project_color(self):
         try:
-            return self.cp.get('colorscheme', 'project_color')
+            return Color(self.cp.getint('colorscheme', 'project_color'))
         except ValueError:
-            return int(self.defaults['colorscheme']['project_color'])
+            return Color(self.cp.get('colorscheme', 'project_color'))
 
     def context_color(self):
         try:
-            return self.cp.get('colorscheme', 'context_color')
+            return Color(self.cp.getint('colorscheme', 'context_color'))
         except ValueError:
-            return int(self.defaults['colorscheme']['context_color'])
+            return Color(self.cp.get('colorscheme', 'context_color'))
 
     def metadata_color(self):
         try:
-            return self.cp.get('colorscheme', 'metadata_color')
+            return Color(self.cp.getint('colorscheme', 'metadata_color'))
         except ValueError:
-            return int(self.defaults['colorscheme']['metadata_color'])
+            return Color(self.cp.get('colorscheme', 'metadata_color'))
 
     def link_color(self):
         try:
-            return self.cp.get('colorscheme', 'link_color')
+            return Color(self.cp.getint('colorscheme', 'link_color'))
         except ValueError:
-            return int(self.defaults['colorscheme']['link_color'])
+            return Color(self.cp.get('colorscheme', 'link_color'))
 
     def auto_creation_date(self):
         try:
