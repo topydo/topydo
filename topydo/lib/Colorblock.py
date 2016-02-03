@@ -16,10 +16,9 @@
 
 import re
 
-from topydo.lib.Colors import int_to_ansi, Colors
 from topydo.lib.Recurrence import relative_date_to_date
 
-COLOR16_RANGE = [
+_COLOR16_RANGE = [
     10,  # light green
     2,   # green
     3,   # yellow
@@ -28,7 +27,7 @@ COLOR16_RANGE = [
 
 # https://upload.wikimedia.org/wikipedia/en/1/15/Xterm_256color_chart.svg
 # a gradient from green to yellow to red
-COLOR256_RANGE = \
+_COLOR256_RANGE = \
     [22, 28, 34, 40, 46, 82, 118, 154, 190, 226, 220, 214, 208, 202, 196]
 
 def progress_color_code(p_todo, p_safe=True):
@@ -76,26 +75,16 @@ def progress_color_code(p_todo, p_safe=True):
         else:
             return 0
 
-    def progress_to_color():
-        color_range = COLOR16_RANGE if p_safe else COLOR256_RANGE
-        progress = get_progress()
+    color_range = _COLOR16_RANGE if p_safe else _COLOR256_RANGE
+    progress = get_progress()
 
-        # TODO: remove linear scale to exponential scale
-        if progress > 1:
-            # overdue, return the last color
-            return color_range[-1]
-        else:
-            # not overdue, calculate position over color range excl. due date
-            # color
-            pos = round(progress * (len(color_range) - 2))
-            return color_range[pos]
-
-    return progress_to_color()
-
-def color_block(p_todo, p_safe=True):
-    color_code = progress_color_code(p_todo, p_safe)
-    ansi_code = int_to_ansi(color_code, p_safe=p_safe, p_background=color_code)
-    priority_color = Colors().get_priority_color(p_todo.priority())
-
-    return '{} {}'.format(ansi_code, priority_color)
+    # TODO: remove linear scale to exponential scale
+    if progress > 1:
+        # overdue, return the last color
+        return color_range[-1]
+    else:
+        # not overdue, calculate position over color range excl. due date
+        # color
+        pos = round(progress * (len(color_range) - 2))
+        return color_range[pos]
 

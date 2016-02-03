@@ -20,7 +20,7 @@ import arrow
 import re
 
 from topydo.lib.Config import config
-from topydo.lib.Colorblock import color_block
+from topydo.lib.Colors import get_color, get_ansi_color, PROGRESS_COLOR, PRIORITY_COLOR, NEUTRAL_COLOR
 from topydo.lib.Utils import get_terminal_size, escape_ansi
 
 MAIN_PATTERN = (r'^({{(?P<before>.+?)}})?'
@@ -128,6 +128,14 @@ def _right_align(p_str):
         p_str = re.sub('\t', ' ', p_str)
 
     return p_str
+
+def color_block(p_todo, p_safe=True):
+    # progress_color = get_color(PROGRESS_COLOR, p_todo, not p_safe0)
+
+    return '{} {}'.format(
+        get_ansi_color(NEUTRAL_COLOR, p_todo, not p_safe, p_background=PROGRESS_COLOR),
+        get_ansi_color(PRIORITY_COLOR, p_todo, not p_safe)
+    )
 
 class ListFormatParser(object):
     """ Parser of format string. """

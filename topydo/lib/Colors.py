@@ -17,51 +17,27 @@
 """ This module serves for managing output colors. """
 
 from topydo.lib.Config import config
+from topydo.lib.Colorblock import progress_color_code
 
-NEUTRAL_COLOR = '\033[0m'
+NEUTRAL_COLOR = 0
+PROJECT_COLOR = 1
+CONTEXT_COLOR = 2
+PRIORITY_COLOR = 3
+LINK_COLOR = 4
+METADATA_COLOR = 5
+PROGRESS_COLOR = 6
 
-def int_to_ansi(p_int, p_decorator='normal', p_safe=True, p_background=''):
+def get_color(p_type, p_todo, p_256color=False):
     """
-    Returns ansi code for color based on xterm color id (0-255) and
-    decoration, where decoration can be one of: normal, bold, faint,
-    italic, or underline. When p_safe is True, resulting ansi code is
-    constructed in most compatible way, but with support for only base 16
-    colors.
+    Returns an integer representing a color.
+
+    With 16 colors, an integer [0..16] is returned, with 256 colors the
+    corresponding xterm code is returned.
+
+    -1 represents the neutral color.
     """
-    decoration_dict = {
-            'normal': '0',
-            'bold': '1',
-            'faint': '2',
-            'italic': '3',
-            'underline': '4'
-    }
-
-    decoration = decoration_dict[p_decorator]
-
-    try:
-        if p_safe:
-            if p_background:
-                p_background = ';4{}'.format(p_background)
-
-            if 8 > int(p_int) >= 0:
-                return '\033[{};3{}{}m'.format(decoration, str(p_int), p_background)
-            elif 16 > int(p_int):
-                p_int = int(p_int) - 8
-                return '\033[{};1;3{}{}m'.format(decoration, str(p_int), p_background)
-
-        if 256 > int(p_int) >= 0:
-            if p_background:
-                p_background = ';48;5;{}'.format(str(p_int))
-
-            return '\033[{};38;5;{}{}m'.format(decoration, str(p_int), p_background)
-        else:
-            return NEUTRAL_COLOR
-    except ValueError:
-        return None
-
-def _name_to_int(p_color_name):
-    """ Returns xterm color id from color name. """
-    color_names_dict = {
+    def normalize_color(p_input):
+        color_names_dict = {
             'black': 0,
             'red': 1,
             'green': 2,
@@ -78,70 +54,77 @@ def _name_to_int(p_color_name):
             'light-magenta': 13,
             'light-cyan': 14,
             'white': 15,
+        }
+
+        try:
+            return color_names_dict[p_input]
+        except KeyError:
+            return p_input
+
+    def priority_color():
+        priority_colors = config().priority_colors()
+
+        try:
+            return priority_colors[p_todo.priority()]
+        except KeyError:
+            return -1
+
+    if p_type == CONTEXT_COLOR:
+        result = config().context_color()
+    elif p_type == PROJECT_COLOR:
+        result = config().project_color()
+    elif p_type == PRIORITY_COLOR:
+        result = priority_color()
+    elif p_type == METADATA_COLOR:
+        result = config().metadata_color()
+    elif p_type == LINK_COLOR:
+        result = config().link_color()
+    elif p_type == PROGRESS_COLOR:
+        result = progress_color_code(p_todo, p_safe=(not p_256color))
+    else:
+        result = -1
+
+    return normalize_color(result)
+
+def get_ansi_color(p_type, p_todo, p_256color=False, p_background=None, p_decoration='normal'):
+    """
+    Returns ansi code for color based on xterm color id (0-255) and
+    decoration, where decoration can be one of: normal, bold, faint,
+    italic, or underline. When p_safe is True, resulting ansi code is
+    constructed in most compatible way, but with support for only base 16
+    colors.
+    """
+
+    def ansicode(p_int, p_background=False):
+        ansi = 4 if p_background else 3
+
+        if p_256color and p_int >= 0:
+            return ';{}8;5;{}'.format(ansi, p_int)
+        else:
+            return ''
+
+        if 0 <= p_int < 8:
+            return ';{}{}'.format(ansi, p_int)
+        elif 8 <= p_int < 16:
+            return ';1;{}{}'.format(ansi, p_int - 8)
+        else:
+            return ''
+
+    decoration_dict = {
+        'normal': '0',
+        'bold': '1',
+        'faint': '2',
+        'italic': '3',
+        'underline': '4'
     }
 
-    try:
-        return color_names_dict[p_color_name]
-    except KeyError:
-        return 404
+    decoration = decoration_dict[p_decoration]
+    foreground = get_color(p_type, p_todo, p_256color)
+    background = get_color(p_background, p_todo, p_256color) if p_background else -1
 
-def _name_to_ansi(p_color_name, p_decorator):
-    """ Returns ansi color code from color name. """
-    number = _name_to_int(p_color_name)
+    return '\033[{}{}{}m'.format(
+        decoration,
+        ansicode(foreground),
+        ansicode(background, p_background=True)
+    )
 
-    return int_to_ansi(number, p_decorator)
-
-def _get_ansi(p_color, p_decorator):
-    """ Returns ansi color code from color name or xterm color id. """
-    if p_color == '':
-        ansi = ''
-    else:
-        ansi = int_to_ansi(p_color, p_decorator, False)
-
-        if not ansi:
-            ansi = _name_to_ansi(p_color, p_decorator)
-
-    return ansi
-
-def _get_priority_colors():
-    pri_ansi_colors = dict()
-    pri_colors = config().priority_colors()
-
-    for pri in pri_colors:
-        color = _get_ansi(pri_colors[pri], 'normal')
-
-        if color == '':
-            color = NEUTRAL_COLOR
-
-        pri_ansi_colors[pri] = color
-
-    return pri_ansi_colors
-
-
-class Colors(object):
-    def __init__(self):
-        self.priority_colors = _get_priority_colors()
-        self.project_color = config().project_color()
-        self.context_color = config().context_color()
-        self.metadata_color = config().metadata_color()
-        self.link_color = config().link_color()
-
-    def get_project_color(self):
-        return _get_ansi(self.project_color, 'bold')
-
-    def get_context_color(self):
-        return _get_ansi(self.context_color, 'bold')
-
-    def get_metadata_color(self):
-        return _get_ansi(self.metadata_color, 'bold')
-
-    def get_link_color(self):
-        return _get_ansi(self.link_color, 'underline')
-
-    def get_priority_color(self, p_priority):
-        try:
-            priority_color = self.priority_colors[p_priority]
-        except KeyError:
-            priority_color = NEUTRAL_COLOR
-
-        return priority_color

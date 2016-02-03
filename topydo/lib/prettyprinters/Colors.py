@@ -18,7 +18,8 @@
 
 import re
 
-from topydo.lib.Colors import NEUTRAL_COLOR, Colors
+from topydo.lib import Colors
+from topydo.lib.Colors import get_ansi_color
 from topydo.lib.Config import config
 from topydo.lib.PrettyPrinterFilter import PrettyPrinterFilter
 
@@ -33,12 +34,12 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
     def filter(self, p_todo_str, p_todo):
         """ Applies the colors. """
         if config().colors():
-            colorscheme = Colors()
-            priority_color = colorscheme.get_priority_color(p_todo.priority())
-            project_color = colorscheme.get_project_color()
-            context_color = colorscheme.get_context_color()
-            metadata_color = colorscheme.get_metadata_color()
-            link_color = colorscheme.get_link_color()
+            priority_color = get_ansi_color(Colors.PRIORITY_COLOR, p_todo)
+            project_color = get_ansi_color(Colors.PROJECT_COLOR, p_todo)
+            context_color = get_ansi_color(Colors.CONTEXT_COLOR, p_todo)
+            metadata_color = get_ansi_color(Colors.METADATA_COLOR, p_todo)
+            link_color = get_ansi_color(Colors.LINK_COLOR, p_todo)
+            neutral_color = get_ansi_color(Colors.NEUTRAL_COLOR, p_todo)
 
             # color projects / contexts
             p_todo_str = re.sub(
@@ -58,7 +59,7 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
                                 r'\1' + link_color + r'\2\3' + priority_color,
                                 p_todo_str)
 
-            p_todo_str += NEUTRAL_COLOR
+            p_todo_str += neutral_color
 
             # color by priority
             p_todo_str = priority_color + p_todo_str
