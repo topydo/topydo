@@ -95,8 +95,10 @@ class PromptApplication(CLIApplicationBase):
                                     completer=self.completer,
                                     complete_while_typing=False)
                 user_input = shlex.split(user_input)
-            except (EOFError, KeyboardInterrupt):
+            except EOFError:
                 sys.exit(0)
+            except KeyboardInterrupt:
+                continue
 
             mtime_after = _todotxt_mtime()
             (subcommand, args) = get_subcommand(user_input)
