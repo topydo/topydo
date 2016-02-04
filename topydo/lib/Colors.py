@@ -169,7 +169,7 @@ def get_ansi_color(p_type, p_todo, p_256color=False, p_background=None, p_decora
     def ansicode(p_int, p_as_background=False):
         ansi = 4 if p_background else 3
 
-        if p_256color and p_int >= 0:
+        if p_256color and 0 <= p_int < 256:
             return ';{}8;5;{}'.format(ansi, p_int)
         elif p_256color:
             return ''
