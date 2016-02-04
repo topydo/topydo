@@ -141,19 +141,18 @@ def get_color(p_type, p_todo, p_256color=False):
             pos = round(progress * (len(color_range) - 2))
             return color_range[pos]
 
-    if p_type == CONTEXT_COLOR:
-        result = config().context_color()
-    elif p_type == PROJECT_COLOR:
-        result = config().project_color()
-    elif p_type == PRIORITY_COLOR:
-        result = priority_color()
-    elif p_type == METADATA_COLOR:
-        result = config().metadata_color()
-    elif p_type == LINK_COLOR:
-        result = config().link_color()
-    elif p_type == PROGRESS_COLOR:
-        result = progress_color()
-    else:
+    lookup = {
+        CONTEXT_COLOR: lambda: config().context_color(),
+        LINK_COLOR: lambda: config().link_color(),
+        METADATA_COLOR: lambda: config().metadata_color(),
+        PRIORITY_COLOR: priority_color,
+        PROJECT_COLOR: lambda: config().project_color(),
+        PROGRESS_COLOR: progress_color
+    }
+
+    try:
+        result = lookup[p_type]()
+    except KeyError:
         result = -1
 
     return normalize_color(result)
