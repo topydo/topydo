@@ -247,7 +247,10 @@ class _Config:
             pri_colors_dict = dict()
             for pri_color in p_string.split(','):
                 pri, color = pri_color.split(':')
-                pri_colors_dict[pri] = color
+                try:
+                    pri_colors_dict[pri] = int(color)
+                except ValueError:
+                    pri_colors_dict[pri] = color
 
             return pri_colors_dict
 
@@ -263,27 +266,27 @@ class _Config:
 
     def project_color(self):
         try:
-            return self.cp.get('colorscheme', 'project_color')
+            return self.cp.getint('colorscheme', 'project_color')
         except ValueError:
-            return int(self.defaults['colorscheme']['project_color'])
+            return self.defaults['colorscheme']['project_color']
 
     def context_color(self):
         try:
-            return self.cp.get('colorscheme', 'context_color')
+            return self.cp.getint('colorscheme', 'context_color')
         except ValueError:
-            return int(self.defaults['colorscheme']['context_color'])
+            return self.defaults['colorscheme']['context_color']
 
     def metadata_color(self):
         try:
-            return self.cp.get('colorscheme', 'metadata_color')
+            return self.cp.getint('colorscheme', 'metadata_color')
         except ValueError:
-            return int(self.defaults['colorscheme']['metadata_color'])
+            return self.defaults['colorscheme']['metadata_color']
 
     def link_color(self):
         try:
-            return self.cp.get('colorscheme', 'link_color')
+            return self.cp.getint('colorscheme', 'link_color')
         except ValueError:
-            return int(self.defaults['colorscheme']['link_color'])
+            return self.defaults['colorscheme']['link_color']
 
     def auto_creation_date(self):
         try:
