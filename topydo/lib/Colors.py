@@ -167,7 +167,7 @@ def get_ansi_color(p_type, p_todo, p_256color=False, p_background=None, p_decora
     colors.
     """
 
-    def ansicode(p_int, p_background=False):
+    def ansicode(p_int, p_as_background=False):
         ansi = 4 if p_background else 3
 
         if p_256color and p_int >= 0:
@@ -191,12 +191,12 @@ def get_ansi_color(p_type, p_todo, p_256color=False, p_background=None, p_decora
     }
 
     decoration = decoration_dict[p_decoration]
-    foreground = get_color(p_type, p_todo, p_256color)
-    background = get_color(p_background, p_todo, p_256color) if p_background else -1
+    fg_color = get_color(p_type, p_todo, p_256color)
+    bg_color = get_color(p_background, p_todo, p_256color) if p_background else -1
 
     return '\033[{}{}{}m'.format(
         decoration,
-        ansicode(foreground),
-        ansicode(background, p_background=True)
+        ansicode(fg_color),
+        ansicode(bg_color, p_as_background=True)
     )
 
