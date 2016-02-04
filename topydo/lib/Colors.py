@@ -171,7 +171,7 @@ def get_ansi_color(p_type, p_todo, p_256color=False, p_background=None, p_decora
 
         if p_256color and p_int >= 0:
             return ';{}8;5;{}'.format(ansi, p_int)
-        else:
+        elif p_256color:
             return ''
 
         if 0 <= p_int < 8:
