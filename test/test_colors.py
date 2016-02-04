@@ -37,7 +37,7 @@ class ColorsTest(TopydoTest):
         config(p_overrides={('colorscheme', 'project_color'): 'Foo'})
         color = get_ansi_color(PROJECT_COLOR, None, True, p_decoration='bold')
 
-        self.assertEqual(color, get_ansi_color(NEUTRAL_COLOR))
+        self.assertEqual(color, get_ansi_color(NEUTRAL_COLOR, None))
 
     def test_project_color3(self):
         config(p_overrides={('colorscheme', 'project_color'): 'yellow'})
@@ -49,7 +49,7 @@ class ColorsTest(TopydoTest):
         config(p_overrides={('colorscheme', 'project_color'): '686'})
         color = get_ansi_color(PROJECT_COLOR, None, True, p_decoration='bold')
 
-        self.assertEqual(color, get_ansi_color(NEUTRAL_COLOR))
+        self.assertEqual(color, get_ansi_color(NEUTRAL_COLOR, None))
 
     def test_context_color1(self):
         config(p_overrides={('colorscheme', 'context_color'): '35'})
@@ -61,7 +61,7 @@ class ColorsTest(TopydoTest):
         config(p_overrides={('colorscheme', 'context_color'): 'Bar'})
         color = get_ansi_color(CONTEXT_COLOR, None, True, p_decoration='bold')
 
-        self.assertEqual(color, get_ansi_color(NEUTRAL_COLOR))
+        self.assertEqual(color, get_ansi_color(NEUTRAL_COLOR, None))
 
     def test_context_color3(self):
         config(p_overrides={('colorscheme', 'context_color'): 'magenta'})
@@ -73,7 +73,7 @@ class ColorsTest(TopydoTest):
         config(p_overrides={('colorscheme', 'context_color'): '392'})
         color = get_ansi_color(CONTEXT_COLOR, None, True, p_decoration='bold')
 
-        self.assertEqual(color, get_ansi_color(NEUTRAL_COLOR))
+        self.assertEqual(color, get_ansi_color(NEUTRAL_COLOR, None))
 
     def test_metadata_color1(self):
         config(p_overrides={('colorscheme', 'metadata_color'): '128'})
@@ -85,7 +85,7 @@ class ColorsTest(TopydoTest):
         config(p_overrides={('colorscheme', 'metadata_color'): 'Baz'})
         color = get_ansi_color(METADATA_COLOR, None, True, p_decoration='bold')
 
-        self.assertEqual(color, get_ansi_color(NEUTRAL_COLOR))
+        self.assertEqual(color, get_ansi_color(NEUTRAL_COLOR, None))
 
     def test_metadata_color3(self):
         config(p_overrides={('colorscheme', 'metadata_color'): 'light-red'})
@@ -97,7 +97,7 @@ class ColorsTest(TopydoTest):
         config(p_overrides={('colorscheme', 'metadata_color'): '777'})
         color = get_ansi_color(METADATA_COLOR, None, True, p_decoration='bold')
 
-        self.assertEqual(color, get_ansi_color(NEUTRAL_COLOR))
+        self.assertEqual(color, get_ansi_color(NEUTRAL_COLOR, None))
 
     def test_link_color1(self):
         config(p_overrides={('colorscheme', 'link_color'): '77'})
@@ -109,7 +109,7 @@ class ColorsTest(TopydoTest):
         config(p_overrides={('colorscheme', 'link_color'): 'FooBar'})
         color = get_ansi_color(LINK_COLOR, None, True, p_decoration='underline')
 
-        self.assertEqual(color, get_ansi_color(NEUTRAL_COLOR))
+        self.assertEqual(color, get_ansi_color(NEUTRAL_COLOR, None))
 
     def test_link_color3(self):
         config(p_overrides={('colorscheme', 'link_color'): 'red'})
@@ -121,7 +121,7 @@ class ColorsTest(TopydoTest):
         config(p_overrides={('colorscheme', 'link_color'): '777'})
         color = get_ansi_color(LINK_COLOR, None, True, p_decoration='underline')
 
-        self.assertEqual(color, get_ansi_color(NEUTRAL_COLOR))
+        self.assertEqual(color, get_ansi_color(NEUTRAL_COLOR, None))
 
     def test_priority_color1(self):
         config("test/data/ColorsTest1.conf")
