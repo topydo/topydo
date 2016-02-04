@@ -17,7 +17,6 @@
 """ This module serves for managing output colors. """
 
 from topydo.lib.Config import config
-from topydo.lib.Colorblock import progress_color_code
 
 NEUTRAL_COLOR = 0
 PROJECT_COLOR = 1
@@ -69,6 +68,79 @@ def get_color(p_type, p_todo, p_256color=False):
         except KeyError:
             return -1
 
+    def progress_color():
+        import re
+        from topydo.lib.Recurrence import relative_date_to_date
+
+        color16_range = [
+            10,  # light green
+            2,   # green
+            3,   # yellow
+            1,   # red
+        ]
+
+        # https://upload.wikimedia.org/wikipedia/en/1/15/Xterm_256color_chart.svg
+        # a gradient from green to yellow to red
+        color256_range = \
+            [22, 28, 34, 40, 46, 82, 118, 154, 190, 226, 220, 214, 208, 202, 196]
+
+        def get_length():
+            """
+            Returns the length of the p_todo item in days, based on the recurrence
+            period + due date, or the start/due date.
+            """
+            result = 0
+
+            def diff_days(p_start, p_end):
+                if p_start < p_end:
+                    diff = p_end - p_start
+                    return diff.days
+
+                return 0
+
+            if p_todo.has_tag('rec') and p_todo.due_date():
+                # add negation, offset is based on due date
+                recurrence_pattern = p_todo.tag_value('rec')
+                neg_recurrence_pattern = re.sub('^\+?', '-', recurrence_pattern)
+
+                start = relative_date_to_date(
+                    neg_recurrence_pattern, p_todo.due_date())
+                due = p_todo.due_date()
+
+                result = diff_days(start, due)
+            else:
+                result = p_todo.length()
+
+            return result
+
+        def get_progress():
+            """
+            Returns a value from 0 to 1 where we are today in a date range. Returns
+            a value >1 when a todo item is overdue.
+            """
+
+            if p_todo.is_overdue():
+                return 1.1
+            elif p_todo.due_date():
+                days_till_due = p_todo.days_till_due()
+                length = get_length() or 14
+                return max((length - days_till_due), 0) / length
+            else:
+                return 0
+
+        color_range = color256_range if p_256color else color16_range
+        progress = get_progress()
+
+        # TODO: remove linear scale to exponential scale
+        if progress > 1:
+            # overdue, return the last color
+            return color_range[-1]
+        else:
+            # not overdue, calculate position over color range excl. due date
+            # color
+            pos = round(progress * (len(color_range) - 2))
+            return color_range[pos]
+
     if p_type == CONTEXT_COLOR:
         result = config().context_color()
     elif p_type == PROJECT_COLOR:
@@ -80,7 +152,7 @@ def get_color(p_type, p_todo, p_256color=False):
     elif p_type == LINK_COLOR:
         result = config().link_color()
     elif p_type == PROGRESS_COLOR:
-        result = progress_color_code(p_todo, p_safe=(not p_256color))
+        result = progress_color()
     else:
         result = -1
 
