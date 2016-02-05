@@ -679,7 +679,7 @@ C -
         self.assertEqual(self.output, result)
 
     @mock.patch('topydo.lib.ListFormat.get_terminal_size')
-    def test_list_format44(self, mock_terminal_size):
+    def test_list_format45(self, mock_terminal_size):
         """ Colorblocks should not affect truncating or right_alignment. """
         self.maxDiff = None
         mock_terminal_size.return_value = self.terminal_size(100, 25)
