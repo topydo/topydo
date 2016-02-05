@@ -58,7 +58,13 @@ def get_color(p_type, p_todo, p_256color=False):
         try:
             return color_names_dict[p_input]
         except KeyError:
-            return p_input
+            try:
+                return int(p_input)
+            except ValueError:
+                if p_input:
+                    return -1
+                else:
+                    return p_input
 
     def priority_color():
         priority_colors = config().priority_colors()
@@ -157,7 +163,7 @@ def get_color(p_type, p_todo, p_256color=False):
 
     return normalize_color(result)
 
-def get_ansi_color(p_type, p_todo, p_256color=False, p_background=None, p_decoration='normal'):
+def get_ansi_color(p_type, p_todo, p_background=None, p_decoration='normal'):
     """
     Returns ansi code for color based on xterm color id (0-255) and
     decoration, where decoration can be one of: normal, bold, faint,
@@ -167,14 +173,12 @@ def get_ansi_color(p_type, p_todo, p_256color=False, p_background=None, p_decora
     """
 
     def ansicode(p_int, p_as_background=False):
+        _256color = True if 256 > p_int > 15 else False
         ansi = 4 if p_background else 3
 
-        if p_256color and 0 <= p_int < 256:
+        if _256color:
             return ';{}8;5;{}'.format(ansi, p_int)
-        elif p_256color:
-            return ''
-
-        if 0 <= p_int < 8:
+        elif 0 <= p_int < 8:
             return ';{}{}'.format(ansi, p_int)
         elif 8 <= p_int < 16:
             return ';1;{}{}'.format(ansi, p_int - 8)
@@ -189,13 +193,19 @@ def get_ansi_color(p_type, p_todo, p_256color=False, p_background=None, p_decora
         'underline': '4'
     }
 
-    decoration = decoration_dict[p_decoration]
-    fg_color = get_color(p_type, p_todo, p_256color)
-    bg_color = get_color(p_background, p_todo, p_256color) if p_background else -1
+    fg_color = get_color(p_type, p_todo)
+    bg_color = get_color(p_background, p_todo) if p_background else -1
+
+    try:
+        if 256 > fg_color >= 0:
+            decoration = decoration_dict[p_decoration]
+        else:
+            decoration = '0'
+    except TypeError:
+        return ''
 
     return '\033[{}{}{}m'.format(
         decoration,
         ansicode(fg_color),
         ansicode(bg_color, p_as_background=True)
     )
-

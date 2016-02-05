@@ -133,8 +133,8 @@ def color_block(p_todo, p_safe=True):
     # progress_color = get_color(PROGRESS_COLOR, p_todo, not p_safe0)
 
     return '{} {}'.format(
-        get_ansi_color(NEUTRAL_COLOR, p_todo, not p_safe, p_background=PROGRESS_COLOR),
-        get_ansi_color(PRIORITY_COLOR, p_todo, not p_safe)
+        get_ansi_color(NEUTRAL_COLOR, p_todo, p_background=PROGRESS_COLOR),
+        get_ansi_color(PRIORITY_COLOR, p_todo)
     )
 
 class ListFormatParser(object):
