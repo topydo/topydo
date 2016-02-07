@@ -56,15 +56,14 @@ def get_color(p_type, p_todo, p_256color=False):
         }
 
         try:
-            return color_names_dict[p_input]
-        except KeyError:
-            try:
+            if p_input in color_names_dict:
+                return color_names_dict[p_input]
+            elif not p_input:  # empty color config value
+                return None
+            else:
                 return int(p_input)
-            except ValueError:
-                if p_input:
-                    return -1
-                else:
-                    return p_input
+        except ValueError:
+            return -1
 
     def priority_color():
         priority_colors = config().priority_colors()
@@ -196,13 +195,13 @@ def get_ansi_color(p_type, p_todo, p_background=None, p_decoration='normal'):
     fg_color = get_color(p_type, p_todo)
     bg_color = get_color(p_background, p_todo) if p_background else -1
 
-    try:
-        if 256 > fg_color >= 0:
-            decoration = decoration_dict[p_decoration]
-        else:
-            decoration = '0'
-    except TypeError:
+    if fg_color is None:  # empty color config value
         return ''
+
+    if 256 > fg_color >= 0:
+        decoration = decoration_dict[p_decoration]
+    else:
+        decoration = '0'
 
     return '\033[{}{}{}m'.format(
         decoration,
