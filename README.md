@@ -33,7 +33,7 @@ Simply install with:
 * [prompt-toolkit][6] : For topydo's _prompt_ mode, which offers a shell-like
                         interface with auto-completion.
 * [urwid][12]         : For topydo's _columns_ mode, a TUI with columns for
-*                       your todo items.
+                        your todo items.
 * [arrow][8]          : Used to turn dates into a human readable version.
 * [backports.shutil_get_terminal_size][9] : Used to determine your terminal
                                             window size. This function was
