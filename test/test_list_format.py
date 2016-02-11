@@ -684,13 +684,9 @@ C -
         self.maxDiff = None
         mock_terminal_size.return_value = self.terminal_size(100, 25)
 
-        config(p_overrides={('ls', 'list_format'): '%Z|%I| %x %p %S %k\\t%{(}h{)}'})
-        command1 = ListCommand(["-x"], self.todolist, self.out, self.error)
-        command1.execute()
-
         config(p_overrides={('ls', 'list_format'): '%z|%I| %x %p %S %k\\t%{(}h{)}'})
-        command2 = ListCommand(["-x"], self.todolist, self.out, self.error)
-        command2.execute()
+        command = ListCommand(["-x"], self.todolist, self.out, self.error)
+        command.execute()
 
         result = u""" |  1| D Bar @Context1 +Project2                             (due a month ago, started a month ago)
  |  2| Z Lorem ipsum dolorem sit amet. Red @fox +jumpe... lazy:bar (due in 2 days, starts in a day)
@@ -699,7 +695,7 @@ C -
  |  5| Drink beer @ home
  |  6| x 2014-12-12 Completed but with date:2014-12-12
 """
-        self.assertEqual(self.output, result * 2)
+        self.assertEqual(self.output, result)
 
 if __name__ == '__main__':
     unittest.main()

@@ -45,8 +45,7 @@ class ConfigTest(TopydoTest):
         """ Bad colour switch value. """
         # boolean settings must first be typecast to integers, because all
         #  strings evaulate to 'True'
-        self.assertEqual(config("test/data/ConfigTest4.conf").colors(),
-                         bool(int(config().defaults["topydo"]["colors"])))
+        self.assertEqual(config("test/data/ConfigTest4.conf").colors(), 0)
 
     def test_config06(self):
         """ Bad auto creation date switch value. """

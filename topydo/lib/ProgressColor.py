@@ -17,9 +17,10 @@
 import re
 
 from topydo.lib.Color import Color
+from topydo.lib.Config import config
 from topydo.lib.Recurrence import relative_date_to_date
 
-def progress_color(p_todo, p_256color=False):
+def progress_color(p_todo):
     color16_range = [
         10,  # light green
         2,   # green
@@ -76,7 +77,7 @@ def progress_color(p_todo, p_256color=False):
         else:
             return 0
 
-    color_range = color256_range if p_256color else color16_range
+    color_range = color256_range if config().colors() == 256 else color16_range
     progress = get_progress()
 
     # TODO: remove linear scale to exponential scale

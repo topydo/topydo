@@ -58,7 +58,7 @@ class _Config:
         self.defaults = {
             'topydo': {
                 'default_command': 'ls',
-                'colors': '1',
+                'colors': 'auto',
                 'filename': 'todo.txt',
                 'archive_filename': 'done.txt',
                 'identifiers': 'linenumber',
@@ -152,11 +152,30 @@ class _Config:
     def default_command(self):
         return self.cp.get('topydo', 'default_command')
 
-    def colors(self):
+    def colors(self, p_default=16):
+        """
+        Returns 0, 16 or 256 representing the number of colors that should be
+        used in the output. When the configured value is 'auto', the default
+        value is used.
+        """
+        lookup = {
+            'auto': p_default,
+            'false': 0,
+            'no': 0,
+            '0': 0,
+            '1': 16,
+            'true': 16,
+            'yes': 16,
+            '16': 16,
+            '256': 256,
+        }
+
         try:
-            return self.cp.getboolean('topydo', 'colors')
+            return lookup[self.cp.get('topydo', 'colors').lower()]  # pylint: disable=no-member
         except ValueError:
-            return self.defaults['topydo']['colors'] == '1'
+            return lookup[self.defaults['topydo']['colors'].lower()]  # pylint: disable=no-member
+        except KeyError:
+            return 0
 
     def todotxt(self):
         return os.path.expanduser(self.cp.get('topydo', 'filename'))

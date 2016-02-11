@@ -22,7 +22,7 @@ I/O on the command-line.
 import getopt
 import sys
 
-MAIN_OPTS = "ac:d:ht:v"
+MAIN_OPTS = "ac:C:d:ht:v"
 READ_ONLY_COMMANDS = ('List', 'ListContext', 'ListProject')
 
 
@@ -30,12 +30,14 @@ def usage():
     """ Prints the command-line usage of topydo. """
 
     print("""\
-Synopsis: topydo [-a] [-c <config>] [-d <archive>] [-t <todo.txt>] subcommand [help|args]
+Synopsis: topydo [-a] [-c <config>] [-C <colormode>] [-d <archive>] [-t <todo.txt>] subcommand [help|args]
           topydo -h
           topydo -v
 
 -a : Do not archive todo items on completion.
 -c : Specify an alternative configuration file.
+-C : Specify color mode (0 = disable, 1 = enable 16 colors,
+     16 = enable 16 colors, 256 = enable 256 colors, auto (default))
 -d : Specify an alternative archive file (done.txt)
 -h : This help text
 -t : Specify an alternative todo file
@@ -62,14 +64,14 @@ Available commands:
 Run `topydo help <subcommand>` for command-specific help.
 """)
 
-
 def write(p_file, p_string):
     """
     Write p_string to file p_file, trailed by a newline character.
 
-    ANSI codes are removed when the file is not a TTY.
+    ANSI codes are removed when the file is not a TTY (and colors are
+    automatically determined).
     """
-    if not p_file.isatty():
+    if not config().colors(16 if p_file.isatty() else 0):
         p_string = escape_ansi(p_string)
 
     if p_string:
@@ -140,6 +142,8 @@ class CLIApplicationBase(object):
                 self.do_archive = False
             elif opt == "-c":
                 alt_config_path = value
+            elif opt == "-C":
+                overrides[('topydo', 'colors')] = value
             elif opt == "-t":
                 overrides[('topydo', 'filename')] = value
             elif opt == "-d":
