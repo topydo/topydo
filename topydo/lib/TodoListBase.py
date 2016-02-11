@@ -54,6 +54,12 @@ class TodoListBase(object):
         self.add_list(p_todostrings)
         self.dirty = False
 
+    def __iter__(self):
+        """
+        Allows use of `for my_todo in todolist` constructs.
+        """
+        return iter(self._todos)
+
     def todo(self, p_identifier):
         """
         The _todos list has the same order as in the backend store (usually

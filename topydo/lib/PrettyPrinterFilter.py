@@ -29,4 +29,3 @@ class PrettyPrinterFilter(object):
         Applies a filter to p_todo_str and returns a modified version of it.
         """
         raise NotImplementedError
-
