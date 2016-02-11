@@ -16,7 +16,11 @@
 
 import configparser
 import os
+import re
 import shlex
+
+from itertools import accumulate
+from string import ascii_lowercase
 
 def home_config_path(p_filename):
     return os.path.join(os.path.expanduser('~'), p_filename)
@@ -109,11 +113,40 @@ class _Config:
                 'listcontext': 'lscon',
                 'listcontexts': 'lscon',
             },
+
+            'column_keymap': {
+                'gg': 'home',
+                'G': 'end',
+                'j': 'down',
+                'k': 'up',
+                'd': 'cmd del {}',
+                'e': 'cmd edit {}',
+                'u': 'cmd revert',
+                'x': 'cmd do {}',
+                'pp': 'postpone',
+                'ps': 'postpone_s',
+                'pr': 'pri',
+                '0': 'first_column',
+                '$': 'last_column',
+                'h': 'prev_column',
+                'l': 'next_column',
+                'A': 'append_column',
+                'I': 'insert_column',
+                'E': 'edit_column',
+                'D': 'delete_column',
+                'Y': 'copy_column',
+                'L': 'swap_left',
+                'R': 'swap_right',
+                '<Left>': 'prev_column',
+                '<Right>': 'next_column',
+            },
         }
 
         self.config = {}
 
         self.cp = configparser.RawConfigParser()
+        # allow uppercase config keys
+        self.cp.optionxform = lambda option: option
 
         for section in self.defaults:
             self.cp.add_section(section)
@@ -310,6 +343,29 @@ class _Config:
     def list_format(self):
         """ Returns the list format used by `ls` """
         return self.cp.get('ls', 'list_format')
+
+    def column_keymap(self):
+        """ Returns keymap and keystates used in column mode """
+        keystates = set()
+
+        shortcuts = self.cp.items('column_keymap')
+        keymap_dict = dict(shortcuts)
+
+        for combo, action in shortcuts:
+            # add all possible prefixes to keystates
+            combo_as_list = re.split('(<[A-Z].+?>|.)', combo)[1::2]
+            if len(combo_as_list) > 1:
+                keystates |= set(accumulate(combo_as_list[:-1]))
+
+            if action in ['pri', 'postpone', 'postpone_s']:
+                keystates.add(combo)
+
+            if action == 'pri':
+                for c in ascii_lowercase:
+                    keymap_dict[combo + c] = 'cmd pri {} ' + c
+
+        return (keymap_dict, keystates)
+
 
 def config(p_path=None, p_overrides=None):
     """
