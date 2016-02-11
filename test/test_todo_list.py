@@ -234,6 +234,19 @@ class TodoListTester(TopydoTest):
 
         self.assertNotEqual(self.todolist.number(todo), 't5c')
 
+    def test_iteration(self):
+        """ Confirms that the iternation method is working. """
+        results = ["(C) Foo @Context2 Not@Context +Project1 Not+Project",
+                   "(D) Bar @Context1 +Project2",
+                   "(C) Baz @Context1 +Project1 key:value",
+                   "(C) Drink beer @ home",
+                   "(C) 13 + 29 = 42"]
+
+        i = 0
+        for todo in self.todolist:
+            self.assertEqual(todo.src, results[i])
+            i += 1
+
 
 class TodoListDependencyTester(TopydoTest):
     def setUp(self):
@@ -401,6 +414,7 @@ class TodoListDependencyTester(TopydoTest):
 
         self.assertTrue(self.todolist.dirty)
         self.assertTrue(self.todolist.todo_by_dep_id('99'))
+
 
 class TodoListCleanDependencyTester(TopydoTest):
     """
