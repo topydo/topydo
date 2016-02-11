@@ -82,42 +82,34 @@ class ConfigTest(TopydoTest):
         self.assertEqual(config("test/data/ConfigTest4.conf").append_parent_contexts(),
                          bool(int(config().defaults["dep"]["append_parent_contexts"])))
 
-    @skip("Error checking not yet implemented")
     def test_config14(self):
         """ Bad priority color value. """
-        self.assertEqual(config("test/data/ConfigTest4.conf").priority_colors(),
-                         config().defaults["colorscheme"]["priority_colors"])
+        self.assertEqual(config("test/data/ConfigTest4.conf").priority_color('A').color, 6)
+        self.assertEqual(config("test/data/ConfigTest4.conf").priority_color('B').color, 3)
+        self.assertEqual(config("test/data/ConfigTest4.conf").priority_color('C').color, 4)
 
-    @skip("Error checking not yet implemented")
     def test_config15(self):
         """ Bad project color value. """
-        self.assertEqual(config("test/data/ConfigTest4.conf").project_color(),
-                         config().defaults["colorscheme"]["project_color"])
+        self.assertTrue(config("test/data/ConfigTest4.conf").project_color().is_neutral())
 
-    @skip("Error checking not yet implemented")
     def test_config16(self):
         """ Bad context color value. """
-        self.assertEqual(config("test/data/ConfigTest4.conf").context_color(),
-                         config().defaults["colorscheme"]["context_color"])
+        self.assertTrue(config("test/data/ConfigTest4.conf").context_color().is_neutral())
 
-    @skip("Error checking not yet implemented")
     def test_config17(self):
         """ Bad metadata color value. """
-        self.assertEqual(config("test/data/ConfigTest4.conf").metadata_color(),
-                         config().defaults["colorscheme"]["metadata_color"])
+        self.assertTrue(config("test/data/ConfigTest4.conf").metadata_color().is_neutral())
 
-    @skip("Error checking not yet implemented")
     def test_config18(self):
         """ Bad link color value. """
-        self.assertEqual(config("test/data/ConfigTest4.conf").link_color(),
-                         config().defaults["colorscheme"]["link_color"])
+        self.assertTrue(config("test/data/ConfigTest4.conf").link_color().is_neutral())
 
-    @skip("Test not yet implemented")
     # the test needs to be of the internal function _str_to_dict
     def test_config19(self):
         """ No priority color value. """
-        self.assertEqual(config("test/data/ConfigTest4.conf").priority_colors(),
-                         config().defaults["colorscheme"]["priority_colors"])
+        self.assertEqual(config("test/data/ConfigTest4.conf").priority_color('A').color, 6)
+        self.assertEqual(config("test/data/ConfigTest4.conf").priority_color('B').color, 3)
+        self.assertEqual(config("test/data/ConfigTest4.conf").priority_color('C').color, 4)
 
     def test_config20(self):
         """ No project color value. """
