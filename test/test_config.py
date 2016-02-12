@@ -127,5 +127,31 @@ class ConfigTest(TopydoTest):
         """ No link color value. """
         self.assertEqual(config("test/data/ConfigTest5.conf").link_color().color, 6)
 
+    def test_config24(self):
+        """ column_keymap test. """
+        keymap, keystates = config("test/data/ConfigTest6.conf").column_keymap()
+
+        self.assertEqual(keymap['pp'], 'postpone')
+        self.assertEqual(keymap['ps'], 'postpone_s')
+        self.assertEqual(keymap['pr'], 'pri')
+
+        self.assertEqual(keymap['pra'], 'cmd pri {} a')
+
+        self.assertIn('p', keystates)
+        self.assertIn('g', keystates)
+        self.assertIn('pp', keystates)
+        self.assertIn('ps', keystates)
+        self.assertIn('pr', keystates)
+
+        self.assertEqual(keymap['up'], 'up')
+        self.assertIn('u', keystates)
+
+        self.assertEqual(keymap['<Left>'], 'prev_column')
+        self.assertNotIn('<Lef', keystates)
+
+        self.assertEqual(keymap['<Esc>d'], 'delete_column')
+        self.assertNotIn('<Esc', keystates)
+        self.assertIn('<Esc>', keystates)
+
 if __name__ == '__main__':
     unittest.main()

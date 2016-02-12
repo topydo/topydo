@@ -24,6 +24,7 @@ from topydo.cli.CLIApplicationBase import CLIApplicationBase
 from topydo.Commands import get_subcommand
 from topydo.ui.CommandLineWidget import CommandLineWidget
 from topydo.ui.ConsoleWidget import ConsoleWidget
+from topydo.ui.KeystateWidget import KeystateWidget
 from topydo.ui.TodoListWidget import TodoListWidget
 from topydo.ui.ViewWidget import ViewWidget
 from topydo.ui.ColumnLayout import columns
@@ -36,6 +37,7 @@ from topydo.lib import TodoFile
 from topydo.lib import TodoList
 
 COLUMN_WIDTH = 40
+
 
 class UIView(View):
     """
@@ -50,6 +52,7 @@ _APPEND_COLUMN = 1
 _EDIT_COLUMN = 2
 _COPY_COLUMN = 3
 _INSERT_COLUMN = 4
+
 
 class MainPile(urwid.Pile):
     """
@@ -82,6 +85,7 @@ class MainPile(urwid.Pile):
             if self._command_map[key] not in ('cursor up', 'cursor down'):
                 return key
 
+
 class UIApplication(CLIApplicationBase):
     def __init__(self):
         super().__init__()
@@ -93,6 +97,13 @@ class UIApplication(CLIApplicationBase):
 
         self.columns = urwid.Columns([], dividechars=0, min_width=COLUMN_WIDTH)
         self.commandline = CommandLineWidget('topydo> ')
+        self.keystate_widget = KeystateWidget()
+        self.status_line = urwid.Columns([
+            ('weight', 1, urwid.Filler(self.commandline)),
+        ])
+
+        self.keymap = config().column_keymap()
+        self._alarm = None
 
         # console widget
         self.console = ConsoleWidget()
@@ -102,8 +113,10 @@ class UIApplication(CLIApplicationBase):
         urwid.connect_signal(self.commandline, 'execute_command',
                              self._execute_handler)
 
-        def hide_console():
+        def hide_console(p_focus_commandline=False):
             self._console_visible = False
+            if p_focus_commandline:
+                self._focus_commandline()
         urwid.connect_signal(self.console, 'close', hide_console)
 
         # view widget
@@ -120,7 +133,7 @@ class UIApplication(CLIApplicationBase):
 
         self.mainwindow = MainPile([
             ('weight', 1, self.columns),
-            (1, urwid.Filler(self.commandline)),
+            (1, self.status_line),
         ])
 
         urwid.connect_signal(self.mainwindow, 'blur_console', hide_console)
@@ -244,22 +257,25 @@ class UIApplication(CLIApplicationBase):
         self.column_mode = _COPY_COLUMN
         self._viewwidget_visible = True
 
+    def _column_action_handler(self, p_action):
+        dispatch = {
+            'first_column': self._focus_first_column,
+            'last_column': self._focus_last_column,
+            'prev_column': self._focus_previous_column,
+            'next_column': self._focus_next_column,
+            'append_column': self._append_column,
+            'insert_column': self._insert_column,
+            'edit_column': self._edit_column,
+            'delete_column': self._delete_column,
+            'copy_column': self._copy_column,
+            'swap_left': self._swap_column_left,
+            'swap_right': self._swap_column_right,
+        }
+        dispatch[p_action]()
+
     def _handle_input(self, p_input):
         dispatch = {
             ':': self._focus_commandline,
-            '0': self._focus_first_column,
-            '$': self._focus_last_column,
-            'left': self._focus_previous_column,
-            'h': self._focus_previous_column,
-            'right': self._focus_next_column,
-            'l': self._focus_next_column,
-            'A': self._append_column,
-            'I': self._insert_column,
-            'E': self._edit_column,
-            'D': self._delete_column,
-            'Y': self._copy_column,
-            'L': self._swap_column_left,
-            'R': self._swap_column_right,
         }
 
         try:
@@ -307,11 +323,16 @@ class UIApplication(CLIApplicationBase):
         before that position.
         """
 
-        todolist = TodoListWidget(p_view, p_view.data['title'])
+        todolist = TodoListWidget(p_view, p_view.data['title'], self.keymap)
         no_output = lambda _: None
-        urwid.connect_signal(todolist, 'execute_command',
+        urwid.connect_signal(todolist, 'execute_command_silent',
                              lambda cmd: self._execute_handler(cmd, no_output))
+        urwid.connect_signal(todolist, 'execute_command', self._execute_handler)
         urwid.connect_signal(todolist, 'refresh', self.mainloop.screen.clear)
+        urwid.connect_signal(todolist, 'add_pending_action', self._set_alarm)
+        urwid.connect_signal(todolist, 'remove_pending_action', self._remove_alarm)
+        urwid.connect_signal(todolist, 'column_action', self._column_action_handler)
+        urwid.connect_signal(todolist, 'show_keystate', self._print_keystate)
 
         options = self.columns.options(
             width_type='given',
@@ -328,6 +349,19 @@ class UIApplication(CLIApplicationBase):
 
         self.columns.focus_position = p_pos
         self._blur_commandline()
+
+    def _print_keystate(self, p_keystate):
+        self.keystate_widget.set_text(p_keystate)
+        self._keystate_visible = len(p_keystate) > 0
+
+    def _set_alarm(self, p_callback):
+        """ Sets alarm to execute p_action specified in 0.5 sec. """
+        self._alarm = self.mainloop.set_alarm_in(0.5, p_callback)
+
+    def _remove_alarm(self):
+        """ Removes pending action alarm stored in _alarm attribute. """
+        self.mainloop.remove_alarm(self._alarm)
+        self._alarm = None
 
     def _swap_column_left(self):
         pos = self.columns.focus_position
@@ -358,6 +392,23 @@ class UIApplication(CLIApplicationBase):
         elif p_enabled == False and self._console_visible:
             self.console.clear()
             del contents[2]
+            self.mainwindow.focus_position = 0
+
+    @property
+    def _keystate_visible(self):
+        contents = self.status_line.contents
+        return len(contents) == 2 and isinstance(contents[1][0].original_widget,
+                                                 KeystateWidget)
+
+    @_keystate_visible.setter
+    def _keystate_visible(self, p_enabled):
+        contents = self.status_line.contents
+
+        if p_enabled and len(contents) == 1:
+            contents.append((urwid.Filler(self.keystate_widget),
+                             ('weight', 1, True)))
+        elif not p_enabled and self._keystate_visible:
+            del contents[1]
 
     @property
     def _viewwidget_visible(self):

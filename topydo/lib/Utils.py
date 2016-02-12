@@ -94,3 +94,18 @@ def get_terminal_size(p_getter=None):
             get_terminal_size.getter = inner
 
         return get_terminal_size.getter()
+
+
+def translate_key_to_config(p_key):
+    """
+    Translates urwid key event to form understandable by topydo config parser.
+    """
+    if len(p_key) > 1:
+        key = p_key.capitalize()
+        if key.startswith('Ctrl') or key.startswith('Meta'):
+            key = key[0] + '-' + key[5:]
+        key = '<' + key + '>'
+    else:
+        key = p_key
+
+    return key
