@@ -22,8 +22,8 @@ from topydo.lib.Recurrence import relative_date_to_date
 
 def progress_color(p_todo):
     color16_range = [
-        10,  # light green
         2,   # green
+        10,  # light green
         3,   # yellow
         1,   # red
     ]

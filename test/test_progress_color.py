@@ -31,12 +31,12 @@ class ProgressColorTest(TopydoTest):
     def test_progress1(self):
         """ Test progress of task with no length """
         color = progress_color(Todo('Foo'))
-        self.assertEqual(color.color, 10)
+        self.assertEqual(color.color, 2)
 
     def test_progress2(self):
         """ Test progress of task with no length (but with creation date). """
         color = progress_color(Todo('2016-02-11 Foo'))
-        self.assertEqual(color.color, 10)
+        self.assertEqual(color.color, 2)
 
     def test_progress3(self):
         """ Test progress of task with no length """
@@ -92,7 +92,7 @@ class ProgressColorTest(TopydoTest):
         """ Due tomorrow (creation date) """
         color = progress_color(Todo('2016-01-01 Foo due:2016-01-02'))
         # a length of 14 days is assumed
-        self.assertEqual(color.color, 10)
+        self.assertEqual(color.color, 2)
 
     def test_progress12(self):
         """ Due tomorrow (creation date) """
@@ -103,7 +103,7 @@ class ProgressColorTest(TopydoTest):
     def test_progress13(self):
         """ Due tomorrow (recurrence) """
         color = progress_color(Todo('Foo due:2016-01-02 rec:1d'))
-        self.assertEqual(color.color, 10)
+        self.assertEqual(color.color, 2)
 
     def test_progress14(self):
         """ Due tomorrow (recurrence) """
@@ -114,7 +114,7 @@ class ProgressColorTest(TopydoTest):
     def test_progress15(self):
         """ Due tomorrow (creation date + recurrence) """
         color = progress_color(Todo('2016-12-01 Foo due:2016-01-02 rec:1d'))
-        self.assertEqual(color.color, 10)
+        self.assertEqual(color.color, 2)
 
     def test_progress16(self):
         """ Due tomorrow (creation date + recurrence) """
@@ -125,7 +125,7 @@ class ProgressColorTest(TopydoTest):
     def test_progress17(self):
         """ Due tomorrow (creation date + recurrence + start date) """
         color = progress_color(Todo('2016-12-01 Foo due:2016-01-02 rec:1d t:2016-01-02'))
-        self.assertEqual(color.color, 10)
+        self.assertEqual(color.color, 2)
 
     def test_progress18(self):
         """ Due tomorrow (creation date + recurrence + start date) """
@@ -136,7 +136,7 @@ class ProgressColorTest(TopydoTest):
     def test_progress19(self):
         """ Due tomorrow (creation date + strict recurrence + start date) """
         color = progress_color(Todo('2016-12-01 Foo due:2016-01-02 rec:+1d t:2016-01-02'))
-        self.assertEqual(color.color, 10)
+        self.assertEqual(color.color, 2)
 
     def test_progress20(self):
         """ Due tomorrow (creation date + strict recurrence + start date) """
@@ -158,7 +158,7 @@ class ProgressColorTest(TopydoTest):
     def test_progress23(self):
         """ Due tomorrow (creation date + start date) """
         color = progress_color(Todo('2016-12-01 Foo due:2016-01-02 t:2015-12-31'))
-        self.assertEqual(color.color, 2)
+        self.assertEqual(color.color, 10)
 
     def test_progress24(self):
         """ Due tomorrow (creation date + start date) """
