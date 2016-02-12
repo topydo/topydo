@@ -16,6 +16,7 @@
 
 from topydo.lib.Config import config
 from topydo.lib.ListFormat import ListFormatParser
+from topydo.lib.ProgressColor import progress_color
 
 import urwid
 
@@ -23,27 +24,28 @@ import urwid
 PRIO_FORMATTER = ListFormatParser(None, "%{(}p{)}")
 TEXT_FORMATTER = ListFormatParser(None, "%s %k\n%h")
 
+def _to_urwid_color(p_color):
+    """
+    Given a Color object, transform it to a color that urwid understands.
+    """
+    if not p_color.is_valid():
+        return 'black'
+    elif p_color.is_neutral():
+        return 'default'
+    else:
+        return 'h{}'.format(p_color.color)
+
 def _markup(p_todo, p_focus):
     """
     Returns an attribute spec for the colors that correspond to the given todo
     item.
     """
-
-    def to_urwid_color(p_color):
-        """
-        Given a Color object, transform it to a color that urwid understands.
-        """
-        if not p_color.is_valid():
-            return 'black'
-        elif p_color.is_neutral():
-            return 'default'
-        else:
-            return 'h{}'.format(p_color.color)
-
     # retrieve the assigned value in the config file
     fg_color = config().priority_color(p_todo.priority())
-    fg_color = 'black' if p_focus and fg_color.is_neutral() else to_urwid_color(
-        fg_color)
+    if p_focus and fg_color.is_neutral():
+        fg_color = 'black'
+    else:
+        fg_color = _to_urwid_color(fg_color)
 
     bg_color = 'light gray' if p_focus else 'default'
 
@@ -61,13 +63,22 @@ class TodoWidget(urwid.WidgetWrap):
         priority_widget = urwid.Text(priority_text)
         self.text_widget = urwid.Text(todo_text)
 
+        progress = _to_urwid_color(progress_color(p_todo))
+        progress_bar = urwid.AttrMap(
+                urwid.SolidFill(' '),
+                urwid.AttrSpec('default', progress, 256),
+                urwid.AttrSpec('default', progress, 256),
+        )
+
         self.columns = urwid.Columns(
             [
+                (1, progress_bar),
                 (4, id_widget),
                 (3, priority_widget),
                 ('weight', 1, self.text_widget),
             ],
-            dividechars=1
+            dividechars=1,
+            box_columns=[0] # the progress bar adapts its height to the rest
         )
 
         self.widget = urwid.AttrMap(
