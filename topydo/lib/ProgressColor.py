@@ -41,11 +41,12 @@ def progress_color(p_todo):
         result = 0
 
         def diff_days(p_start, p_end):
-            if p_start < p_end:
-                diff = p_end - p_start
-                return diff.days
-
-            return 0
+            """
+            Returns the difference in days between p_start and p_end, where
+            start is before due.
+            """
+            diff = p_end - p_start
+            return diff.days
 
         if p_todo.has_tag('rec') and p_todo.due_date():
             # add negation, offset is based on due date

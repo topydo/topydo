@@ -83,7 +83,6 @@ class Color:
         elif self.is_neutral():
             return '\033[0m'
 
-        is_low_color = 0 <= self._value < 8
         is_high_color = 8 <= self._value < 16
         is_256 = 16 <= self._value < 255
 
@@ -101,10 +100,9 @@ class Color:
             color = '1;{}'.format(base + self._value - 8)
         elif is_256:
             color = '{};5;{}'.format(base + 8, self._value)
-        elif is_low_color:
-            color = str(base + self._value)
         else:
-            color = ''
+            # it's a low color
+            color = str(base + self._value)
 
         return '\033[{};{}m'.format(
             decoration,
