@@ -176,6 +176,9 @@ class ListFormatParser(object):
             # priority (or placeholder space)
             'P': lambda t: t.priority() if t.priority() else ' ',
 
+            # raw text
+            'r': lambda t: t.source(),
+
             # text
             's': lambda t: t.text(),
 

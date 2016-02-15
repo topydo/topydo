@@ -678,6 +678,19 @@ C -
 """
         self.assertEqual(self.output, result)
 
+    def test_list_format45(self):
+        command = ListCommand(["-x", "-F", "%r"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = """(D) 2015-08-31 Bar @Context1 +Project2 due:2015-09-30 t:2015-09-29
+(Z) 2015-11-06 Lorem ipsum dolorem sit amet. Red @fox +jumped over the lazy:bar and jar due:2015-11-08 t:2015-11-07
+(C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
+(C) Baz @Context1 +Project1 key:value
+Drink beer @ home id:1 p:2 ical:foobar
+x 2014-12-12 Completed but with date:2014-12-12
+"""
+        self.assertEqual(self.output, result)
+
 
 if __name__ == '__main__':
     unittest.main()
