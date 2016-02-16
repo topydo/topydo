@@ -1,26 +1,26 @@
-(B) 2016-02-15 Fix crash when deleting/removing items +branch/column-ui p:2 +version/0.10 type:bug
-(B) 2016-02-15 Merge pr:98 p:2 +branch/column-ui +version/0.10 p:5 url:https://github.com/bram85/topydo/pull/98
-(B) 2016-02-16 Do not crash when unclosed quotes are used type:bug issue:107 url:https://github.com/bram85/topydo/issues/107
-(C) 2016-02-16 Times in hh:mm format are not printed (but seen as tag) type:bug
-(C) 2016-02-16 Merge +branch/dot id:4
-(C) 2016-02-15 Fix output width calculation (get_terminal_size) when rendered first or after window resize +branch/column-ui p:2 +version/0.10 type:bug
-(C) 2016-02-16 Change default command to empty issue:105 url:https://github.com/bram85/topydo/issues/105 type:feature
-(C) 2016-02-15 Merge +branch/column-ui +version/0.10 p:1 id:2 p:4
-(C) 2016-02-16 ConsoleWidget should be able to show colors p:2 +branch/column-ui +version/0.10 id:6
-(C) 2016-02-15 Release +version/0.10 id:1
-(C) 2016-02-16 Describe list format on ls subcommand page +wiki url:https://github.com/bram85/topydo/wiki/ls-%28subcommand%29
-(C) 2016-02-16 Describe +branch/column-ui on +wiki id:5 p:1 +version/0.10
-2016-02-15 Remove workaround to disable colors in +branch/column-ui p:2 +version/0.10 id:3
-2016-02-15 Merge pr:114 p:2 +branch/column-ui +version/0.10 url:https://github.com/bram85/topydo/pull/114
-2016-02-15 Introduce TopydoString to handle colors in an UI agnostic way +branch/column-ui +version/0.10 p:3 p:6
-2016-02-15 Update changelog +version/0.10 p:1 +branch/column-ui
-2016-02-15 Bump version +version/0.10 p:1 +branch/column-ui
-2016-02-16 Merge +branch/flake8
-2016-02-16 Merge +branch/due-parent
-2016-02-16 Merge +branch/due-edit-sort
-2016-02-16 Process relative dates with the arrow library type:feature
-2016-02-16 Work day mode for recurrence calculation, postponing (i.e. skip weekends) type:feature
-2016-02-16 Add hooks, ability to process todo items through external script (e.g. post-add.sh, pre-do.sh) etc. type:feature
-2016-02-16 Merge pr:108 url:https://github.com/bram85/topydo/pull/108
-2016-02-16 append should understand relative dates for certain tags (like add and tag do) type:feature issue:103 url:https://github.com/bram85/topydo/issues/103
-2016-02-16 Investigate whether progress colors should have a linear color range or an exponential color range type:investigate
+(B) Fix crash when deleting/removing items +branch/column-ui p:2 +version/0.10 type:bug
+(B) Merge pr:98 p:2 +branch/column-ui +version/0.10 p:5 url:https://github.com/bram85/topydo/pull/98
+(B) Do not crash when unclosed quotes are used type:bug issue:107 url:https://github.com/bram85/topydo/issues/107
+(C) Times in hh:mm format are not printed (but seen as tag) type:bug
+(C) Merge +branch/dot id:4
+(C) Fix output width calculation (get_terminal_size) when rendered first or after window resize +branch/column-ui p:2 +version/0.10 type:bug
+(C) Change default command to empty issue:105 url:https://github.com/bram85/topydo/issues/105 type:feature
+(C) Merge +branch/column-ui +version/0.10 p:1 id:2 p:4
+(C) ConsoleWidget should be able to show colors p:2 +branch/column-ui +version/0.10 id:6
+(C) Release +version/0.10 id:1
+(C) Describe list format on ls subcommand page +wiki url:https://github.com/bram85/topydo/wiki/ls-%28subcommand%29
+(C) Describe +branch/column-ui on +wiki id:5 p:1 +version/0.10
+Remove workaround to disable colors in +branch/column-ui p:2 +version/0.10 id:3
+Merge pr:114 p:2 +branch/column-ui +version/0.10 url:https://github.com/bram85/topydo/pull/114
+Introduce TopydoString to handle colors in an UI agnostic way +branch/column-ui +version/0.10 p:3 p:6
+Update changelog +version/0.10 p:1 +branch/column-ui
+Bump version +version/0.10 p:1 +branch/column-ui
+Merge +branch/flake8
+Merge +branch/due-parent
+Merge +branch/due-edit-sort
+Process relative dates with the arrow library type:feature
+Work day mode for recurrence calculation, postponing (i.e. skip weekends) type:feature
+Add hooks, ability to process todo items through external script (e.g. post-add.sh, pre-do.sh) etc. type:feature
+Merge pr:108 url:https://github.com/bram85/topydo/pull/108
+append should understand relative dates for certain tags (like add and tag do) type:feature issue:103 url:https://github.com/bram85/topydo/issues/103
+Investigate whether progress colors should have a linear color range or an exponential color range type:investigate
