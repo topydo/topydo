@@ -1,6 +1,7 @@
-(B) Fix crash when deleting/removing items +branch/column-ui p:2 +version/0.10 type:bug
 (B) Merge pr:98 p:2 +branch/column-ui +version/0.10 p:5 url:https://github.com/bram85/topydo/pull/98
 (B) Do not crash when unclosed quotes are used type:bug issue:107 url:https://github.com/bram85/topydo/issues/107
+(B) Fix crash when deleting/removing items +version/0.10 type:bug id:8 p:1
+(C) Removing edited items should maintain dependencies type:bug p:8 +version/0.10
 (C) Times in hh:mm format are not printed (but seen as tag) type:bug
 (C) Merge +branch/dot id:4
 (C) Fix output width calculation (get_terminal_size) when rendered first or after window resize +branch/column-ui p:2 +version/0.10 type:bug
