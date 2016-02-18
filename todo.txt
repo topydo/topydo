@@ -18,6 +18,8 @@ Introduce TopydoString to handle colors in an UI agnostic way +branch/column-ui 
 Bump version +version/0.10 p:1 +branch/column-ui
 Update changelog +version/0.10 p:1 id:7
 Perform benchmark compared with version 0.9 +version/0.10 p:7
+OR operator in filter expressions type:feature
+Remove usage of TodoListBase.todos() and use its __iter__() method instead
 Merge +branch/flake8
 Merge +branch/due-parent
 Merge +branch/due-edit-sort
