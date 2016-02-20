@@ -40,6 +40,18 @@ class RelativeDateTester(TopydoTest):
         result = relative_date_to_date('1d')
         self.assertEqual(result, self.tomorrow)
 
+    def test_zero_bdays(self):
+        result = relative_date_to_date('0b')
+        self.assertEqual(result, self.today)
+
+    def test_one_bday(self):
+        result = relative_date_to_date('1b')
+        self.assertEqual(result, self.monday)
+
+    def test_one_bweek(self):
+        result = relative_date_to_date('5b')
+        self.assertEqual(result, self.friday)
+
     def test_one_week(self):
         result = relative_date_to_date('1w')
         self.assertEqual(result, date(2015, 11, 13))
@@ -151,6 +163,14 @@ class RelativeDateTester(TopydoTest):
     def test_negative_period2(self):
         result = relative_date_to_date('-0d')
         self.assertTrue(result, self.today)
+
+    def test_negative_period3(self):
+        result = relative_date_to_date('-1b')
+        self.assertEqual(result, date(2015, 11, 5))
+
+    def test_negative_period4(self):
+        result = relative_date_to_date('-5b')
+        self.assertEqual(result, date(2015, 10, 30))
 
     def test_weekday_next_week(self):
         """
