@@ -14,11 +14,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from collections import namedtuple
 import datetime
 import shlex
 import time
 import urwid
+
+from collections import namedtuple
+from string import ascii_uppercase
 
 from topydo.cli.CLIApplicationBase import CLIApplicationBase
 from topydo.Commands import get_subcommand
@@ -26,6 +28,7 @@ from topydo.ui.CommandLineWidget import CommandLineWidget
 from topydo.ui.ConsoleWidget import ConsoleWidget
 from topydo.ui.KeystateWidget import KeystateWidget
 from topydo.ui.TodoListWidget import TodoListWidget
+from topydo.ui.TodoWidget import _to_urwid_color
 from topydo.ui.ViewWidget import ViewWidget
 from topydo.ui.ColumnLayout import columns
 from topydo.lib.Config import config
@@ -141,14 +144,52 @@ class UIApplication(CLIApplicationBase):
         # the columns should have keyboard focus
         self._blur_commandline()
 
+        self._screen = urwid.raw_display.Screen()
+        self._screen.register_palette(self._create_color_palette())
+        self._screen.set_terminal_properties(256)
+
         self.mainloop = urwid.MainLoop(
             self.mainwindow,
+            screen=self._screen,
             unhandled_input=self._handle_input,
             pop_ups=True
         )
 
         self.column_mode = _APPEND_COLUMN
         self._set_alarm_for_next_midnight_update()
+
+    def _create_color_palette(self):
+        project_color = _to_urwid_color(config().project_color())
+        context_color = _to_urwid_color(config().context_color())
+        metadata_color = _to_urwid_color(config().metadata_color())
+        link_color = _to_urwid_color(config().link_color())
+
+        palette = [
+            ('project', '', '', '', project_color, ''),
+            ('project_focus', '', 'light gray', '', project_color, None),
+            ('context', '', '', '', context_color, ''),
+            ('context_focus', '', 'light gray', '', context_color, None),
+            ('metadata', '', '', '', metadata_color, ''),
+            ('metadata_focus', '', 'light gray', '', metadata_color, None),
+            ('link', '', '', '', link_color, ''),
+            ('link_focus', '', 'light gray', '', link_color, None),
+            ('default_focus', 'black', 'light gray'),
+        ]
+
+        for C in ascii_uppercase:
+            pri_color_cfg = config().priority_color(C)
+
+            pri_color = _to_urwid_color(pri_color_cfg)
+            pri_color_focus = pri_color if not pri_color_cfg.is_neutral() else 'black'
+
+            palette.append((
+                'pri_' + C, '', '', '', pri_color, ''
+            ))
+            palette.append((
+                'pri_' + C + '_focus', '', 'light gray', '', pri_color_focus, None
+            ))
+
+        return palette
 
     def _set_alarm_for_next_midnight_update(self):
         def callback(p_loop, p_data):
