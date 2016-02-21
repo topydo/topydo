@@ -314,6 +314,7 @@ class UIApplication(CLIApplicationBase):
             current_column.view = view
 
         self._viewwidget_visible = False
+        self._blur_commandline()
 
     def _add_column(self, p_view, p_pos=None):
         """
