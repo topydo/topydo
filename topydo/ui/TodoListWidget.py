@@ -16,7 +16,7 @@
 
 import urwid
 
-from topydo.ui.TodoWidget import TodoWidget, markup
+from topydo.ui.TodoWidget import TodoWidget
 from topydo.lib.Utils import translate_key_to_config
 
 
@@ -207,9 +207,10 @@ class TodoListWidget(urwid.LineBox):
         try:
             todo = self.listbox.focus.todo
             todo_id = str(self.view.todolist.number(todo))
-            result = urwid.emit_signal(self, 'toggle_mark', todo_id)
-            attr_spec = {None: markup(todo, result)}
-            self.listbox.focus.widget.set_attr_map(attr_spec)
+            if urwid.emit_signal(self, 'toggle_mark', todo_id):
+                self.listbox.focus.mark()
+            else:
+                self.listbox.focus.unmark()
         except AttributeError:
             # No todo item selected
             pass

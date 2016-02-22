@@ -36,7 +36,7 @@ def _to_urwid_color(p_color):
         return 'h{}'.format(p_color.color)
 
 
-def markup(p_todo, p_focus):
+def _markup(p_todo, p_focus):
     """
     Returns an attribute spec for the colors that correspond to the given todo
     item.
@@ -84,8 +84,8 @@ class TodoWidget(urwid.WidgetWrap):
 
         self.widget = urwid.AttrMap(
             self.columns,
-            markup(p_todo, False),  # no focus
-            markup(p_todo, True)  # focus
+            _markup(p_todo, False),  # no focus
+            _markup(p_todo, True)  # focus
         )
 
         super().__init__(self.widget)
@@ -100,3 +100,9 @@ class TodoWidget(urwid.WidgetWrap):
     def selectable(self):
         # make sure that ListBox will highlight this widget
         return True
+
+    def mark(self):
+        self.widget.set_attr_map({None: _markup(self.todo, True)})
+
+    def unmark(self):
+        self.widget.set_attr_map({None: _markup(self.todo, False)})
