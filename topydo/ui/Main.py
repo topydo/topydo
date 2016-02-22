@@ -169,14 +169,19 @@ class UIApplication(CLIApplicationBase):
     def _output(self, p_text):
         self._print_to_console(p_text + "\n")
 
-    def _execute_handler(self, p_command, p_output=None):
+    def _execute_handler(self, p_command, p_todo_id=None, p_output=None):
         """
         Executes a command, given as a string.
         """
-        if '{}' in p_command:
-            todos = ' '.join(self.marked_todos)
-            p_command = p_command.format(todos)
         p_output = p_output or self._output
+
+        self._last_cmd = (p_command, p_output == self._output)
+
+        if '{}' in p_command:
+            if self._has_marked_todos():
+                p_todo_id = ' '.join(self.marked_todos)
+            p_command = p_command.format(p_todo_id)
+
         p_command = shlex.split(p_command)
         (subcommand, args) = get_subcommand(p_command)
 
@@ -211,29 +216,14 @@ class UIApplication(CLIApplicationBase):
         if dirty or self.marked_todos:
             self._reset_state()
 
-    def _save_cmd(self, p_cmd, p_execute_signal):
-        verbosity = False
-        if p_execute_signal == 'execute_command':
-            verbosity = True
-        self._last_cmd = (p_cmd, verbosity)
-
     def _repeat_last_cmd(self, p_todo_id=None):
         try:
             cmd, verbosity = self._last_cmd
         except TypeError:
             return
 
-        if verbosity:
-            output = self._output
-        else:
-            output = lambda _: None
-
-        if '{}' in cmd:
-            if not p_todo_id:
-                p_todo_id = ' '.join(self.marked_todos)
-            cmd = cmd.format(p_todo_id)
-
-        self._execute_handler(cmd, output)
+        self._execute_handler(cmd, p_todo_id,
+                              self._output if verbosity else lambda _: None)
 
     def _reset_state(self):
         self.marked_todos = []
@@ -360,13 +350,13 @@ class UIApplication(CLIApplicationBase):
         When no position is given, it is added to the end, otherwise inserted
         before that position.
         """
+        def execute_silent(p_cmd, p_todo_id=None):
+            self._execute_handler(p_cmd, p_todo_id, lambda _: None)
 
         todolist = TodoListWidget(p_view, p_view.data['title'], self.keymap)
-        no_output = lambda _: None
         urwid.connect_signal(todolist, 'execute_command_silent',
-                             lambda cmd: self._execute_handler(cmd, no_output))
+                             execute_silent)
         urwid.connect_signal(todolist, 'execute_command', self._execute_handler)
-        urwid.connect_signal(todolist, 'save_cmd', self._save_cmd)
         urwid.connect_signal(todolist, 'repeat_cmd', self._repeat_last_cmd)
         urwid.connect_signal(todolist, 'refresh', self.mainloop.screen.clear)
         urwid.connect_signal(todolist, 'add_pending_action', self._set_alarm)
@@ -375,8 +365,6 @@ class UIApplication(CLIApplicationBase):
         urwid.connect_signal(todolist, 'show_keystate', self._print_keystate)
         urwid.connect_signal(todolist, 'toggle_mark',
                              self._process_mark_toggle)
-        urwid.connect_signal(todolist, 'has_marked_todos',
-                             self._has_marked_todos)
 
         options = self.columns.options(
             width_type='given',

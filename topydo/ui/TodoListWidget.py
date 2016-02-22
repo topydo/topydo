@@ -60,12 +60,10 @@ class TodoListWidget(urwid.LineBox):
                                                'refresh',
                                                'add_pending_action',
                                                'remove_pending_action',
-                                               'save_cmd',
                                                'repeat_cmd',
                                                'column_action',
                                                'show_keystate',
                                                'toggle_mark',
-                                               'has_marked_todos',
                                                ])
 
     @property
@@ -229,13 +227,7 @@ class TodoListWidget(urwid.LineBox):
             todo = self.listbox.focus.todo
             todo_id = str(self.view.todolist.number(todo))
 
-            result = urwid.emit_signal(self, 'has_marked_todos')
-            if result:
-                cmd = p_cmd_str
-            else:
-                cmd = p_cmd_str.format(todo_id)
-
-            urwid.emit_signal(self, p_execute_signal, cmd)
+            urwid.emit_signal(self, p_execute_signal, p_cmd_str, todo_id)
 
             # force screen redraw after editing
             if p_cmd_str.startswith('edit'):
@@ -262,8 +254,6 @@ class TodoListWidget(urwid.LineBox):
                 self._execute_on_selected(cmd, execute_signal)
             else:
                 urwid.emit_signal(self, execute_signal, cmd)
-
-            urwid.emit_signal(self, 'save_cmd', cmd, execute_signal)
         else:
             self.execute_builtin_action(p_action_str, p_size)
 
@@ -365,7 +355,4 @@ class TodoListWidget(urwid.LineBox):
         except AttributeError:
             todo_id = None
 
-        result = urwid.emit_signal(self, 'has_marked_todos')
-        if result:
-            todo_id = None
         urwid.emit_signal(self, 'repeat_cmd', todo_id)
