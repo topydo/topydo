@@ -96,7 +96,7 @@ class UIApplication(CLIApplicationBase):
         self.todofile = TodoFile.TodoFile(config().todotxt())
         self.todolist = TodoList.TodoList(self.todofile.read())
 
-        self.pending_todos = []
+        self.marked_todos = []
 
         self.columns = urwid.Columns([], dividechars=0, min_width=COLUMN_WIDTH)
         self.commandline = CommandLineWidget('topydo> ')
@@ -174,7 +174,7 @@ class UIApplication(CLIApplicationBase):
         Executes a command, given as a string.
         """
         if '{}' in p_command:
-            todos = ' '.join(self.pending_todos)
+            todos = ' '.join(self.marked_todos)
             p_command = p_command.format(todos)
         p_output = p_output or self._output
         p_command = shlex.split(p_command)
@@ -208,7 +208,7 @@ class UIApplication(CLIApplicationBase):
         dirty = self.todolist.dirty
         super()._post_execute()
 
-        if dirty or self.pending_todos:
+        if dirty or self.marked_todos:
             self._reset_state()
 
     def _save_cmd(self, p_cmd, p_execute_signal):
@@ -230,13 +230,13 @@ class UIApplication(CLIApplicationBase):
 
         if '{}' in cmd:
             if not p_todo_id:
-                p_todo_id = ' '.join(self.pending_todos)
+                p_todo_id = ' '.join(self.marked_todos)
             cmd = cmd.format(p_todo_id)
 
         self._execute_handler(cmd, output)
 
     def _reset_state(self):
-        self.pending_todos = []
+        self.marked_todos = []
         self._update_all_columns()
 
     def _blur_commandline(self):
@@ -373,8 +373,10 @@ class UIApplication(CLIApplicationBase):
         urwid.connect_signal(todolist, 'remove_pending_action', self._remove_alarm)
         urwid.connect_signal(todolist, 'column_action', self._column_action_handler)
         urwid.connect_signal(todolist, 'show_keystate', self._print_keystate)
-        urwid.connect_signal(todolist, 'append_pending_todos', self._pending_todos_handler)
-        urwid.connect_signal(todolist, 'check_pending_todos', self._is_pending)
+        urwid.connect_signal(todolist, 'toggle_mark',
+                             self._process_mark_toggle)
+        urwid.connect_signal(todolist, 'has_marked_todos',
+                             self._has_marked_todos)
 
         options = self.columns.options(
             width_type='given',
@@ -491,18 +493,20 @@ class UIApplication(CLIApplicationBase):
 
         return sz
 
-    def _is_pending(self):
-        if len(self.pending_todos) > 0:
-            return True
-        else:
-            return False
+    def _has_marked_todos(self):
+        return len(self.marked_todos) > 0
 
-    def _pending_todos_handler(self, p_todo_id):
-        if p_todo_id not in self.pending_todos:
-            self.pending_todos.append(p_todo_id)
+    def _process_mark_toggle(self, p_todo_id):
+        """
+        Adds p_todo_id to marked_todos attribute and returns True if p_todo_id
+        is not already present. Removes p_todo_id from marked_todos and returns
+        False otherwise.
+        """
+        if p_todo_id not in self.marked_todos:
+            self.marked_todos.append(p_todo_id)
             return True
         else:
-            self.pending_todos.remove(p_todo_id)
+            self.marked_todos.remove(p_todo_id)
             return False
 
     def run(self):

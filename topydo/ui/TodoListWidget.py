@@ -64,8 +64,8 @@ class TodoListWidget(urwid.LineBox):
                                                'repeat_cmd',
                                                'column_action',
                                                'show_keystate',
-                                               'append_pending_todos',
-                                               'check_pending_todos',
+                                               'toggle_mark',
+                                               'has_marked_todos',
                                                ])
 
     @property
@@ -203,11 +203,11 @@ class TodoListWidget(urwid.LineBox):
     def selectable(self):
         return True
 
-    def _append_pending_todos(self):
+    def _toggle_marked_status(self):
         try:
             todo = self.listbox.focus.todo
             todo_id = str(self.view.todolist.number(todo))
-            result = urwid.emit_signal(self, 'append_pending_todos', todo_id)
+            result = urwid.emit_signal(self, 'toggle_mark', todo_id)
             attr_spec = {None: markup(todo, result)}
             self.listbox.focus.widget.set_attr_map(attr_spec)
         except AttributeError:
@@ -228,7 +228,7 @@ class TodoListWidget(urwid.LineBox):
             todo = self.listbox.focus.todo
             todo_id = str(self.view.todolist.number(todo))
 
-            result = urwid.emit_signal(self, 'check_pending_todos')
+            result = urwid.emit_signal(self, 'has_marked_todos')
             if result:
                 cmd = p_cmd_str
             else:
@@ -303,7 +303,7 @@ class TodoListWidget(urwid.LineBox):
         elif p_action_str == 'pri':
             pass
         elif p_action_str == 'mark':
-            self._append_pending_todos()
+            self._toggle_marked_status()
         elif p_action_str == 'repeat':
             self._repeat_cmd()
 
@@ -364,7 +364,7 @@ class TodoListWidget(urwid.LineBox):
         except AttributeError:
             todo_id = None
 
-        result = urwid.emit_signal(self, 'check_pending_todos')
+        result = urwid.emit_signal(self, 'has_marked_todos')
         if result:
             todo_id = None
         urwid.emit_signal(self, 'repeat_cmd', todo_id)
