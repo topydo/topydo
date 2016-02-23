@@ -21,9 +21,8 @@ from topydo.Commands import get_subcommand
 from topydo.commands.AddCommand import AddCommand
 from topydo.commands.DeleteCommand import DeleteCommand
 from topydo.commands.ListCommand import ListCommand
-from topydo.commands.ListProjectCommand import ListProjectCommand
 from topydo.commands.TagCommand import TagCommand
-from topydo.lib.Config import config
+from topydo.lib.Config import config, ConfigError
 
 class GetSubcommandTest(TopydoTest):
     def test_normal_cmd(self):
@@ -119,6 +118,15 @@ class GetSubcommandTest(TopydoTest):
         args = ["baz"]
         real_cmd, final_args = get_subcommand(args)
         self.assertEqual(real_cmd, None)
+
+    def test_alias_quotation(self):
+        config("test/data/aliases.conf")
+
+        args = ["quot"]
+        with self.assertRaises(ConfigError) as ce:
+            get_subcommand(args)
+
+        self.assertEqual(str(ce.exception), 'No closing quotation')
 
     def test_help(self):
         real_cmd, final_args = get_subcommand(['help', 'nonexisting'])

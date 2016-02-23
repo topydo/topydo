@@ -18,6 +18,7 @@ import configparser
 import os
 import shlex
 
+
 class ConfigError(Exception):
     def __init__(self, p_text):
         self.text = p_text
@@ -299,10 +300,13 @@ class _Config:
         alias_dict = dict()
 
         for alias, meaning in aliases:
-            meaning = shlex.split(meaning)
-            real_subcommand = meaning[0]
-            alias_args = meaning[1:]
-            alias_dict[alias] = (real_subcommand, alias_args)
+            try:
+                meaning = shlex.split(meaning)
+                real_subcommand = meaning[0]
+                alias_args = meaning[1:]
+                alias_dict[alias] = (real_subcommand, alias_args)
+            except ValueError as verr:
+                alias_dict[alias] = str(verr)
 
         return alias_dict
 

@@ -50,7 +50,11 @@ class CLIApplication(CLIApplicationBase):
         self.todofile = TodoFile.TodoFile(config().todotxt())
         self.todolist = TodoList.TodoList(self.todofile.read())
 
-        (subcommand, args) = get_subcommand(args)
+        try:
+            (subcommand, args) = get_subcommand(args)
+        except ConfigError as ce:
+            error('Error: ' + str(ce) + '. Check your aliases configuration')
+            sys.exit(1)
 
         if subcommand is None:
             self._usage()
