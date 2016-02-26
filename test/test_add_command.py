@@ -33,7 +33,7 @@ except ImportError:
 
 class AddCommandTest(CommandTest):
     def setUp(self):
-        super(AddCommandTest, self).setUp()
+        super().setUp()
         self.todolist = TodoList.TodoList([])
         self.today = date.today().isoformat()
 

@@ -54,6 +54,12 @@ class TodoListBase(object):
         self.add_list(p_todostrings)
         self._dirty = False
 
+    def __iter__(self):
+        """
+        Allows use of `for my_todo in todolist` constructs.
+        """
+        return iter(self._todos)
+
     def todo(self, p_identifier):
         """
         The _todos list has the same order as in the backend store (usually
@@ -95,11 +101,11 @@ class TodoListBase(object):
                         # the expression is a string and no leading zeroes,
                         # treat it as an integer
                         raise TypeError
-                except TypeError:
+                except TypeError as te:
                     try:
                         result = self._todos[int(p_identifier) - 1]
-                    except IndexError:
-                        raise InvalidTodoException
+                    except (ValueError, IndexError):
+                        raise InvalidTodoException from te
 
             return result
 
@@ -251,8 +257,8 @@ class TodoListBase(object):
                 return self._todo_id_map[p_todo]
             else:
                 return self._todos.index(p_todo) + 1
-        except (ValueError, KeyError):
-            raise InvalidTodoException
+        except (ValueError, KeyError) as ex:
+            raise InvalidTodoException from ex
 
     def _update_todo_ids(self):
         # the idea is to have a hash that is independent of the position of the

@@ -28,7 +28,7 @@ class DepCommand(Command):
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
-        super(DepCommand, self).__init__(
+        super().__init__(
             p_args, p_todolist, p_out, p_err, p_prompt)
 
         try:
@@ -109,7 +109,7 @@ class DepCommand(Command):
             self.error(self.usage())
 
     def execute(self):
-        if not super(DepCommand, self).execute():
+        if not super().execute():
             return False
 
         dispatch = {

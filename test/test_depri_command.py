@@ -23,7 +23,7 @@ from topydo.lib.TodoList import TodoList
 
 class DepriCommandTest(CommandTest):
     def setUp(self):
-        super(DepriCommandTest, self).setUp()
+        super().setUp()
         todos = [
             "(A) Foo",
             "Bar",

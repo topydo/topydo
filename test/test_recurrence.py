@@ -25,7 +25,7 @@ from topydo.lib.Todo import Todo
 
 class RecurrenceTest(TopydoTest):
     def setUp(self):
-        super(RecurrenceTest, self).setUp()
+        super().setUp()
         self.todo = Todo("Test rec:1w")
         self.stricttodo = Todo("Test rec:+1w")
 

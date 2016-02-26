@@ -25,7 +25,7 @@ from topydo.lib.ListFormat import ListFormatParser
 
 class PrettyPrinterFormatFilter(PrettyPrinterFilter):
     def __init__(self, p_todolist, p_format=None):
-        super(PrettyPrinterFormatFilter, self).__init__()
+        super().__init__()
         self.parser = ListFormatParser(p_todolist, p_format)
 
     def filter(self, p_todo_str, p_todo):

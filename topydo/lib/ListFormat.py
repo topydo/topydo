@@ -43,7 +43,7 @@ def humanize_date(p_datetime):
     """ Returns a relative date string from a datetime object. """
     now = arrow.now()
     date = now.replace(day=p_datetime.day, month=p_datetime.month, year=p_datetime.year)
-    return date.humanize()
+    return date.humanize().replace('just now', 'today')
 
 def humanize_dates(p_due=None, p_start=None, p_creation=None):
     """
@@ -182,6 +182,9 @@ class ListFormatParser(object):
 
             # priority (or placeholder space)
             'P': lambda t: t.priority() if t.priority() else ' ',
+
+            # raw text
+            'r': lambda t: t.source(),
 
             # text
             's': lambda t: t.text(),

@@ -27,7 +27,7 @@ class ArchiveCommand(Command):
         TodoListBase class which does no dependency checking, so a better
         choice for huge done.txt files.
         """
-        super(ArchiveCommand, self).__init__([], p_todolist)
+        super().__init__([], p_todolist)
         self.archive = p_archive_list
 
     def execute(self):

@@ -28,7 +28,7 @@ from topydo.ui.KeystateWidget import KeystateWidget
 from topydo.ui.TodoListWidget import TodoListWidget
 from topydo.ui.ViewWidget import ViewWidget
 from topydo.ui.ColumnLayout import columns
-from topydo.lib.Config import config
+from topydo.lib.Config import config, ConfigError
 from topydo.lib.Sorter import Sorter
 from topydo.lib.Filter import get_filter_list, RelevanceFilter, DependencyFilter
 from topydo.lib.Utils import get_terminal_size
@@ -171,7 +171,12 @@ class UIApplication(CLIApplicationBase):
         """
         p_output = p_output or self._output
         p_command = shlex.split(p_command)
-        (subcommand, args) = get_subcommand(p_command)
+        try:
+            (subcommand, args) = get_subcommand(p_command)
+        except ConfigError as cerr:
+            self._print_to_console(
+                'Error: {}. Check your aliases configuration.'.format(cerr))
+            return
 
         self._backup(subcommand, args)
 

@@ -25,11 +25,11 @@ class RevertCommand(Command):
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
-        super(RevertCommand, self).__init__(p_args, p_todolist, p_out, p_err,
+        super().__init__(p_args, p_todolist, p_out, p_err,
                 p_prompt)
 
     def execute(self):
-        if not super(RevertCommand, self).execute():
+        if not super().execute():
             return False
 
         archive_file = TodoFile.TodoFile(config().archive())

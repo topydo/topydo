@@ -35,7 +35,7 @@ from topydo.lib.TodoList import TodoList
 
 class RevertCommandTest(CommandTest):
     def setUp(self):
-        super(RevertCommandTest, self).setUp()
+        super().setUp()
         todos = [
             "Foo",
             "Bar",

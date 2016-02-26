@@ -39,7 +39,7 @@ def _is_edited(p_orig_mtime, p_file):
 
 class EditCommand(MultiCommand):
     def __init__(self, p_args, p_todolist, p_output, p_error, p_input):
-        super(EditCommand, self).__init__(p_args, p_todolist, p_output,
+        super().__init__(p_args, p_todolist, p_output,
                                           p_error, p_input)
 
         if len(self.args) == 0:

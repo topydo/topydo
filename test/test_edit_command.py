@@ -33,7 +33,7 @@ except ImportError:
 
 class EditCommandTest(CommandTest):
     def setUp(self):
-        super(EditCommandTest, self).setUp()
+        super().setUp()
         todos = [
             "Foo id:1",
             "Bar p:1 @test",

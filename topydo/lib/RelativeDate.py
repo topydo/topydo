@@ -37,9 +37,26 @@ def _add_months(p_sourcedate, p_months):
     return date(year, month, day)
 
 
+def _add_business_days(p_sourcedate, p_bdays):
+    """ Adds a number of business days to the source date. """
+    result = p_sourcedate
+    delta = 1 if p_bdays > 0 else -1
+
+    while abs(p_bdays) > 0:
+        result += timedelta(delta)
+
+        weekday = result.weekday()
+        if weekday >= 5:
+            continue
+
+        p_bdays = p_bdays - 1 if delta > 0 else p_bdays + 1
+
+    return result
+
+
 def _convert_pattern(p_length, p_periodunit, p_offset=None):
     """
-    Converts a pattern in the form [0-9][dwmy] and returns a date from the
+    Converts a pattern in the form [0-9][dwmyb] and returns a date from the
     offset with the period of time added to it.
     """
     result = None
@@ -55,6 +72,8 @@ def _convert_pattern(p_length, p_periodunit, p_offset=None):
         result = _add_months(p_offset, p_length)
     elif p_periodunit == 'y':
         result = _add_months(p_offset, p_length * 12)
+    elif p_periodunit == 'b':
+        result = _add_business_days(p_offset, p_length)
 
     return result
 
@@ -98,7 +117,8 @@ def relative_date_to_date(p_date, p_offset=None):
     p_date = p_date.lower()
     p_offset = p_offset or date.today()
 
-    relative = re.match('(?P<length>-?[0-9]+)(?P<period>[dwmy])$', p_date, re.I)
+    relative = re.match('(?P<length>-?[0-9]+)(?P<period>[dwmyb])$',
+                        p_date, re.I)
 
     monday = 'mo(n(day)?)?$'
     tuesday = 'tu(e(sday)?)?$'

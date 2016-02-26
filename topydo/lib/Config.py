@@ -354,10 +354,13 @@ class _Config:
         alias_dict = dict()
 
         for alias, meaning in aliases:
-            meaning = shlex.split(meaning)
-            real_subcommand = meaning[0]
-            alias_args = meaning[1:]
-            alias_dict[alias] = (real_subcommand, alias_args)
+            try:
+                meaning = shlex.split(meaning)
+                real_subcommand = meaning[0]
+                alias_args = meaning[1:]
+                alias_dict[alias] = (real_subcommand, alias_args)
+            except ValueError as verr:
+                alias_dict[alias] = str(verr)
 
         return alias_dict
 
@@ -404,7 +407,7 @@ def config(p_path=None, p_overrides=None):
         try:
             config.instance = _Config(p_path, p_overrides)
         except configparser.ParsingError as perr:
-            raise ConfigError(str(perr))
+            raise ConfigError(str(perr)) from perr
 
     return config.instance
 

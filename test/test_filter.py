@@ -301,7 +301,7 @@ class FilterTest(TopydoTest):
 
 class OrdinalTagFilterTest(TopydoTest):
     def setUp(self):
-        super(OrdinalTagFilterTest, self).setUp()
+        super().setUp()
 
         today = date.today()
         tomorrow = today + timedelta(1)
@@ -381,7 +381,7 @@ class OrdinalTagFilterTest(TopydoTest):
 
 class CreationFilterTest(TopydoTest):
     def setUp(self):
-        super(CreationFilterTest, self).setUp()
+        super().setUp()
 
         self.todo1 = "2015-12-19 With creation date."
         self.todo2 = "Without creation date."
@@ -415,7 +415,7 @@ class CreationFilterTest(TopydoTest):
 
 class CompletionFilterTest(TopydoTest):
     def setUp(self):
-        super(CompletionFilterTest, self).setUp()
+        super().setUp()
 
         self.todo1 = "2015-12-19 With creation date."
         self.todo2 = "x 2015-12-19 2015-12-18 Without creation date."
@@ -459,7 +459,7 @@ class CompletionFilterTest(TopydoTest):
 
 class PriorityFilterTest(TopydoTest):
     def setUp(self):
-        super(PriorityFilterTest, self).setUp()
+        super().setUp()
 
         self.todo1 = "(A) Foo"
         self.todo2 = "(B) Bar"

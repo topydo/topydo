@@ -62,7 +62,7 @@ class GrepFilter(Filter):
     """ Matches when the todo text contains a text. """
 
     def __init__(self, p_expression, p_case_sensitive=None):
-        super(GrepFilter, self).__init__()
+        super().__init__()
 
         # convert to string in case we receive integers
         self.expression = p_expression
@@ -96,13 +96,15 @@ class RelevanceFilter(Filter):
     """
 
     def match(self, p_todo):
-        is_due = p_todo.is_active()
-        is_due |= p_todo.due_date() == None
-        is_due |= p_todo.priority() == 'A'
-        is_due |= p_todo.priority() == 'B' and p_todo.days_till_due() <= 30
-        is_due |= p_todo.priority() == 'C' and p_todo.days_till_due() <= 14
+        active = p_todo.is_active()
 
-        return p_todo.is_active() and is_due
+        is_due = active
+        is_due = is_due or p_todo.due_date() == None
+        is_due = is_due or p_todo.priority() == 'A'
+        is_due = is_due or (p_todo.priority() == 'B' and p_todo.days_till_due() <= 30)
+        is_due = is_due or (p_todo.priority() == 'C' and p_todo.days_till_due() <= 14)
+
+        return active and is_due
 
 
 class DependencyFilter(Filter):
@@ -115,7 +117,7 @@ class DependencyFilter(Filter):
         Pass on a TodoList instance such that the dependencies can be
         looked up.
         """
-        super(DependencyFilter, self).__init__()
+        super().__init__()
         self.todolist = p_todolist
 
     def match(self, p_todo):
@@ -138,7 +140,7 @@ class InstanceFilter(Filter):
 
         This is handy for constructing a view given a plain list of Todo items.
         """
-        super(InstanceFilter, self).__init__()
+        super().__init__()
         self.todos = p_todos
 
     def match(self, p_todo):
@@ -154,7 +156,7 @@ class InstanceFilter(Filter):
 
 class LimitFilter(Filter):
     def __init__(self, p_limit):
-        super(LimitFilter, self).__init__()
+        super().__init__()
         self.limit = p_limit
 
     def filter(self, p_todos):
@@ -167,7 +169,7 @@ class OrdinalFilter(Filter):
     """ Base class for ordinal filters. """
 
     def __init__(self, p_expression, p_pattern):
-        super(OrdinalFilter, self).__init__()
+        super().__init__()
 
         self.expression = p_expression
 
@@ -206,7 +208,7 @@ _ORDINAL_TAG_MATCH = r"(?P<key>[^:]*):" + _OPERATOR_MATCH + _VALUE_MATCH
 
 class OrdinalTagFilter(OrdinalFilter):
     def __init__(self, p_expression):
-        super(OrdinalTagFilter, self).__init__(p_expression, _ORDINAL_TAG_MATCH)
+        super().__init__(p_expression, _ORDINAL_TAG_MATCH)
 
     def match(self, p_todo):
         """
@@ -247,7 +249,7 @@ class OrdinalTagFilter(OrdinalFilter):
 
 class _DateAttributeFilter(OrdinalFilter):
     def __init__(self, p_expression, p_match, p_getter):
-        super(_DateAttributeFilter, self).__init__(p_expression, p_match)
+        super().__init__(p_expression, p_match)
         self.getter = p_getter
 
     def match(self, p_todo):
@@ -268,7 +270,7 @@ _CREATED_MATCH = r'creat(ion|ed?):' + _OPERATOR_MATCH + _VALUE_MATCH
 
 class CreationFilter(_DateAttributeFilter):
     def __init__(self, p_expression):
-        super(CreationFilter, self).__init__(
+        super().__init__(
             p_expression,
             _CREATED_MATCH,
             lambda t: t.creation_date()  # pragma: no branch
@@ -280,7 +282,7 @@ _COMPLETED_MATCH = r'complet(ed?|ion):' + _OPERATOR_MATCH + _VALUE_MATCH
 
 class CompletionFilter(_DateAttributeFilter):
     def __init__(self, p_expression):
-        super(CompletionFilter, self).__init__(
+        super().__init__(
             p_expression,
             _COMPLETED_MATCH,
             lambda t: t.completion_date()  # pragma: no branch
@@ -292,7 +294,7 @@ _PRIORITY_MATCH = r"\(" + _OPERATOR_MATCH + r"(?P<value>[A-Z]{1})\)"
 
 class PriorityFilter(OrdinalFilter):
     def __init__(self, p_expression):
-        super(PriorityFilter, self).__init__(p_expression, _PRIORITY_MATCH)
+        super().__init__(p_expression, _PRIORITY_MATCH)
 
     def match(self, p_todo):
         """

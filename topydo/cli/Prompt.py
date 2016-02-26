@@ -59,7 +59,7 @@ class PromptApplication(CLIApplicationBase):
     """
 
     def __init__(self):
-        super(PromptApplication, self).__init__()
+        super().__init__()
 
         self._process_flags()
         self.mtime = None
@@ -95,11 +95,20 @@ class PromptApplication(CLIApplicationBase):
                                     completer=self.completer,
                                     complete_while_typing=False)
                 user_input = shlex.split(user_input)
-            except (EOFError, KeyboardInterrupt):
+            except EOFError:
                 sys.exit(0)
+            except KeyboardInterrupt:
+                continue
+            except ValueError as verr:
+                error('Error: ' + str(verr))
 
             mtime_after = _todotxt_mtime()
-            (subcommand, args) = get_subcommand(user_input)
+
+            try:
+                (subcommand, args) = get_subcommand(user_input)
+            except ConfigError as ce:
+                error('Error: ' + str(ce) + '. Check your aliases configuration')
+                continue
 
             # refuse to perform operations such as 'del' and 'do' if the
             # todo.txt file has been changed in the background.

@@ -226,9 +226,9 @@ class CLIApplicationBase(object):
         to the todo.txt file.
         """
 
-        # do not archive when the value of the filename is an empty string
-        # (i.e. explicitly left empty in the configuration
         if self.todolist.dirty:
+            # do not archive when the value of the filename is an empty string
+            # (i.e. explicitly left empty in the configuration
             if self.do_archive and config().archive():
                 self._archive()
 

@@ -36,7 +36,7 @@ except ImportError:
 @freeze_time("2015, 11, 06")
 class ListFormatTest(CommandTest):
     def setUp(self):
-        super(ListFormatTest, self).setUp()
+        super().setUp()
         self.todolist = load_file_to_todolist("test/data/ListFormat.txt")
         self.terminal_size = namedtuple('terminal_size', ['columns', 'lines'])
 
@@ -132,7 +132,7 @@ class ListFormatTest(CommandTest):
         command.execute()
 
         result = """|  1| D Bar @Context1 +Project2                (3 months ago, due a month ago, started a month ago)
-|  2| Z Lorem ipsum dolorem sit amet. Red @f... lazy:bar (just now, due in 2 days, starts in a day)
+|  2| Z Lorem ipsum dolorem sit amet. Red @fox ... lazy:bar (today, due in 2 days, starts in a day)
 |  3| C Foo @Context2 Not@Context +Project1 Not+Project                              (4 months ago)
 |  4| C Baz @Context1 +Project1 key:value
 |  5| Drink beer @ home
@@ -183,7 +183,7 @@ x 2014-12-12
         command.execute()
 
         result = """3 months ago | a month ago | a month ago |
-just now | in 2 days | in a day |
+today | in 2 days | in a day |
 4 months ago | | |
 | | |
 | | |
@@ -278,7 +278,7 @@ just now | in 2 days | in a day |
         command.execute()
 
         result = """3 months ago
-just now
+today
 4 months ago
 
 
@@ -330,7 +330,7 @@ due in 2 days, starts in a day
         command.execute()
 
         result = """3 months ago, due a month ago, started a month ago
-just now, due in 2 days, starts in a day
+today, due in 2 days, starts in a day
 4 months ago
 
 
@@ -696,6 +696,20 @@ C -
  |  6| x 2014-12-12 Completed but with date:2014-12-12
 """
         self.assertEqual(self.output, result)
+
+    def test_list_format46(self):
+        command = ListCommand(["-x", "-F", "%r"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = """(D) 2015-08-31 Bar @Context1 +Project2 due:2015-09-30 t:2015-09-29
+(Z) 2015-11-06 Lorem ipsum dolorem sit amet. Red @fox +jumped over the lazy:bar and jar due:2015-11-08 t:2015-11-07
+(C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
+(C) Baz @Context1 +Project1 key:value
+Drink beer @ home id:1 p:2 ical:foobar
+x 2014-12-12 Completed but with date:2014-12-12
+"""
+        self.assertEqual(self.output, result)
+
 
 if __name__ == '__main__':
     unittest.main()
