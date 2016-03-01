@@ -96,6 +96,8 @@ class UIApplication(CLIApplicationBase):
         self.todofile = TodoFile.TodoFile(config().todotxt())
         self.todolist = TodoList.TodoList(self.todofile.read())
 
+        self.marked_todos = []
+
         self.columns = urwid.Columns([], dividechars=0, min_width=COLUMN_WIDTH)
         self.commandline = CommandLineWidget('topydo> ')
         self.keystate_widget = KeystateWidget()
@@ -105,6 +107,8 @@ class UIApplication(CLIApplicationBase):
 
         self.keymap = config().column_keymap()
         self._alarm = None
+
+        self._last_cmd = None
 
         # console widget
         self.console = ConsoleWidget()
@@ -165,11 +169,19 @@ class UIApplication(CLIApplicationBase):
     def _output(self, p_text):
         self._print_to_console(p_text + "\n")
 
-    def _execute_handler(self, p_command, p_output=None):
+    def _execute_handler(self, p_command, p_todo_id=None, p_output=None):
         """
         Executes a command, given as a string.
         """
         p_output = p_output or self._output
+
+        self._last_cmd = (p_command, p_output == self._output)
+
+        if '{}' in p_command:
+            if self._has_marked_todos():
+                p_todo_id = ' '.join(self.marked_todos)
+            p_command = p_command.format(p_todo_id)
+
         p_command = shlex.split(p_command)
         try:
             (subcommand, args) = get_subcommand(p_command)
@@ -199,14 +211,28 @@ class UIApplication(CLIApplicationBase):
     def _update_all_columns(self):
         for column, _ in self.columns.contents:
             column.update()
+            column.keystate = None
 
     def _post_execute(self):
         # store dirty flag because base _post_execute will reset it after flush
         dirty = self.todolist.dirty
         super()._post_execute()
 
-        if dirty:
-            self._update_all_columns()
+        if dirty or self.marked_todos:
+            self._reset_state()
+
+    def _repeat_last_cmd(self, p_todo_id=None):
+        try:
+            cmd, verbosity = self._last_cmd
+        except TypeError:
+            return
+
+        self._execute_handler(cmd, p_todo_id,
+                              self._output if verbosity else lambda _: None)
+
+    def _reset_state(self):
+        self.marked_todos = []
+        self._update_all_columns()
 
     def _blur_commandline(self):
         self.mainwindow.focus_item = 0
@@ -276,6 +302,7 @@ class UIApplication(CLIApplicationBase):
             'copy_column': self._copy_column,
             'swap_left': self._swap_column_left,
             'swap_right': self._swap_column_right,
+            'reset': self._reset_state,
         }
         dispatch[p_action]()
 
@@ -328,17 +355,21 @@ class UIApplication(CLIApplicationBase):
         When no position is given, it is added to the end, otherwise inserted
         before that position.
         """
+        def execute_silent(p_cmd, p_todo_id=None):
+            self._execute_handler(p_cmd, p_todo_id, lambda _: None)
 
         todolist = TodoListWidget(p_view, p_view.data['title'], self.keymap)
-        no_output = lambda _: None
         urwid.connect_signal(todolist, 'execute_command_silent',
-                             lambda cmd: self._execute_handler(cmd, no_output))
+                             execute_silent)
         urwid.connect_signal(todolist, 'execute_command', self._execute_handler)
+        urwid.connect_signal(todolist, 'repeat_cmd', self._repeat_last_cmd)
         urwid.connect_signal(todolist, 'refresh', self.mainloop.screen.clear)
         urwid.connect_signal(todolist, 'add_pending_action', self._set_alarm)
         urwid.connect_signal(todolist, 'remove_pending_action', self._remove_alarm)
         urwid.connect_signal(todolist, 'column_action', self._column_action_handler)
         urwid.connect_signal(todolist, 'show_keystate', self._print_keystate)
+        urwid.connect_signal(todolist, 'toggle_mark',
+                             self._process_mark_toggle)
 
         options = self.columns.options(
             width_type='given',
@@ -454,6 +485,22 @@ class UIApplication(CLIApplicationBase):
         sz = terminal_size(width, 1)
 
         return sz
+
+    def _has_marked_todos(self):
+        return len(self.marked_todos) > 0
+
+    def _process_mark_toggle(self, p_todo_id):
+        """
+        Adds p_todo_id to marked_todos attribute and returns True if p_todo_id
+        is not already present. Removes p_todo_id from marked_todos and returns
+        False otherwise.
+        """
+        if p_todo_id not in self.marked_todos:
+            self.marked_todos.append(p_todo_id)
+            return True
+        else:
+            self.marked_todos.remove(p_todo_id)
+            return False
 
     def run(self):
         layout = columns()

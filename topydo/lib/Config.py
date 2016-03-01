@@ -125,6 +125,8 @@ class _Config:
                 'e': 'cmd edit {}',
                 'u': 'cmd revert',
                 'x': 'cmd do {}',
+                'm': 'mark',
+                '.': 'repeat',
                 'pp': 'postpone',
                 'ps': 'postpone_s',
                 'pr': 'pri',
@@ -141,6 +143,7 @@ class _Config:
                 'R': 'swap_right',
                 '<Left>': 'prev_column',
                 '<Right>': 'next_column',
+                '<Esc>': 'reset',
             },
         }
 

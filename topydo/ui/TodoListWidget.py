@@ -60,8 +60,10 @@ class TodoListWidget(urwid.LineBox):
                                                'refresh',
                                                'add_pending_action',
                                                'remove_pending_action',
+                                               'repeat_cmd',
                                                'column_action',
                                                'show_keystate',
+                                               'toggle_mark',
                                                ])
 
     @property
@@ -199,6 +201,18 @@ class TodoListWidget(urwid.LineBox):
     def selectable(self):
         return True
 
+    def _toggle_marked_status(self):
+        try:
+            todo = self.listbox.focus.todo
+            todo_id = str(self.view.todolist.number(todo))
+            if urwid.emit_signal(self, 'toggle_mark', todo_id):
+                self.listbox.focus.mark()
+            else:
+                self.listbox.focus.unmark()
+        except AttributeError:
+            # No todo item selected
+            pass
+
     def _execute_on_selected(self, p_cmd_str, p_execute_signal):
         """
         Executes command specified by p_cmd_str on selected todo item.
@@ -213,7 +227,7 @@ class TodoListWidget(urwid.LineBox):
             todo = self.listbox.focus.todo
             todo_id = str(self.view.todolist.number(todo))
 
-            urwid.emit_signal(self, p_execute_signal, p_cmd_str.format(todo_id))
+            urwid.emit_signal(self, p_execute_signal, p_cmd_str, todo_id)
 
             # force screen redraw after editing
             if p_cmd_str.startswith('edit'):
@@ -250,8 +264,8 @@ class TodoListWidget(urwid.LineBox):
         Currently supported actions are: 'up', 'down', 'home', 'end',
         'first_column', 'last_column', 'prev_column', 'next_column',
         'append_column', 'insert_column', 'edit_column', 'delete_column',
-        'copy_column', swap_right', 'swap_left', 'postpone', 'postpone_s' and
-        'pri'.
+        'copy_column', swap_right', 'swap_left', 'postpone', 'postpone_s',
+        'pri', 'mark', 'reset' and 'repeat'.
         """
         column_actions = ['first_column',
                           'last_column',
@@ -264,6 +278,7 @@ class TodoListWidget(urwid.LineBox):
                           'copy_column',
                           'swap_left',
                           'swap_right',
+                          'reset',
                           ]
 
         if p_action_str in column_actions:
@@ -278,6 +293,10 @@ class TodoListWidget(urwid.LineBox):
             pass
         elif p_action_str == 'pri':
             pass
+        elif p_action_str == 'mark':
+            self._toggle_marked_status()
+        elif p_action_str == 'repeat':
+            self._repeat_cmd()
 
     def _add_pending_action(self, p_action, p_size):
         """
@@ -328,3 +347,12 @@ class TodoListWidget(urwid.LineBox):
             self._pp_offset = None
             result = False
         return result
+
+    def _repeat_cmd(self):
+        try:
+            todo = self.listbox.focus.todo
+            todo_id = str(self.view.todolist.number(todo))
+        except AttributeError:
+            todo_id = None
+
+        urwid.emit_signal(self, 'repeat_cmd', todo_id)
