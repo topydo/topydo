@@ -335,7 +335,7 @@ class TodoListWidget(urwid.LineBox):
             self._pp_offset += p_pattern
             result = None
         else:
-            if p_pattern in ['d', 'w', 'm', 'y']:
+            if p_pattern in ['d', 'w', 'm', 'y', 'b']:
                 offset = self._pp_offset or '1'
                 if p_mode == 'postpone':
                     pp_cmd = 'cmd postpone {} '
