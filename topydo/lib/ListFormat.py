@@ -17,7 +17,9 @@
 """ Utilities for formatting output with "list_format" option."""
 
 import arrow
+import os
 import re
+import sys
 
 from topydo.lib.Config import config
 from topydo.lib.Utils import get_terminal_size
@@ -279,3 +281,32 @@ class ListFormatParser(object):
             parsed_str = _right_align(parsed_str)
 
         return parsed_str.rstrip()
+
+def _N_lines():
+    ''' Determine how many lines to print, such that the number of items
+        displayed will fit on the terminal (i.e one 'screen-ful' of items)
+
+        This looks at the environmental prompt variable, and tries to determine
+        how many lines it takes up.
+
+        On Windows, it does this by looking for the '$_' sequence, which indicates
+        a new line, in the environmental variable PROMPT.
+
+        Otherwise, it looks for a newline ('\n') in the environmental variable
+        PS1.
+    '''  
+    lines_in_prompt = 2     # prompt is assumed to take up one line, even
+                            #   without any newlines in it, plus there is a free
+                            #   line printed out after the program output
+    if "win32" in sys.platform:
+        a = re.findall('\$_', os.getenv('PROMPT', ''))
+        lines_in_prompt += len(a)
+    else:
+        a = re.findall('\\n', os.getenv('PS1', ''))
+        lines_in_prompt += len(a)
+    n_lines = get_terminal_size().lines - lines_in_prompt
+
+    # print a minimum of one item
+    n_lines = max(n_lines, 1)
+
+    return n_lines

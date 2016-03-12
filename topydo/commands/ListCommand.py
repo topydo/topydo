@@ -17,10 +17,10 @@
 from topydo.lib.Config import config
 from topydo.lib.ExpressionCommand import ExpressionCommand
 from topydo.lib.Filter import InstanceFilter
+from topydo.lib.ListFormat import _N_lines
 from topydo.lib.PrettyPrinter import pretty_printer_factory
 from topydo.lib.prettyprinters.Format import PrettyPrinterFormatFilter
 from topydo.lib.TodoListBase import InvalidTodoException
-from topydo.lib.Utils import get_terminal_size
 
 
 class ListCommand(ExpressionCommand):
@@ -73,7 +73,7 @@ class ListCommand(ExpressionCommand):
             elif opt == '-N':
                 # 2 lines are assumed to be taken up by printing the next prompt
                 # display at least one item
-                self.limit = max(get_terminal_size().lines - 2, 1)
+                self.limit = _N_lines()
             elif opt == '-n':
                 try:
                     self.limit = int(value)
