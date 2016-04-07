@@ -21,6 +21,7 @@ import re
 from topydo.lib.Color import Color
 from topydo.lib.Config import config
 from topydo.lib.PrettyPrinterFilter import PrettyPrinterFilter
+from topydo.lib.TopydoString import TopydoString
 
 
 class PrettyPrinterColorFilter(PrettyPrinterFilter):
@@ -33,35 +34,27 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
     def filter(self, p_todo_str, p_todo):
         """ Applies the colors. """
         if config().colors():
+            p_todo_str = TopydoString(p_todo_str)
+
             priority_color = config().priority_color(p_todo.priority())
-            project_color = config().project_color()
-            context_color = config().context_color()
-            metadata_color = config().metadata_color()
-            link_color = config().link_color()
             neutral_color = Color('NEUTRAL')
 
-            # color projects / contexts
-            p_todo_str = re.sub(
-                r'\B(\+|@)(\S*\w)',
-                lambda m: (
-                    context_color.as_ansi() if m.group(0)[0] == "@"
-                    else project_color.as_ansi()) + m.group(0) + priority_color.as_ansi(),
-                p_todo_str)
+            colors = [
+                (r'\B@(\S*\w)', config().context_color()),
+                (r'\B\+(\S*\w)', config().project_color()),
+                (r'\b\S+:[^/\s]\S*\b', config().metadata_color()),
+                (r'(^|\s)(\w+:){1}(//\S+)', config().link_color()),
+            ]
 
-            # tags
-            p_todo_str = re.sub(r'\b\S+:[^/\s]\S*\b',
-                                metadata_color.as_ansi() + r'\g<0>' + priority_color.as_ansi(),
-                                p_todo_str)
+            for pattern, color in colors:
+                for match in re.finditer(pattern, p_todo_str.data):
+                    p_todo_str.set_color(match.start(), color)
+                    p_todo_str.set_color(match.end(), priority_color)
 
-            # add link_color to any valid URL specified outside of the tag.
-            p_todo_str = re.sub(r'(^|\s)(\w+:){1}(//\S+)',
-                                r'\1' + link_color.as_ansi() + r'\2\3' + priority_color.as_ansi(),
-                                p_todo_str)
-
-            p_todo_str += neutral_color.as_ansi()
+            p_todo_str.append('', neutral_color)
 
             # color by priority
-            p_todo_str = priority_color.as_ansi() + p_todo_str
+            p_todo_str.set_color(0, priority_color)
 
         return p_todo_str
 

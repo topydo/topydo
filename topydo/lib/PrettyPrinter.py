@@ -16,6 +16,7 @@
 
 from topydo.lib.prettyprinters.Colors import PrettyPrinterColorFilter
 from topydo.lib.prettyprinters.Numbers import PrettyPrinterNumbers
+from topydo.lib.TopydoString import TopydoString
 
 
 class Printer(object):
@@ -68,7 +69,11 @@ class PrettyPrinter(Printer):
         for ppf in self.filters:
             todo_str = ppf.filter(todo_str, p_todo)
 
-        return todo_str
+        # transform color annotations to ANSI codes
+        if isinstance(todo_str, TopydoString):
+            return todo_str.with_colors(lambda c: c.as_ansi())
+        else:
+            return todo_str
 
 
 def pretty_printer_factory(p_todolist, p_additional_filters=None):
