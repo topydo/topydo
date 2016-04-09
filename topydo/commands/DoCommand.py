@@ -105,28 +105,28 @@ class DoCommand(DCommand):
 
     def usage(self):
         return """\
-Synopsis: do [--date] [--force] [--strict] <NUMBER1> [<NUMBER2> ...]
-          do [-x] -e <EXPRESSION>
+Synopsis: do [--date <DATE>] [--force] [--strict] <NUMBER 1> [<NUMBER 2> ...]
+          do [-x] -e <EXPRESSION>\
 """
 
     def help(self):
-        return """Marks the todo(s) with given number(s) as complete.
+        return """Marks the todo(s) with given NUMBER(s) as complete.
 
-It is also possible to mark todo items as complete with an expression using the
--e flag. Use -x to also process todo items that are normally invisible (with
+It is also possible to mark todo items as complete with an EXPRESSION using the
+-e flag. Use -x to also process todo items that are normally invisible (as with
 the 'ls' subcommand).
 
-In case a todo has subitems, a question is asked whether the subitems should be
-marked as completed as well. When --force is given, no interaction is required
-and the subitems are not marked completed.
+In case a todo has subitems (dependencies), a question is asked whether the
+subitems should be marked as completed as well. When --force is given, no
+interaction is required and the subitems are not marked completed.
 
 In case a completed todo is recurring, a new todo will be added to the list,
 while the given todo item is marked as complete. The new date is calculated
 based on the todo item's due date. If the due date is in the past, today's date
-is used to calculate the new recurrence date. Using --strict prevents this,
+is used to calculate the new recurrence date. Using --strict prevents this, and
 then the actual due date of the todo item is used to calculate the new
 recurrence date. Note that a future due date is always used as such to
 calculate the new due date.
 
-Use --date to set a custom completion date.
+Use --date to set a custom completion date.\
 """

@@ -49,9 +49,9 @@ class AppendCommand(Command):
             self.error("Invalid todo number given.")
 
     def usage(self):
-        return """Synopsis: append <number> <text>"""
+        return """Synopsis: append <NUMBER> <TEXT>"""
 
     def help(self):
         return """\
-Adds the given <text> to the end of the todo indicated by <number>.
+Adds the given TEXT to the end of the todo indicated by NUMBER.\
 """

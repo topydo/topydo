@@ -145,20 +145,21 @@ class ListCommand(ExpressionCommand):
         return True
 
     def usage(self):
-        return """Synopsis: ls [-x] [-s <sort_expression>] [-f <output format>]
-[-F <format string>] [-i <item numbers>] [-N | -n <integer>] [expression]"""
+        return """Synopsis: ls [-x] [-s <SORT EXPRESSION>] [-f <OUTPUT FORMAT>]
+[-F <FORMAT STRING>] [-i <NUMBER 1>[,<NUMBER 2> ...]] [-N | -n <INTEGER>]
+[EXPRESSION]"""
 
     def help(self):
         return """\
 Lists all relevant todos. A todo is relevant when:
 
-* has not been completed yet;
-* the start date (if present) has passed;
+* has not been completed yet,
+* the start date (if present) has passed, and
 * there are no subitems that need to be completed.
 
-When an expression is given, only the todos matching that expression are shown.
+When an EXPRESSION is given, only the todos matching that EXPRESSION are shown.
 
--f : Specify the output format, being 'text' (default), 'ical' or 'json'.
+-f : Specify the OUTPUT FORMAT, being 'text' (default), 'ical' or 'json'.
 
      * 'text' - Text output with colors and indentation if applicable.
      * 'ical' - iCalendar (RFC 2445). Is not supported in Python 3.2. Be aware
@@ -166,6 +167,7 @@ When an expression is given, only the todos matching that expression are shown.
                 an 'ical' tag with a unique ID. Completed todo items may be
                 archived.
      * 'json' - Javascript Object Notation (JSON)
+
 -F : Specify the format of the text ('text' format), which may contain
      placeholders that may be expanded if the todo has such attribute. If such
      attribute does not exist, then it expands to an empty string.
@@ -193,14 +195,14 @@ When an expression is given, only the todos matching that expression are shown.
      Conditional characters can be added with blocks surrounded by curly
      braces, they will only appear when a placeholder expanded to a value.
 
-     E.g. %{(}p{)} will print (C) when the todo item has priority C, or ''
+     E.g. %{(}p{)} will print '(C)' when the todo item has priority C, or ''
      (empty string) when an item has no priority set.
 
      A tab character serves as a marker to start right alignment.
 -i : Comma separated list of todo IDs to print.
 -n : Number of items to display. Defaults to the value in the configuration.
 -N : Limit number of items displayed such that they fit on the terminal.
--s : Sort the list according to a sort expression. Defaults to the expression
+-s : Sort the list according to a SORT EXPRESSION. Defaults to the expression
      in the configuration.
--x : Show all todos (i.e. do not filter on dependencies or relevance).
+-x : Show all todos (i.e. do not filter on dependencies or relevance).\
 """

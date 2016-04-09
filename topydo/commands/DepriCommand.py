@@ -37,14 +37,14 @@ class DepriCommand(MultiCommand):
 
     def usage(self):
         return """\
-Synopsis: depri <NUMBER1> [<NUMBER2> ...]
-          depri [-x] -e <EXPRESSION>
+Synopsis: depri <NUMBER 1> [<NUMBER 2> ...]
+          depri [-x] -e <EXPRESSION>\
 """
 
     def help(self):
         return """Removes the priority of the given todo item(s).
 
-It is also possible to deprioritize items as complete with an expression using
-the -e flag. Use -x to also process todo items that are normally invisible
-(with the 'ls' subcommand).
+It is also possible to deprioritize items as complete with an EXPRESSION using
+the -e flag. Use -x to also process todo items that are normally invisible (as
+with the 'ls' subcommand).\
 """

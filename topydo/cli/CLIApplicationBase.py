@@ -59,7 +59,7 @@ Available commands:
 * sort
 * tag
 
-Run `topydo help <subcommand>` for command-specific help.
+Run `topydo help <subcommand>` for command-specific help.\
 """)
 
 
