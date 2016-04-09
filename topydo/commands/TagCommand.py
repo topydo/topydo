@@ -109,7 +109,7 @@ class TagCommand(Command):
             self.todolist.set_dirty()
 
     def _set(self):
-        if len(self.current_values) > 1:
+        if len(self.current_values) > 1 and not self.force_add:
             answer = self._choose()
 
             if answer == "all":
