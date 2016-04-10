@@ -14,15 +14,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from topydo.lib.Config import config
 from topydo.lib.ListFormat import ListFormatParser
 from topydo.lib.ProgressColor import progress_color
 
 import urwid
+import re
 
 # pass a None todo list, since we won't use %i or %I here
 PRIO_FORMATTER = ListFormatParser(None, "%{(}p{)}")
 TEXT_FORMATTER = ListFormatParser(None, "%s %k\n%h")
+
+PRJ_CON_PATTERN = r'\B(?:\+|@)(?:\S*\w)'
+TAG_PATTERN = r'\b\S+:[^/\s]\S*\b'
+URL_PATTERN = r'(?:^|\s)(?:\w+:){1}(?://\S+)'
+
 
 def _to_urwid_color(p_color):
     """
@@ -41,16 +46,21 @@ def _markup(p_todo, p_focus):
     Returns an attribute spec for the colors that correspond to the given todo
     item.
     """
-    # retrieve the assigned value in the config file
-    fg_color = config().priority_color(p_todo.priority())
-    if p_focus and fg_color.is_neutral():
-        fg_color = 'black'
+    pri = p_todo.priority()
+    pri = 'pri_' + pri if pri else 'default'
+
+    if not p_focus:
+        attr_dict = {None: pri}
     else:
-        fg_color = _to_urwid_color(fg_color)
+        # use '_focus' palette entries instead of standard ones
+        attr_dict = {None: pri + '_focus'}
+        attr_dict['project'] = 'project_focus'
+        attr_dict['context'] = 'context_focus'
+        attr_dict['metadata'] = 'metadata_focus'
+        attr_dict['link'] = 'link_focus'
 
-    bg_color = 'light gray' if p_focus else 'default'
+    return attr_dict
 
-    return urwid.AttrSpec(fg_color, bg_color, 256)
 
 class TodoWidget(urwid.WidgetWrap):
     def __init__(self, p_todo, p_number):
@@ -60,9 +70,32 @@ class TodoWidget(urwid.WidgetWrap):
         todo_text = TEXT_FORMATTER.parse(p_todo)
         priority_text = PRIO_FORMATTER.parse(p_todo)
 
+        # split todo_text at each occurrence of tag/project/context/url
+        txt_pattern = r'|'.join([PRJ_CON_PATTERN, TAG_PATTERN, URL_PATTERN])
+        txt_pattern = r'(' + txt_pattern + r')'
+        txt_splitted = re.split(txt_pattern, todo_text)
+        txt_markup = []
+
+        # Examine each substring and apply relevant palette entry if needed
+        for substring in txt_splitted:
+            # re.split can generate empty strings when capturing group is used
+            if not substring:
+                continue
+            if re.match(TAG_PATTERN, substring):
+                txt_markup.append(('metadata', substring))
+            elif re.match(URL_PATTERN, substring):
+                txt_markup.append(('link', substring))
+            elif re.match(PRJ_CON_PATTERN, substring):
+                if substring.startswith('+'):
+                    txt_markup.append(('project', substring))
+                else:
+                    txt_markup.append(('context', substring))
+            else:
+                txt_markup.append(substring)
+
         id_widget = urwid.Text(str(p_number), align='right')
         priority_widget = urwid.Text(priority_text)
-        self.text_widget = urwid.Text(todo_text)
+        self.text_widget = urwid.Text(txt_markup)
 
         progress = _to_urwid_color(progress_color(p_todo))
         progress_bar = urwid.AttrMap(
