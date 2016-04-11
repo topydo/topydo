@@ -179,6 +179,7 @@ class UIApplication(CLIApplicationBase):
             ('link', '', '', '', link_color, ''),
             ('link_focus', '', 'light gray', '', link_color, None),
             ('default_focus', 'black', 'light gray'),
+            ('marked', '', 'light blue'),
         ]
 
         for C in ascii_uppercase:

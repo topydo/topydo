@@ -135,7 +135,14 @@ class TodoWidget(urwid.WidgetWrap):
         return True
 
     def mark(self):
-        self.widget.set_attr_map({None: _markup(self.todo, True)})
+        attr_map = {
+            None:       'marked',
+            'link':     'marked',
+            'context':  'marked',
+            'project':  'marked',
+            'metadata': 'marked',
+        }
+        self.widget.set_attr_map(attr_map)
 
     def unmark(self):
-        self.widget.set_attr_map({None: _markup(self.todo, False)})
+        self.widget.set_attr_map(_markup(self.todo, False))
