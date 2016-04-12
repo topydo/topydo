@@ -48,7 +48,9 @@ def progress_color(p_todo):
             diff = p_end - p_start
             return diff.days
 
-        if p_todo.has_tag('rec') and p_todo.due_date():
+        if p_todo.has_tag('rec') and p_todo.due_date() \
+            and not p_todo.start_date():
+
             # add negation, offset is based on due date
             recurrence_pattern = p_todo.tag_value('rec')
             neg_recurrence_pattern = re.sub('^\+?', '-', recurrence_pattern)
@@ -61,7 +63,8 @@ def progress_color(p_todo):
         else:
             result = p_todo.length()
 
-        return result
+        # a todo item is at least one day long
+        return max(1, result)
 
     def get_progress():
         """
@@ -73,7 +76,7 @@ def progress_color(p_todo):
             return 1.1
         elif p_todo.due_date():
             days_till_due = p_todo.days_till_due()
-            length = get_length() or 14
+            length = get_length()
             return max((length - days_till_due), 0) / length
         else:
             return 0
