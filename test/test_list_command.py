@@ -17,6 +17,7 @@
 import codecs
 import re
 import os
+import sys
 import unittest
 from collections import namedtuple
 
@@ -346,7 +347,10 @@ class ListCommandTest(CommandTest):
         Test 'N' parameter with output longer than available terminal lines.
         """
         self.todolist = load_file_to_todolist("test/data/ListCommand_50_items.txt")
-        mock_terminal_size.return_value = self.terminal_size(80, 23)
+        if "win32" in sys.platform:
+            mock_terminal_size.return_value = self.terminal_size(80, 23)
+        else:
+            mock_terminal_size.return_value = self.terminal_size(80, 22)
 
         command = ListCommand(["-N"], self.todolist, self.out, self.error)
         command.execute()
@@ -360,7 +364,10 @@ class ListCommandTest(CommandTest):
         """Test basic 'N' parameter with nine line terminal."""
         # have 9 lines on the terminal will print 7 items and leave 2 lines
         # for the next prompt
-        mock_terminal_size.return_value = self.terminal_size(100, 9)
+        if "win32" in sys.platform:
+            mock_terminal_size.return_value = self.terminal_size(100, 9)
+        else:
+            mock_terminal_size.return_value = self.terminal_size(100, 8)
         self.todolist = load_file_to_todolist("test/data/ListCommand_50_items.txt")
 
         command = ListCommand(["-N"], self.todolist, self.out, self.error)
@@ -391,7 +398,10 @@ class ListCommandTest(CommandTest):
         Test 'N' parameter with multiline prompt.
         """
         self.todolist = load_file_to_todolist("test/data/ListCommand_50_items.txt")
-        mock_terminal_size.return_value = self.terminal_size(80, 23)
+        if "win32" in sys.platform:
+            mock_terminal_size.return_value = self.terminal_size(80, 23)
+        else:
+            mock_terminal_size.return_value = self.terminal_size(80, 22)
 
         command = ListCommand(["-N"], self.todolist, self.out, self.error)
         command.execute()
