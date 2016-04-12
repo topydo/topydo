@@ -295,10 +295,11 @@ def _N_lines():
         Otherwise, it looks for a newline ('\n') in the environmental variable
         PS1.
     '''  
-    lines_in_prompt = 2     # prompt is assumed to take up one line, even
-                            #   without any newlines in it, plus there is a free
-                            #   line printed out after the program output
+    lines_in_prompt = 1     # prompt is assumed to take up one line, even
+                            #   without any newlines in it
     if "win32" in sys.platform:
+        lines_in_prompt += 1  # Windows will typically print a free line after
+                              #   the program output
         a = re.findall('\$_', os.getenv('PROMPT', ''))
         lines_in_prompt += len(a)
     else:
