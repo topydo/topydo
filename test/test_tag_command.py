@@ -75,6 +75,17 @@ class TagCommandTest(CommandTest):
         self.assertFalse(self.output)
         self.assertEqual(self.errors, "Invalid todo number.\n")
 
+    def test_force_add_tag01(self):
+        '''Tries to different values to a tag for the same name 3 times.'''
+        for letter in ['a', 'b', 'c']:
+            command = TagCommand(['-a', '1', 'k', letter], self.todolist,
+                                 self.out, self.error)
+            command.execute()
+
+            self.assertEqual(self.errors, "")
+            self.assertTrue(self.todolist.is_dirty())
+        self.assertEqual(self.todolist.todo(1).source(), "Foo k:a k:b k:c")
+
     def test_set_tag04(self):
         command = TagCommand(["3", "due", "2014-10-20"], self.todolist,
                              self.out, self.error)
