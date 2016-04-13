@@ -54,6 +54,4 @@ class RevertCommand(Command):
         return """Synopsis: revert"""
 
     def help(self):
-        return """\
-Reverts the last command.
-"""
+        return """Reverts the last command."""

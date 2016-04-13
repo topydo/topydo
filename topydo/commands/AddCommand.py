@@ -138,15 +138,14 @@ class AddCommand(Command):
 
     def usage(self):
         return """Synopsis:
-  add <text>
-  add -f <file>
-  add -f -"""
+  add <TEXT>
+  add -f <FILE> | -"""
 
     def help(self):
         return """\
 This subcommand automatically adds the creation date to the added item.
 
-<text> may contain:
+TEXT may contain:
 
 * Priorities mid-sentence. Example: add "Water flowers (C)"
 
@@ -156,5 +155,5 @@ This subcommand automatically adds the creation date to the added item.
 
   Example: add "Subtask partof:1"
 
--f : Add todo items from specified <file> or from standard input.
+-f : Add todo items from specified FILE or from standard input.\
 """

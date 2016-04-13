@@ -138,8 +138,8 @@ class EditCommand(MultiCommand):
     def usage(self):
         return """Synopsis:
   edit
-  edit <NUMBER1> [<NUMBER2> ...]
-  edit -e [-x] [expression]
+  edit <NUMBER 1> [<NUMBER 2> ...]
+  edit -e [-x] [EXPRESSION]
   edit -d"""
 
     def help(self):
@@ -147,15 +147,15 @@ class EditCommand(MultiCommand):
 Launches a text editor to edit todos.
 
 Without any arguments it will just open the todo.txt file. Alternatively it can
-edit todo item(s) with the given number(s) or edit relevant todos matching
-the given expression. See `topydo help ls` for more information on relevant
+edit todo item(s) with the given NUMBER(s) or edit relevant todos matching
+the given EXPRESSION. See `topydo help ls` for more information on relevant
 todo items. It is also possible to open the archive file.
 
-By default it will use $EDITOR in your environment, otherwise it will fall back
-to 'vi'.
+By default it will look to your environment variable $EDITOR, otherwise it will
+fall back to 'vi'.
 
--e : Treat the subsequent arguments as an expression.
--x : Edit *all* todos matching the expression (i.e. do not filter on
+-e : Treat the subsequent arguments as an EXPRESSION.
+-x : Edit *all* todos matching the EXPRESSION (i.e. do not filter on
      dependencies or relevance).
--d : Open the archive file.
+-d : Open the archive file.\
 """

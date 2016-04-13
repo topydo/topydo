@@ -136,9 +136,10 @@ class DepCommand(Command):
 
     def help(self):
         return """\
-* add               : Adds a dependency. Using 1 before 2 creates a dependency
-                      from todo item 2 to 1.
+* add               : Adds a dependency. `dep add 1 2` denotes that todo item 1
+                      is dependant on todo item 2, i.e. item 2 is a subitem of
+                      item 1.
 * rm (alias: del)   : Removes a dependency.
 * ls                : Lists all dependencies to or from a certain todo.
-* clean (alias: gc) : Removes redundant id or p tags.
+* clean (alias: gc) : Removes redundant id or p tags.\
 """
