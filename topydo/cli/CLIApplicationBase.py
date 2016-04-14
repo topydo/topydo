@@ -22,6 +22,8 @@ I/O on the command-line.
 import getopt
 import sys
 
+from topydo.lib.TopydoString import TopydoString
+
 MAIN_OPTS = "ac:C:d:ht:v"
 READ_ONLY_COMMANDS = ('List', 'ListContext', 'ListProject')
 
@@ -77,6 +79,17 @@ def write(p_file, p_string):
     if p_string:
         p_file.write(p_string + "\n")
 
+
+def output(p_string):
+    ansi = lambda c: c.as_ansi()
+
+    if isinstance(p_string, list):
+        p_string = "\n".join([s.with_colors(ansi) for s in p_string])
+    elif isinstance(p_string, TopydoString):
+        # convert color codes to ANSI
+        p_string = p_string.with_colors(ansi)
+
+    write(sys.stdout, p_string)
 
 def error(p_string):
     """ Writes an error on the standard error. """
@@ -210,7 +223,7 @@ class CLIApplicationBase(object):
         command = p_command(
             p_args,
             self.todolist,
-            lambda o: write(sys.stdout, o),
+            output,
             error,
             input)
 

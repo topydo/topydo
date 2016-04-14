@@ -279,4 +279,4 @@ class TodoListBase(object):
         this list.
         """
         printer = PrettyPrinter()
-        return printer.print_list(self._todos)
+        return "\n".join([str(s) for s in printer.print_list(self._todos)])

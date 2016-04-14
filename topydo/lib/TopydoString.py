@@ -26,8 +26,13 @@ class TopydoString(collections.UserString):
     """
 
     def __init__(self, p_content):
-        super().__init__(p_content)
-        self.colors = {}
+        if isinstance(p_content, TopydoString):
+            # don't nest topydostrings
+            self.colors = p_content.colors
+            super().__init__(p_content.data)
+        else:
+            self.colors = {}
+            super().__init__(p_content)
 
     def append(self, p_string, p_color):
         """ Append a string with the given color. """

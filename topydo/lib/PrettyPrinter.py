@@ -30,11 +30,8 @@ class Printer(object):
         raise NotImplementedError
 
     def print_list(self, p_todos):
-        """
-        Given a list of todo items, pretty print it and return a list of
-        formatted strings.
-        """
-        return "\n".join([self.print_todo(todo) for todo in p_todos])
+        for todo in p_todos:
+            self.print_todo(todo)
 
 
 class PrettyPrinter(Printer):
@@ -69,11 +66,15 @@ class PrettyPrinter(Printer):
         for ppf in self.filters:
             todo_str = ppf.filter(todo_str, p_todo)
 
-        # transform color annotations to ANSI codes
-        if isinstance(todo_str, TopydoString):
-            return todo_str.with_colors(lambda c: c.as_ansi())
-        else:
-            return todo_str
+        return TopydoString(todo_str)
+
+    def print_list(self, p_todos):
+        """
+        Given a list of todo items, pretty print it and return a list of
+        formatted TopydoStrings. The output function in the UI should convert
+        the colors inside properly.
+        """
+        return [self.print_todo(todo) for todo in p_todos]
 
 
 def pretty_printer_factory(p_todolist, p_additional_filters=None):
