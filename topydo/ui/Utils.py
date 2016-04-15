@@ -17,13 +17,13 @@
 class PaletteItem:
     PROJECT = 'project'
     PROJECT_FOCUS = 'project_focus'
-    CONTEXT = 'context_focus'
+    CONTEXT = 'context'
     CONTEXT_FOCUS = 'context_focus'
     METADATA = 'metadata'
     METADATA_FOCUS = 'metadata_focus'
     LINK = 'link'
     LINK_FOCUS = 'link_focus'
-    
+
     DEFAULT = 'default'
     DEFAULT_FOCUS = 'default_focus'
     MARKED = 'marked'
