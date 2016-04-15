@@ -12,8 +12,7 @@
 (C) Describe +branch/column-ui on +wiki id:5 p:1 +version/0.10
 (C) Columns can not be added when all columns are removed type:bug +branch/column-ui
 (C) Catch ConfigError when retrieving subcommand issue:107 pr:108 +branch/column-ui p:2 +version/0.10 id:9
-(C) TodoListWidget must understand business days on postponing (even better, unaware of any length patterns) p:2 +branch/column-ui +version/0.10 id:11
-(C) Merge +branch/master in +branch/column-ui +version/0.10 p:9 p:11
+(C) TodoListWidget must understand business days on postponing (even better, unaware of any length patterns) p:2 +branch/column-ui +version/0.10
 Remove workaround to disable colors in +branch/column-ui p:2 +version/0.10 id:3
 Merge pr:114 p:2 +branch/column-ui +version/0.10 url:https://github.com/bram85/topydo/pull/114
 Introduce TopydoString to handle colors in an UI agnostic way +branch/column-ui +version/0.10 p:3 p:6
@@ -21,16 +20,17 @@ Update changelog +version/0.10 p:1 id:7
 Bump version +version/0.10 p:1 id:10
 x 2016-02-23 Do not crash when unclosed quotes are used type:bug issue:107 url:https://github.com/bram85/topydo/issues/107 p:9 +version/0.10 +branch/column-ui
 Perform benchmark compared with version 0.9 +version/0.10 p:7
+(D) ConsoleWidget should be able to show color blocks +branch/column-ui
 OR operator in filter expressions type:feature
 Remove usage of TodoListBase.todos() and use its __iter__() method instead
 Merge +branch/flake8
 Merge +branch/due-parent
 Merge +branch/due-edit-sort
 Process relative dates with the arrow library type:feature
-Work day mode for recurrence calculation, postponing (i.e. skip weekends) type:feature
 Add hooks, ability to process todo items through external script (e.g. post-add.sh, pre-do.sh) etc. type:feature
-Merge pr:108 url:https://github.com/bram85/topydo/pull/108
 append should understand relative dates for certain tags (like add and tag do) type:feature issue:103 url:https://github.com/bram85/topydo/issues/103
 Investigate whether progress colors should have a linear color range or an exponential color range type:investigate
 Add / shortcut to quickly find items based on a filter expression type:feature +branch/column-ui
 ConsoleWidget should support scrolling type:feature +branch/column-ui
+Merge pr:118 url:https://github.com/bram85/topydo/pull/118
+x 2016-04-15 Merge pr:108 url:https://github.com/bram85/topydo/pull/108
