@@ -19,14 +19,15 @@ import urwid
 from topydo.lib.Color import AbstractColor
 from topydo.lib.Todo import Todo
 from topydo.lib.TopydoString import TopydoString
+from topydo.ui.Utils import PaletteItem
 
 PALETTE_LOOKUP = {
     # omitting AbstractColor.NEUTRAL on purpose, so a text without any
     # attribute will be added to the markup
-    AbstractColor.PROJECT: 'project',
-    AbstractColor.CONTEXT: 'context',
-    AbstractColor.META: 'metadata',
-    AbstractColor.LINK: 'link',
+    AbstractColor.PROJECT: PaletteItem.PROJECT,
+    AbstractColor.CONTEXT: PaletteItem.CONTEXT,
+    AbstractColor.META: PaletteItem.METADATA,
+    AbstractColor.LINK: PaletteItem.LINK,
 }
 
 def topydostringToMarkup(p_string):
