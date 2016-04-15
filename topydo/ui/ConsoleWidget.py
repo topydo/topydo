@@ -16,15 +16,61 @@
 
 import urwid
 
+from topydo.lib.Color import AbstractColor
+from topydo.lib.Todo import Todo
+from topydo.lib.TopydoString import TopydoString
+
+PALETTE_LOOKUP = {
+    # omitting AbstractColor.NEUTRAL on purpose, so a text without any
+    # attribute will be added to the markup
+    AbstractColor.PROJECT: 'project',
+    AbstractColor.CONTEXT: 'context',
+    AbstractColor.META: 'metadata',
+    AbstractColor.LINK: 'link',
+}
+
+def topydostringToMarkup(p_string):
+    markup = []
+
+    color_positions = sorted(p_string.colors.items())
+    for i, (start_pos, color) in enumerate(color_positions):
+        # color starts at indicated position
+        start = start_pos
+
+        # color ends at next color indication. if missing, run until the end of
+        # the string
+        try:
+            end = color_positions[i+1][0]
+        except IndexError:
+            end = len(str(p_string))
+
+        text = str(p_string)[start:end]
+
+        if color in PALETTE_LOOKUP:
+            markup.append((PALETTE_LOOKUP[color], text))
+        else:
+            # a plain text without any attribute set (including
+            # AbstractColor.NEUTRAL)
+            markup.append(text)
+
+    color_at_start = color_positions and color_positions[0][0] == 0
+
+    # priority color should appear at the start if present, build a nesting
+    # markup
+    if color_at_start and isinstance(p_string.metadata, Todo):
+        priority = p_string.metadata.priority()
+        markup = ('pri_' + priority, markup)
+
+    return markup
 
 class ConsoleWidget(urwid.LineBox):
     def __init__(self, p_text=""):
         urwid.register_signal(ConsoleWidget, ['close'])
 
-        self.text = urwid.Text(p_text)
         self.width = 0
+        self.pile = urwid.Pile([])
 
-        super().__init__(self.text)
+        super().__init__(self.pile)
 
     def keypress(self, p_size, p_key):
         if p_key == 'enter' or p_key == 'q' or p_key == 'esc':
@@ -47,10 +93,20 @@ class ConsoleWidget(urwid.LineBox):
         return True
 
     def print_text(self, p_text):
-        self.text.set_text(self.text.text + p_text)
+        if isinstance(p_text, list):
+            for text in p_text:
+                self.print_text(text)
+
+            return
+        elif isinstance(p_text, TopydoString):
+            text = urwid.Text(topydostringToMarkup(p_text))
+        else:
+            text = urwid.Text(p_text)
+
+        self.pile.contents.append((text, ('pack', None)))
 
     def clear(self):
-        self.text.set_text("")
+        self.pile.contents = []
 
     def console_width(self):
         # return the last known width (last render)

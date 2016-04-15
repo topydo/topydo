@@ -18,7 +18,7 @@
 
 import re
 
-from topydo.lib.Color import Color
+from topydo.lib.Color import AbstractColor
 from topydo.lib.Config import config
 from topydo.lib.PrettyPrinterFilter import PrettyPrinterFilter
 from topydo.lib.TopydoString import TopydoString
@@ -34,16 +34,15 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
     def filter(self, p_todo_str, p_todo):
         """ Applies the colors. """
         if config().colors():
-            p_todo_str = TopydoString(p_todo_str)
+            p_todo_str = TopydoString(p_todo_str, p_todo)
 
             priority_color = config().priority_color(p_todo.priority())
-            neutral_color = Color('NEUTRAL')
 
             colors = [
-                (r'\B@(\S*\w)', config().context_color()),
-                (r'\B\+(\S*\w)', config().project_color()),
-                (r'\b\S+:[^/\s]\S*\b', config().metadata_color()),
-                (r'(^|\s)(\w+:){1}(//\S+)', config().link_color()),
+                (r'\B@(\S*\w)', AbstractColor.CONTEXT),
+                (r'\B\+(\S*\w)', AbstractColor.PROJECT),
+                (r'\b\S+:[^/\s]\S*\b', AbstractColor.META),
+                (r'(^|\s)(\w+:){1}(//\S+)', AbstractColor.LINK),
             ]
 
             for pattern, color in colors:
@@ -51,7 +50,7 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
                     p_todo_str.set_color(match.start(), color)
                     p_todo_str.set_color(match.end(), priority_color)
 
-            p_todo_str.append('', neutral_color)
+            p_todo_str.append('', AbstractColor.NEUTRAL)
 
             # color by priority
             p_todo_str.set_color(0, priority_color)

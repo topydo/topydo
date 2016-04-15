@@ -14,11 +14,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import re
+import urwid
+
 from topydo.lib.ListFormat import ListFormatParser
 from topydo.lib.ProgressColor import progress_color
-
-import urwid
-import re
+from topydo.ui.Utils import PaletteItem, to_urwid_color
 
 # pass a None todo list, since we won't use %i or %I here
 PRIO_FORMATTER = ListFormatParser(None, "%{(}p{)}")
@@ -29,35 +30,23 @@ TAG_PATTERN = r'\b\S+:[^/\s]\S*\b'
 URL_PATTERN = r'(?:^|\s)(?:\w+:){1}(?://\S+)'
 
 
-def _to_urwid_color(p_color):
-    """
-    Given a Color object, transform it to a color that urwid understands.
-    """
-    if not p_color.is_valid():
-        return 'black'
-    elif p_color.is_neutral():
-        return 'default'
-    else:
-        return 'h{}'.format(p_color.color)
-
-
 def _markup(p_todo, p_focus):
     """
     Returns an attribute spec for the colors that correspond to the given todo
     item.
     """
     pri = p_todo.priority()
-    pri = 'pri_' + pri if pri else 'default'
+    pri = 'pri_' + pri if pri else PaletteItem.DEFAULT
 
     if not p_focus:
         attr_dict = {None: pri}
     else:
         # use '_focus' palette entries instead of standard ones
         attr_dict = {None: pri + '_focus'}
-        attr_dict['project'] = 'project_focus'
-        attr_dict['context'] = 'context_focus'
-        attr_dict['metadata'] = 'metadata_focus'
-        attr_dict['link'] = 'link_focus'
+        attr_dict[PaletteItem.PROJECT] = PaletteItem.PROJECT_FOCUS
+        attr_dict[PaletteItem.CONTEXT] = PaletteItem.CONTEXT_FOCUS
+        attr_dict[PaletteItem.METADATA] = PaletteItem.METADATA_FOCUS
+        attr_dict[PaletteItem.LINK] = PaletteItem.LINK_FOCUS
 
     return attr_dict
 
@@ -82,14 +71,14 @@ class TodoWidget(urwid.WidgetWrap):
             if not substring:
                 continue
             if re.match(TAG_PATTERN, substring):
-                txt_markup.append(('metadata', substring))
+                txt_markup.append((PaletteItem.METADATA, substring))
             elif re.match(URL_PATTERN, substring):
-                txt_markup.append(('link', substring))
+                txt_markup.append((PaletteItem.LINK, substring))
             elif re.match(PRJ_CON_PATTERN, substring):
                 if substring.startswith('+'):
-                    txt_markup.append(('project', substring))
+                    txt_markup.append((PaletteItem.PROJECT, substring))
                 else:
-                    txt_markup.append(('context', substring))
+                    txt_markup.append((PaletteItem.CONTEXT, substring))
             else:
                 txt_markup.append(substring)
 
@@ -97,11 +86,11 @@ class TodoWidget(urwid.WidgetWrap):
         priority_widget = urwid.Text(priority_text)
         self.text_widget = urwid.Text(txt_markup)
 
-        progress = _to_urwid_color(progress_color(p_todo))
+        progress = to_urwid_color(progress_color(p_todo))
         progress_bar = urwid.AttrMap(
                 urwid.SolidFill(' '),
-                urwid.AttrSpec('default', progress, 256),
-                urwid.AttrSpec('default', progress, 256),
+                urwid.AttrSpec(PaletteItem.DEFAULT, progress, 256),
+                urwid.AttrSpec(PaletteItem.DEFAULT, progress, 256),
         )
 
         self.columns = urwid.Columns(
@@ -136,11 +125,11 @@ class TodoWidget(urwid.WidgetWrap):
 
     def mark(self):
         attr_map = {
-            None:       'marked',
-            'link':     'marked',
-            'context':  'marked',
-            'project':  'marked',
-            'metadata': 'marked',
+            None:                 PaletteItem.MARKED,
+            PaletteItem.LINK:     PaletteItem.MARKED,
+            PaletteItem.CONTEXT:  PaletteItem.MARKED,
+            PaletteItem.PROJECT:  PaletteItem.MARKED,
+            PaletteItem.METADATA: PaletteItem.MARKED,
         }
         self.widget.set_attr_map(attr_map)
 

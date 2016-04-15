@@ -22,6 +22,7 @@ I/O on the command-line.
 import getopt
 import sys
 
+from topydo.lib.Color import AbstractColor, Color
 from topydo.lib.TopydoString import TopydoString
 
 MAIN_OPTS = "ac:C:d:ht:v"
@@ -80,14 +81,42 @@ def write(p_file, p_string):
         p_file.write(p_string + "\n")
 
 
-def output(p_string):
-    ansi = lambda c: c.as_ansi()
+def lookup_color(p_color):
+    """
+    Converts an AbstractColor to a normal Color. Returns the Color itself
+    when a normal color is passed.
+    """
+    if not lookup_color.colors:
+        lookup_color.colors[AbstractColor.NEUTRAL] = Color('NEUTRAL')
+        lookup_color.colors[AbstractColor.PROJECT] = config().project_color()
+        lookup_color.colors[AbstractColor.CONTEXT] = config().context_color()
+        lookup_color.colors[AbstractColor.META] = config().metadata_color()
+        lookup_color.colors[AbstractColor.LINK] = config().link_color()
 
+    try:
+        return lookup_color.colors[p_color]
+    except KeyError:
+        return p_color
+
+lookup_color.colors = {}
+
+def insert_ansi(p_string):
+    """ Returns a string with color information at the right positions.  """
+    result = p_string.data
+
+    for pos, color in sorted(p_string.colors.items(), reverse=True):
+        color = lookup_color(color)
+
+        result = result[:pos] + color.as_ansi() + result[pos:]
+
+    return result
+
+def output(p_string):
     if isinstance(p_string, list):
-        p_string = "\n".join([s.with_colors(ansi) for s in p_string])
+        p_string = "\n".join([insert_ansi(s) for s in p_string])
     elif isinstance(p_string, TopydoString):
         # convert color codes to ANSI
-        p_string = p_string.with_colors(ansi)
+        p_string = insert_ansi(p_string)
 
     write(sys.stdout, p_string)
 

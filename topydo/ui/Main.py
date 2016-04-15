@@ -28,7 +28,7 @@ from topydo.ui.CommandLineWidget import CommandLineWidget
 from topydo.ui.ConsoleWidget import ConsoleWidget
 from topydo.ui.KeystateWidget import KeystateWidget
 from topydo.ui.TodoListWidget import TodoListWidget
-from topydo.ui.TodoWidget import _to_urwid_color
+from topydo.ui.Utils import PaletteItem, to_urwid_color
 from topydo.ui.ViewWidget import ViewWidget
 from topydo.ui.ColumnLayout import columns
 from topydo.lib.Config import config, ConfigError
@@ -94,7 +94,6 @@ class UIApplication(CLIApplicationBase):
         super().__init__()
 
         self._process_flags()
-        config(p_overrides={('topydo', 'colors'): '0'}) # disable color in output
 
         self.todofile = TodoFile.TodoFile(config().todotxt())
         self.todolist = TodoList.TodoList(self.todofile.read())
@@ -164,28 +163,28 @@ class UIApplication(CLIApplicationBase):
         self._set_alarm_for_next_midnight_update()
 
     def _create_color_palette(self):
-        project_color = _to_urwid_color(config().project_color())
-        context_color = _to_urwid_color(config().context_color())
-        metadata_color = _to_urwid_color(config().metadata_color())
-        link_color = _to_urwid_color(config().link_color())
+        project_color = to_urwid_color(config().project_color())
+        context_color = to_urwid_color(config().context_color())
+        metadata_color = to_urwid_color(config().metadata_color())
+        link_color = to_urwid_color(config().link_color())
 
         palette = [
-            ('project', '', '', '', project_color, ''),
-            ('project_focus', '', 'light gray', '', project_color, None),
-            ('context', '', '', '', context_color, ''),
-            ('context_focus', '', 'light gray', '', context_color, None),
-            ('metadata', '', '', '', metadata_color, ''),
-            ('metadata_focus', '', 'light gray', '', metadata_color, None),
-            ('link', '', '', '', link_color, ''),
-            ('link_focus', '', 'light gray', '', link_color, None),
-            ('default_focus', 'black', 'light gray'),
-            ('marked', '', 'light blue'),
+            (PaletteItem.PROJECT, '', '', '', project_color, ''),
+            (PaletteItem.PROJECT_FOCUS, '', 'light gray', '', project_color, None),
+            (PaletteItem.CONTEXT, '', '', '', context_color, ''),
+            (PaletteItem.CONTEXT_FOCUS, '', 'light gray', '', context_color, None),
+            (PaletteItem.METADATA, '', '', '', metadata_color, ''),
+            (PaletteItem.METADATA_FOCUS, '', 'light gray', '', metadata_color, None),
+            (PaletteItem.LINK, '', '', '', link_color, ''),
+            (PaletteItem.LINK_FOCUS, '', 'light gray', '', link_color, None),
+            (PaletteItem.DEFAULT_FOCUS, 'black', 'light gray'),
+            (PaletteItem.MARKED, '', 'light blue'),
         ]
 
         for C in ascii_uppercase:
             pri_color_cfg = config().priority_color(C)
 
-            pri_color = _to_urwid_color(pri_color_cfg)
+            pri_color = to_urwid_color(pri_color_cfg)
             pri_color_focus = pri_color if not pri_color_cfg.is_neutral() else 'black'
 
             palette.append((
@@ -209,7 +208,7 @@ class UIApplication(CLIApplicationBase):
         self.mainloop.set_alarm_at(time.mktime(tomorrow.timetuple()), callback)
 
     def _output(self, p_text):
-        self._print_to_console(p_text + "\n")
+        self._print_to_console(p_text)
 
     def _execute_handler(self, p_command, p_todo_id=None, p_output=None):
         """

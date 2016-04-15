@@ -17,6 +17,14 @@
 """ This module provides a class that represents a color. """
 
 
+class AbstractColor:
+    NEUTRAL = 0
+    PROJECT = 1
+    CONTEXT = 2
+    META = 3
+    LINK = 4
+
+
 class Color:
     color_names_dict = {
         'black': 0,

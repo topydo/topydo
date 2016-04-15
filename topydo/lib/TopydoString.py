@@ -25,17 +25,25 @@ class TopydoString(collections.UserString):
     where a certain color should start.
     """
 
-    def __init__(self, p_content):
+    def __init__(self, p_content, p_metadata=None):
         if isinstance(p_content, TopydoString):
             # don't nest topydostrings
             self.colors = p_content.colors
+            self.metadata = p_content.metadata
             super().__init__(p_content.data)
         else:
             self.colors = {}
             super().__init__(p_content)
 
+            # allows clients to pass arbitrary data with this string (e.g. a Todo
+            # object)
+            self.metadata = p_metadata
+
     def append(self, p_string, p_color):
-        """ Append a string with the given color. """
+        """
+        Append a string with the given color (normal Color or an
+        AbstractColor).
+        """
         self.colors[len(self.data)] = p_color
         self.data += p_string
 
@@ -43,15 +51,3 @@ class TopydoString(collections.UserString):
         """ Start using a color at the given position. """
         self.colors[p_pos] = p_color
 
-    def with_colors(self, p_transform_fn):
-        """
-        Returns a string with color information at the right positions.
-        p_transform_fn is a function that takes a Color object and returns a
-        string representing the color (e.g. "#ff0000").
-        """
-        result = self.data
-
-        for pos, color in sorted(self.colors.items(), reverse=True):
-            result = result[:pos] + p_transform_fn(color) + result[pos:]
-
-        return result
