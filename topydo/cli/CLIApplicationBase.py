@@ -74,7 +74,7 @@ def write(p_file, p_string):
     ANSI codes are removed when the file is not a TTY (and colors are
     automatically determined).
     """
-    if not config().colors(16 if p_file.isatty() else 0):
+    if not config().colors(p_file.isatty()):
         p_string = escape_ansi(p_string)
 
     if p_string:
@@ -185,6 +185,7 @@ class CLIApplicationBase(object):
             elif opt == "-c":
                 alt_config_path = value
             elif opt == "-C":
+                overrides[('topydo', 'force_colors')] = '1'
                 overrides[('topydo', 'colors')] = value
             elif opt == "-t":
                 overrides[('topydo', 'filename')] = value

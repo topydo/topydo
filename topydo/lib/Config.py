@@ -63,6 +63,7 @@ class _Config:
             'topydo': {
                 'default_command': 'ls',
                 'colors': 'auto',
+                'force_colors': '0',
                 'filename': 'todo.txt',
                 'archive_filename': 'done.txt',
                 'identifiers': 'linenumber',
@@ -188,14 +189,15 @@ class _Config:
     def default_command(self):
         return self.cp.get('topydo', 'default_command')
 
-    def colors(self, p_default=16):
+    def colors(self, p_hint_possible=True):
         """
         Returns 0, 16 or 256 representing the number of colors that should be
-        used in the output. When the configured value is 'auto', the default
-        value is used.
+        used in the output.
+
+        A hint can be passed whether the device that will output the text
+        supports colors.
         """
         lookup = {
-            'auto': p_default,
             'false': 0,
             'no': 0,
             '0': 0,
@@ -207,11 +209,21 @@ class _Config:
         }
 
         try:
-            return lookup[self.cp.get('topydo', 'colors').lower()]  # pylint: disable=no-member
+            forced = self.cp.get('topydo', 'force_colors') == '1'
         except ValueError:
-            return lookup[self.defaults['topydo']['colors'].lower()]  # pylint: disable=no-member
+            forced = self.defaults['topydo']['force_colors'] == '1'
+
+        try:
+            colors = lookup[self.cp.get('topydo', 'colors').lower()]  # pylint: disable=no-member
+        except ValueError:
+            colors = lookup[self.defaults['topydo']['colors'].lower()]  # pylint: disable=no-member
         except KeyError:
-            return 0
+            # for invalid values or 'auto'
+            colors = 16 if p_hint_possible else 0
+
+        # disable colors when no colors are enforced on the commandline and
+        # color support is determined automatically
+        return 0 if not forced and not p_hint_possible else colors
 
     def todotxt(self):
         return os.path.expanduser(self.cp.get('topydo', 'filename'))
