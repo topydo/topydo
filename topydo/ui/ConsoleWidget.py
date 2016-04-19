@@ -34,6 +34,12 @@ def topydostringToMarkup(p_string):
     markup = []
 
     color_positions = sorted(p_string.colors.items())
+
+    # in case no color positions are available, at least set something at the
+    # start position
+    if not color_positions:
+        color_positions = [(0, None)]
+
     for i, (start_pos, color) in enumerate(color_positions):
         # color starts at indicated position
         start = start_pos
