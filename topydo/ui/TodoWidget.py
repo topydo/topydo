@@ -17,6 +17,7 @@
 import re
 import urwid
 
+from topydo.lib.Config import config
 from topydo.lib.ListFormat import ListFormatParser
 from topydo.lib.ProgressColor import progress_color
 from topydo.ui.Utils import PaletteItem, to_urwid_color
@@ -86,7 +87,7 @@ class TodoWidget(urwid.WidgetWrap):
         priority_widget = urwid.Text(priority_text)
         self.text_widget = urwid.Text(txt_markup)
 
-        progress = to_urwid_color(progress_color(p_todo))
+        progress = to_urwid_color(progress_color(p_todo)) if config().colors() else PaletteItem.DEFAULT
         progress_bar = urwid.AttrMap(
                 urwid.SolidFill(' '),
                 urwid.AttrSpec(PaletteItem.DEFAULT, progress, 256),
@@ -106,8 +107,8 @@ class TodoWidget(urwid.WidgetWrap):
 
         self.widget = urwid.AttrMap(
             self.columns,
-            _markup(p_todo, False),  # no focus
-            _markup(p_todo, True)  # focus
+            _markup(p_todo, p_focus=False),
+            _markup(p_todo, p_focus=True)
         )
 
         super().__init__(self.widget)

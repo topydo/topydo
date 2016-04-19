@@ -163,6 +163,10 @@ class UIApplication(CLIApplicationBase):
         self._set_alarm_for_next_midnight_update()
 
     def _create_color_palette(self):
+        if not config().colors():
+            # return an empty palette:
+            return []
+
         project_color = to_urwid_color(config().project_color())
         context_color = to_urwid_color(config().context_color())
         metadata_color = to_urwid_color(config().metadata_color())
