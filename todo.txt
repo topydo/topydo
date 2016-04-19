@@ -35,4 +35,4 @@ ConsoleWidget should support scrolling type:feature +branch/column-ui
 Merge pr:118 url:https://github.com/bram85/topydo/pull/118
 x 2016-04-15 Merge pr:108 url:https://github.com/bram85/topydo/pull/108
 x 2016-04-19 TodoWidget still shows colors when run with -C 0 type:bug +branch/column-ui p:2
-Command `ls` crashes when column mode is run with -C 0 type:bug +branch/colunm-ui p:2
+x 2016-04-19 Command `ls` crashes when column mode is run with -C 0 type:bug +branch/colunm-ui p:2
