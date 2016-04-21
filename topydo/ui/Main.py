@@ -149,7 +149,12 @@ class UIApplication(CLIApplicationBase):
         self._blur_commandline()
 
         self._screen = urwid.raw_display.Screen()
-        self._screen.register_palette(self._create_color_palette())
+
+        if config().colors():
+            self._screen.register_palette(self._create_color_palette())
+        else:
+            self._screen.register_palette(self._create_mono_palette())
+
         self._screen.set_terminal_properties(256)
 
         self.mainloop = urwid.MainLoop(
@@ -163,10 +168,6 @@ class UIApplication(CLIApplicationBase):
         self._set_alarm_for_next_midnight_update()
 
     def _create_color_palette(self):
-        if not config().colors():
-            # return an empty palette:
-            return []
-
         project_color = to_urwid_color(config().project_color())
         context_color = to_urwid_color(config().context_color())
         metadata_color = to_urwid_color(config().metadata_color())
@@ -197,6 +198,23 @@ class UIApplication(CLIApplicationBase):
             palette.append((
                 'pri_' + C + '_focus', '', 'light gray', '', pri_color_focus, None
             ))
+
+        return palette
+
+    def _create_mono_palette(self):
+        palette = [
+            (PaletteItem.DEFAULT_FOCUS, 'black', 'light gray'),
+            (PaletteItem.PROJECT_FOCUS, PaletteItem.DEFAULT_FOCUS),
+            (PaletteItem.CONTEXT_FOCUS, PaletteItem.DEFAULT_FOCUS),
+            (PaletteItem.METADATA_FOCUS, PaletteItem.DEFAULT_FOCUS),
+            (PaletteItem.LINK_FOCUS, PaletteItem.DEFAULT_FOCUS),
+            (PaletteItem.MARKED, 'default,underline,bold', 'default'),
+        ]
+
+        for C in ascii_uppercase:
+            palette.append(
+                ('pri_' + C + '_focus', PaletteItem.DEFAULT_FOCUS)
+            )
 
         return palette
 
