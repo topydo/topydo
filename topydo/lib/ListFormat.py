@@ -125,7 +125,7 @@ def _right_align(p_str):
 
 def color_block(p_todo):
     return '{} {}'.format(
-        progress_color(p_todo).as_ansi(p_background=True),
+        progress_color(p_todo).as_ansi(),
         config().priority_color(p_todo.priority()).as_ansi(),
     )
 
