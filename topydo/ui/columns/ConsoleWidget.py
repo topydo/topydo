@@ -16,10 +16,10 @@
 
 import urwid
 
-from topydo.lib.Color import AbstractColor
+from topydo.lib.Color import AbstractColor, Color
 from topydo.lib.Todo import Todo
 from topydo.lib.TopydoString import TopydoString
-from topydo.ui.columns.Utils import PaletteItem
+from topydo.ui.columns.Utils import PaletteItem, to_urwid_color
 
 PALETTE_LOOKUP = {
     # omitting AbstractColor.NEUTRAL on purpose, so a text without any
@@ -55,6 +55,10 @@ def topydostringToMarkup(p_string):
 
         if color in PALETTE_LOOKUP:
             markup.append((PALETTE_LOOKUP[color], text))
+        # print progress color-block
+        elif isinstance(color, Color) and color.background:
+            progress = urwid.AttrSpec('', to_urwid_color(color), 256)
+            markup.append((progress, text))
         else:
             # a plain text without any attribute set (including
             # AbstractColor.NEUTRAL)
