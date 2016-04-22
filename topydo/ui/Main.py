@@ -245,7 +245,12 @@ class UIApplication(CLIApplicationBase):
                 p_todo_id = ' '.join(self.marked_todos)
             p_command = p_command.format(p_todo_id)
 
-        p_command = shlex.split(p_command)
+        try:
+            p_command = shlex.split(p_command)
+        except ValueError as verr:
+            self._print_to_console('Error: ' + str(verr))
+            return
+
         try:
             (subcommand, args) = get_subcommand(p_command)
         except ConfigError as cerr:
