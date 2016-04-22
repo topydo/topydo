@@ -45,15 +45,15 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
                 (r'(^|\s)(\w+:){1}(//\S+)', AbstractColor.LINK),
             ]
 
+            # color by priority
+            p_todo_str.set_color(0, priority_color)
+
             for pattern, color in colors:
                 for match in re.finditer(pattern, p_todo_str.data):
                     p_todo_str.set_color(match.start(), color)
                     p_todo_str.set_color(match.end(), priority_color)
 
             p_todo_str.append('', AbstractColor.NEUTRAL)
-
-            # color by priority
-            p_todo_str.set_color(0, priority_color)
 
         return p_todo_str
 
