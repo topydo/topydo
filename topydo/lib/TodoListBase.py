@@ -25,6 +25,7 @@ from topydo.lib import Filter
 from topydo.lib.Config import config
 from topydo.lib.HashListValues import hash_list_values
 from topydo.lib.PrettyPrinter import PrettyPrinter
+from topydo.lib.RelativeDate import relative_date_to_date
 from topydo.lib.Todo import Todo
 from topydo.lib.View import View
 
@@ -187,15 +188,31 @@ class TodoListBase(object):
         """ Returns the number of todos on this list. """
         return len(self._todos)
 
+    def _convert_date(self, p_todo, p_tag):
+        """
+        For the given tag, attemps to convert a relative date to an absolute
+        date.
+        """
+        value = p_todo.tag_value(p_tag)
+
+        if value:
+            dateobj = relative_date_to_date(value)
+            if dateobj:
+                p_todo.set_tag(p_tag, dateobj.isoformat())
+
     def append(self, p_todo, p_string):
         """
         Appends a text to the todo, specified by its number.
-        The todo will be parsed again, such that tags and projects in de
+        The todo will be parsed again, such that tags and projects in the
         appended string are processed.
         """
         if len(p_string) > 0:
             new_text = p_todo.source() + ' ' + p_string
             p_todo.set_source_text(new_text)
+
+            self._convert_date(p_todo, config().tag_start())
+            self._convert_date(p_todo, config().tag_due())
+
             self._update_todo_ids()
             self.dirty = True
 
