@@ -101,6 +101,7 @@ class PromptApplication(CLIApplicationBase):
                 continue
             except ValueError as verr:
                 error('Error: ' + str(verr))
+                continue
 
             mtime_after = _todotxt_mtime()
 
