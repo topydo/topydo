@@ -90,6 +90,16 @@ class AppendCommandTest(CommandTest):
         self.assertEqual(self.output, "|  1| Foo due:2016-04-25\n")
         self.assertEqual(self.errors, "")
 
+    def test_append9(self):
+        """Use append to add a dependency."""
+        self.todolist.add("Bar")
+        command = AppendCommand([1, "after:2"], self.todolist, self.out,
+                                self.error)
+        command.execute()
+
+        self.assertEqual(self.output, "|  1| Foo id:1\n")
+        self.assertEqual(self.errors, "")
+
 
     def test_help(self):
         command = AppendCommand(["help"], self.todolist, self.out, self.error)
