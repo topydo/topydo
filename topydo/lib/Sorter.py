@@ -52,6 +52,8 @@ def get_field_function(p_field):
         result = importance
     elif p_field == 'importance-avg' or p_field == 'importance-average':
         result = average_importance
+    elif p_field == 'length':
+        result = lambda a: a.length()
     elif p_field == 'project' or p_field == 'projects':
         result = lambda a: sorted([c.lower() for c in a.projects()])
     elif p_field == 'text':
