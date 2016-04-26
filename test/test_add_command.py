@@ -140,7 +140,7 @@ class AddCommandTest(CommandTest):
                          self.today + " Bar id:1")
         self.assertEqual(self.errors, "")
 
-    def test_add_de04(self):
+    def test_add_dep04(self):
         """ Test for using an after: tag with non-existing value. """
         command = AddCommand.AddCommand(["Foo after:1"], self.todolist,
                                         self.out, self.error)

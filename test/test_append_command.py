@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
+from freezegun import freeze_time
 
 from test.command_testcase import CommandTest
 from topydo.commands.AppendCommand import AppendCommand
@@ -78,6 +79,27 @@ class AppendCommandTest(CommandTest):
 
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors, command.usage() + "\n")
+
+    @freeze_time('2016, 4, 24')
+    def test_append8(self):
+        """Due dates given by append are processed."""
+        command = AppendCommand([1, "due:tomorrow"], self.todolist, self.out,
+                                self.error)
+        command.execute()
+
+        self.assertEqual(self.output, "|  1| Foo due:2016-04-25\n")
+        self.assertEqual(self.errors, "")
+
+    def test_append9(self):
+        """Use append to add a dependency."""
+        self.todolist.add("Bar")
+        command = AppendCommand([1, "after:2"], self.todolist, self.out,
+                                self.error)
+        command.execute()
+
+        self.assertEqual(self.output, "|  1| Foo id:1\n")
+        self.assertEqual(self.errors, "")
+
 
     def test_help(self):
         command = AppendCommand(["help"], self.todolist, self.out, self.error)
