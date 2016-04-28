@@ -415,6 +415,30 @@ class TodoListDependencyTester(TopydoTest):
         self.assertTrue(self.todolist.dirty)
         self.assertTrue(self.todolist.todo_by_dep_id('99'))
 
+    def test_delete01(self):
+        """ Check that dependency tags are cleaned up. """
+        todo = self.todolist.todo(4)
+        self.todolist.delete(todo, p_leave_tags=False)
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEqual(self.todolist.todo(3).source(), "Baz p:1")
+
+    def test_delete02(self):
+        """ Check that dependency tags are left when requested. """
+        todo = self.todolist.todo(4)
+        self.todolist.delete(todo, p_leave_tags=True)
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEqual(self.todolist.todo(3).source(), "Baz p:1 id:2")
+
+    def test_delete03(self):
+        """ Check that dependency tags are left when requested. """
+        todo = self.todolist.todo(3)
+        self.todolist.delete(todo, p_leave_tags=True)
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertEqual(self.todolist.todo(3).source(), "Buzz p:2")
+
 
 class TodoListCleanDependencyTester(TopydoTest):
     """
