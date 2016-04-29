@@ -125,35 +125,35 @@ class ProgressColorTest(TopydoTest):
     def test_progress17(self):
         """ Due tomorrow (creation date + recurrence + start date) """
         color = progress_color(Todo('2016-12-01 Foo due:2016-01-02 rec:1d t:2016-01-02'))
-        self.assertEqual(color.color, 3)
+        self.assertEqual(color.color, 2)
 
     def test_progress18(self):
         """ Due tomorrow (creation date + recurrence + start date) """
         set_256_colors()
         color = progress_color(Todo('2015-12-01 Foo due:2016-01-02 rec:1d t:2016-01-02'))
-        self.assertEqual(color.color, 208)
+        self.assertEqual(color.color, 22)
 
     def test_progress19(self):
         """ Due tomorrow (creation date + strict recurrence + start date) """
         color = progress_color(Todo('2016-12-01 Foo due:2016-01-02 rec:+1d t:2016-01-02'))
-        self.assertEqual(color.color, 3)
+        self.assertEqual(color.color, 2)
 
     def test_progress20(self):
         """ Due tomorrow (creation date + strict recurrence + start date) """
         set_256_colors()
         color = progress_color(Todo('2015-12-01 Foo due:2016-01-02 rec:+1d t:2016-01-02'))
-        self.assertEqual(color.color, 208)
+        self.assertEqual(color.color, 22)
 
     def test_progress21(self):
         """ Due tomorrow (creation date + start date) """
         color = progress_color(Todo('2016-12-01 Foo due:2016-01-02 t:2016-01-02'))
-        self.assertEqual(color.color, 3)
+        self.assertEqual(color.color, 2)
 
     def test_progress22(self):
         """ Due tomorrow (creation date + start date) """
         set_256_colors()
         color = progress_color(Todo('2015-12-01 Foo due:2016-01-02 t:2016-01-02'))
-        self.assertEqual(color.color, 208)
+        self.assertEqual(color.color, 22)
 
     def test_progress23(self):
         """ Due tomorrow (creation date + start date) """
@@ -176,6 +176,13 @@ class ProgressColorTest(TopydoTest):
         """ Start date after due date """
         set_256_colors()
         color = progress_color(Todo('Foo due:2016-01-02 t:2016-01-03'))
+        # a length of 14 days is assumed
+        self.assertEqual(color.color, 208)
+
+    def test_progress27(self):
+        """ Creation date after due date """
+        set_256_colors()
+        color = progress_color(Todo('2016-01-03 Foo due:2016-01-02'))
         # a length of 14 days is assumed
         self.assertEqual(color.color, 208)
 

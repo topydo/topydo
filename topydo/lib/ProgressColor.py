@@ -20,6 +20,11 @@ from topydo.lib.Color import Color
 from topydo.lib.Config import config
 from topydo.lib.Recurrence import relative_date_to_date
 
+
+# when a todo item has not enough information to determine the length, assume
+# this length
+ASSUMED_TODO_LENGTH = 14  # days
+
 def progress_color(p_todo):
     color16_range = [
         2,   # green
@@ -48,18 +53,24 @@ def progress_color(p_todo):
             diff = p_end - p_start
             return diff.days
 
-        if p_todo.has_tag('rec') and p_todo.due_date() \
-            and not p_todo.start_date():
+        does_recur = p_todo.has_tag('rec')
+        start_date = p_todo.start_date()
+        due_date = p_todo.due_date()
+        creation_date = p_todo.creation_date()
 
+        if does_recur and due_date and not start_date:
             # add negation, offset is based on due date
             recurrence_pattern = p_todo.tag_value('rec')
             neg_recurrence_pattern = re.sub('^\+?', '-', recurrence_pattern)
 
-            start = relative_date_to_date(
-                neg_recurrence_pattern, p_todo.due_date())
-            due = p_todo.due_date()
-
-            result = diff_days(start, due)
+            start = relative_date_to_date(neg_recurrence_pattern, due_date)
+            result = diff_days(start, due_date)
+        elif due_date and not start_date and not creation_date:
+            result = ASSUMED_TODO_LENGTH
+        elif due_date and start_date and due_date < start_date:
+            result = ASSUMED_TODO_LENGTH
+        elif due_date and not start_date and creation_date and due_date < creation_date:
+            result = ASSUMED_TODO_LENGTH
         else:
             result = p_todo.length()
 
