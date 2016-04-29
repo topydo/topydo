@@ -94,7 +94,5 @@ class Todo(TodoBase):
         if start and due and start < due:
             diff = due - start
             return diff.days
-        elif start and due and start == due:
-            return 1
         else:
             return 0
