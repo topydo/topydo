@@ -191,7 +191,7 @@ class SorterTest(TopydoTest):
                        'test/data/SorterTest13-result-context.txt', sorter)
 
 
-    def test_sort18(self):
+    def test_sort19(self):
         """
         Check sorting by length.
         """
