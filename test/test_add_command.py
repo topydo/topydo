@@ -268,6 +268,61 @@ class AddCommandTest(CommandTest):
 
         self.assertEqual(self.output, "|wb3| {today} Bar p:1 @Context\n|wb3| {today} Bar @Context\n".format(today=self.today))
 
+    def add_parentsof_helper(self, p_tag):
+        command = AddCommand.AddCommand(["Foo"], self.todolist, self.out,
+                                        self.error)
+        command.execute()
+
+        command = AddCommand.AddCommand(["Bar before:1"], self.todolist,
+                                        self.out, self.error)
+        command.execute()
+
+        command = AddCommand.AddCommand(["Baz {}:2".format(p_tag)],
+                                        self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertTrue(self.todolist.todo(3).has_tag('p', '1'))
+
+    def test_add_dep_parentsof01(self):
+        self.add_parentsof_helper('parentsof')
+
+    def test_add_dep_parentsof02(self):
+        self.add_parentsof_helper('parentof')
+
+    def test_add_dep_parentsof03(self):
+        self.add_parentsof_helper('parents-of')
+
+    def test_add_dep_parentsof04(self):
+        self.add_parentsof_helper('parent-of')
+
+    def add_childrenof_helper(self, p_tag):
+        command = AddCommand.AddCommand(["Foo"], self.todolist, self.out,
+                                        self.error)
+        command.execute()
+
+        command = AddCommand.AddCommand(["Bar before:1"], self.todolist,
+                                        self.out, self.error)
+        command.execute()
+
+        command = AddCommand.AddCommand(["Baz {}:1".format(p_tag)],
+                                        self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertTrue(self.todolist.todo(3).has_tag('id', '2'))
+        self.assertTrue(self.todolist.todo(2).has_tag('p', '2'))
+
+    def test_add_dep_childrenof01(self):
+        self.add_childrenof_helper('childrenof')
+
+    def test_add_dep_childrenof02(self):
+        self.add_childrenof_helper('childof')
+
+    def test_add_dep_childrenof03(self):
+        self.add_childrenof_helper('children-of')
+
+    def test_add_dep_childrenof04(self):
+        self.add_childrenof_helper('child-of')
+
     def test_add_reldate1(self):
         command = AddCommand.AddCommand(["Foo due:today"], self.todolist,
                                         self.out, self.error)

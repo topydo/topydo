@@ -96,6 +96,12 @@ class AddCommand(Command):
                             self.todolist.add_dependency(p_todo, dep)
                         elif p_tag == 'before' or p_tag == 'partof':
                             self.todolist.add_dependency(dep, p_todo)
+                        elif p_tag.startswith('parent'):
+                            for parent in self.todolist.parents(dep):
+                                self.todolist.add_dependency(parent, p_todo)
+                        elif p_tag.startswith('child'):
+                            for child in self.todolist.children(dep):
+                                self.todolist.add_dependency(p_todo, child)
                     except InvalidTodoException:
                         pass
 
@@ -104,9 +110,22 @@ class AddCommand(Command):
             convert_date(config().tag_start())
             convert_date(config().tag_due())
 
-            add_dependencies('partof')
-            add_dependencies('before')
-            add_dependencies('after')
+            keywords = [
+                'after',
+                'before',
+                'child-of',
+                'childof',
+                'children-of',
+                'childrenof',
+                'parent-of',
+                'parentof',
+                'parents-of',
+                'parentsof',
+                'partof',
+            ]
+
+            for keyword in keywords:
+                add_dependencies(keyword)
 
             if config().auto_creation_date():
                 p_todo.set_creation_date(date.today())
@@ -149,9 +168,9 @@ TEXT may contain:
 
 * Priorities mid-sentence. Example: add "Water flowers (C)"
 
-* Dependencies using before, after and partof tags. They are translated to the
-  corresponding 'id' and 'p' tags. The values of these tags correspond to the
-  todo number (not the dependency number).
+* Dependencies using before, after, partof, parents-of and children-of tags.
+  These are translated to the corresponding 'id' and 'p' tags. The values of
+  these tags correspond to the todo number (not the dependency number).
 
   Example: add "Subtask partof:1"
 
