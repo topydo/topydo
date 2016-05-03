@@ -45,10 +45,11 @@ class Color:
         'white': 15,
     }
 
-    def __init__(self, p_value=None):
+    def __init__(self, p_value=None, p_background=False):
         """ p_value is user input, be it a word color or an xterm code """
         self._value = None
         self.color = p_value
+        self.background = p_background
 
     @property
     def color(self):
@@ -85,7 +86,7 @@ class Color:
         """
         return self._value is not None
 
-    def as_ansi(self, p_decoration='normal', p_background=False):
+    def as_ansi(self, p_decoration='normal'):
         if not self.is_valid():
             return ''
         elif self.is_neutral():
@@ -103,7 +104,7 @@ class Color:
         }
         decoration = decoration_dict[p_decoration]
 
-        base = 40 if p_background else 30
+        base = 40 if self.background else 30
         if is_high_color:
             color = '1;{}'.format(base + self._value - 8)
         elif is_256:

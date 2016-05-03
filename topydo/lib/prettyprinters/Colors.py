@@ -21,6 +21,7 @@ import re
 from topydo.lib.Color import AbstractColor
 from topydo.lib.Config import config
 from topydo.lib.PrettyPrinterFilter import PrettyPrinterFilter
+from topydo.lib.ProgressColor import progress_color
 from topydo.lib.TopydoString import TopydoString
 
 
@@ -37,13 +38,18 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
             p_todo_str = TopydoString(p_todo_str, p_todo)
 
             priority_color = config().priority_color(p_todo.priority())
+            todo_prog_color = progress_color(p_todo)
 
             colors = [
                 (r'\B@(\S*\w)', AbstractColor.CONTEXT),
                 (r'\B\+(\S*\w)', AbstractColor.PROJECT),
                 (r'\b\S+:[^/\s]\S*\b', AbstractColor.META),
                 (r'(^|\s)(\w+:){1}(//\S+)', AbstractColor.LINK),
+                (r'\a+', todo_prog_color),
             ]
+
+            # color by priority
+            p_todo_str.set_color(0, priority_color)
 
             for pattern, color in colors:
                 for match in re.finditer(pattern, p_todo_str.data):
@@ -51,9 +57,8 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
                     p_todo_str.set_color(match.end(), priority_color)
 
             p_todo_str.append('', AbstractColor.NEUTRAL)
-
-            # color by priority
-            p_todo_str.set_color(0, priority_color)
+            # convert non-printable progress bells to spaces
+            p_todo_str.data = re.sub(r'\a', ' ', p_todo_str.data)
 
         return p_todo_str
 
