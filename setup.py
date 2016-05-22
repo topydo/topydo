@@ -41,7 +41,7 @@ setup(
         'test:python_version=="3.2"': ['mock'],
     },
     entry_points= {
-        'console_scripts': ['topydo = topydo.cli.UILoader:main'],
+        'console_scripts': ['topydo = topydo.ui.UILoader:main'],
     },
     classifiers = [
         "Development Status :: 5 - Production/Stable",

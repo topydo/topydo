@@ -19,7 +19,7 @@ import urwid
 from topydo.lib.Color import AbstractColor
 from topydo.lib.Todo import Todo
 from topydo.lib.TopydoString import TopydoString
-from topydo.ui.Utils import PaletteItem
+from topydo.ui.columns.Utils import PaletteItem
 
 PALETTE_LOOKUP = {
     # omitting AbstractColor.NEUTRAL on purpose, so a text without any

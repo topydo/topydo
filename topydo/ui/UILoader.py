@@ -19,8 +19,8 @@
 import getopt
 import sys
 
-from topydo.cli.CLI import CLIApplication
-from topydo.cli.CLIApplicationBase import MAIN_OPTS, error
+from topydo.ui.cli.CLI import CLIApplication
+from topydo.ui.CLIApplicationBase import MAIN_OPTS, error
 
 # enable color on windows CMD
 if "win32" in sys.platform:
@@ -41,13 +41,13 @@ def main():
 
         if args[0] == 'prompt':
             try:
-                from topydo.cli.Prompt import PromptApplication
+                from topydo.ui.prompt.Prompt import PromptApplication
                 PromptApplication().run()
             except ImportError:
                 error("You have to install prompt-toolkit to run prompt mode.")
         elif args[0] == 'columns':
             try:
-                from topydo.ui.Main import UIApplication
+                from topydo.ui.columns.Main import UIApplication
                 UIApplication().run()
             except ImportError:
                 error("You have to install urwid to run column mode.")

@@ -16,8 +16,8 @@
 
 import urwid
 
-from topydo.ui.TodoWidget import TodoWidget
 from topydo.lib.Utils import translate_key_to_config
+from topydo.ui.columns.TodoWidget import TodoWidget
 
 
 def get_execute_signal(p_prefix):

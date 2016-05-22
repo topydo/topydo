@@ -22,15 +22,7 @@ import urwid
 from collections import namedtuple
 from string import ascii_uppercase
 
-from topydo.cli.CLIApplicationBase import CLIApplicationBase
 from topydo.Commands import get_subcommand
-from topydo.ui.CommandLineWidget import CommandLineWidget
-from topydo.ui.ConsoleWidget import ConsoleWidget
-from topydo.ui.KeystateWidget import KeystateWidget
-from topydo.ui.TodoListWidget import TodoListWidget
-from topydo.ui.Utils import PaletteItem, to_urwid_color
-from topydo.ui.ViewWidget import ViewWidget
-from topydo.ui.ColumnLayout import columns
 from topydo.lib.Config import config, ConfigError
 from topydo.lib.Sorter import Sorter
 from topydo.lib.Filter import get_filter_list, RelevanceFilter, DependencyFilter
@@ -38,6 +30,14 @@ from topydo.lib.Utils import get_terminal_size
 from topydo.lib.View import View
 from topydo.lib import TodoFile
 from topydo.lib import TodoList
+from topydo.ui.CLIApplicationBase import CLIApplicationBase
+from topydo.ui.columns.CommandLineWidget import CommandLineWidget
+from topydo.ui.columns.ConsoleWidget import ConsoleWidget
+from topydo.ui.columns.KeystateWidget import KeystateWidget
+from topydo.ui.columns.TodoListWidget import TodoListWidget
+from topydo.ui.columns.Utils import PaletteItem, to_urwid_color
+from topydo.ui.columns.ViewWidget import ViewWidget
+from topydo.ui.columns.ColumnLayout import columns
 
 COLUMN_WIDTH = 40
 

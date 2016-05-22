@@ -20,7 +20,7 @@ import urwid
 from topydo.lib.Config import config
 from topydo.lib.ListFormat import ListFormatParser
 from topydo.lib.ProgressColor import progress_color
-from topydo.ui.Utils import PaletteItem, to_urwid_color
+from topydo.ui.columns.Utils import PaletteItem, to_urwid_color
 
 # pass a None todo list, since we won't use %i or %I here
 PRIO_FORMATTER = ListFormatParser(None, "%{(}p{)}")
