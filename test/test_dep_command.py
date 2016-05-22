@@ -121,6 +121,67 @@ class DepCommandTest(CommandTest):
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors, "")
 
+    def add_parentsof_helper(self, p_args):
+        command = DepCommand(p_args, self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.todo(4).has_tag('p', '1'))
+        self.assertEqual(self.output, "")
+        self.assertEqual(self.errors, "")
+
+    def test_add10(self):
+        self.add_parentsof_helper(["add", "4", "parents-of", "2"])
+
+    def test_add11(self):
+        self.add_parentsof_helper(["add", "4", "parent-of", "2"])
+
+    def test_add12(self):
+        self.add_parentsof_helper(["add", "4", "parentsof", "2"])
+
+    def test_add13(self):
+        self.add_parentsof_helper(["add", "4", "parentof", "2"])
+
+    def test_add14(self):
+        command = DepCommand(["add", "4", "parents-of", "5"], self.todolist,
+                             self.out, self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+        self.assertEqual(self.output, "")
+        self.assertEqual(self.errors, "")
+
+    def add_childrenof_helper(self, p_args):
+        command = DepCommand(p_args, self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.todo(2).has_tag('p', '2'))
+        self.assertTrue(self.todolist.todo(3).has_tag('p', '2'))
+        self.assertEqual(self.output, "")
+        self.assertEqual(self.errors, "")
+
+    def test_add15(self):
+        self.add_childrenof_helper(["add", "4", "children-of", "1"])
+
+    def test_add16(self):
+        self.add_childrenof_helper(["add", "4", "child-of", "1"])
+
+    def test_add17(self):
+        self.add_childrenof_helper(["add", "4", "childrenof", "1"])
+
+    def test_add18(self):
+        self.add_childrenof_helper(["add", "4", "childof", "1"])
+
+    def test_add19(self):
+        command = DepCommand(["add", "4", "children-of", "5"], self.todolist,
+                             self.out, self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.is_dirty())
+        self.assertEqual(self.output, "")
+        self.assertEqual(self.errors, "")
+
     def rm_helper(self, p_args):
         """
         Helper function that checks the removal of the dependency from todo 1

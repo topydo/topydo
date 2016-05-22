@@ -124,18 +124,18 @@ class TodoList(TodoListBase):
             if self._initialized:
                 self._register_todo(todo)
 
-    def delete(self, p_todo):
+    def delete(self, p_todo, p_leave_tags=False):
         """ Deletes a todo item from the list. """
         try:
             number = self._todos.index(p_todo)
 
             if p_todo.has_tag('id'):
                 for child in self.children(p_todo):
-                    self.remove_dependency(p_todo, child)
+                    self.remove_dependency(p_todo, child, p_leave_tags)
 
             if p_todo.has_tag('p'):
                 for parent in self.parents(p_todo):
-                    self.remove_dependency(parent, p_todo)
+                    self.remove_dependency(parent, p_todo, p_leave_tags)
 
             del self._todos[number]
             self._update_todo_ids()
@@ -206,19 +206,21 @@ class TodoList(TodoListBase):
             self.dirty = True
 
     @_needs_dependencies
-    def remove_dependency(self, p_from_todo, p_to_todo):
+    def remove_dependency(self, p_from_todo, p_to_todo, p_leave_tags=False):
         """ Removes a dependency between two todos. """
         dep_id = p_from_todo.tag_value('id')
 
         if dep_id:
-            p_to_todo.remove_tag('p', dep_id)
             self._depgraph.remove_edge(hash(p_from_todo), hash(p_to_todo))
+            self.dirty = True
+
+        # clean dangling dependency tags
+        if dep_id and not p_leave_tags:
+            p_to_todo.remove_tag('p', dep_id)
 
             if not self.children(p_from_todo, True):
                 p_from_todo.remove_tag('id')
                 del self._parentdict[dep_id]
-
-            self.dirty = True
 
     @_needs_dependencies
     def parents(self, p_todo, p_only_direct=False):

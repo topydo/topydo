@@ -39,44 +39,66 @@ class DepCommand(Command):
         self.printer = pretty_printer_factory(self.todolist)
 
     def _handle_add(self):
-        (from_todo, to_todo) = self._get_todos()
-
-        if from_todo and to_todo:
+        for from_todo, to_todo in self._get_todos():
             self.todolist.add_dependency(from_todo, to_todo)
 
     def _handle_rm(self):
-        (from_todo, to_todo) = self._get_todos()
-
-        if from_todo and to_todo:
+        for from_todo, to_todo in self._get_todos():
             self.todolist.remove_dependency(from_todo, to_todo)
 
     def _get_todos(self):
-        from_todo = None
-        to_todo = None
+        result = []
+
+        def get_parent_dependencies():
+            child_todo = first_todo
+            sibling_todo = second_todo
+
+            return [(parent, child_todo) for parent in self.todolist.parents(sibling_todo)]
+
+        def get_child_dependencies():
+            parent_todo = first_todo
+            sibling_todo = second_todo
+
+            return [(parent_todo, child) for child in self.todolist.children(sibling_todo)]
+
+        get_before_dependency = lambda: [(second_todo, first_todo)]
+        get_after_dependency = lambda: [(first_todo, second_todo)]
+
+        operators = {
+            "after": get_after_dependency,
+            "before": get_before_dependency,
+            "child-of": get_child_dependencies,
+            "childof": get_child_dependencies,
+            "children-of": get_child_dependencies,
+            "childrenof": get_child_dependencies,
+            "parent-of": get_parent_dependencies,
+            "parentof": get_parent_dependencies,
+            "parents-of": get_parent_dependencies,
+            "parentsof": get_parent_dependencies,
+            "partof": get_before_dependency,
+            "to": get_after_dependency,
+        }
 
         try:
+            first_todo_nr = self.argument(1)
             operator = self.argument(2)
 
-            if operator == 'before' or operator == 'partof':
-                from_todo_nr = self.argument(3)
-                to_todo_nr = self.argument(1)
-            elif operator == 'to' or operator == 'after':
-                from_todo_nr = self.argument(1)
-                to_todo_nr = self.argument(3)
+            if operator in operators:
+                second_todo_nr = self.argument(3)
             else:
-                # the operator was omitted, assume 2nd argument is target task
-                # default to 'to' behavior
-                from_todo_nr = self.argument(1)
-                to_todo_nr = self.argument(2)
+                second_todo_nr = self.argument(2)
+                operator = "to"
 
-            from_todo = self.todolist.todo(from_todo_nr)
-            to_todo = self.todolist.todo(to_todo_nr)
+            first_todo = self.todolist.todo(first_todo_nr)
+            second_todo = self.todolist.todo(second_todo_nr)
+
+            result = operators[operator]()
         except (InvalidTodoException):
             self.error("Invalid todo number given.")
         except InvalidCommandArgument:
             self.error(self.usage())
 
-        return (from_todo, to_todo)
+        return result
 
     def _handle_ls(self):
         """ Handles the ls subsubcommand. """
@@ -129,7 +151,7 @@ class DepCommand(Command):
     def usage(self):
         return """Synopsis:
   dep <add|rm> <NUMBER> [to] <NUMBER>
-  dep add <NUMBER> <before|partof|after> <NUMBER>
+  dep add <NUMBER> <before|partof|after|parents-of|children-of> <NUMBER>
   dep ls <NUMBER> to
   dep ls to <NUMBER>
   dep clean"""

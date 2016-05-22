@@ -27,10 +27,6 @@ from topydo.lib.TodoList import TodoList
 # the true and only editor
 DEFAULT_EDITOR = 'vi'
 
-# Access the base class of the TodoList instance kept inside EditCommand. We
-# cannot use super() inside the class itself
-BASE_TODOLIST = lambda tl: super(TodoList, tl)
-
 def _get_file_mtime(p_file):
     return os.stat(p_file.name).st_mtime
 
@@ -115,7 +111,7 @@ class EditCommand(MultiCommand):
 
             if _is_edited(orig_mtime, temp_todos):
                 for todo in self.todos:
-                    BASE_TODOLIST(self.todolist).delete(todo)
+                    self.todolist.delete(todo, p_leave_tags=True)
 
                 for todo in new_todos:
                     self.todolist.add_todo(todo)
