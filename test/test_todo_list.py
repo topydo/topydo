@@ -40,12 +40,12 @@ class TodoListTester(TopydoTest):
     def test_contexts(self):
         self.assertEqual(set(['Context1', 'Context2']),
                          self.todolist.contexts())
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
 
     def test_projects(self):
         self.assertEqual(set(['Project1', 'Project2']),
                          self.todolist.projects())
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
 
     def test_add1(self):
         text = "(C) Adding a new task @Context3 +Project3"
@@ -58,7 +58,7 @@ class TodoListTester(TopydoTest):
         self.assertEqual(set(['Context1', 'Context2', 'Context3']),
                          self.todolist.contexts())
         self.assertEqual(self.todolist.number(todo), 6)
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
 
     def test_add2(self):
         text = str(self.todolist)
@@ -101,7 +101,7 @@ class TodoListTester(TopydoTest):
         self.assertEqual(self.todolist.todo(2).source(),
                          "(C) Baz @Context1 +Project1 key:value")
         self.assertEqual(self.todolist.count(), count - 1)
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertRaises(InvalidTodoException, self.todolist.number, todo)
 
     def test_delete2(self):
@@ -112,7 +112,7 @@ class TodoListTester(TopydoTest):
         self.todolist.delete(todo)
 
         self.assertEqual(self.todolist.count(), count)
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
 
     def test_append1(self):
         todo = self.todolist.todo(3)
@@ -122,7 +122,7 @@ class TodoListTester(TopydoTest):
                          "(C) Baz @Context1 +Project1 key:value @Context3")
         self.assertEqual(set(['Context1', 'Context2', 'Context3']),
                          self.todolist.contexts())
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
 
     def test_append2(self):
         todo = self.todolist.todo(3)
@@ -145,7 +145,7 @@ class TodoListTester(TopydoTest):
 
         self.assertRaises(InvalidTodoException, self.todolist.todo,
                           count + 100)
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
 
     def test_count(self):
         """ Test that empty lines are not counted. """
@@ -167,26 +167,26 @@ class TodoListTester(TopydoTest):
         todo = self.todolist.todo(1)
         self.todolist.set_todo_completed(todo)
         self.assertTrue(self.todolist.todo(1).is_completed())
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
 
     def test_todo_priority1(self):
         todo = self.todolist.todo(1)
         self.todolist.set_priority(todo, 'F')
 
         self.assertEqual(self.todolist.todo(1).priority(), 'F')
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
 
     def test_todo_priority2(self):
         todo = self.todolist.todo(1)
         self.todolist.set_priority(todo, 'C')
 
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
 
     def test_erase(self):
         self.todolist.erase()
 
         self.assertEqual(self.todolist.count(), 0)
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
 
     def test_regex1(self):
         """ Multiple hits should result in None. """

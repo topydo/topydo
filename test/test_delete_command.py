@@ -48,7 +48,7 @@ class DeleteCommandTest(CommandTest):
                                 _no_prompt)
         command.execute()
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.todolist.todo(1).source(), "Bar")
         self.assertEqual(self.output, "|  2| Bar p:1\nRemoved: Foo id:1\n")
         self.assertEqual(self.errors, "")
@@ -58,7 +58,7 @@ class DeleteCommandTest(CommandTest):
                                 _no_prompt)
         command.execute()
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.todolist.todo(1).source(), "Bar")
         self.assertEqual(self.output, "|  2| Bar p:1\nRemoved: Foo id:1\n")
         self.assertEqual(self.errors, "")
@@ -68,7 +68,7 @@ class DeleteCommandTest(CommandTest):
                                 _yes_prompt)
         command.execute()
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.todolist.count(), 2)
         self.assertEqual(self.output,
                          "|  2| Bar p:1\nRemoved: Bar\nRemoved: Foo\n")
@@ -79,7 +79,7 @@ class DeleteCommandTest(CommandTest):
                                 self.error, _yes_prompt)
         command.execute()
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.todolist.count(), 3)  # force won't delete subtasks
         self.assertEqual(self.output, "|  2| Bar p:1\nRemoved: Foo id:1\n")
         self.assertEqual(self.errors, "")
@@ -89,7 +89,7 @@ class DeleteCommandTest(CommandTest):
                                 self.error, _yes_prompt)
         command.execute()
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.todolist.count(), 3)  # force won't delete subtasks
         self.assertEqual(self.output, "|  2| Bar p:1\nRemoved: Foo id:1\n")
         self.assertEqual(self.errors, "")
@@ -98,7 +98,7 @@ class DeleteCommandTest(CommandTest):
         command = DeleteCommand(["2"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.todolist.todo(1).source(), "Foo")
         self.assertEqual(self.output, "Removed: Bar p:1\nThe following todo item(s) became active:\n|  1| Foo\n")
         self.assertEqual(self.errors, "")
@@ -107,7 +107,7 @@ class DeleteCommandTest(CommandTest):
         command = DeleteCommand(["99"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors, "Invalid todo number given.\n")
 
@@ -115,7 +115,7 @@ class DeleteCommandTest(CommandTest):
         command = DeleteCommand(["A"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors, "Invalid todo number given.\n")
 
@@ -159,7 +159,7 @@ class DeleteCommandTest(CommandTest):
                                 self.error, _yes_prompt)
         command.execute()
 
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors, "Invalid todo number given: 99.\n")
 
@@ -169,7 +169,7 @@ class DeleteCommandTest(CommandTest):
                                 self.error, _yes_prompt)
         command.execute()
 
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors, "Invalid todo number given: 99.\nInvalid todo number given: A.\n")
 
@@ -181,7 +181,7 @@ class DeleteCommandTest(CommandTest):
                                 self.out, self.error, None)
         command.execute()
 
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors,
                          u"Invalid todo number given: Fo\u00d3B\u0105r.\n")
@@ -193,7 +193,7 @@ class DeleteCommandTest(CommandTest):
 
         result = "Removed: a @test with due:2015-06-03\nRemoved: a @test with +project\n"
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.todolist.count(), 2)
         self.assertEqual(self.output, result)
         self.assertEqual(self.errors, "")
@@ -203,7 +203,7 @@ class DeleteCommandTest(CommandTest):
                                 self.todolist, self.out, self.error, None)
         command.execute()
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.output, "Removed: a @test with due:2015-06-03\n")
         self.assertEqual(self.errors, "")
 
@@ -212,7 +212,7 @@ class DeleteCommandTest(CommandTest):
                                 self.todolist, self.out, self.error, None)
         command.execute()
 
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
 
     def test_expr_del4(self):
         """ Remove only relevant todo items. """
@@ -222,7 +222,7 @@ class DeleteCommandTest(CommandTest):
 
         result = "Foo"
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.todolist.count(), 1)
         self.assertEqual(self.todolist.print_todos(), result)
 
@@ -232,14 +232,14 @@ class DeleteCommandTest(CommandTest):
                                 self.error, _yes_prompt)
         command.execute()
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.todolist.count(), 0)
 
     def test_empty(self):
         command = DeleteCommand([], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
         self.assertFalse(self.output)
         self.assertEqual(self.errors, command.usage() + "\n")
 

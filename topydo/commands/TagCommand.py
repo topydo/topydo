@@ -106,7 +106,7 @@ class TagCommand(Command):
         self.todo.set_tag(self.tag, self.value, self.force_add, p_old_value)
 
         if old_src != self.todo.source():
-            self.todolist.set_dirty()
+            self.todolist.dirty = True
 
     def _set(self):
         if len(self.current_values) > 1 and not self.force_add:

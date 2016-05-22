@@ -69,7 +69,7 @@ class PostponeCommand(MultiCommand):
                 # pylint: disable=E1103
                 todo.set_tag(config().tag_due(), new_due.isoformat())
 
-                self.todolist.set_dirty()
+                self.todolist.dirty = True
                 self.out(self.printer.print_todo(todo))
             else:
                 self.error("Invalid date pattern given.")

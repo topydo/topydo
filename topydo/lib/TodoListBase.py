@@ -52,7 +52,7 @@ class TodoListBase(object):
         self._id_todo_map = {}
 
         self.add_list(p_todostrings)
-        self.dirty = False
+        self._dirty = False
 
     def __iter__(self):
         """
@@ -227,11 +227,13 @@ class TodoListBase(object):
         """
         return View(p_sorter, p_filters, self)
 
-    def is_dirty(self):
-        return self.dirty
+    @property
+    def dirty(self):
+        return self._dirty
 
-    def set_dirty(self):
-        self.dirty = True
+    @dirty.setter
+    def dirty(self, p_flag):
+        self._dirty = p_flag
 
     def todos(self):
         return self._todos
@@ -277,4 +279,4 @@ class TodoListBase(object):
         this list.
         """
         printer = PrettyPrinter()
-        return printer.print_list(self._todos)
+        return "\n".join([str(s) for s in printer.print_list(self._todos)])

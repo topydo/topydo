@@ -14,27 +14,23 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-""" A view is a list of todos, sorted and filtered. """
+import unittest
+
+from test.topydo_testcase import TopydoTest
+from topydo.lib.Utils import translate_key_to_config
 
 
-class View(object):
-    """
-    A view is instantiated by a todo list, usually obtained from a todo.txt
-    file. Also a sorter and a list of filters should be given that is applied
-    to the list.
-    """
+class UtilsTest(TopydoTest):
+    def test_key_to_cfg(self):
+        ctrl_s = translate_key_to_config('ctrl s')
+        meta_d = translate_key_to_config('meta d')
+        esc = translate_key_to_config('esc')
+        f4 = translate_key_to_config('f4')
 
-    def __init__(self, p_sorter, p_filters, p_todolist):
-        self.todolist = p_todolist
-        self._sorter = p_sorter
-        self._filters = p_filters
+        self.assertEqual(ctrl_s, '<C-s>')
+        self.assertEqual(meta_d, '<M-d>')
+        self.assertEqual(esc, '<Esc>')
+        self.assertEqual(f4, '<F4>')
 
-    @property
-    def todos(self):
-        """ Returns a sorted and filtered list of todos in this view. """
-        result = self._sorter.sort(self.todolist.todos())
-
-        for _filter in self._filters:
-            result = _filter.filter(result)
-
-        return result
+if __name__ == '__main__':
+    unittest.main()

@@ -16,8 +16,16 @@
 
 import configparser
 import os
+import re
 import shlex
 
+from itertools import accumulate
+from string import ascii_lowercase
+
+from topydo.lib.Color import Color
+
+def home_config_path(p_filename):
+    return os.path.join(os.path.expanduser('~'), p_filename)
 
 class ConfigError(Exception):
     def __init__(self, p_text):
@@ -54,7 +62,8 @@ class _Config:
         self.defaults = {
             'topydo': {
                 'default_command': 'ls',
-                'colors': '1',
+                'colors': 'auto',
+                'force_colors': '0',
                 'filename': 'todo.txt',
                 'archive_filename': 'done.txt',
                 'identifiers': 'linenumber',
@@ -107,11 +116,43 @@ class _Config:
                 'listcontext': 'lscon',
                 'listcontexts': 'lscon',
             },
+
+            'column_keymap': {
+                'gg': 'home',
+                'G': 'end',
+                'j': 'down',
+                'k': 'up',
+                'd': 'cmd del {}',
+                'e': 'cmd edit {}',
+                'u': 'cmd revert',
+                'x': 'cmd do {}',
+                'm': 'mark',
+                '.': 'repeat',
+                'pp': 'postpone',
+                'ps': 'postpone_s',
+                'pr': 'pri',
+                '0': 'first_column',
+                '$': 'last_column',
+                'h': 'prev_column',
+                'l': 'next_column',
+                'A': 'append_column',
+                'I': 'insert_column',
+                'E': 'edit_column',
+                'D': 'delete_column',
+                'Y': 'copy_column',
+                'L': 'swap_left',
+                'R': 'swap_right',
+                '<Left>': 'prev_column',
+                '<Right>': 'next_column',
+                '<Esc>': 'reset',
+            },
         }
 
         self.config = {}
 
         self.cp = configparser.RawConfigParser()
+        # allow uppercase config keys
+        self.cp.optionxform = lambda option: option
 
         for section in self.defaults:
             self.cp.add_section(section)
@@ -121,7 +162,8 @@ class _Config:
 
         files = [
             "/etc/topydo.conf",
-            self._home_config_path(),
+            home_config_path('.config/topydo/config'),
+            home_config_path('.topydo'),
             ".topydo",
             "topydo.conf",
             "topydo.ini",
@@ -144,17 +186,44 @@ class _Config:
             if not self.cp.has_section(section):
                 self.cp.add_section(section)
 
-    def _home_config_path(self):
-        return os.path.join(os.path.expanduser('~'), '.topydo')
-
     def default_command(self):
         return self.cp.get('topydo', 'default_command')
 
-    def colors(self):
+    def colors(self, p_hint_possible=True):
+        """
+        Returns 0, 16 or 256 representing the number of colors that should be
+        used in the output.
+
+        A hint can be passed whether the device that will output the text
+        supports colors.
+        """
+        lookup = {
+            'false': 0,
+            'no': 0,
+            '0': 0,
+            '1': 16,
+            'true': 16,
+            'yes': 16,
+            '16': 16,
+            '256': 256,
+        }
+
         try:
-            return self.cp.getboolean('topydo', 'colors')
+            forced = self.cp.get('topydo', 'force_colors') == '1'
         except ValueError:
-            return self.defaults['topydo']['colors'] == '1'
+            forced = self.defaults['topydo']['force_colors'] == '1'
+
+        try:
+            colors = lookup[self.cp.get('topydo', 'colors').lower()]  # pylint: disable=no-member
+        except ValueError:
+            colors = lookup[self.defaults['topydo']['colors'].lower()]  # pylint: disable=no-member
+        except KeyError:
+            # for invalid values or 'auto'
+            colors = 16 if p_hint_possible else 0
+
+        # disable colors when no colors are enforced on the commandline and
+        # color support is determined automatically
+        return 0 if not forced and not p_hint_possible else colors
 
     def todotxt(self):
         return os.path.expanduser(self.cp.get('topydo', 'filename'))
@@ -237,53 +306,53 @@ class _Config:
         return [] if hidden_tags == '' else [tag.strip() for tag in
                                              hidden_tags.split(',')]
 
-    def priority_colors(self):
+    def priority_color(self, p_priority):
         """
         Returns a dict with priorities as keys and color numbers as value.
         """
-        pri_colors_str = self.cp.get('colorscheme', 'priority_colors')
-
         def _str_to_dict(p_string):
             pri_colors_dict = dict()
             for pri_color in p_string.split(','):
                 pri, color = pri_color.split(':')
-                pri_colors_dict[pri] = color
+                pri_colors_dict[pri] = Color(color)
 
             return pri_colors_dict
 
         try:
+            pri_colors_str = self.cp.get('colorscheme', 'priority_colors')
+
             if pri_colors_str == '':
-                pri_colors_dict = {'A': '', 'B': '', 'C': ''}
+                pri_colors_dict = _str_to_dict('A:-1,B:-1,C:-1')
             else:
                 pri_colors_dict = _str_to_dict(pri_colors_str)
         except ValueError:
             pri_colors_dict = _str_to_dict(self.defaults['colorscheme']['priority_colors'])
 
-        return pri_colors_dict
+        return pri_colors_dict[p_priority] if p_priority in pri_colors_dict else Color('NEUTRAL')
 
     def project_color(self):
         try:
-            return self.cp.get('colorscheme', 'project_color')
+            return Color(self.cp.getint('colorscheme', 'project_color'))
         except ValueError:
-            return int(self.defaults['colorscheme']['project_color'])
+            return Color(self.cp.get('colorscheme', 'project_color'))
 
     def context_color(self):
         try:
-            return self.cp.get('colorscheme', 'context_color')
+            return Color(self.cp.getint('colorscheme', 'context_color'))
         except ValueError:
-            return int(self.defaults['colorscheme']['context_color'])
+            return Color(self.cp.get('colorscheme', 'context_color'))
 
     def metadata_color(self):
         try:
-            return self.cp.get('colorscheme', 'metadata_color')
+            return Color(self.cp.getint('colorscheme', 'metadata_color'))
         except ValueError:
-            return int(self.defaults['colorscheme']['metadata_color'])
+            return Color(self.cp.get('colorscheme', 'metadata_color'))
 
     def link_color(self):
         try:
-            return self.cp.get('colorscheme', 'link_color')
+            return Color(self.cp.getint('colorscheme', 'link_color'))
         except ValueError:
-            return int(self.defaults['colorscheme']['link_color'])
+            return Color(self.cp.get('colorscheme', 'link_color'))
 
     def auto_creation_date(self):
         try:
@@ -313,6 +382,28 @@ class _Config:
     def list_format(self):
         """ Returns the list format used by `ls` """
         return self.cp.get('ls', 'list_format')
+
+    def column_keymap(self):
+        """ Returns keymap and keystates used in column mode """
+        keystates = set()
+
+        shortcuts = self.cp.items('column_keymap')
+        keymap_dict = dict(shortcuts)
+
+        for combo, action in shortcuts:
+            # add all possible prefixes to keystates
+            combo_as_list = re.split('(<[A-Z].+?>|.)', combo)[1::2]
+            if len(combo_as_list) > 1:
+                keystates |= set(accumulate(combo_as_list[:-1]))
+
+            if action in ['pri', 'postpone', 'postpone_s']:
+                keystates.add(combo)
+
+            if action == 'pri':
+                for c in ascii_lowercase:
+                    keymap_dict[combo + c] = 'cmd pri {} ' + c
+
+        return (keymap_dict, keystates)
 
 
 def config(p_path=None, p_overrides=None):
