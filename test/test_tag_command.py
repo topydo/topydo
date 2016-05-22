@@ -83,7 +83,7 @@ class TagCommandTest(CommandTest):
             command.execute()
 
             self.assertEqual(self.errors, "")
-            self.assertTrue(self.todolist.is_dirty())
+            self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.todolist.todo(1).source(), "Foo k:a k:b k:c")
 
     def test_set_tag04(self):
