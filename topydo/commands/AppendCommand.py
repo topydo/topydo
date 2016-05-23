@@ -14,12 +14,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from topydo.lib.Command import Command, InvalidCommandArgument
+from topydo.lib.Config import config
+from topydo.lib.Command import InvalidCommandArgument
+from topydo.lib.WriteCommand import WriteCommand
 from topydo.lib.prettyprinters.Numbers import PrettyPrinterNumbers
 from topydo.lib.TodoListBase import InvalidTodoException
+from topydo.lib.TodoParser import parse_line
 
-
-class AppendCommand(Command):
+class AppendCommand(WriteCommand):
     def __init__(self, p_args, p_todolist, #pragma: no branch
                  p_out=lambda a: None,
                  p_err=lambda a: None,
@@ -37,7 +39,13 @@ class AppendCommand(Command):
 
             if text:
                 todo = self.todolist.todo(number)
+                new_text_parsed = parse_line(text)
+                new_tags = new_text_parsed['tags']
+                for tag in (config().tag_start(), config().tag_due()):
+                    if tag in new_tags:
+                        todo.remove_tag(tag)
                 self.todolist.append(todo, text)
+                self.postprocess_input_todo(todo)
 
                 self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
                 self.out(self.printer.print_todo(todo))
