@@ -99,12 +99,12 @@ class TodoList(TodoListBase):
             for dep in \
                     [dep for dep in self._todos if dep.has_tag('p', dep_id)]:
 
-                self._depgraph.add_edge(hash(p_todo), hash(dep), dep_id)
+                self._add_edge(p_todo, dep, dep_id)
 
         for dep_id in p_todo.tag_values('p'):
             try:
                 parent = self._parentdict[dep_id]
-                self._depgraph.add_edge(hash(parent), hash(p_todo), dep_id)
+                self._add_edge(parent, p_todo, dep_id)
             except KeyError:
                 pass
 
@@ -144,6 +144,10 @@ class TodoList(TodoListBase):
         except ValueError:
             # todo item couldn't be found, ignore
             pass
+
+    def _add_edge(self, p_from_todo, p_to_todo, p_dep_id):
+        self._parentdict[p_dep_id] = p_from_todo
+        self._depgraph.add_edge(hash(p_from_todo), hash(p_to_todo), p_dep_id)
 
     @_needs_dependencies
     def add_dependency(self, p_from_todo, p_to_todo):
@@ -200,7 +204,7 @@ class TodoList(TodoListBase):
                 p_from_todo.set_tag('id', dep_id)
 
             p_to_todo.add_tag('p', dep_id)
-            self._depgraph.add_edge(hash(p_from_todo), hash(p_to_todo), dep_id)
+            self._add_edge(p_from_todo, p_to_todo, dep_id)
             append_projects_to_subtodo()
             append_contexts_to_subtodo()
             self.dirty = True
