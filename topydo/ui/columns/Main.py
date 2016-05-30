@@ -95,12 +95,14 @@ class UIApplication(CLIApplicationBase):
 
         self._process_flags()
 
+        self.column_width = config().column_width()
         self.todofile = TodoFile.TodoFile(config().todotxt())
         self.todolist = TodoList.TodoList(self.todofile.read())
 
         self.marked_todos = []
 
-        self.columns = urwid.Columns([], dividechars=0, min_width=COLUMN_WIDTH)
+        self.columns = urwid.Columns([], dividechars=0,
+            min_width=config().column_width())
         self.commandline = CommandLineWidget('topydo> ')
         self.keystate_widget = KeystateWidget()
         self.status_line = urwid.Columns([
@@ -442,7 +444,7 @@ class UIApplication(CLIApplicationBase):
 
         options = self.columns.options(
             width_type='given',
-            width_amount=COLUMN_WIDTH,
+            width_amount=config().column_width(),
             box_widget=True
         )
 

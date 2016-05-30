@@ -52,6 +52,7 @@ class _Config:
             'add',
             'aliases',
             'colorscheme',
+            'columns',
             'dep',
             'ls',
             'sort',
@@ -115,6 +116,10 @@ class _Config:
                 'listcon': 'lscon',
                 'listcontext': 'lscon',
                 'listcontexts': 'lscon',
+            },
+
+            'columns': {
+                'column_width': '40',
             },
 
             'column_keymap': {
@@ -382,6 +387,18 @@ class _Config:
     def list_format(self):
         """ Returns the list format used by `ls` """
         return self.cp.get('ls', 'list_format')
+
+    def column_width(self):
+        try:
+            width = self.cp.getint('columns', 'column_width')
+
+            if width < 1:
+                # read default
+                raise ValueError
+
+            return width
+        except ValueError:
+            return int(self.defaults['columns']['column_width'])
 
     def column_keymap(self):
         """ Returns keymap and keystates used in column mode """
