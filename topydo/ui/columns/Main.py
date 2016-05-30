@@ -39,8 +39,6 @@ from topydo.ui.columns.Utils import PaletteItem, to_urwid_color
 from topydo.ui.columns.ViewWidget import ViewWidget
 from topydo.ui.columns.ColumnLayout import columns
 
-COLUMN_WIDTH = 40
-
 
 class UIView(View):
     """
