@@ -33,7 +33,7 @@ except ImportError:
 
 class EditCommandTest(CommandTest):
     def setUp(self):
-        super(EditCommandTest, self).setUp()
+        super().setUp()
         todos = [
             "Foo id:1",
             "Bar p:1 @test",
@@ -56,7 +56,7 @@ class EditCommandTest(CommandTest):
         command.execute()
 
         self.assertEqual(self.errors, "")
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.todolist.print_todos(), u"Bar p:1 @test\nBaz @test\nFo\u00f3B\u0105\u017a\nFoo id:1")
 
     @mock.patch('topydo.commands.EditCommand._is_edited')
@@ -72,7 +72,7 @@ class EditCommandTest(CommandTest):
                               None)
         command.execute()
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.errors, "")
         self.assertEqual(self.todolist.print_todos(), u"Foo id:1\nBaz @test\nFo\u00f3B\u0105\u017a\nLazy Cat")
 
@@ -82,7 +82,7 @@ class EditCommandTest(CommandTest):
                               None)
         command.execute()
 
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
         self.assertEqual(self.errors, "Invalid todo number given.\n")
 
     def test_edit04(self):
@@ -91,7 +91,7 @@ class EditCommandTest(CommandTest):
                               self.error, None)
         command.execute()
 
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
         self.assertEqual(self.errors, "Invalid todo number given: 5.\n")
 
     def test_edit05(self):
@@ -102,7 +102,7 @@ class EditCommandTest(CommandTest):
                               self.out, self.error, None)
         command.execute()
 
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
         self.assertEqual(self.errors,
                          u"Invalid todo number given: Fo\u00d3B\u0105r.\n")
 
@@ -119,7 +119,7 @@ class EditCommandTest(CommandTest):
                               self.out, self.error, None)
         command.execute()
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.errors, "")
         self.assertEqual(self.todolist.print_todos(),
                          u"Foo id:1\nBar p:1 @test\nBaz @test\nLazy Cat")
@@ -137,7 +137,7 @@ class EditCommandTest(CommandTest):
                               self.error, None)
         command.execute()
 
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
         self.assertEqual(self.errors, "Editing aborted. Nothing to do.\n")
         self.assertEqual(self.todolist.print_todos(), u"Foo id:1\nBar p:1 @test\nBaz @test\nFo\u00f3B\u0105\u017a")
 
@@ -158,7 +158,7 @@ class EditCommandTest(CommandTest):
         expected = u"|  3| Lazy Cat\n|  4| Lazy Dog\n"
 
         self.assertEqual(self.errors, "")
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.output, expected)
         self.assertEqual(self.todolist.print_todos(), u"Foo id:1\nFo\u00f3B\u0105\u017a\nLazy Cat\nLazy Dog")
 

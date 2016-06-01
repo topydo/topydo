@@ -1,3 +1,57 @@
+0.10
+----
+
+A major release, introducing a new user interface (TUI). Special thanks go to
+@mruwek for helping out to get this UI in its current shape.
+
+* New: A column-based user interface. Each column has its own filters and sort
+  order, allowing you to build a dashboard with your todo items. Launch with
+  `topydo columns`.
+* New: color blocks that change from green to red (overdue) as time passes by.
+  Use the %z placeholder to add color blocks to the `ls` output.
+* New: color option can be set to 0, 1, 16 or 256 and if needed overridden by
+  -C on the commandline.
+* New: recurrence based on business days. Skips Saturdays and Sundays when
+  calculating the next date (thanks to @mruwek).
+* New: items can be sorted by length (use 'length' as sort field).
+* New: parents-of and children-of operators with `add`, `dep` and `append`
+  subcommands. The todo item receives the same parents/children from the
+  specified todo item.
+* New: `append` understands relative dates and other tags that are special to
+  `add` (thanks to @rameshg87).
+
+* Fix: dependency ID creation with orphan todo items.
+* Fix: crash after completing/deleting an edited item.
+* Fix: crash after completing an item that got a new dependency with `dep add`
+
+* Change: a new tag value with an existing key can be added with the tag
+  subcommand (thanks to @MinchinWeb)
+* Change: ~/.config/topydo/config can be used as a configuration file.
+* Change: No backups are written for read-only commands (e.g. lsprj)
+* Change: topydo is more scalable for large todo.txt files.
+
+* Known issue: color blocks are not shown in `ls` output in the column UI.
+
+0.9
+---
+
+* Dropped support for Python 2.7.
+* Add ability to filter on creation/completion dates:
+
+        topydo ls created:today
+        topydo ls completed:today
+        topydo -t done.txt completed:today # if auto-archiving is set
+
+* `ls -F` supports `%P` that expands to a single space when no priority is set,
+  in contrast to `%p` which expands to an empty string (thanks to @MinchinWeb).
+* `ls -N` prints enough todo items such that it fits on one screen (thanks to
+  @MinchinWeb).
+* Aliases can have a `{}` placeholder which is substituted with the alias'
+  arguments (thanks to @mruwek).
+* `pri` accepts priorities in lowercase (thanks to @MinchinWeb).
+* Several bugfixes for `dep gc`.
+* Various test/CI improvements.
+
 0.8
 ---
 
@@ -21,8 +75,8 @@ for the majority of these new features.
 
 * `ls` output can be customized with a -F flag or a configuration option:
 
-      [ls]
-      list_format = |%I| %x %{(}p{)} %c %s %k %{due:}d %{t:}t
+        [ls]
+        list_format = |%I| %x %{(}p{)} %c %s %k %{due:}d %{t:}t
 
   or `ls -F "%{(}p{)} %s %{due:}d"`.
 

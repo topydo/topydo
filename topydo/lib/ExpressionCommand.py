@@ -32,7 +32,7 @@ class ExpressionCommand(Command):
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
-        super(ExpressionCommand, self).__init__(
+        super().__init__(
             p_args, p_todolist, p_out, p_err, p_prompt)
 
         self.sort_expression = config().sort_string()
@@ -45,38 +45,12 @@ class ExpressionCommand(Command):
     def _filters(self):
         filters = []
 
-        def arg_filters():
-            result = []
-
-            if self.last_argument:
-                args = self.args[:-1]
-            else:
-                args = self.args
-
-            for arg in args:
-                # when a word starts with -, it should be negated
-                is_negated = len(arg) > 1 and arg[0] == '-'
-                arg = arg[1:] if is_negated else arg
-
-                if re.match(Filter.ORDINAL_TAG_MATCH, arg):
-                    argfilter = Filter.OrdinalTagFilter(arg)
-                elif re.match(Filter.PRIORITY_MATCH, arg):
-                    argfilter = Filter.PriorityFilter(arg)
-                else:
-                    argfilter = Filter.GrepFilter(arg)
-
-                if is_negated:
-                    argfilter = Filter.NegationFilter(argfilter)
-
-                result.append(argfilter)
-
-            return result
-
         if not self.show_all:
             filters.append(Filter.DependencyFilter(self.todolist))
             filters.append(Filter.RelevanceFilter())
 
-        filters += arg_filters()
+        args = self.args[:-1] if self.last_argument else self.args
+        filters += Filter.get_filter_list(args)
 
         if not self.show_all:
             filters.append(Filter.LimitFilter(self.limit))

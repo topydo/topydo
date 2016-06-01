@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
+from datetime import date
 
 from test.command_testcase import CommandTest
 from topydo.commands.AppendCommand import AppendCommand
@@ -23,9 +24,10 @@ from topydo.lib.TodoList import TodoList
 
 class AppendCommandTest(CommandTest):
     def setUp(self):
-        super(AppendCommandTest, self).setUp()
+        super().setUp()
         self.todolist = TodoList([])
         self.todolist.add("Foo")
+        self.today = date.today().isoformat()
 
     def test_append1(self):
         command = AppendCommand([1, "Bar"], self.todolist, self.out,
@@ -78,6 +80,27 @@ class AppendCommandTest(CommandTest):
 
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors, command.usage() + "\n")
+
+    def test_append8(self):
+        command = AppendCommand([1, "due:today t:today"], self.todolist,
+                                self.out, self.error)
+        command.execute()
+
+        self.assertEqual(self.output,
+                         "|  1| Foo due:%s t:%s\n" % (self.today, self.today))
+        self.assertEqual(self.errors, "")
+
+    def test_append9(self):
+        self.todolist.add("Qux due:2015-12-21 t:2015-12-21 before:1")
+        self.todolist.add("Baz")
+        command = AppendCommand([2, "due:today t:today before:3"], self.todolist,
+                                self.out, self.error)
+        command.execute()
+
+        self.assertEqual(
+                self.output,
+                "|  2| Qux due:%s t:%s p:1 p:2\n" % (self.today, self.today))
+        self.assertEqual(self.errors, "")
 
     def test_help(self):
         command = AppendCommand(["help"], self.todolist, self.out, self.error)

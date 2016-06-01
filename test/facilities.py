@@ -52,4 +52,4 @@ def todolist_to_string(p_list):
 
 def print_view(p_view):
     printer = PrettyPrinter()
-    return printer.print_list(p_view.todos)
+    return "\n".join([str(s) for s in printer.print_list(p_view.todos)])

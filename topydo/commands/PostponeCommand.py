@@ -28,7 +28,7 @@ class PostponeCommand(MultiCommand):
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
-        super(PostponeCommand, self).__init__(
+        super().__init__(
             p_args, p_todolist, p_out, p_err, p_prompt)
 
         self.move_start_date = False
@@ -69,7 +69,7 @@ class PostponeCommand(MultiCommand):
                 # pylint: disable=E1103
                 todo.set_tag(config().tag_due(), new_due.isoformat())
 
-                self.todolist.set_dirty()
+                self.todolist.dirty = True
                 self.out(self.printer.print_todo(todo))
             else:
                 self.error("Invalid date pattern given.")
@@ -77,23 +77,23 @@ class PostponeCommand(MultiCommand):
 
     def usage(self):
         return """\
-Synopsis: postpone [-s] <NUMBER> [<NUMBER2> ...] <PATTERN>"
-          postpone [-x] -e <EXPRESSION>
+Synopsis: postpone [-s] <NUMBER> [<NUMBER2> ...] <PATTERN>
+          postpone [-x] -e <EXPRESSION>\
 """
 
     def help(self):
         return """\
-Postpone the todo item(s) with the given number(s) and the given pattern.
+Postpone the todo item(s) with the given NUMBER(s) and the given PATTERN.
 
 Postponing is done by adjusting the due date(s) of the todo(s), and if the -s
 flag is given, the start date accordingly.
 
-It is also possible to postpone items as complete with an expression using
-the -e flag. Use -x to also process todo items that are normally invisible
-(with the 'ls' subcommand).
+It is also possible to postpone items as complete with an EXPRESSION using
+the -e flag. Use -x to also process todo items that are normally invisible (as
+with the 'ls' subcommand).
 
-The pattern is a relative date, written in the format <COUNT><PERIOD> where
-count is a number and <PERIOD> is either 'd', 'w', 'm' or 'y', which stands for
-days, weeks, months and years respectively. Example: 'postpone 1 1w' postpones
-todo number 1 for 1 week.
+The PATTERN is a relative date, written in the format <COUNT> <PERIOD> where
+COUNT is a number and PERIOD is either 'd', 'w', 'm' or 'y', which stands for
+days, weeks, months and years respectively. Example: 'postpone 1 2w' postpones
+todo number 1 for 2 weeks.\
 """

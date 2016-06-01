@@ -8,8 +8,9 @@ python:
 install:
   - "python -m pip install pip --upgrade"
   - "pip install ."
+  - "pip install .[columns]"
   - "pip install .[ical]"
-  - "pip install .[prompt-toolkit]"
+  - "pip install .[prompt]"
   - "pip install .[test]"
   - "pip install pylint"
   - "pip install codecov"

@@ -22,19 +22,17 @@ from datetime import date
 from os.path import expanduser
 from sys import stdin
 
-from topydo.lib.Command import Command
+from topydo.lib.WriteCommand import WriteCommand
 from topydo.lib.Config import config
 from topydo.lib.prettyprinters.Numbers import PrettyPrinterNumbers
-from topydo.lib.RelativeDate import relative_date_to_date
-from topydo.lib.TodoListBase import InvalidTodoException
 
 
-class AddCommand(Command):
+class AddCommand(WriteCommand):
     def __init__(self, p_args, p_todolist, # pragma: no branch
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
-        super(AddCommand, self).__init__(
+        super().__init__(
             p_args, p_todolist, p_out, p_err, p_prompt)
         self.text = ' '.join(p_args)
         self.from_file = None
@@ -70,56 +68,18 @@ class AddCommand(Command):
 
             return todo_text
 
-        def _postprocess_input_todo(p_todo):
-            """
-            Post-processes a parsed todo when adding it to the list.
-
-            * It converts relative dates to absolute ones.
-            * Automatically inserts a creation date if not present.
-            * Handles more user-friendly dependencies with before:, partof: and
-            after: tags
-            """
-            def convert_date(p_tag):
-                value = p_todo.tag_value(p_tag)
-
-                if value:
-                    dateobj = relative_date_to_date(value)
-                    if dateobj:
-                        p_todo.set_tag(p_tag, dateobj.isoformat())
-
-            def add_dependencies(p_tag):
-                for value in p_todo.tag_values(p_tag):
-                    try:
-                        dep = self.todolist.todo(value)
-
-                        if p_tag == 'after':
-                            self.todolist.add_dependency(p_todo, dep)
-                        elif p_tag == 'before' or p_tag == 'partof':
-                            self.todolist.add_dependency(dep, p_todo)
-                    except InvalidTodoException:
-                        pass
-
-                    p_todo.remove_tag(p_tag, value)
-
-            convert_date(config().tag_start())
-            convert_date(config().tag_due())
-
-            add_dependencies('partof')
-            add_dependencies('before')
-            add_dependencies('after')
-
-            if config().auto_creation_date():
-                p_todo.set_creation_date(date.today())
-
         todo_text = _preprocess_input_todo(p_todo_text)
         todo = self.todolist.add(todo_text)
-        _postprocess_input_todo(todo)
+        self.postprocess_input_todo(todo)
+
+        if config().auto_creation_date():
+            todo.set_creation_date(date.today())
 
         self.out(self.printer.print_todo(todo))
 
     def execute(self):
         """ Adds a todo item to the list. """
-        if not super(AddCommand, self).execute():
+        if not super().execute():
             return False
 
         self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
@@ -138,23 +98,22 @@ class AddCommand(Command):
 
     def usage(self):
         return """Synopsis:
-  add <text>
-  add -f <file>
-  add -f -"""
+  add <TEXT>
+  add -f <FILE> | -"""
 
     def help(self):
         return """\
 This subcommand automatically adds the creation date to the added item.
 
-<text> may contain:
+TEXT may contain:
 
 * Priorities mid-sentence. Example: add "Water flowers (C)"
 
-* Dependencies using before, after and partof tags. They are translated to the
-  corresponding 'id' and 'p' tags. The values of these tags correspond to the
-  todo number (not the dependency number).
+* Dependencies using before, after, partof, parents-of and children-of tags.
+  These are translated to the corresponding 'id' and 'p' tags. The values of
+  these tags correspond to the todo number (not the dependency number).
 
   Example: add "Subtask partof:1"
 
--f : Add todo items from specified <file> or from standard input.
+-f : Add todo items from specified FILE or from standard input.\
 """

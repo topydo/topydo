@@ -43,10 +43,6 @@ smoothly into topydo.
                exit 1
            fi
       
-          if ! python2 -m pylint --errors-only topydo test; then
-              exit 1
-          fi
-      
           if ! python3 -m pylint --errors-only topydo test; then
               exit 1
           fi

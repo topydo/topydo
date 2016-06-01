@@ -26,7 +26,7 @@ class TagCommand(Command):
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
-        super(TagCommand, self).__init__(
+        super().__init__(
             p_args, p_todolist, p_out, p_err, p_prompt)
 
         self.force = False
@@ -106,10 +106,10 @@ class TagCommand(Command):
         self.todo.set_tag(self.tag, self.value, self.force_add, p_old_value)
 
         if old_src != self.todo.source():
-            self.todolist.set_dirty()
+            self.todolist.dirty = True
 
     def _set(self):
-        if len(self.current_values) > 1:
+        if len(self.current_values) > 1 and not self.force_add:
             answer = self._choose()
 
             if answer == "all":
@@ -124,7 +124,7 @@ class TagCommand(Command):
         self._print()
 
     def execute(self):
-        if not super(TagCommand, self).execute():
+        if not super().execute():
             return False
 
         self._process_args()
@@ -133,15 +133,15 @@ class TagCommand(Command):
             self._set()
 
     def usage(self):
-        return """Synopsis: tag [-a] [-f] <NUMBER> <tag> [<value>]"""
+        return """Synopsis: tag [-a] [-f] <NUMBER> <TAG> [<VALUE>]"""
 
     def help(self):
         return """\
-Sets the given tag to the given todo number with the given value. If the value
-is omitted, the tag is removed from the todo item.
+Sets the given TAG on the given todo NUMBER with the given VALUE. If the VALUE
+is omitted, the TAG is removed from the todo item.
 
--a : Do not change the current value of the tag if it exists, but add a new
-     value.
--f : Force setting/removing all values of the tag. Prevents interaction with
-     the user.
+-a : Do not change the current value of the TAG if it exists, but add a new
+     VALUE for the given TAG.
+-f : Force setting/removing all values of the TAG. Prevents interaction with
+     the user.\
 """

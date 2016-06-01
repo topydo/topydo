@@ -33,12 +33,15 @@ setup(
     ],
     extras_require = {
         ':sys_platform=="win32"': ['colorama>=0.2.5'],
+        ':python_version=="3.2"': ['backports.shutil_get_terminal_size>=1.0.0'],
+        'columns': ['urwid >= 1.3.0'],
         'ical': ['icalendar'],
-        'prompt-toolkit': ['prompt-toolkit >= 0.53'],
+        'prompt': ['prompt_toolkit >= 0.53'],
         'test': ['coverage', 'freezegun', 'green', ],
+        'test:python_version=="3.2"': ['mock'],
     },
     entry_points= {
-        'console_scripts': ['topydo = topydo.cli.UILoader:main'],
+        'console_scripts': ['topydo = topydo.ui.UILoader:main'],
     },
     classifiers = [
         "Development Status :: 5 - Production/Stable",

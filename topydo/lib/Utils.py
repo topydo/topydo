@@ -55,28 +55,65 @@ def escape_ansi(p_string):
 
 escape_ansi.pattern = re.compile(r'\x1b[^m]*m')
 
-def get_terminal_size():
+
+def get_terminal_size(p_getter=None):
     """
     Try to determine terminal size at run time. If that is not possible,
     returns the default size of 80x24.
+
+    By default, the size is determined with provided get_terminal_size by
+    shutil. Sometimes an UI may want to specify the desired width, then it can
+    provide a getter that returns a named tuple (columns, lines) with the size.
     """
-    from shutil import get_terminal_size # pylint: disable=no-name-in-module
 
     try:
-        sz = get_terminal_size()
-    except ValueError:
-        """
-        This can result from the 'underlying buffer being detached', which
-        occurs during running the unittest on Windows (but not on Linux?)
-        """
-        terminal_size = namedtuple('Terminal_Size', 'columns lines')
-        sz = terminal_size((80, 24))
+        return get_terminal_size.getter()
+    except AttributeError:
+        if p_getter:
+            get_terminal_size.getter = p_getter
+        else:
+            def inner():
+                try:
+                    # shutil.get_terminal_size was added to the standard
+                    # library in Python 3.3
+                    try:
+                        from shutil import get_terminal_size as _get_terminal_size  # pylint: disable=no-name-in-module
+                    except ImportError:
+                        from backports.shutil_get_terminal_size import get_terminal_size as _get_terminal_size  # pylint: disable=import-error
 
-    return sz
+                    sz = _get_terminal_size()
+                except ValueError:
+                    """
+                    This can result from the 'underlying buffer being detached', which
+                    occurs during running the unittest on Windows (but not on Linux?)
+                    """
+                    terminal_size = namedtuple('Terminal_Size', 'columns lines')
+                    sz = terminal_size(80, 24)
+
+                return sz
+
+            get_terminal_size.getter = inner
+
+        return get_terminal_size.getter()
+
+
+def translate_key_to_config(p_key):
+    """
+    Translates urwid key event to form understandable by topydo config parser.
+    """
+    if len(p_key) > 1:
+        key = p_key.capitalize()
+        if key.startswith('Ctrl') or key.startswith('Meta'):
+            key = key[0] + '-' + key[5:]
+        key = '<' + key + '>'
+    else:
+        key = p_key
+
+    return key
 
 def humanize_date(p_datetime):
     """ Returns a relative date string from a datetime object. """
     now = arrow.now()
     date = now.replace(day=p_datetime.day, month=p_datetime.month, year=p_datetime.year)
-    return date.humanize()
+    return date.humanize().replace('just now', 'today')
 

@@ -21,8 +21,8 @@ notation. Useful for displaying dependencies.
 
 from textwrap import wrap
 
-from topydo.lib.Colorblock import progress_html_color
 from topydo.lib.printers.PrettyPrinter import Printer
+from topydo.lib.ProgressColor import progress_color
 from topydo.lib.Utils import humanize_date
 
 
@@ -89,13 +89,13 @@ class DotPrinter(Printer):
 
         # print todos
         for todo in p_todos:
-            foreground, background = progress_html_color(todo)
+            color = progress_color(todo).as_html()
 
             result += '  {} [label={} style=filled fillcolor="{}" fontcolor="{}"]\n'.format(
                 node_name(todo),
                 node_label(todo),
-                background,
-                foreground,
+                color,
+                '#000000',
             )
 
         # print edges

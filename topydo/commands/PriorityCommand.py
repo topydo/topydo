@@ -22,18 +22,18 @@ from topydo.lib.Utils import is_valid_priority
 
 
 class PriorityCommand(MultiCommand):
-    def __init__(self, p_args, p_todolist, #pragma: no branch
+    def __init__(self, p_args, p_todolist,  # pragma: no branch
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
-        super(PriorityCommand, self).__init__(
+        super().__init__(
             p_args, p_todolist, p_out, p_err, p_prompt)
 
         self.last_argument = True
 
     def _execute_multi_specific(self):
         def normalize_priority(p_priority):
-            match = re.search(r'\b([A-Z])\b', p_priority)
+            match = re.search(r'\b([A-Z])\b', p_priority.upper())
             return match.group(1) if match else p_priority
 
         priority = normalize_priority(self.args[-1])
@@ -56,15 +56,15 @@ class PriorityCommand(MultiCommand):
 
     def usage(self):
         return """\
-Synopsis: pri <NUMBER1> [<NUMBER2> ...] <PRIORITY>
-          pri [-x] -e <EXPRESSION>
+Synopsis: pri <NUMBER 1> [<NUMBER 2> ...] <PRIORITY>
+          pri [-x] -e <EXPRESSION>\
 """
 
     def help(self):
         return """\
-Sets the priority of todo(s) the given number(s) to the given priority.
+Sets the priority of todo(s) the given NUMBER(s) to the given PRIORITY.
 
-It is also possible to prioritize items as complete with an expression using
-the -e flag. Use -x to also process todo items that are normally invisible
-(with the 'ls' subcommand).
+It is also possible to prioritize items with an EXPRESSION using the -e flag.
+Use -x to also process todo items that are normally invisible (as with the 'ls'
+subcommand).\
 """

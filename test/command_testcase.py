@@ -20,14 +20,19 @@ from topydo.lib.Utils import escape_ansi
 
 class CommandTest(TopydoTest):
     def __init__(self, *args, **kwargs):
-        super(CommandTest, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.output = ""
         self.errors = ""
 
     def out(self, p_output):
-        if p_output:
-            self.output += escape_ansi(p_output + "\n")
+        if isinstance(p_output, list) and p_output:
+            self.output += escape_ansi(
+                "\n".join([str(s) for s in p_output]) + "\n")
+        elif p_output:
+            self.output += str(p_output) + "\n"
 
     def error(self, p_error):
-        if p_error:
-            self.errors += escape_ansi(p_error + "\n")
+        if isinstance(p_error, list) and p_error:
+            self.errors += escape_ansi(p_error + "\n") + "\n"
+        elif p_error:
+            self.errors += str(p_error) + "\n"

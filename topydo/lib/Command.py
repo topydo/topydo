@@ -71,8 +71,8 @@ class Command(object):
         """ Retrieves a value from the argument list at the given position. """
         try:
             return self.args[p_number]
-        except IndexError:
-            raise InvalidCommandArgument
+        except IndexError as ie:
+            raise InvalidCommandArgument from ie
 
     def getopt(self, p_flags, p_long=None):
         p_long = p_long or []

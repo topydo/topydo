@@ -1,0 +1,8 @@
+4 Length of 0 days t:2016-04-25 due:2016-04-25
+2016-04-25 2 No length (zero)
+3 Length of 0 days t:2016-04-25 due:2016-04-25
+5 Length of 0 days tomorrow t:2016-04-26 due:2016-04-26
+2 Length of 1 day t:2016-04-25 due:2016-04-26
+2016-04-25 Length of 2 days with creation due:2016-04-27
+2016-04-25 1 Length of 1 day with creation due:2016-04-26
+1 No length (zero)

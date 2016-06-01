@@ -22,7 +22,10 @@ I/O on the command-line.
 import getopt
 import sys
 
-MAIN_OPTS = "ac:d:ht:v"
+from topydo.lib.Color import AbstractColor, Color
+from topydo.lib.TopydoString import TopydoString
+
+MAIN_OPTS = "ac:C:d:ht:v"
 READ_ONLY_COMMANDS = ('List', 'ListContext', 'ListProject')
 
 
@@ -30,12 +33,14 @@ def usage():
     """ Prints the command-line usage of topydo. """
 
     print("""\
-Synopsis: topydo [-a] [-c <config>] [-d <archive>] [-t <todo.txt>] subcommand [help|args]
+Synopsis: topydo [-a] [-c <config>] [-C <colormode>] [-d <archive>] [-t <todo.txt>] subcommand [help|args]
           topydo -h
           topydo -v
 
 -a : Do not archive todo items on completion.
 -c : Specify an alternative configuration file.
+-C : Specify color mode (0 = disable, 1 = enable 16 colors,
+     16 = enable 16 colors, 256 = enable 256 colors, auto (default))
 -d : Specify an alternative archive file (done.txt)
 -h : This help text
 -t : Specify an alternative todo file
@@ -59,22 +64,61 @@ Available commands:
 * sort
 * tag
 
-Run `topydo help <subcommand>` for command-specific help.
+Run `topydo help <subcommand>` for command-specific help.\
 """)
-
 
 def write(p_file, p_string):
     """
     Write p_string to file p_file, trailed by a newline character.
 
-    ANSI codes are removed when the file is not a TTY.
+    ANSI codes are removed when the file is not a TTY (and colors are
+    automatically determined).
     """
-    if not p_file.isatty():
+    if not config().colors(p_file.isatty()):
         p_string = escape_ansi(p_string)
 
     if p_string:
         p_file.write(p_string + "\n")
 
+
+def lookup_color(p_color):
+    """
+    Converts an AbstractColor to a normal Color. Returns the Color itself
+    when a normal color is passed.
+    """
+    if not lookup_color.colors:
+        lookup_color.colors[AbstractColor.NEUTRAL] = Color('NEUTRAL')
+        lookup_color.colors[AbstractColor.PROJECT] = config().project_color()
+        lookup_color.colors[AbstractColor.CONTEXT] = config().context_color()
+        lookup_color.colors[AbstractColor.META] = config().metadata_color()
+        lookup_color.colors[AbstractColor.LINK] = config().link_color()
+
+    try:
+        return lookup_color.colors[p_color]
+    except KeyError:
+        return p_color
+
+lookup_color.colors = {}
+
+def insert_ansi(p_string):
+    """ Returns a string with color information at the right positions.  """
+    result = p_string.data
+
+    for pos, color in sorted(p_string.colors.items(), reverse=True):
+        color = lookup_color(color)
+
+        result = result[:pos] + color.as_ansi() + result[pos:]
+
+    return result
+
+def output(p_string):
+    if isinstance(p_string, list):
+        p_string = "\n".join([insert_ansi(s) for s in p_string])
+    elif isinstance(p_string, TopydoString):
+        # convert color codes to ANSI
+        p_string = insert_ansi(p_string)
+
+    write(sys.stdout, p_string)
 
 def error(p_string):
     """ Writes an error on the standard error. """
@@ -140,6 +184,9 @@ class CLIApplicationBase(object):
                 self.do_archive = False
             elif opt == "-c":
                 alt_config_path = value
+            elif opt == "-C":
+                overrides[('topydo', 'force_colors')] = '1'
+                overrides[('topydo', 'colors')] = value
             elif opt == "-t":
                 overrides[('topydo', 'filename')] = value
             elif opt == "-d":
@@ -174,7 +221,7 @@ class CLIApplicationBase(object):
             command = ArchiveCommand(self.todolist, archive)
             command.execute()
 
-            if archive.is_dirty():
+            if archive.dirty:
                 archive_file.write(archive.print_todos())
 
     def _help(self, args):
@@ -189,21 +236,24 @@ class CLIApplicationBase(object):
                 READ_ONLY_COMMANDS)
         return p_command.__module__.endswith(read_only_commands)
 
-    def _execute(self, p_command, p_args):
-        """
-        Execute a subcommand with arguments. p_command is a class (not an
-        object).
-        """
+    def _backup(self, p_command, p_args):
         if config().backup_count() > 0 and p_command and not self.is_read_only(p_command):
             call = [p_command.__module__.lower()[16:-7]] + p_args # strip "topydo.commands" and "Command"
 
             from topydo.lib.ChangeSet import ChangeSet
             self.backup = ChangeSet(self.todolist, p_call=call)
 
+    def _execute(self, p_command, p_args):
+        """
+        Execute a subcommand with arguments. p_command is a class (not an
+        object).
+        """
+        self._backup(p_command, p_args)
+
         command = p_command(
             p_args,
             self.todolist,
-            lambda o: write(sys.stdout, o),
+            output,
             error,
             input)
 
@@ -219,9 +269,9 @@ class CLIApplicationBase(object):
         to the todo.txt file.
         """
 
-        # do not archive when the value of the filename is an empty string
-        # (i.e. explicitly left empty in the configuration
-        if self.todolist.is_dirty():
+        if self.todolist.dirty:
+            # do not archive when the value of the filename is an empty string
+            # (i.e. explicitly left empty in the configuration
             if self.do_archive and config().archive():
                 self._archive()
 
@@ -233,6 +283,7 @@ class CLIApplicationBase(object):
                 self.backup.save(self.todolist)
 
             self.todofile.write(self.todolist.print_todos())
+            self.todolist.dirty = False
 
         self.backup = None
 

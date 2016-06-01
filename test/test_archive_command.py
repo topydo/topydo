@@ -30,8 +30,8 @@ class ArchiveCommandTest(CommandTest):
         command = ArchiveCommand(todolist, archive)
         command.execute()
 
-        self.assertTrue(todolist.is_dirty())
-        self.assertTrue(archive.is_dirty())
+        self.assertTrue(todolist.dirty)
+        self.assertTrue(archive.dirty)
         self.assertEqual(todolist.print_todos(), "x Not complete\n(C) Active")
         self.assertEqual(archive.print_todos(), "x 2014-10-19 Complete\nx 2014-10-20 Another one complete")
 

@@ -20,7 +20,7 @@ import arrow
 import re
 
 from topydo.lib.Config import config
-from topydo.lib.Colorblock import color_block
+from topydo.lib.ProgressColor import progress_color
 from topydo.lib.Utils import get_terminal_size, escape_ansi, humanize_date
 
 MAIN_PATTERN = (r'^({{(?P<before>.+?)}})?'
@@ -123,6 +123,12 @@ def _right_align(p_str):
 
     return p_str
 
+def color_block(p_todo):
+    return '{} {}'.format(
+        progress_color(p_todo).as_ansi(p_background=True),
+        config().priority_color(p_todo.priority()).as_ansi(),
+    )
+
 class ListFormatParser(object):
     """ Parser of format string. """
     def __init__(self, p_todolist, p_format=None):
@@ -147,6 +153,7 @@ class ListFormatParser(object):
 
             # relative dates in form:  creation, due, start
             'H': lambda t: humanize_dates(t.due_date(), t.start_date(), t.creation_date()),
+
             # todo ID
             'i': lambda t: str(self.todolist.number(t)),
 
@@ -167,6 +174,12 @@ class ListFormatParser(object):
             # priority
             'p': lambda t: t.priority() if t.priority() else '',
 
+            # priority (or placeholder space)
+            'P': lambda t: t.priority() if t.priority() else ' ',
+
+            # raw text
+            'r': lambda t: t.source(),
+
             # text
             's': lambda t: t.text(),
 
@@ -186,8 +199,6 @@ class ListFormatParser(object):
             'X': lambda t: 'x ' + humanize_date(t.completion_date()) if t.is_completed() else '',
 
             'z': lambda t: color_block(t) if config().colors() else ' ',
-
-            'Z': lambda t: color_block(t, p_safe=False) if config().colors() else ' ',
         }
         self.format_list = self._preprocess_format()
 

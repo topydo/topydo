@@ -27,10 +27,6 @@ from topydo.lib.TodoList import TodoList
 # the true and only editor
 DEFAULT_EDITOR = 'vi'
 
-# Access the base class of the TodoList instance kept inside EditCommand. We
-# cannot use super() inside the class itself
-BASE_TODOLIST = lambda tl: super(TodoList, tl)
-
 def _get_file_mtime(p_file):
     return os.stat(p_file.name).st_mtime
 
@@ -39,7 +35,7 @@ def _is_edited(p_orig_mtime, p_file):
 
 class EditCommand(MultiCommand):
     def __init__(self, p_args, p_todolist, p_output, p_error, p_input):
-        super(EditCommand, self).__init__(p_args, p_todolist, p_output,
+        super().__init__(p_args, p_todolist, p_output,
                                           p_error, p_input)
 
         if len(self.args) == 0:
@@ -115,7 +111,7 @@ class EditCommand(MultiCommand):
 
             if _is_edited(orig_mtime, temp_todos):
                 for todo in self.todos:
-                    BASE_TODOLIST(self.todolist).delete(todo)
+                    self.todolist.delete(todo, p_leave_tags=True)
 
                 for todo in new_todos:
                     self.todolist.add_todo(todo)
@@ -138,8 +134,8 @@ class EditCommand(MultiCommand):
     def usage(self):
         return """Synopsis:
   edit
-  edit <NUMBER1> [<NUMBER2> ...]
-  edit -e [-x] [expression]
+  edit <NUMBER 1> [<NUMBER 2> ...]
+  edit -e [-x] [EXPRESSION]
   edit -d"""
 
     def help(self):
@@ -147,15 +143,15 @@ class EditCommand(MultiCommand):
 Launches a text editor to edit todos.
 
 Without any arguments it will just open the todo.txt file. Alternatively it can
-edit todo item(s) with the given number(s) or edit relevant todos matching
-the given expression. See `topydo help ls` for more information on relevant
+edit todo item(s) with the given NUMBER(s) or edit relevant todos matching
+the given EXPRESSION. See `topydo help ls` for more information on relevant
 todo items. It is also possible to open the archive file.
 
-By default it will use $EDITOR in your environment, otherwise it will fall back
-to 'vi'.
+By default it will look to your environment variable $EDITOR, otherwise it will
+fall back to 'vi'.
 
--e : Treat the subsequent arguments as an expression.
--x : Edit *all* todos matching the expression (i.e. do not filter on
+-e : Treat the subsequent arguments as an EXPRESSION.
+-x : Edit *all* todos matching the EXPRESSION (i.e. do not filter on
      dependencies or relevance).
--d : Open the archive file.
+-d : Open the archive file.\
 """

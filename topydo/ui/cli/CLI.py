@@ -18,7 +18,7 @@
 
 import sys
 
-from topydo.cli.CLIApplicationBase import CLIApplicationBase, error
+from topydo.ui.CLIApplicationBase import CLIApplicationBase, error
 from topydo.lib import TodoFile
 from topydo.lib.Config import config, ConfigError
 
@@ -41,7 +41,7 @@ class CLIApplication(CLIApplicationBase):
     """
 
     def __init__(self):
-        super(CLIApplication, self).__init__()
+        super().__init__()
 
     def run(self):
         """ Main entry function. """
@@ -50,7 +50,11 @@ class CLIApplication(CLIApplicationBase):
         self.todofile = TodoFile.TodoFile(config().todotxt())
         self.todolist = TodoList.TodoList(self.todofile.read())
 
-        (subcommand, args) = get_subcommand(args)
+        try:
+            (subcommand, args) = get_subcommand(args)
+        except ConfigError as ce:
+            error('Error: ' + str(ce) + '. Check your aliases configuration')
+            sys.exit(1)
 
         if subcommand is None:
             self._usage()

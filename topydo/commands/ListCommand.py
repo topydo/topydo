@@ -20,6 +20,7 @@ from topydo.lib.Filter import InstanceFilter
 from topydo.lib.printers.PrettyPrinter import pretty_printer_factory
 from topydo.lib.prettyprinters.Format import PrettyPrinterFormatFilter
 from topydo.lib.TodoListBase import InvalidTodoException
+from topydo.lib.Utils import get_terminal_size
 
 
 class ListCommand(ExpressionCommand):
@@ -27,7 +28,7 @@ class ListCommand(ExpressionCommand):
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
-        super(ListCommand, self).__init__(
+        super().__init__(
             p_args, p_todolist, p_out, p_err, p_prompt)
 
         self.printer = None
@@ -50,7 +51,7 @@ class ListCommand(ExpressionCommand):
         return True
 
     def _process_flags(self):
-        opts, args = self.getopt('f:F:i:n:s:x')
+        opts, args = self.getopt('f:F:i:n:Ns:x')
 
         for opt, value in opts:
             if opt == '-x':
@@ -65,22 +66,26 @@ class ListCommand(ExpressionCommand):
                     if self._poke_icalendar():
                         from topydo.lib.printers.Ical import IcalPrinter
                         self.printer = IcalPrinter(self.todolist)
-
-                        # a graph without dependencies is not so useful, hence
-                        # show all
-                        self.show_all = True
                 elif value == 'dot':
                     from topydo.lib.printers.Dot import DotPrinter
                     self.printer = DotPrinter(self.todolist)
+
+                    # a graph without dependencies is not so useful, hence
+                    # show all
+                    self.show_all = True
                 else:
                     self.printer = None
             elif opt == '-F':
                 self.format = value
+            elif opt == '-N':
+                # 2 lines are assumed to be taken up by printing the next prompt
+                # display at least one item
+                self.limit = max(get_terminal_size().lines - 2, 1)
             elif opt == '-n':
                 try:
                     self.limit = int(value)
                 except ValueError:
-                    pass # use default value in configuration
+                    pass  # use default value in configuration
             elif opt == '-i':
                 self.ids = value.split(',')
 
@@ -94,7 +99,7 @@ class ListCommand(ExpressionCommand):
         Additional filters to select particular todo items given with the -i
         flag.
         """
-        filters = super(ListCommand, self)._filters()
+        filters = super()._filters()
 
         if self.ids:
             def get_todo(p_id):
@@ -124,7 +129,6 @@ class ListCommand(ExpressionCommand):
             # create a standard printer with some filters
             indent = config().list_indent()
             final_format = ' ' * indent + self.format
-            hidden_tags = config().hidden_tags()
 
             filters = []
             filters.append(PrettyPrinterFormatFilter(self.todolist, final_format))
@@ -134,7 +138,7 @@ class ListCommand(ExpressionCommand):
         self.out(self.printer.print_list(self._view().todos))
 
     def execute(self):
-        if not super(ListCommand, self).execute():
+        if not super().execute():
             return False
 
         try:
@@ -148,20 +152,21 @@ class ListCommand(ExpressionCommand):
         return True
 
     def usage(self):
-        return """Synopsis: ls [-x] [-s <sort_expression>] [-f <output format>]
-[-F <format string>] [expression]"""
+        return """Synopsis: ls [-x] [-s <SORT EXPRESSION>] [-f <OUTPUT FORMAT>]
+[-F <FORMAT STRING>] [-i <NUMBER 1>[,<NUMBER 2> ...]] [-N | -n <INTEGER>]
+[EXPRESSION]"""
 
     def help(self):
         return """\
 Lists all relevant todos. A todo is relevant when:
 
-* has not been completed yet;
-* the start date (if present) has passed;
+* has not been completed yet,
+* the start date (if present) has passed, and
 * there are no subitems that need to be completed.
 
-When an expression is given, only the todos matching that expression are shown.
+When an EXPRESSION is given, only the todos matching that EXPRESSION are shown.
 
--f : Specify the output format, being 'text' (default), 'dot' or 'ical' or
+-f : Specify the OUTPUT format, being 'text' (default), 'dot' or 'ical' or
      'json'.
 
      * 'text' - Text output with colors and indentation if applicable.
@@ -172,6 +177,7 @@ When an expression is given, only the todos matching that expression are shown.
                 an 'ical' tag with a unique ID. Completed todo items may be
                 archived.
      * 'json' - Javascript Object Notation (JSON)
+
 -F : Specify the format of the text ('text' format), which may contain
      placeholders that may be expanded if the todo has such attribute. If such
      attribute does not exist, then it expands to an empty string.
@@ -187,6 +193,7 @@ When an expression is given, only the todos matching that expression are shown.
          %k: List of tags separated by spaces (excluding hidden tags).
          %K: List of all tags separated by spaces.
          %p: Priority.
+         %P: Priority or placeholder space if no priority.
          %s: Todo text.
          %S: Todo text, truncated such that an item fits on one line.
          %t: Absolute creation date.
@@ -198,12 +205,14 @@ When an expression is given, only the todos matching that expression are shown.
      Conditional characters can be added with blocks surrounded by curly
      braces, they will only appear when a placeholder expanded to a value.
 
-     E.g. %{(}p{)} will print (C) when the todo item has priority C, or ''
+     E.g. %{(}p{)} will print '(C)' when the todo item has priority C, or ''
      (empty string) when an item has no priority set.
 
      A tab character serves as a marker to start right alignment.
 -i : Comma separated list of todo IDs to print.
--s : Sort the list according to a sort expression. Defaults to the expression
+-n : Number of items to display. Defaults to the value in the configuration.
+-N : Limit number of items displayed such that they fit on the terminal.
+-s : Sort the list according to a SORT EXPRESSION. Defaults to the expression
      in the configuration.
--x : Show all todos (i.e. do not filter on dependencies or relevance).
+-x : Show all todos (i.e. do not filter on dependencies or relevance).\
 """

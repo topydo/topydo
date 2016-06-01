@@ -29,7 +29,7 @@ from topydo.lib.TodoListBase import InvalidTodoException, TodoListBase
 
 class TodoListTester(TopydoTest):
     def setUp(self):
-        super(TodoListTester, self).setUp()
+        super().setUp()
 
         self.todofile = TodoFile('test/data/TodoListTest.txt')
         lines = [line for line in self.todofile.read()
@@ -40,12 +40,12 @@ class TodoListTester(TopydoTest):
     def test_contexts(self):
         self.assertEqual(set(['Context1', 'Context2']),
                          self.todolist.contexts())
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
 
     def test_projects(self):
         self.assertEqual(set(['Project1', 'Project2']),
                          self.todolist.projects())
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
 
     def test_add1(self):
         text = "(C) Adding a new task @Context3 +Project3"
@@ -58,7 +58,7 @@ class TodoListTester(TopydoTest):
         self.assertEqual(set(['Context1', 'Context2', 'Context3']),
                          self.todolist.contexts())
         self.assertEqual(self.todolist.number(todo), 6)
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
 
     def test_add2(self):
         text = str(self.todolist)
@@ -101,7 +101,7 @@ class TodoListTester(TopydoTest):
         self.assertEqual(self.todolist.todo(2).source(),
                          "(C) Baz @Context1 +Project1 key:value")
         self.assertEqual(self.todolist.count(), count - 1)
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertRaises(InvalidTodoException, self.todolist.number, todo)
 
     def test_delete2(self):
@@ -112,7 +112,7 @@ class TodoListTester(TopydoTest):
         self.todolist.delete(todo)
 
         self.assertEqual(self.todolist.count(), count)
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
 
     def test_append1(self):
         todo = self.todolist.todo(3)
@@ -122,7 +122,7 @@ class TodoListTester(TopydoTest):
                          "(C) Baz @Context1 +Project1 key:value @Context3")
         self.assertEqual(set(['Context1', 'Context2', 'Context3']),
                          self.todolist.contexts())
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
 
     def test_append2(self):
         todo = self.todolist.todo(3)
@@ -145,7 +145,7 @@ class TodoListTester(TopydoTest):
 
         self.assertRaises(InvalidTodoException, self.todolist.todo,
                           count + 100)
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
 
     def test_count(self):
         """ Test that empty lines are not counted. """
@@ -167,26 +167,26 @@ class TodoListTester(TopydoTest):
         todo = self.todolist.todo(1)
         self.todolist.set_todo_completed(todo)
         self.assertTrue(self.todolist.todo(1).is_completed())
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
 
     def test_todo_priority1(self):
         todo = self.todolist.todo(1)
         self.todolist.set_priority(todo, 'F')
 
         self.assertEqual(self.todolist.todo(1).priority(), 'F')
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
 
     def test_todo_priority2(self):
         todo = self.todolist.todo(1)
         self.todolist.set_priority(todo, 'C')
 
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
 
     def test_erase(self):
         self.todolist.erase()
 
         self.assertEqual(self.todolist.count(), 0)
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
 
     def test_regex1(self):
         """ Multiple hits should result in None. """
@@ -219,6 +219,13 @@ class TodoListTester(TopydoTest):
         config("test/data/todolist-uid.conf")
         self.assertRaises(InvalidTodoException, self.todolist.todo, 1)
 
+    def test_uid4(self):
+        """
+        Handle UIDs properly when line numbers are configured.
+        """
+        config(p_overrides={('topydo', 'identifiers'): 'linenumber'})
+        self.assertRaises(InvalidTodoException, self.todolist.todo, '11a')
+
     def test_new_uid(self):
         """ Make sure that item has new text ID after append. """
         config("test/data/todolist-uid.conf")
@@ -227,10 +234,23 @@ class TodoListTester(TopydoTest):
 
         self.assertNotEqual(self.todolist.number(todo), 't5c')
 
+    def test_iteration(self):
+        """ Confirms that the iternation method is working. """
+        results = ["(C) Foo @Context2 Not@Context +Project1 Not+Project",
+                   "(D) Bar @Context1 +Project2",
+                   "(C) Baz @Context1 +Project1 key:value",
+                   "(C) Drink beer @ home",
+                   "(C) 13 + 29 = 42"]
+
+        i = 0
+        for todo in self.todolist:
+            self.assertEqual(todo.src, results[i])
+            i += 1
+
 
 class TodoListDependencyTester(TopydoTest):
     def setUp(self):
-        super(TodoListDependencyTester, self).setUp()
+        super().setUp()
 
         self.todolist = TodoList([])
         self.todolist.add("Foo id:1")
@@ -242,6 +262,7 @@ class TodoListDependencyTester(TopydoTest):
         self.todolist.add("Another one with +Project")
         self.todolist.add("Todo with +AnotherProject")
         self.todolist.add("Todo without children id:3")
+        self.todolist.add("Orphan p:4")
 
     def test_check_dep(self):
         children = self.todolist.children(self.todolist.todo(1))
@@ -272,8 +293,8 @@ class TodoListDependencyTester(TopydoTest):
         todo5 = self.todolist.todo(5)
         self.todolist.add_dependency(todo5, todo4)
 
-        self.assertTrue(todo5.has_tag('id', '4'))
-        self.assertTrue(todo4.has_tag('p', '4'))
+        self.assertTrue(todo5.has_tag('id', '5'))
+        self.assertTrue(todo4.has_tag('p', '5'))
 
     def test_add_dep2(self):
         """
@@ -287,8 +308,8 @@ class TodoListDependencyTester(TopydoTest):
         self.todolist.add_dependency(todo5, todo4)
         self.todolist.add_dependency(todo4, todo1)
 
-        self.assertTrue(todo4.has_tag('id', '5'))
-        self.assertTrue(todo1.has_tag('p', '5'))
+        self.assertTrue(todo4.has_tag('id', '6'))
+        self.assertTrue(todo1.has_tag('p', '6'))
 
     def test_add_dep3(self):
         """
@@ -322,6 +343,7 @@ class TodoListDependencyTester(TopydoTest):
 
         self.assertFalse(from_todo.has_tag('id'))
         self.assertFalse(to_todo.has_tag('p'))
+        self.assertFalse(self.todolist.todo_by_dep_id('2'))
 
     def test_remove_dep2(self):
         old = str(self.todolist)
@@ -330,6 +352,9 @@ class TodoListDependencyTester(TopydoTest):
         self.todolist.remove_dependency(from_todo, to_todo)
 
         self.assertEqual(str(self.todolist), old)
+        self.assertTrue(self.todolist.todo_by_dep_id('1'))
+        self.assertTrue(self.todolist.todo_by_dep_id('2'))
+        self.assertTrue(self.todolist.todo_by_dep_id('3'))
 
     def test_remove_dep3(self):
         """ Try to remove non-existing dependency. """
@@ -339,6 +364,9 @@ class TodoListDependencyTester(TopydoTest):
         self.todolist.remove_dependency(from_todo, to_todo)
 
         self.assertEqual(str(self.todolist), old)
+        self.assertTrue(self.todolist.todo_by_dep_id('1'))
+        self.assertTrue(self.todolist.todo_by_dep_id('2'))
+        self.assertTrue(self.todolist.todo_by_dep_id('3'))
 
     def test_remove_todo_check_children(self):
         todo = self.todolist.todo(2)
@@ -351,6 +379,7 @@ class TodoListDependencyTester(TopydoTest):
         todo = self.todolist.todo(3)
         self.todolist.delete(todo)
         self.assertFalse(todo.has_tag('p', '2'))
+        self.assertFalse(self.todolist.todo_by_dep_id('2'))
 
         todo = self.todolist.todo(1)
         children = self.todolist.children(todo)
@@ -372,6 +401,44 @@ class TodoListDependencyTester(TopydoTest):
         self.assertTrue(todolist.todo_by_dep_id('1'))
         self.assertFalse(todolist.todo_by_dep_id('2'))
 
+    def test_add_after_dependencies(self):
+        """
+        Test that information is properly stored after dependency related
+        information was retrieved from the todo list.
+        """
+        todo = self.todolist.todo(1)
+        self.todolist.parents(todo)
+
+        self.todolist.add('New dependency id:99')
+        self.todolist.add('Child p:99')
+
+        self.assertTrue(self.todolist.dirty)
+        self.assertTrue(self.todolist.todo_by_dep_id('99'))
+
+    def test_delete01(self):
+        """ Check that dependency tags are cleaned up. """
+        todo = self.todolist.todo(4)
+        self.todolist.delete(todo, p_leave_tags=False)
+
+        self.assertTrue(self.todolist.dirty)
+        self.assertEqual(self.todolist.todo(3).source(), "Baz p:1")
+
+    def test_delete02(self):
+        """ Check that dependency tags are left when requested. """
+        todo = self.todolist.todo(4)
+        self.todolist.delete(todo, p_leave_tags=True)
+
+        self.assertTrue(self.todolist.dirty)
+        self.assertEqual(self.todolist.todo(3).source(), "Baz p:1 id:2")
+
+    def test_delete03(self):
+        """ Check that dependency tags are left when requested. """
+        todo = self.todolist.todo(3)
+        self.todolist.delete(todo, p_leave_tags=True)
+
+        self.assertTrue(self.todolist.dirty)
+        self.assertEqual(self.todolist.todo(3).source(), "Buzz p:2")
+
 
 class TodoListCleanDependencyTester(TopydoTest):
     """
@@ -383,7 +450,7 @@ class TodoListCleanDependencyTester(TopydoTest):
     """
 
     def setUp(self):
-        super(TodoListCleanDependencyTester, self).setUp()
+        super().setUp()
         self.todolist = TodoList([])
 
     def test_clean_dependencies1(self):
@@ -419,19 +486,7 @@ class TodoListCleanDependencyTester(TopydoTest):
         self.todolist.clean_dependencies()
 
         self.assertFalse(self.todolist.todo(1).has_tag('id'))
-
-    def test_clean_dependencies4(self):
-        """ Clean p: items when siblings are still connected to parent. """
-        self.todolist.add("Foo id:1")
-        self.todolist.add("Bar p:1")
-        self.todolist.add("Baz p:1 id:2")
-        self.todolist.add("Buzz p:2 p:1")
-
-        self.todolist.clean_dependencies()
-
-        self.assertFalse(self.todolist.todo(4).has_tag('p', '1'))
-        self.assertTrue(self.todolist.todo(1).has_tag('id', '1'))
-        self.assertTrue(self.todolist.todo(2).has_tag('p', '1'))
+        self.assertFalse(self.todolist.todo_by_dep_id('1'))
 
 
 if __name__ == '__main__':

@@ -14,3 +14,4 @@ exclude_lines =
 omit =
     topydo/commands/ExitCommand.py
     topydo/lib/Version.py
+    topydo/ui/*

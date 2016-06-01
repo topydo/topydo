@@ -66,7 +66,7 @@ class IcalPrinter(Printer):
     """
 
     def __init__(self, p_todolist):
-        super(IcalPrinter, self).__init__()
+        super().__init__()
         self.todolist = p_todolist
 
         try:
@@ -112,7 +112,7 @@ class IcalPrinter(Printer):
             if not uid:
                 uid = generate_uid()
                 p_todo.set_tag('ical', uid)
-                self.todolist.set_dirty()
+                self.todolist.dirty = True
 
             return uid
 

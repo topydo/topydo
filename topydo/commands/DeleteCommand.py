@@ -22,7 +22,7 @@ class DeleteCommand(DCommand):
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
-        super(DeleteCommand, self).__init__(
+        super().__init__(
             p_args, p_todolist, p_out, p_err, p_prompt)
 
     def prompt_text(self):
@@ -40,15 +40,15 @@ class DeleteCommand(DCommand):
 
     def usage(self):
         return """\
-Synopsis: del [-f] <NUMBER1> [<NUMBER2> ...]
-          del [-x] -e <EXPRESSION>
+Synopsis: del [-f] <NUMBER 1> [<NUMBER 2> ...]
+          del [-x] -e <EXPRESSION>\
 """
 
     def help(self):
         return """\
 Deletes the todo item(s) with the given number(s) from the list.
 
-It is also possible to delete items as complete with an expression using
-the -e flag. Use -x to also process todo items that are normally invisible
-(with the 'ls' subcommand).
+It is also possible to delete items that match EXPRESSION using the -e flag.
+Use -x to also process todo items that are normally invisible (as with the 'ls'
+subcommand).\
 """

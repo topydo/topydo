@@ -24,7 +24,7 @@ from topydo.lib.TodoList import TodoList
 
 class PostponeCommandTest(CommandTest):
     def setUp(self):
-        super(PostponeCommandTest, self).setUp()
+        super().setUp()
         self.today = date.today()
         self.past = date.today() - timedelta(1)
         self.future = date.today() + timedelta(1)
@@ -49,7 +49,7 @@ class PostponeCommandTest(CommandTest):
 
         due = self.today + timedelta(7)
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.output,
                          "|  1| Foo due:{}\n".format(due.isoformat()))
         self.assertEqual(self.errors, "")
@@ -61,7 +61,7 @@ class PostponeCommandTest(CommandTest):
 
         due = self.today + timedelta(7)
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.output,
                          "|  2| Bar due:{}\n".format(due.isoformat()))
         self.assertEqual(self.errors, "")
@@ -73,7 +73,7 @@ class PostponeCommandTest(CommandTest):
 
         due = self.today + timedelta(7)
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.output,
                          "|  2| Bar due:{}\n".format(due.isoformat()))
         self.assertEqual(self.errors, "")
@@ -85,7 +85,7 @@ class PostponeCommandTest(CommandTest):
 
         due = self.today + timedelta(7)
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.output, "|  3| Baz due:{} t:{}\n".format(due.isoformat(), self.start.isoformat()))
         self.assertEqual(self.errors, "")
 
@@ -97,7 +97,7 @@ class PostponeCommandTest(CommandTest):
         due = self.today + timedelta(7)
         start = self.start + timedelta(7)
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         # pylint: disable=E1103
         self.assertEqual(self.output, "|  3| Baz due:{} t:{}\n".format(due.isoformat(), start.isoformat()))
         self.assertEqual(self.errors, "")
@@ -109,7 +109,7 @@ class PostponeCommandTest(CommandTest):
 
         due = self.today + timedelta(7)
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.output,
                          "|  4| Past due:{}\n".format(due.isoformat()))
         self.assertEqual(self.errors, "")
@@ -121,7 +121,7 @@ class PostponeCommandTest(CommandTest):
 
         due = self.future + timedelta(7)
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         # pylint: disable=E1103
         self.assertEqual(self.output, "|  5| Future due:{} t:{}\n".format(due.isoformat(), self.future_start.isoformat()))
         self.assertEqual(self.errors, "")
@@ -134,7 +134,7 @@ class PostponeCommandTest(CommandTest):
         due = self.future + timedelta(7)
         start = self.future_start + timedelta(7)
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         # pylint: disable=E1103
         self.assertEqual(self.output, "|  5| Future due:{} t:{}\n".format(due.isoformat(), start.isoformat()))
         self.assertEqual(self.errors, "")
@@ -144,7 +144,7 @@ class PostponeCommandTest(CommandTest):
                                   self.error)
         command.execute()
 
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors, "Invalid date pattern given.\n")
 
@@ -153,7 +153,7 @@ class PostponeCommandTest(CommandTest):
                                   self.error)
         command.execute()
 
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors, "Invalid todo number given.\n")
 
@@ -162,7 +162,7 @@ class PostponeCommandTest(CommandTest):
                                   self.error)
         command.execute()
 
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors, "Invalid todo number given.\n")
 
@@ -170,7 +170,7 @@ class PostponeCommandTest(CommandTest):
         command = PostponeCommand(["1"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors, command.usage() + "\n")
 
@@ -181,7 +181,7 @@ class PostponeCommandTest(CommandTest):
 
         due = self.today + timedelta(7)
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.output,
                          "|  1| Foo due:{}\n".format(due.isoformat()))
         self.assertEqual(self.errors, "")
@@ -193,7 +193,7 @@ class PostponeCommandTest(CommandTest):
 
         due = self.today + timedelta(7)
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.output, "|  1| Foo due:{}\n|  2| Bar due:{}\n".format(due.isoformat(), due.isoformat()))
         self.assertEqual(self.errors, "")
 
@@ -204,7 +204,7 @@ class PostponeCommandTest(CommandTest):
 
         due = self.today + timedelta(7)
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.output, "|  1| Foo due:{}\n|  2| Bar due:{}\n".format(due.isoformat(), due.isoformat()))
         self.assertEqual(self.errors, "")
 
@@ -216,7 +216,7 @@ class PostponeCommandTest(CommandTest):
         due = self.today + timedelta(7)
         start = self.start + timedelta(7)
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         # pylint: disable=E1103
         self.assertEqual(self.output, "|  2| Bar due:{}\n|  3| Baz due:{} t:{}\n".format(due.isoformat(), due.isoformat(), start.isoformat()))
         self.assertEqual(self.errors, "")
@@ -226,7 +226,7 @@ class PostponeCommandTest(CommandTest):
                                   self.error)
         command.execute()
 
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors, "Invalid date pattern given.\n")
 
@@ -235,7 +235,7 @@ class PostponeCommandTest(CommandTest):
                                   self.out, self.error)
         command.execute()
 
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors, "Invalid todo number given: 99.\nInvalid todo number given: 123.\n")
 
@@ -244,7 +244,7 @@ class PostponeCommandTest(CommandTest):
                                   self.out, self.error)
         command.execute()
 
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors, "Invalid todo number given: Zoo.\nInvalid todo number given: 99.\nInvalid todo number given: 123.\n")
 
@@ -254,7 +254,7 @@ class PostponeCommandTest(CommandTest):
                                   self.todolist, self.out, self.error, None)
         command.execute()
 
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors,
                          u"Invalid todo number given: Fo\u00d3B\u0105r.\n")
@@ -267,7 +267,7 @@ class PostponeCommandTest(CommandTest):
         due = self.today + timedelta(14)
         result = "|  2| Bar due:{d}\n|  3| Baz due:{d} t:{s}\n".format(d=due.isoformat(), s=self.start.isoformat())
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.output, result)
         self.assertEqual(self.errors, "")
 
@@ -282,7 +282,7 @@ class PostponeCommandTest(CommandTest):
         result = "|  3| Baz due:{} t:{}\n".format(due.isoformat(),
                                                   self.start.isoformat())
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.output, result)
         self.assertEqual(self.errors, "")
 
@@ -291,7 +291,7 @@ class PostponeCommandTest(CommandTest):
                                   self.todolist, self.out, self.error, None)
         command.execute()
 
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
 
     def test_expr_postpone4(self):
         """ Don't postpone unrelevant todo items. """
@@ -299,7 +299,7 @@ class PostponeCommandTest(CommandTest):
                                   self.out, self.error, None)
         command.execute()
 
-        self.assertFalse(self.todolist.is_dirty())
+        self.assertFalse(self.todolist.dirty)
 
     def test_expr_postpone5(self):
         """ Force postponing unrelevant items with additional -x flag. """
@@ -310,7 +310,7 @@ class PostponeCommandTest(CommandTest):
         due = self.today + timedelta(7)
         result = "|  6| FutureStart t:{} due:{}\n".format(self.future.isoformat(), due.isoformat())
 
-        self.assertTrue(self.todolist.is_dirty())
+        self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.output, result)
         self.assertEqual(self.errors, "")
 

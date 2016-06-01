@@ -24,11 +24,11 @@ class SortCommand(Command):
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
-        super(SortCommand, self).__init__(
+        super().__init__(
             p_args, p_todolist, p_out, p_err, p_prompt)
 
     def execute(self):
-        if not super(SortCommand, self).execute():
+        if not super().execute():
             return False
 
         try:
@@ -42,14 +42,14 @@ class SortCommand(Command):
         self.todolist.replace(sorted_todos)
 
     def usage(self):
-        return """Synopsis: sort [expression]"""
+        return """Synopsis: sort [<EXPRESSION>]"""
 
     def help(self):
         return """\
-Sorts the file according to the expression. If no expression is given, the
+Sorts the todo file according to the EXPRESSION. If no EXPRESSION is given, the
 expression in the configuration is used.
 
-The expression is a comma separated list of attributes to sort on. The list is
+The EXPRESSION is a comma separated list of attributes to sort on. The list is
 evaluated in order, which means that the first attribute takes higher
 precedence, then the second, etc.
 
@@ -61,12 +61,12 @@ The following sort attributes are supported:
 * importance     - Sort by importance
 * importance-avg - Sort by average importance (based on parent items)
 * text           - Sort by text
-* <tag>          - Sort by values of the given tag
+* <TAG>          - Sort by values of the given TAG
 
 Each item can optionally be prefixed with asc: and desc: to specify ascending
 or descending sort respectively. If not specified, ascending sort is assumed.
 
 Example:
 
-    desc:importance,due,desc:priority
+    desc:importance,due,desc:priority\
 """

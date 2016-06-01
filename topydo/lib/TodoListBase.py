@@ -52,7 +52,13 @@ class TodoListBase(object):
         self._id_todo_map = {}
 
         self.add_list(p_todostrings)
-        self.dirty = False
+        self._dirty = False
+
+    def __iter__(self):
+        """
+        Allows use of `for my_todo in todolist` constructs.
+        """
+        return iter(self._todos)
 
     def todo(self, p_identifier):
         """
@@ -95,11 +101,11 @@ class TodoListBase(object):
                         # the expression is a string and no leading zeroes,
                         # treat it as an integer
                         raise TypeError
-                except TypeError:
+                except TypeError as te:
                     try:
                         result = self._todos[int(p_identifier) - 1]
-                    except IndexError:
-                        raise InvalidTodoException
+                    except (ValueError, IndexError):
+                        raise InvalidTodoException from te
 
             return result
 
@@ -221,11 +227,13 @@ class TodoListBase(object):
         """
         return View(p_sorter, p_filters, self)
 
-    def is_dirty(self):
-        return self.dirty
+    @property
+    def dirty(self):
+        return self._dirty
 
-    def set_dirty(self):
-        self.dirty = True
+    @dirty.setter
+    def dirty(self, p_flag):
+        self._dirty = p_flag
 
     def todos(self):
         return self._todos
@@ -249,8 +257,8 @@ class TodoListBase(object):
                 return self._todo_id_map[p_todo]
             else:
                 return self._todos.index(p_todo) + 1
-        except (ValueError, KeyError):
-            raise InvalidTodoException
+        except (ValueError, KeyError) as ex:
+            raise InvalidTodoException from ex
 
     def _update_todo_ids(self):
         # the idea is to have a hash that is independent of the position of the
@@ -271,4 +279,4 @@ class TodoListBase(object):
         this list.
         """
         printer = PrettyPrinter()
-        return printer.print_list(self._todos)
+        return "\n".join([str(s) for s in printer.print_list(self._todos)])

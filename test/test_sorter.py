@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from freezegun import freeze_time
 import unittest
 
 from test.facilities import (load_file, load_file_to_todolist, print_view,
@@ -23,6 +24,7 @@ from topydo.lib.Config import config
 from topydo.lib.Sorter import Sorter
 
 
+@freeze_time("2016, 04, 25")
 class SorterTest(TopydoTest):
     def sort_file(self, p_filename, p_filename_ref, p_sorter):
         """
@@ -188,6 +190,15 @@ class SorterTest(TopydoTest):
         self.sort_file('test/data/SorterTest13.txt',
                        'test/data/SorterTest13-result-context.txt', sorter)
 
+
+    def test_sort19(self):
+        """
+        Check sorting by length.
+        """
+        sorter = Sorter('length,text')
+
+        self.sort_file('test/data/SorterTest14.txt',
+                       'test/data/SorterTest14-result.txt', sorter)
 
 if __name__ == '__main__':
     unittest.main()
