@@ -20,7 +20,7 @@ import getopt
 import sys
 
 from topydo.ui.cli.CLI import CLIApplication
-from topydo.ui.CLIApplicationBase import MAIN_OPTS, error
+from topydo.ui.CLIApplicationBase import MAIN_OPTS, MAIN_LONG_OPTS, error
 
 # enable color on windows CMD
 if "win32" in sys.platform:
@@ -34,7 +34,7 @@ def main():
         args = sys.argv[1:]
 
         try:
-            _, args = getopt.getopt(args, MAIN_OPTS)
+            _, args = getopt.getopt(args, MAIN_OPTS, MAIN_LONG_OPTS)
         except getopt.GetoptError as e:
             error(str(e))
             sys.exit(1)
