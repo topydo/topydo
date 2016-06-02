@@ -178,3 +178,16 @@ class Color:
             return Color.html_color_dict[self.color]
         except KeyError:
             return '#ffffff'
+
+    def as_rgb(self):
+        """
+        Returns a tuple (r, g, b) of the color.
+        """
+
+        html = self.as_html()
+
+        return (
+            int(html[1:3], 16),
+            int(html[3:5], 16),
+            int(html[5:7], 16)
+        )

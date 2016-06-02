@@ -82,6 +82,17 @@ class DotPrinter(Printer):
 
             return node_result
 
+        def foreground(p_background):
+            """
+            Chooses a suitable foreground color (black or white) given a
+            background color.
+            """
+
+            (r, g, b) = p_background.as_rgb()
+            brightness = (r * 299 + g * 587 + b * 114) / ( 255 * 1000 )
+
+            return '#ffffff' if brightness < 0.5 else '#000000'
+
         node_name = lambda t: '_' + str(self.todolist.number(t))
 
         result = 'digraph topydo {\n'
@@ -89,13 +100,13 @@ class DotPrinter(Printer):
 
         # print todos
         for todo in p_todos:
-            color = progress_color(todo).as_html()
+            background_color = progress_color(todo)
 
             result += '  {} [label={} style=filled fillcolor="{}" fontcolor="{}"]\n'.format(
                 node_name(todo),
                 node_label(todo),
-                color,
-                '#000000',
+                background_color.as_html(),
+                foreground(background_color),
             )
 
         # print edges
