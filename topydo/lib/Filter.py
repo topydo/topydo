@@ -16,6 +16,7 @@
 
 import re
 
+from topydo.lib.Config import config
 from topydo.lib.RelativeDate import relative_date_to_date
 from topydo.lib.Utils import date_string_to_date
 
@@ -91,8 +92,8 @@ class RelevanceFilter(Filter):
 
     The item has not been completed AND
     The start date is blank, today or in the past, AND
-    The priority is 'A' or the priority is B with due date within 30 days or
-    the priority is C with due date within 14 days.
+    The priority is 'A', or the priority is 'B' with due date within 30 days, or
+    the priority is 'C' with due date within 14 days.
     """
 
     def match(self, p_todo):
@@ -152,6 +153,32 @@ class InstanceFilter(Filter):
             return True
         except ValueError:
             return False
+
+
+class HiddenTagFilter(Filter):
+    def __init__(self, p_todos):
+        """
+        Constructor.
+
+        A filter which selects a number of Todo instances from a TodoList
+        instance.
+
+        This is handy for constructing a view given a plain list of Todo items.
+        """
+        super().__init__()
+        self.todos = p_todos
+
+    def match(self, p_todo):
+        """
+        Returns Ture when p_todo doesn't have a tag to mark it as hidden.
+        """
+        for my_tag in config().hidden_item_tags():
+            my_values = p_todo.tag_values(my_tag)
+            for my_value in my_values:
+                if not my_value in (0, '0', False, 'False'):
+                    return False
+
+        return True
 
 
 class LimitFilter(Filter):

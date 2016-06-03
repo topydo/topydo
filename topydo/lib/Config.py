@@ -77,6 +77,7 @@ class _Config:
 
             'ls': {
                 'hide_tags': 'id,p,ical',
+                'hidden_item_tags': 'h,hide',
                 'indent': '0',
                 'list_limit': '-1',
                 'list_format': '|%I| %x %{(}p{)} %c %s %k %{due:}d %{t:}t',
@@ -310,6 +311,13 @@ class _Config:
         # pylint: disable=no-member
         return [] if hidden_tags == '' else [tag.strip() for tag in
                                              hidden_tags.split(',')]
+
+    def hidden_item_tags(self):
+        """ Returns a list of tags which hide an item from the 'ls' output. """
+        hidden_item_tags = self.cp.get('ls', 'hidden_item_tags')
+        # pylint: disable=no-member
+        return [] if hidden_item_tags == '' else [tag.strip() for tag in
+                                                  hidden_item_tags.split(',')]
 
     def priority_color(self, p_priority):
         """
