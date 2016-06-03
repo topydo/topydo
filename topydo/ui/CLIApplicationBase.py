@@ -26,6 +26,7 @@ from topydo.lib.Color import AbstractColor, Color
 from topydo.lib.TopydoString import TopydoString
 
 MAIN_OPTS = "ac:C:d:ht:v"
+MAIN_LONG_OPTS = ('version')
 READ_ONLY_COMMANDS = ('List', 'ListContext', 'ListProject')
 
 
@@ -171,7 +172,7 @@ class CLIApplicationBase(object):
         args = sys.argv[1:]
 
         try:
-            opts, args = getopt.getopt(args, MAIN_OPTS)
+            opts, args = getopt.getopt(args, MAIN_OPTS, MAIN_LONG_OPTS)
         except getopt.GetoptError as e:
             error(str(e))
             sys.exit(1)
@@ -191,7 +192,7 @@ class CLIApplicationBase(object):
                 overrides[('topydo', 'filename')] = value
             elif opt == "-d":
                 overrides[('topydo', 'archive_filename')] = value
-            elif opt == "-v":
+            elif opt in ("-v", "--version"):
                 version()
             else:
                 self._usage()
