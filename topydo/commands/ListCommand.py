@@ -14,6 +14,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import re
+import sys
+import os
+
 from topydo.lib.Config import config
 from topydo.lib.ExpressionCommand import ExpressionCommand
 from topydo.lib.Filter import InstanceFilter
@@ -73,7 +77,7 @@ class ListCommand(ExpressionCommand):
             elif opt == '-N':
                 # 2 lines are assumed to be taken up by printing the next prompt
                 # display at least one item
-                self.limit = max(get_terminal_size().lines - 2, 1)
+                self.limit = self._N_lines()
             elif opt == '-n':
                 try:
                     self.limit = int(value)
@@ -129,6 +133,36 @@ class ListCommand(ExpressionCommand):
             self.printer = pretty_printer_factory(self.todolist, filters)
 
         self.out(self.printer.print_list(self._view().todos))
+
+    def _N_lines(self):
+        ''' Determine how many lines to print, such that the number of items
+            displayed will fit on the terminal (i.e one 'screen-ful' of items)
+
+            This looks at the environmental prompt variable, and tries to determine
+            how many lines it takes up.
+
+            On Windows, it does this by looking for the '$_' sequence, which indicates
+            a new line, in the environmental variable PROMPT.
+
+            Otherwise, it looks for a newline ('\n') in the environmental variable
+            PS1.
+        '''  
+        lines_in_prompt = 1     # prompt is assumed to take up one line, even
+                                #   without any newlines in it
+        if "win32" in sys.platform:
+            lines_in_prompt += 1  # Windows will typically print a free line after
+                                  #   the program output
+            a = re.findall('\$_', os.getenv('PROMPT', ''))
+            lines_in_prompt += len(a)
+        else:
+            a = re.findall('\\n', os.getenv('PS1', ''))
+            lines_in_prompt += len(a)
+        n_lines = get_terminal_size().lines - lines_in_prompt
+
+        # print a minimum of one item
+        n_lines = max(n_lines, 1)
+
+        return n_lines
 
     def execute(self):
         if not super().execute():
