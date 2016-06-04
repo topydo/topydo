@@ -160,17 +160,14 @@ class HiddenTagFilter(Filter):
         """
         Constructor.
 
-        A filter which selects a number of Todo instances from a TodoList
-        instance.
-
-        This is handy for constructing a view given a plain list of Todo items.
+        A filter which hides items marked with the approriate tag.
         """
         super().__init__()
         self.todos = p_todos
 
     def match(self, p_todo):
         """
-        Returns Ture when p_todo doesn't have a tag to mark it as hidden.
+        Returns True when p_todo doesn't have a tag to mark it as hidden.
         """
         for my_tag in config().hidden_item_tags():
             my_values = p_todo.tag_values(my_tag)
