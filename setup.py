@@ -26,8 +26,8 @@ setup(
     version = find_version('topydo', 'lib', 'Version.py'),
     description = "A command-line todo list application using the todo.txt format.",
     author = "Bram Schoenmakers",
-    author_email = "me@bramschoenmakers.nl",
-    url = "https://github.com/bram85/topydo",
+    author_email = "bram@topydo.org",
+    url = "https://www.topydo.org",
     install_requires = [
         'arrow >= 0.7.0',
     ],

@@ -16,8 +16,8 @@ on top of the CLI. These extensions are:
 * Some conveniences when adding new items (e.g. adding creation date and use
   **relative dates**);
 
-Consult the [wiki][4] for more information about the features and on how to
-use topydo.
+The documentation on [topydo.org][4] provides more information about the
+features and how to use topydo.
 
 Install
 -------
@@ -56,7 +56,7 @@ Demo
 [1]: https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format
 [2]: https://github.com/ginatrapani/todo.txt-cli
 [3]: https://github.com/bram85/todo.txt-tools
-[4]: https://github.com/bram85/topydo/wiki
+[4]: https://www.topydo.org
 [5]: https://raw.githubusercontent.com/bram85/topydo/master/doc/topydo.gif
 [6]: https://github.com/jonathanslenders/python-prompt-toolkit
 [7]: https://github.com/collective/icalendar
