@@ -150,6 +150,17 @@ from topydo.lib import TodoListBase
 from topydo.lib.Utils import escape_ansi
 
 
+def _retrieve_archive():
+    """
+    Returns a tuple with archive content: the first element is a TodoListBase
+    and the second element is a TodoFile.
+    """
+    archive_file = TodoFile.TodoFile(config().archive())
+    archive = TodoListBase.TodoListBase(archive_file.read())
+
+    return (archive, archive_file)
+
+
 class CLIApplicationBase(object):
     """
     Base class for a Command Line Interfaces (CLI) for topydo. Examples are the
@@ -211,8 +222,7 @@ class CLIApplicationBase(object):
         This means that all completed tasks are moved to the archive file
         (defaults to done.txt).
         """
-        archive_file = TodoFile.TodoFile(config().archive())
-        archive = TodoListBase.TodoListBase(archive_file.read())
+        archive, archive_file = _retrieve_archive()
 
         if self.backup:
             self.backup.add_archive(archive)
@@ -275,6 +285,9 @@ class CLIApplicationBase(object):
             # (i.e. explicitly left empty in the configuration
             if self.do_archive and config().archive():
                 self._archive()
+            elif config().archive() and self.backup:
+                archive = _retrieve_archive()[0]
+                self.backup.add_archive(archive)
 
             if config().keep_sorted():
                 from topydo.commands.SortCommand import SortCommand
