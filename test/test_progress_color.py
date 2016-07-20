@@ -21,6 +21,7 @@ from test.topydo_testcase import TopydoTest
 from topydo.lib.Config import config
 from topydo.lib.ProgressColor import progress_color
 from topydo.lib.Todo import Todo
+from topydo.lib.TodoList import TodoList
 
 def set_256_colors():
     config(p_overrides={('topydo', 'colors'): '256'})
@@ -185,6 +186,44 @@ class ProgressColorTest(TopydoTest):
         color = progress_color(Todo('2016-01-03 Foo due:2016-01-02'))
         # a length of 14 days is assumed
         self.assertEqual(color.color, 208)
+
+    def test_progress28(self):
+        """ Progress color determined by parent """
+        todolist = TodoList([
+            "Overdue id:1 due:2015-12-31",
+            "Bar p:1",
+        ])
+
+        color = progress_color(todolist.todo(2))
+
+        # color the subitem red because it has no color of its own and its
+        # parent is overdue
+        self.assertEqual(color.color, 1)
+
+    def test_progress29(self):
+        """ Progress color determined by parent """
+        todolist = TodoList([
+            "Overdue id:1 due:2015-12-31",
+            "Bar p:1 t:2016-01-01 due:2016-01-01",
+        ])
+
+        color = progress_color(todolist.todo(2))
+
+        # the parent has no influence here
+        self.assertEqual(color.color, 3)
+
+    def test_progress30(self):
+        """ Progress color determined by parent """
+        todolist = TodoList([
+            "Foo id:1",
+            "Bar p:1",
+        ])
+
+        color = progress_color(todolist.todo(2))
+
+        # the parent has no influence here
+        self.assertEqual(color.color, 2)
+
 
 if __name__ == '__main__':
     unittest.main()

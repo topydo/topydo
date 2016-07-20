@@ -77,11 +77,21 @@ def progress_color(p_todo):
         # a todo item is at least one day long
         return max(1, result)
 
-    def get_progress():
+    def get_progress(p_todo, p_consider_parents=True):
         """
         Returns a value from 0 to 1 where we are today in a date range. Returns
         a value >1 when a todo item is overdue.
         """
+        def progress_of_parents():
+            try:
+                parents = p_todo.parents()
+            except AttributeError:
+                parents = []
+
+            if parents:
+                return max(get_progress(parent, False) for parent in parents)
+            else:
+                return 0
 
         if p_todo.is_overdue():
             return 1.1
@@ -89,11 +99,13 @@ def progress_color(p_todo):
             days_till_due = p_todo.days_till_due()
             length = get_length()
             return max((length - days_till_due), 0) / length
+        elif p_consider_parents:
+            return progress_of_parents()
         else:
             return 0
 
     color_range = color256_range if config().colors() == 256 else color16_range
-    progress = get_progress()
+    progress = get_progress(p_todo)
 
     # TODO: remove linear scale to exponential scale
     if progress > 1:
