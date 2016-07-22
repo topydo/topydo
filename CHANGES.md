@@ -23,6 +23,7 @@ A major release, introducing a new user interface (TUI). Special thanks go to
 * Fix: dependency ID creation with orphan todo items.
 * Fix: crash after completing/deleting an edited item.
 * Fix: crash after completing an item that got a new dependency with `dep add`
+* Fix: crash when archive filename is empty (fixed by @mruwek).
 
 * Change: a new tag value with an existing key can be added with the tag
   subcommand (thanks to @MinchinWeb)
@@ -31,6 +32,9 @@ A major release, introducing a new user interface (TUI). Special thanks go to
 * Change: topydo is more scalable for large todo.txt files.
 
 * Known issue: color blocks are not shown in `ls` output in the column UI.
+
+* Misc: topydo also has its own website at topydo.org. All commands and
+  features are documented there.
 
 0.9
 ---

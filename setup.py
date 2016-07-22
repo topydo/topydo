@@ -24,7 +24,7 @@ setup(
     name = "topydo",
     packages = find_packages(exclude=["test"]),
     version = find_version('topydo', 'lib', 'Version.py'),
-    description = "A command-line todo list application using the todo.txt format.",
+    description = "A powerful todo.txt application for the console",
     author = "Bram Schoenmakers",
     author_email = "bram@topydo.org",
     url = "https://www.topydo.org",
@@ -58,11 +58,14 @@ setup(
         "Topic :: Utilities",
     ],
     long_description = """\
-topydo is a todo list application using the todo.txt format. It is heavily inspired by the todo.txt CLI by Gina Trapani. This tool is actually a merge between the todo.txt CLI and a number of extensions that I wrote on top of the CLI. These extensions are:
+topydo is a powerful and customizable todo.txt application for the console, inspired by the todo.txt CLI by Gina Trapani.
+
+Highlights of the additional features it provides:
 
 * Set due and start dates;
+* Multiple UIs (CLI, prompt and a column-based TUI);
 * Custom sorting;
-* Dealing with tags;
+* Manage tags;
 * Maintain dependencies between todo items;
 * Allow todos to recur;
 * Some conveniences when adding new items (e.g. adding creation date and use relative dates)
