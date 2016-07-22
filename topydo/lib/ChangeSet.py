@@ -99,7 +99,10 @@ class ChangeSet(object):
 
         current_hash = hash_todolist(p_todolist)
         list_todo = (self.todolist.print_todos()+'\n').splitlines(True)
-        list_archive = (self.archive.print_todos()+'\n').splitlines(True)
+        try:
+            list_archive = (self.archive.print_todos()+'\n').splitlines(True)
+        except AttributeError:
+            list_archive = []
 
         self.backup_dict[self.timestamp] = (list_todo, list_archive,  self.call)
 

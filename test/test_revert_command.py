@@ -284,6 +284,20 @@ class RevertCommandTest(CommandTest):
         self.assertEqual(result, [])
         self.assertEqual(self.errors, "")
 
+    def test_revert07(self):
+        """ Test backup when no archive file is set """
+        backup = ChangeSet(self.todolist, None, ['add One'])
+        backup.timestamp = '1'
+        command1 = AddCommand(["One"], self.todolist, self.out, self.error, None)
+        command1.execute()
+        backup.save(self.todolist)
+
+        changesets = list(backup.backup_dict.keys())
+        changesets.remove('index')
+
+        self.assertEqual(len(changesets), 1)
+        self.assertEqual(self.errors, "")
+
     def test_backup_config01(self):
         config(p_overrides={('topydo', 'backup_count'): '1'})
 
