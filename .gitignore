@@ -1,7 +1,9 @@
 *.py[cod]
 *.sw?
+*.un~
 install
 .coverage
+*,cover
 
 # Distribution / packaging
 .Python
