@@ -66,7 +66,9 @@ def topydostringToMarkup(p_string):
     # markup
     if color_at_start and isinstance(p_string.metadata, Todo):
         priority = p_string.metadata.priority()
-        markup = ('pri_' + priority, markup)
+
+        if priority:
+            markup = ('pri_' + priority, markup)
 
     return markup
 
