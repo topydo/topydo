@@ -93,7 +93,9 @@ def progress_color(p_todo):
             else:
                 return 0
 
-        if p_todo.is_overdue():
+        if p_todo.is_completed():
+            return 0
+        elif p_todo.is_overdue():
             return 1.1
         elif p_todo.due_date():
             days_till_due = p_todo.days_till_due()
