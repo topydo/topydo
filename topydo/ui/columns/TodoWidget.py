@@ -58,7 +58,11 @@ class TodoWidget(urwid.WidgetWrap):
         self.todo = p_todo
 
         todo_text = TEXT_FORMATTER.parse(p_todo)
-        priority_text = PRIO_FORMATTER.parse(p_todo)
+
+        if p_todo.is_completed():
+            priority_text = ' x '
+        else:
+            priority_text = PRIO_FORMATTER.parse(p_todo)
 
         # split todo_text at each occurrence of tag/project/context/url
         txt_pattern = r'|'.join([PRJ_CON_PATTERN, TAG_PATTERN, URL_PATTERN])
