@@ -93,7 +93,8 @@ class TodoListWidget(urwid.LineBox):
         del self.todolist[:]
 
         for todo in self.view.todos:
-            todowidget = TodoWidget(todo, self.view.todolist.number(todo))
+            todowidget = TodoWidget.create(todo)
+            todowidget.number = self.view.todolist.number(todo)
             self.todolist.append(todowidget)
             self.todolist.append(urwid.Divider('-'))
 
@@ -104,6 +105,10 @@ class TodoListWidget(urwid.LineBox):
                 # scroll to the bottom if the last item disappeared from column
                 # -2 for the same reason as in self._scroll_to_bottom()
                 self.todolist.set_focus(len(self.todolist) - 2)
+
+        # after the update there might be old stuff left in the widget cache,
+        # clean it
+        TodoWidget.clean_cache(self.view.todolist)
 
     def _scroll_to_top(self, p_size):
         self.listbox.set_focus(0)
