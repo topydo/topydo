@@ -1,3 +1,8 @@
+0.10.1
+------
+
+* Fix: items without priority are shown in the console of the Column UI.
+
 0.10
 ----
 
