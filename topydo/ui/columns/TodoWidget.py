@@ -173,6 +173,13 @@ class TodoWidget(urwid.WidgetWrap):
         if source in p_class.cache:
             widget = p_class.cache[source]
 
+            if p_todo is not widget.todo:
+                # same source text but different todo instance (could happen
+                # after an edit where a new Todo instance is created with the
+                # same text as before)
+                # simply fix the reference in the stored widget.
+                widget.todo = p_todo
+
             if parent_progress_may_have_changed(p_todo):
                 widget.update_progress()
         else:
