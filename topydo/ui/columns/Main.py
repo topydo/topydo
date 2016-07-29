@@ -34,6 +34,7 @@ from topydo.ui.CLIApplicationBase import CLIApplicationBase
 from topydo.ui.columns.CommandLineWidget import CommandLineWidget
 from topydo.ui.columns.ConsoleWidget import ConsoleWidget
 from topydo.ui.columns.KeystateWidget import KeystateWidget
+from topydo.ui.columns.TodoWidget import TodoWidget
 from topydo.ui.columns.TodoListWidget import TodoListWidget
 from topydo.ui.columns.Utils import PaletteItem, to_urwid_color
 from topydo.ui.columns.ViewWidget import ViewWidget
@@ -220,6 +221,7 @@ class UIApplication(CLIApplicationBase):
 
     def _set_alarm_for_next_midnight_update(self):
         def callback(p_loop, p_data):
+            TodoWidget.wipe_cache()
             self._update_all_columns()
             self._set_alarm_for_next_midnight_update()
 

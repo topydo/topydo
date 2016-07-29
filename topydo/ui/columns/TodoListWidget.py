@@ -106,10 +106,6 @@ class TodoListWidget(urwid.LineBox):
                 # -2 for the same reason as in self._scroll_to_bottom()
                 self.todolist.set_focus(len(self.todolist) - 2)
 
-        # after the update there might be old stuff left in the widget cache,
-        # clean it
-        TodoWidget.clean_cache(self.view.todolist)
-
     def _scroll_to_top(self, p_size):
         self.listbox.set_focus(0)
 

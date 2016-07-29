@@ -188,19 +188,8 @@ class TodoWidget(urwid.WidgetWrap):
 
         return widget
 
-    cache_clean_counter = 0
-
     @classmethod
-    def clean_cache(p_class, p_todolist):
-        """ Cleans the widget cache once every 500 column updates. """
+    def wipe_cache(p_class):
+        """ Wipes the cache """
+        p_class.cache = {}
 
-        if p_class.cache_clean_counter % 500 != 0:
-            # wait
-            p_class.cache_clean_counter += 1
-            return
-
-        sources_in_list = set([todo.source() for todo in p_todolist])
-        sources_in_cache = set(p_class.cache.keys())
-
-        for stale in sources_in_cache - sources_in_list:
-            del p_class.cache[stale]
