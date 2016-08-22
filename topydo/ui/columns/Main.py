@@ -301,6 +301,8 @@ class UIApplication(CLIApplicationBase):
                               self._output if verbosity else lambda _: None)
 
     def _reset_state(self):
+        for widget in TodoWidget.cache.values():
+            widget.unmark()
         self.marked_todos = []
         self._update_all_columns()
 
