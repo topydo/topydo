@@ -156,14 +156,13 @@ class InstanceFilter(Filter):
 
 
 class HiddenTagFilter(Filter):
-    def __init__(self, p_todos):
+    def __init__(self):
         """
         Constructor.
 
         A filter which hides items marked with the approriate tag.
         """
         super().__init__()
-        self.todos = p_todos
 
     def match(self, p_todo):
         """

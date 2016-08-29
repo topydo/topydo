@@ -114,7 +114,7 @@ class ListCommand(ExpressionCommand):
             filters.append(InstanceFilter(todos))
 
         if not self.show_all:
-            filters.append(HiddenTagFilter(self.todolist))
+            filters.append(HiddenTagFilter())
 
         return filters
 
