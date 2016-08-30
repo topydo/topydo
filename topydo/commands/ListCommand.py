@@ -20,7 +20,7 @@ import os
 
 from topydo.lib.Config import config
 from topydo.lib.ExpressionCommand import ExpressionCommand
-from topydo.lib.Filter import InstanceFilter
+from topydo.lib.Filter import HiddenTagFilter, InstanceFilter
 from topydo.lib.PrettyPrinter import pretty_printer_factory
 from topydo.lib.prettyprinters.Format import PrettyPrinterFormatFilter
 from topydo.lib.TodoListBase import InvalidTodoException
@@ -93,8 +93,9 @@ class ListCommand(ExpressionCommand):
 
     def _filters(self):
         """
-        Additional filters to select particular todo items given with the -i
-        flag.
+        Additional filters to:
+            - select particular todo items given with the -i flag,
+            - hide appropriately tagged items in the absense of the -x flag.
         """
         filters = super()._filters()
 
@@ -111,6 +112,9 @@ class ListCommand(ExpressionCommand):
 
             todos = [get_todo(i) for i in self.ids]
             filters.append(InstanceFilter(todos))
+
+        if not self.show_all:
+            filters.append(HiddenTagFilter())
 
         return filters
 
@@ -238,5 +242,6 @@ When an EXPRESSION is given, only the todos matching that EXPRESSION are shown.
 -N : Limit number of items displayed such that they fit on the terminal.
 -s : Sort the list according to a SORT EXPRESSION. Defaults to the expression
      in the configuration.
--x : Show all todos (i.e. do not filter on dependencies or relevance).\
+-x : Show all todos (i.e. do not filter on dependencies, relevance, or hidden
+     status).\
 """
