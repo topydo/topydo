@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import codecs
 import tempfile
 from subprocess import CalledProcessError, check_call
 
@@ -54,16 +55,16 @@ class EditCommand(MultiCommand):
             self.multi_mode = False
 
     def _todos_to_temp(self):
-        f = tempfile.NamedTemporaryFile()
+        f = tempfile.NamedTemporaryFile(delete=False)
         for todo in self.todos:
             f.write((todo.source() + "\n").encode('utf-8'))
-        f.seek(0)
+        f.close()
 
         return f
 
     def _todos_from_temp(self, p_temp_file):
-        p_temp_file.seek(0)
-        todos = p_temp_file.read().decode('utf-8').splitlines()
+        f = codecs.open(p_temp_file.name, encoding='utf-8')
+        todos = f.read().splitlines()
 
         todo_objs = []
         for todo in todos:
@@ -120,6 +121,8 @@ class EditCommand(MultiCommand):
                 self.error('Editing aborted. Nothing to do.')
         else:
             self.error(self.usage())
+
+        os.unlink(temp_todos.name)
 
     def _execute_not_multi(self):
         if self.edit_archive:
