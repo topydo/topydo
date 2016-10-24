@@ -56,5 +56,39 @@ class ImportanceTest(TopydoTest):
         todo = Todo("(C) Foo " + config().tag_due() + ":" + "2015-11-09")
         self.assertEqual(importance(todo), 6)
 
+
+@freeze_time("2016, 10, 21")
+class ImportanceWeekendFridayTest(TopydoTest):
+    def test_importance_ignore_weekends_due_not_next_monday(self):
+        # Today is friday
+        # due on a monday, but over a month away.
+        # So 2 + 0 (no priority) + 0 (no star) + 0 (due > 14 days)
+        config(p_overrides={('sort', 'ignore_weekends'): '1'})
+        todo = Todo("Foo " + config().tag_due() + ":" + "2016-11-28")
+        self.assertEqual(importance(todo), 2)
+
+
+@freeze_time("2016, 10, 22")
+class ImportanceWeekendSaturdayTest(TopydoTest):
+    def test_importance_ignore_weekends_due_not_next_monday(self):
+        # Today is saturday
+        # due on a monday, but over a month away.
+        # So 2 + 0 (no priority) + 0 (no star) + 0 (due > 14 days)
+        config(p_overrides={('sort', 'ignore_weekends'): '1'})
+        todo = Todo("Foo " + config().tag_due() + ":" + "2016-11-28")
+        self.assertEqual(importance(todo), 2)
+
+
+@freeze_time("2016, 10, 23")
+class ImportanceWeekendSundayTest(TopydoTest):
+    def test_importance_ignore_weekends_due_not_next_monday(self):
+        # Today is sunday
+        # due on a monday, but over a month away.
+        # So 2 + 0 (no priority) + 0 (no star) + 0 (due > 14 days)
+        config(p_overrides={('sort', 'ignore_weekends'): '1'})
+        todo = Todo("Foo " + config().tag_due() + ":" + "2016-11-28")
+        self.assertEqual(importance(todo), 2)
+
+
 if __name__ == '__main__':
     unittest.main()
