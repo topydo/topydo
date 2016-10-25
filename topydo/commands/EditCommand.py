@@ -55,7 +55,7 @@ class EditCommand(MultiCommand):
             self.multi_mode = False
 
     def _todos_to_temp(self):
-        f = tempfile.NamedTemporaryFile(delete=False)
+        f = tempfile.NamedTemporaryFile(delete=False, suffix='.todo.txt')
         for todo in self.todos:
             f.write((todo.source() + "\n").encode('utf-8'))
         f.close()
