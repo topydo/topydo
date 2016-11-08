@@ -15,7 +15,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import datetime
+import getopt
 import shlex
+import sys
 import time
 import urwid
 
@@ -30,7 +32,7 @@ from topydo.lib.Utils import get_terminal_size
 from topydo.lib.View import View
 from topydo.lib import TodoFile
 from topydo.lib import TodoList
-from topydo.ui.CLIApplicationBase import CLIApplicationBase
+from topydo.ui.CLIApplicationBase import CLIApplicationBase, error
 from topydo.ui.columns.CommandLineWidget import CommandLineWidget
 from topydo.ui.columns.ConsoleWidget import ConsoleWidget
 from topydo.ui.columns.KeystateWidget import KeystateWidget
@@ -92,7 +94,19 @@ class UIApplication(CLIApplicationBase):
     def __init__(self):
         super().__init__()
 
-        self._process_flags()
+        args = self._process_flags()
+
+        try:
+            opts, args = getopt.getopt(args[1:], 'l:')
+        except getopt.GetoptError as e:
+            error(str(e))
+            sys.exit(1)
+
+        self.alt_layout_path = None
+
+        for opt, value in opts:
+            if opt == "-l":
+                self.alt_layout_path = value
 
         self.column_width = config().column_width()
         self.todofile = TodoFile.TodoFile(config().todotxt())
@@ -576,7 +590,7 @@ class UIApplication(CLIApplicationBase):
             return False
 
     def run(self):
-        layout = columns()
+        layout = columns(self.alt_layout_path)
         if len(layout) > 0:
             for column in layout:
                 self._add_column(self._viewdata_to_view(column))
