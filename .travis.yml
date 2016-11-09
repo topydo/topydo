@@ -5,6 +5,9 @@ python:
   - "3.4"
   - "3.5"
   - "pypy3"
+matrix:
+  allow_failures:
+    - python: "pypy3"
 install:
   - "python -m pip install pip --upgrade"
   - "pip install ."
