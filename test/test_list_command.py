@@ -332,8 +332,11 @@ class ListCommandTest(CommandTest):
         self.assertEqual(self.output, "|  1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n")
         self.assertEqual(self.errors, "")
 
-    def test_list43(self):
+    @mock.patch('topydo.commands.ListCommand.get_terminal_size')
+    def test_list43(self, mock_terminal_size):
         """Test basic 'N' parameter."""
+        mock_terminal_size.return_value = self.terminal_size(81, 100)
+
         command = ListCommand(["-N"], self.todolist, self.out, self.error)
         command.execute()
 
