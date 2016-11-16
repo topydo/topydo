@@ -15,10 +15,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import configparser
+from os.path import expanduser
 
 from topydo.lib.Config import home_config_path, config
 
-def columns():
+
+def columns(p_alt_layout_path=None):
     """
     Returns list with complete column configuration dicts.
     """
@@ -49,6 +51,8 @@ def columns():
         "/etc/topydo_columns.conf",
     ]
 
+    if p_alt_layout_path is not None:
+        files.insert(0, expanduser(p_alt_layout_path))
     for filename in files:
         if cp.read(filename):
             break
