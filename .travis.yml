@@ -4,7 +4,14 @@ python:
   - "3.3"
   - "3.4"
   - "3.5"
-  - "pypy3"
+env:
+  - GREEN_OPTS=
+
+matrix:
+  include:
+    - python: "pypy3"
+      env: GREEN_OPTS='--processes 1'
+
 install:
   - "python -m pip install pip --upgrade"
   - "pip install ."
@@ -15,7 +22,7 @@ install:
   - "pip install pylint"
   - "pip install codecov"
 script:
-  - "green -vvr"
+  - "green -vvr $GREEN_OPTS"
   - "python -m pylint --errors-only topydo test"
 # Cache Dependencies
 after_script:
