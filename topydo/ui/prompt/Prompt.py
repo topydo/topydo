@@ -41,17 +41,6 @@ from topydo.lib import TodoFile
 from topydo.lib import TodoList
 
 
-def _todotxt_mtime():
-    """
-    Returns the mtime for the configured todo.txt file.
-    """
-    try:
-        return os.path.getmtime(config().todotxt())
-    except os.error:
-        # file not found
-        return None
-
-
 class PromptApplication(CLIApplicationBase):
     """
     This class implements a variant of topydo's CLI showing a shell and
@@ -62,33 +51,25 @@ class PromptApplication(CLIApplicationBase):
         super().__init__()
 
         self._process_flags()
-        self.mtime = None
         self.completer = None
+        self.todofile = TodoFile.TodoFile(config().todotxt(), self._load_file)
 
     def _load_file(self):
         """
         Reads the configured todo.txt file and loads it into the todo list
         instance.
-
-        If the modification time of the todo.txt file is equal to the last time
-        it was checked, nothing will be done.
         """
-        current_mtime = _todotxt_mtime()
-
-        if not self.todofile or self.mtime != current_mtime:
-            self.todofile = TodoFile.TodoFile(config().todotxt())
-            self.todolist = TodoList.TodoList(self.todofile.read())
-            self.mtime = current_mtime
-
-            self.completer = TopydoCompleter(self.todolist)
+        self.todolist.erase()
+        self.todolist.add_list(self.todofile.read())
+        self.completer = TopydoCompleter(self.todolist)
 
     def run(self):
         """ Main entry function. """
         history = InMemoryHistory()
+        self._load_file()
 
         while True:
             # (re)load the todo.txt file (only if it has been modified)
-            self._load_file()
 
             try:
                 user_input = prompt(u'topydo> ', history=history,
@@ -103,18 +84,10 @@ class PromptApplication(CLIApplicationBase):
                 error('Error: ' + str(verr))
                 continue
 
-            mtime_after = _todotxt_mtime()
-
             try:
                 (subcommand, args) = get_subcommand(user_input)
             except ConfigError as ce:
                 error('Error: ' + str(ce) + '. Check your aliases configuration')
-                continue
-
-            # refuse to perform operations such as 'del' and 'do' if the
-            # todo.txt file has been changed in the background.
-            if subcommand and not self.is_read_only(subcommand) and self.mtime != mtime_after:
-                error("WARNING: todo.txt file was modified by another application.\nTo prevent unintended changes, this operation was not executed.")
                 continue
 
             try:

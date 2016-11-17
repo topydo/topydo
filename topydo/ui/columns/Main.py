@@ -108,8 +108,13 @@ class UIApplication(CLIApplicationBase):
             if opt == "-l":
                 self.alt_layout_path = value
 
+        def callback():
+            self.todolist.erase()
+            self.todolist.add_list(self.todofile.read())
+            self._update_all_columns()
+
         self.column_width = config().column_width()
-        self.todofile = TodoFile.TodoFile(config().todotxt())
+        self.todofile = TodoFile.TodoFile(config().todotxt(), callback)
         self.todolist = TodoList.TodoList(self.todofile.read())
 
         self.marked_todos = []

@@ -19,6 +19,7 @@ This module deals with todo.txt files.
 """
 
 import codecs
+import os.path
 
 
 class TodoFile(object):
@@ -27,8 +28,33 @@ class TodoFile(object):
     to.
     """
 
-    def __init__(self, p_path):
-        self.path = p_path
+    def __init__(self, p_path, p_on_update=None):
+        self.path = os.path.abspath(p_path)
+
+        if p_on_update:
+            from watchdog.observers import Observer
+            from watchdog.events import FileSystemEventHandler, FileModifiedEvent, FileCreatedEvent
+
+            class EventHandler(FileSystemEventHandler):
+                def _handle(_, p_event):
+                    right_type = isinstance(p_event, FileCreatedEvent) or isinstance(p_event, FileModifiedEvent)
+
+                    if right_type and p_event.src_path == self.path:
+                        p_on_update()
+
+                def on_created(self, p_event):
+                    """
+                    Because vim deletes and creates a file on buffer save, also
+                    catch a creation event.
+                    """
+                    self._handle(p_event)
+
+                def on_modified(self, p_event):
+                    self._handle(p_event)
+
+            observer = Observer()
+            observer.schedule(EventHandler(), os.path.dirname(self.path))
+            observer.start()
 
     def read(self):
         """ Reads the todo.txt file and returns a list of todo items. """
