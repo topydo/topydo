@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 from test.topydo_testcase import TopydoTest
 from topydo.lib.Utils import escape_ansi
 
@@ -27,12 +28,12 @@ class CommandTest(TopydoTest):
     def out(self, p_output):
         if isinstance(p_output, list) and p_output:
             self.output += escape_ansi(
-                "\n".join([str(s) for s in p_output]) + "\n")
+                os.linesep.join([str(s) for s in p_output]) + os.linesep)
         elif p_output:
-            self.output += str(p_output) + "\n"
+            self.output += str(p_output) + os.linesep
 
     def error(self, p_error):
         if isinstance(p_error, list) and p_error:
-            self.errors += escape_ansi(p_error + "\n") + "\n"
+            self.errors += escape_ansi(p_error + os.linesep) + os.linesep
         elif p_error:
-            self.errors += str(p_error) + "\n"
+            self.errors += str(p_error) + os.linesep

@@ -1,0 +1,2 @@
+test/data/* text eol=lf
+test/data/*.ics binary
