@@ -30,6 +30,7 @@ class TodoFile(object):
 
     def __init__(self, p_path, p_on_update=None):
         self.path = os.path.abspath(p_path)
+        self.write_lock = False
 
         if p_on_update:
             from watchdog.observers import Observer
@@ -39,7 +40,7 @@ class TodoFile(object):
                 def _handle(_, p_event):
                     right_type = isinstance(p_event, FileCreatedEvent) or isinstance(p_event, FileModifiedEvent)
 
-                    if right_type and p_event.src_path == self.path:
+                    if not self.write_lock and right_type and p_event.src_path == self.path:
                         p_on_update()
 
                 def on_created(self, p_event):
@@ -75,6 +76,11 @@ class TodoFile(object):
         p_todos can be a list of todo items, or a string that is just written
         to the file.
         """
+
+        # make sure not to reread the todo file because this instance is
+        # actually writing it
+        self.write_lock = True
+
         todofile = codecs.open(self.path, 'w', encoding="utf-8")
 
         if p_todos is list:
@@ -86,3 +92,4 @@ class TodoFile(object):
         todofile.write("\n")
 
         todofile.close()
+        self.write_lock = False
