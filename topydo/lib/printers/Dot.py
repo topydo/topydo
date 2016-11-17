@@ -36,10 +36,6 @@ class DotPrinter(Printer):
         self.todolist = p_todolist
 
     def print_list(self, p_todos):
-        def escape(p_text):
-            """ Escapes double quotes as they are special in attributes. """
-            return p_text.replace('"', '\\"')
-
         def node_label(p_todo):
             """
             Prints an HTML table for a node label with some todo details.
