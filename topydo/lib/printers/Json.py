@@ -21,7 +21,7 @@ such that other applications can process it.
 
 import json
 
-from topydo.lib.PrettyPrinter import Printer
+from topydo.lib.printers.PrettyPrinter import Printer
 
 
 def _convert_todo(p_todo):

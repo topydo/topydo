@@ -17,7 +17,7 @@
 from datetime import date
 
 from topydo.lib.DCommand import DCommand
-from topydo.lib.PrettyPrinter import PrettyPrinter
+from topydo.lib.printers.PrettyPrinter import PrettyPrinter
 from topydo.lib.prettyprinters.Numbers import PrettyPrinterNumbers
 from topydo.lib.Recurrence import NoRecurrenceException, advance_recurring_todo
 from topydo.lib.RelativeDate import relative_date_to_date

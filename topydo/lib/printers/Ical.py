@@ -23,7 +23,7 @@ import random
 import string
 from datetime import datetime, time
 
-from topydo.lib.PrettyPrinter import Printer
+from topydo.lib.printers.PrettyPrinter import Printer
 
 
 def _convert_priority(p_priority):

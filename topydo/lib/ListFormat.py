@@ -21,7 +21,7 @@ import re
 
 from topydo.lib.Config import config
 from topydo.lib.ProgressColor import progress_color
-from topydo.lib.Utils import get_terminal_size, escape_ansi
+from topydo.lib.Utils import get_terminal_size, escape_ansi, humanize_date
 
 MAIN_PATTERN = (r'^({{(?P<before>.+?)}})?'
                 r'(?P<placeholder>{ph}|\[{ph}\])'
@@ -38,12 +38,6 @@ def _filler(p_str, p_len):
     """
     to_fill = p_len - len(p_str)
     return to_fill*' ' + p_str
-
-def humanize_date(p_datetime):
-    """ Returns a relative date string from a datetime object. """
-    now = arrow.now()
-    date = now.replace(day=p_datetime.day, month=p_datetime.month, year=p_datetime.year)
-    return date.humanize().replace('just now', 'today')
 
 def humanize_dates(p_due=None, p_start=None, p_creation=None):
     """

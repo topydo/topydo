@@ -20,6 +20,7 @@ import os
 import sys
 import unittest
 from collections import namedtuple
+from freezegun import freeze_time
 
 from test.command_testcase import CommandTest
 from test.facilities import load_file_to_todolist
@@ -526,6 +527,30 @@ class ListCommandIcalTest(CommandTest):
         self.assertEqual(replace_ical_tags(self.output),
                          replace_ical_tags(icaltext))
         self.assertEqual(self.errors, "")
+
+
+@freeze_time('2016, 11, 17')
+class ListCommandDotTest(CommandTest):
+    def setUp(self):
+        self.maxDiff = None
+
+    def test_dot(self):
+        todolist = load_file_to_todolist("test/data/ListCommandDotTest.txt")
+
+        command = ListCommand(["-x", "-f", "dot"], todolist, self.out,
+                              self.error)
+        command.execute()
+
+        self.assertFalse(todolist.dirty)
+
+        dottext = ""
+        with codecs.open('test/data/ListCommandTest.dot', 'r',
+                         encoding='utf-8') as dot:
+            dottext = dot.read()
+
+        self.assertEqual(self.output, dottext)
+        self.assertEqual(self.errors, "")
+
 
 if __name__ == '__main__':
     unittest.main()

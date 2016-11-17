@@ -21,7 +21,7 @@ import os
 from topydo.lib.Config import config
 from topydo.lib.ExpressionCommand import ExpressionCommand
 from topydo.lib.Filter import HiddenTagFilter, InstanceFilter
-from topydo.lib.PrettyPrinter import pretty_printer_factory
+from topydo.lib.printers.PrettyPrinter import pretty_printer_factory
 from topydo.lib.prettyprinters.Format import PrettyPrinterFormatFilter
 from topydo.lib.TodoListBase import InvalidTodoException
 from topydo.lib.Utils import get_terminal_size
@@ -64,12 +64,19 @@ class ListCommand(ExpressionCommand):
                 self.sort_expression = value
             elif opt == '-f':
                 if value == 'json':
-                    from topydo.lib.JsonPrinter import JsonPrinter
+                    from topydo.lib.printers.Json import JsonPrinter
                     self.printer = JsonPrinter()
                 elif value == 'ical':
                     if self._poke_icalendar():
-                        from topydo.lib.IcalPrinter import IcalPrinter
+                        from topydo.lib.printers.Ical import IcalPrinter
                         self.printer = IcalPrinter(self.todolist)
+                elif value == 'dot':
+                    from topydo.lib.printers.Dot import DotPrinter
+                    self.printer = DotPrinter(self.todolist)
+
+                    # a graph without dependencies is not so useful, hence
+                    # show all
+                    self.show_all = True
                 else:
                     self.printer = None
             elif opt == '-F':
@@ -197,9 +204,12 @@ Lists all relevant todos. A todo is relevant when:
 
 When an EXPRESSION is given, only the todos matching that EXPRESSION are shown.
 
--f : Specify the OUTPUT FORMAT, being 'text' (default), 'ical' or 'json'.
+-f : Specify the OUTPUT format, being 'text' (default), 'dot' or 'ical' or
+     'json'.
 
      * 'text' - Text output with colors and indentation if applicable.
+     * 'dot'  - Prints a dependency graph for the selected items in GraphViz
+                Dot format.
      * 'ical' - iCalendar (RFC 2445). Is not supported in Python 3.2. Be aware
                 that this is not a read-only operation, todo items may obtain
                 an 'ical' tag with a unique ID. Completed todo items may be

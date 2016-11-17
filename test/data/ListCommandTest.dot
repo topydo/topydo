@@ -1,0 +1,14 @@
+digraph topydo {
+node [ shape="none" margin="0" fontsize="9" fontname="Helvetica" ]
+  _1 [label=<<TABLE CELLBORDER="0" CELLSPACING="1" VALIGN="top"><TR><TD><B>1</B></TD><TD BALIGN="LEFT"><B>Foo @Context2 Not@Context +Project1<BR />Not+Project</B></TD></TR><HR/><TR><TD ALIGN="RIGHT">Prio:</TD><TD ALIGN="LEFT">C</TD></TR><TR><TD ALIGN="RIGHT">Starts:</TD><TD ALIGN="LEFT">2016-11-17 (today)</TD></TR><TR><TD ALIGN="RIGHT">Due:</TD><TD ALIGN="LEFT">2016-11-18 (in a day)</TD></TR></TABLE>> style=filled fillcolor="#008000" fontcolor="#ffffff"]
+  _3 [label=<<TABLE CELLBORDER="0" CELLSPACING="1" VALIGN="top"><TR><TD><B>3</B></TD><TD BALIGN="LEFT"><B>Baz @Context1 +Project1</B></TD></TR><HR/><TR><TD ALIGN="RIGHT">Prio:</TD><TD ALIGN="LEFT">C</TD></TR></TABLE>> style=filled fillcolor="#008000" fontcolor="#ffffff"]
+  _4 [label=<<TABLE CELLBORDER="0" CELLSPACING="1" VALIGN="top"><TR><TD><B>4</B></TD><TD BALIGN="LEFT"><B>Drink beer @ home</B></TD></TR><HR/><TR><TD ALIGN="RIGHT">Prio:</TD><TD ALIGN="LEFT">C</TD></TR></TABLE>> style=filled fillcolor="#008000" fontcolor="#ffffff"]
+  _5 [label=<<TABLE CELLBORDER="0" CELLSPACING="1" VALIGN="top"><TR><TD><B>5</B></TD><TD BALIGN="LEFT"><B>13 + 29 = 42</B></TD></TR><HR/><TR><TD ALIGN="RIGHT">Prio:</TD><TD ALIGN="LEFT">C</TD></TR></TABLE>> style=filled fillcolor="#008000" fontcolor="#ffffff"]
+  _2 [label=<<TABLE CELLBORDER="0" CELLSPACING="1" VALIGN="top"><TR><TD><B>2</B></TD><TD BALIGN="LEFT"><B>Bar @Context1 +Project2</B></TD></TR><HR/><TR><TD ALIGN="RIGHT">Prio:</TD><TD ALIGN="LEFT">D</TD></TR></TABLE>> style=filled fillcolor="#008000" fontcolor="#ffffff"]
+  _6 [label=<<TABLE CELLBORDER="0" CELLSPACING="1" VALIGN="top"><TR><TD><B>6</B></TD><TD BALIGN="LEFT"><B><S>Completed but with</S></B></TD></TR></TABLE>> style=filled fillcolor="#008000" fontcolor="#ffffff"]
+  _3 -> _2
+  _1 -> _4 [style="invis"]
+  _4 -> _5 [style="invis"]
+  _5 -> _6 [style="invis"]
+}
+
