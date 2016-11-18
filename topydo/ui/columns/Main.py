@@ -112,6 +112,7 @@ class UIApplication(CLIApplicationBase):
             self.todolist.erase()
             self.todolist.add_list(self.todofile.read())
             self._update_all_columns()
+            self._redraw()
 
         self.column_width = config().column_width()
         self.todofile = TodoFile.TodoFile(config().todotxt(), callback)
@@ -558,13 +559,16 @@ class UIApplication(CLIApplicationBase):
         self._console_visible = True
         self.console.print_text(p_text)
 
+    def _redraw(self):
+        self.mainloop.draw_screen()
+
     def _input(self, p_question):
         self._print_to_console(p_question)
 
         # don't wait for the event loop to enter idle, there is a command
         # waiting for input right now, so already go ahead and draw the
         # question on screen.
-        self.mainloop.draw_screen()
+        self._redraw()
 
         user_input = self.mainloop.screen.get_input()
         self._console_visible = False
