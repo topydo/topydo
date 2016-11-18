@@ -37,10 +37,18 @@ class TodoFile(object):
             from watchdog.events import FileSystemEventHandler, FileModifiedEvent, FileCreatedEvent
 
             class EventHandler(FileSystemEventHandler):
-                def _handle(_, p_event):
-                    right_type = isinstance(p_event, FileCreatedEvent) or isinstance(p_event, FileModifiedEvent)
+                """
+                Event handler to catch modifications (or creations) of the
+                current todo.txt file.
+                """
+                def __init__(self, p_file):
+                    super().__init__()
+                    self.file = p_file
 
-                    if not self.write_lock and right_type and p_event.src_path == self.path:
+                def _handle(self, p_event):
+                    right_type = isinstance(p_event, FileModifiedEvent) or isinstance(p_event, FileCreatedEvent)
+
+                    if not self.file.write_lock and right_type and p_event.src_path == self.file.path:
                         p_on_update()
 
                 def on_created(self, p_event):
@@ -54,7 +62,7 @@ class TodoFile(object):
                     self._handle(p_event)
 
             observer = Observer()
-            observer.schedule(EventHandler(), os.path.dirname(self.path))
+            observer.schedule(EventHandler(self), os.path.dirname(self.path))
             observer.start()
 
     def read(self):
