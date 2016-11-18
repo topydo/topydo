@@ -20,6 +20,8 @@ def find_version(*file_paths):
         return version_match.group(1)
     raise RuntimeError("Unable to find version string.")
 
+WATCHDOG = 'watchdog >= 0.8.3'
+
 setup(
     name = "topydo",
     packages = find_packages(exclude=["test"]),
@@ -34,9 +36,9 @@ setup(
     extras_require = {
         ':sys_platform=="win32"': ['colorama>=0.2.5'],
         ':python_version=="3.2"': ['backports.shutil_get_terminal_size>=1.0.0'],
-        'columns': ['urwid >= 1.3.0'],
+        'columns': ['urwid >= 1.3.0', WATCHDOG],
         'ical': ['icalendar'],
-        'prompt': ['prompt_toolkit >= 0.53'],
+        'prompt': ['prompt_toolkit >= 0.53', WATCHDOG],
         'test': ['coverage', 'freezegun', 'green', ],
         'test:python_version=="3.2"': ['mock'],
     },
