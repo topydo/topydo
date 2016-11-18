@@ -191,19 +191,24 @@ class UIApplication(CLIApplicationBase):
     def _create_color_palette(self):
         project_color = to_urwid_color(config().project_color())
         context_color = to_urwid_color(config().context_color())
+        context_focus_background_color = to_urwid_color(config().context_focus_background_color())
         metadata_color = to_urwid_color(config().metadata_color())
         link_color = to_urwid_color(config().link_color())
+        default_focus_background_color = to_urwid_color(config().default_focus_background_color())
+        project_focus_background_color = to_urwid_color(config().project_focus_background_color())
+        link_focus_background_color = to_urwid_color(config().link_focus_background_color())
+        metadata_focus_background_color = to_urwid_color(config().metadata_focus_background_color())
 
         palette = [
             (PaletteItem.PROJECT, '', '', '', project_color, ''),
-            (PaletteItem.PROJECT_FOCUS, '', 'light gray', '', project_color, None),
+            (PaletteItem.PROJECT_FOCUS, '', 'light gray', '', project_color, project_focus_background_color),
             (PaletteItem.CONTEXT, '', '', '', context_color, ''),
-            (PaletteItem.CONTEXT_FOCUS, '', 'light gray', '', context_color, None),
+            (PaletteItem.CONTEXT_FOCUS, '', 'light gray', '', context_color, context_focus_background_color),
             (PaletteItem.METADATA, '', '', '', metadata_color, ''),
-            (PaletteItem.METADATA_FOCUS, '', 'light gray', '', metadata_color, None),
+            (PaletteItem.METADATA_FOCUS, '', 'light gray', '', metadata_color, metadata_focus_background_color),
             (PaletteItem.LINK, '', '', '', link_color, ''),
-            (PaletteItem.LINK_FOCUS, '', 'light gray', '', link_color, None),
-            (PaletteItem.DEFAULT_FOCUS, 'black', 'light gray'),
+            (PaletteItem.LINK_FOCUS, '', 'light gray', '', link_color, link_focus_background_color),
+            (PaletteItem.DEFAULT_FOCUS, '', 'light gray', '', '', default_focus_background_color),
             (PaletteItem.MARKED, '', 'light blue'),
         ]
 
