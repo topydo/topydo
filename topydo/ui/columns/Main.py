@@ -30,7 +30,7 @@ from topydo.lib.Sorter import Sorter
 from topydo.lib.Filter import get_filter_list, RelevanceFilter, DependencyFilter
 from topydo.lib.Utils import get_terminal_size
 from topydo.lib.View import View
-from topydo.lib import TodoFile
+from topydo.lib.TodoFileWatched import TodoFileWatched
 from topydo.lib import TodoList
 from topydo.ui.CLIApplicationBase import CLIApplicationBase, error
 from topydo.ui.columns.CommandLineWidget import CommandLineWidget
@@ -115,7 +115,7 @@ class UIApplication(CLIApplicationBase):
             self._redraw()
 
         self.column_width = config().column_width()
-        self.todofile = TodoFile.TodoFile(config().todotxt(), callback)
+        self.todofile = TodoFileWatched(config().todotxt(), callback)
         self.todolist = TodoList.TodoList(self.todofile.read())
 
         self.marked_todos = []
