@@ -76,6 +76,15 @@ class PrettyPrinter(Printer):
         """
         return [self.print_todo(todo) for todo in p_todos]
 
+    def print_groups(self, p_groups):
+        result = []
+
+        for key, todos in p_groups:
+            result.append(TopydoString(key))
+            result.append(TopydoString("\n===\n"))
+            result += self.print_list(todos)
+
+        return result
 
 def pretty_printer_factory(p_todolist, p_additional_filters=None):
     """ Returns a pretty printer suitable for the ls and dep subcommands. """

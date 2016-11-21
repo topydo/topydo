@@ -34,13 +34,33 @@ def get_field_function(p_field):
     access that property. If the property could not be located, return the
     identity function.
     """
+
+    def priority_key(p_todo):
+        priority = p_todo.priority()
+        return (priority or 'ZZ', priority or '')
+
+    def projects_key(p_todo):
+        projects = sorted(p_todo.projects())
+        return ([p.lower() for p in projects], ", ".join(projects))
+
+    def contexts_key(p_todo):
+        contexts = sorted(p_todo.contexts())
+        return ([p.lower() for p in contexts], ", ".join(contexts))
+
+    def get_tag_key(p_todo):
+        if p_todo.has_tag(p_field):
+            return ("0" + p_todo.tag_value(p_field), p_todo.tag_value(p_field))
+        else:
+            return ("1", "")
+
+    # default result
     result = lambda a: a
 
     if is_priority_field(p_field):
         # assign dummy priority when a todo has no priority
-        result = lambda a: a.priority() or 'ZZ'
+        result = priority_key
     elif p_field == 'context' or p_field == 'contexts':
-        result = lambda a: sorted([c.lower() for c in a.contexts()])
+        result = contexts_key
     elif p_field == 'creationdate' or p_field == 'creation':
         # when a task has no creation date, push it to the end by assigning it
         # the maximum possible date.
@@ -56,15 +76,14 @@ def get_field_function(p_field):
     elif p_field == 'length':
         result = lambda a: a.length()
     elif p_field == 'project' or p_field == 'projects':
-        result = lambda a: sorted([c.lower() for c in a.projects()])
+        result = projects_key
     elif p_field == 'text':
         result = lambda a: a.text()
     else:
         # try to find the corresponding tag
         # when a tag is not present, push it to the end of the list by giving
         # it an artificially higher value
-        result = (lambda a: "0" + a.tag_value(p_field) if a.has_tag(p_field)
-                  else "1")
+        result = get_tag_key
 
     return result
 
@@ -115,7 +134,11 @@ class Sorter(object):
         return sorted_todos
 
     def group(self, p_todos):
-        result = [([], self.sort(p_todos))]
+        """
+        Groups the todos according to the given group string. Assumes that the
+        given todos have already been sorted with self.sort().
+        """
+        result = [([], p_todos)]
 
         for function, _ in self.groupfunctions:
             oldresult = result

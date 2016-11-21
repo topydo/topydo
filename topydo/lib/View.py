@@ -38,3 +38,8 @@ class View(object):
             result = _filter.filter(result)
 
         return result
+
+    @property
+    def groups(self):
+        todos = self.todos
+        return self._sorter.group(self.todos)
