@@ -16,6 +16,7 @@
 
 """ This module provides functionality to sort lists with todo items. """
 
+from itertools import groupby
 import re
 from datetime import date
 
@@ -93,10 +94,9 @@ class Sorter(object):
     stable.
     """
 
-    def __init__(self, p_sortstring="desc:priority"):
-        self.sortstring = p_sortstring
-        self.functions = []
-        self._parse()
+    def __init__(self, p_sortstring="desc:priority", p_groupstring=""):
+        self.groupfunctions = self._parse(p_groupstring) if p_groupstring else []
+        self.sortfunctions = self._parse(p_groupstring + ',' + p_sortstring)
 
     def sort(self, p_todos):
         """
@@ -108,18 +108,34 @@ class Sorter(object):
         function.
         """
         sorted_todos = p_todos
-        for function, order in reversed(self.functions):
+        for function, order in reversed(self.sortfunctions):
             sorted_todos = sorted(sorted_todos, key=function,
                                   reverse=(order == 'desc'))
 
         return sorted_todos
 
-    def _parse(self):
+    def group(self, p_todos):
+        result = [([], self.sort(p_todos))]
+
+        for function, _ in self.groupfunctions:
+            oldresult = result
+            result = []
+            for oldkey, oldgroup in oldresult:
+                for key, group in groupby(oldgroup, function):
+                    newkey = oldkey + [key]
+                    newgroup = list(group)
+
+                    result.append((newkey, newgroup))
+
+        return result
+
+    def _parse(self, p_string):
         """
         Parses a sort string and returns a list of functions and the
         desired order.
         """
-        fields = self.sortstring.lower().split(',')
+        result = []
+        fields = p_string.lower().split(',')
 
         for field in fields:
             parsed_field = re.match(
@@ -141,4 +157,23 @@ class Sorter(object):
                 if is_priority_field(field):
                     order = 'asc' if order == 'desc' else 'desc'
 
-                self.functions.append((function, order))
+                result.append((function, order))
+
+        return result
+
+
+if __name__ == '__main__':
+    from topydo.lib.Todo import Todo
+    todos = [
+        Todo('Foo +A @A type:a'),
+        Todo('Foo +A @B type:b'),
+        Todo('Bar +B @B type:b'),
+        Todo('Baz +A @B'),
+    ]
+
+    s = Sorter('desc:context', 'project,type')
+
+    for key, group in s.group(todos):
+        print(key)
+        for item2 in group:
+            print(item2.source())
