@@ -103,15 +103,15 @@ class _Config:
             'colorscheme': {
                 'project_color': 'red',
                 'context_color': 'magenta',
-                'context_focus_background_color': 'light gray',
                 'metadata_color': 'green',
                 'link_color': 'cyan',
                 'priority_colors': 'A:cyan,B:yellow,C:blue',
-                'default_focus_background_color': '',
-                'project_focus_background_color': '',
-                'link_focus_background_color': '',
-                'metadata_focus_background_color': '',
-                'marked_background_color': ''
+                'context_focus_background_color': 'light gray',
+                'default_focus_background_color': 'light gray',
+                'project_focus_background_color': 'light gray',
+                'link_focus_background_color': 'light gray',
+                'metadata_focus_background_color': 'light gray',
+                'marked_background_color': 'light blue'
             },
 
             'aliases': {
