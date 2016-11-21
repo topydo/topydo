@@ -198,6 +198,7 @@ class UIApplication(CLIApplicationBase):
         project_focus_background_color = to_urwid_color(config().project_focus_background_color())
         link_focus_background_color = to_urwid_color(config().link_focus_background_color())
         metadata_focus_background_color = to_urwid_color(config().metadata_focus_background_color())
+        marked_background_color = to_urwid_color(config().marked_background_color())
 
         palette = [
             (PaletteItem.PROJECT, '', '', '', project_color, ''),
@@ -209,7 +210,7 @@ class UIApplication(CLIApplicationBase):
             (PaletteItem.LINK, '', '', '', link_color, ''),
             (PaletteItem.LINK_FOCUS, '', 'light gray', '', link_color, link_focus_background_color),
             (PaletteItem.DEFAULT_FOCUS, '', 'light gray', '', '', default_focus_background_color),
-            (PaletteItem.MARKED, '', 'light blue'),
+            (PaletteItem.MARKED, '', 'light blue', '', '', marked_background_color),
         ]
 
         for C in ascii_uppercase:

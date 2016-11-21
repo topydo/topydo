@@ -111,6 +111,7 @@ class _Config:
                 'project_focus_background_color': '',
                 'link_focus_background_color': '',
                 'metadata_focus_background_color': '',
+                'marked_background_color': ''
             },
 
             'aliases': {
@@ -401,6 +402,12 @@ class _Config:
             return Color(self.cp.getint('colorscheme', 'metadata_focus_background_color'))
         except ValueError:
             return Color(self.cp.get('colorscheme', 'metadata_focus_background_color'))
+
+    def marked_background_color(self):
+        try:
+            return Color(self.cp.getint('colorscheme', 'marked_background_color'))
+        except ValueError:
+            return Color(self.cp.get('colorscheme', 'marked_background_color'))
 
     def auto_creation_date(self):
         try:
