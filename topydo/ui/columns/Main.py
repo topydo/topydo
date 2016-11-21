@@ -191,25 +191,21 @@ class UIApplication(CLIApplicationBase):
     def _create_color_palette(self):
         project_color = to_urwid_color(config().project_color())
         context_color = to_urwid_color(config().context_color())
-        context_focus_background_color = to_urwid_color(config().context_focus_background_color())
         metadata_color = to_urwid_color(config().metadata_color())
         link_color = to_urwid_color(config().link_color())
-        default_focus_background_color = to_urwid_color(config().default_focus_background_color())
-        project_focus_background_color = to_urwid_color(config().project_focus_background_color())
-        link_focus_background_color = to_urwid_color(config().link_focus_background_color())
-        metadata_focus_background_color = to_urwid_color(config().metadata_focus_background_color())
+        focus_background_color = to_urwid_color(config().focus_background_color())
         marked_background_color = to_urwid_color(config().marked_background_color())
 
         palette = [
             (PaletteItem.PROJECT, '', '', '', project_color, ''),
-            (PaletteItem.PROJECT_FOCUS, '', 'light gray', '', project_color, project_focus_background_color),
+            (PaletteItem.PROJECT_FOCUS, '', 'light gray', '', project_color, focus_background_color),
             (PaletteItem.CONTEXT, '', '', '', context_color, ''),
-            (PaletteItem.CONTEXT_FOCUS, '', 'light gray', '', context_color, context_focus_background_color),
+            (PaletteItem.CONTEXT_FOCUS, '', 'light gray', '', context_color, focus_background_color),
             (PaletteItem.METADATA, '', '', '', metadata_color, ''),
-            (PaletteItem.METADATA_FOCUS, '', 'light gray', '', metadata_color, metadata_focus_background_color),
+            (PaletteItem.METADATA_FOCUS, '', 'light gray', '', metadata_color, focus_background_color),
             (PaletteItem.LINK, '', '', '', link_color, ''),
-            (PaletteItem.LINK_FOCUS, '', 'light gray', '', link_color, link_focus_background_color),
-            (PaletteItem.DEFAULT_FOCUS, '', 'light gray', '', '', default_focus_background_color),
+            (PaletteItem.LINK_FOCUS, '', 'light gray', '', link_color, focus_background_color),
+            (PaletteItem.DEFAULT_FOCUS, '', 'light gray', '', '', focus_background_color),
             (PaletteItem.MARKED, '', 'light blue', '', '', marked_background_color),
         ]
 
@@ -223,7 +219,7 @@ class UIApplication(CLIApplicationBase):
                 'pri_' + C, '', '', '', pri_color, ''
             ))
             palette.append((
-                'pri_' + C + '_focus', '', 'light gray', '', pri_color_focus, None
+                'pri_' + C + '_focus', '', 'light gray', '', pri_color_focus, focus_background_color
             ))
 
         return palette

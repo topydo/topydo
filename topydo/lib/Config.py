@@ -106,12 +106,8 @@ class _Config:
                 'metadata_color': 'green',
                 'link_color': 'cyan',
                 'priority_colors': 'A:cyan,B:yellow,C:blue',
-                'context_focus_background_color': 'light gray',
-                'default_focus_background_color': 'light gray',
-                'project_focus_background_color': 'light gray',
-                'link_focus_background_color': 'light gray',
-                'metadata_focus_background_color': 'light gray',
-                'marked_background_color': 'light blue'
+                'focus_background_color': 'gray',
+                'marked_background_color': 'blue'
             },
 
             'aliases': {
@@ -361,12 +357,6 @@ class _Config:
         except ValueError:
             return Color(self.cp.get('colorscheme', 'context_color'))
 
-    def context_focus_background_color(self):
-        try:
-            return Color(self.cp.getint('colorscheme', 'context_focus_background_color'))
-        except ValueError:
-            return Color(self.cp.get('colorscheme', 'context_focus_background_color'))
-
     def metadata_color(self):
         try:
             return Color(self.cp.getint('colorscheme', 'metadata_color'))
@@ -379,29 +369,11 @@ class _Config:
         except ValueError:
             return Color(self.cp.get('colorscheme', 'link_color'))
 
-    def default_focus_background_color(self):
+    def focus_background_color(self):
         try:
-            return Color(self.cp.getint('colorscheme', 'default_focus_background_color'))
+            return Color(self.cp.getint('colorscheme', 'focus_background_color'))
         except ValueError:
-            return Color(self.cp.get('colorscheme', 'default_focus_background_color'))
-
-    def project_focus_background_color(self):
-        try:
-            return Color(self.cp.getint('colorscheme', 'project_focus_background_color'))
-        except ValueError:
-            return Color(self.cp.get('colorscheme', 'project_focus_background_color'))
-
-    def link_focus_background_color(self):
-        try:
-            return Color(self.cp.getint('colorscheme', 'link_focus_background_color'))
-        except ValueError:
-            return Color(self.cp.get('colorscheme', 'link_focus_background_color'))
-
-    def metadata_focus_background_color(self):
-        try:
-            return Color(self.cp.getint('colorscheme', 'metadata_focus_background_color'))
-        except ValueError:
-            return Color(self.cp.get('colorscheme', 'metadata_focus_background_color'))
+            return Color(self.cp.get('colorscheme', 'focus_background_color'))
 
     def marked_background_color(self):
         try:
