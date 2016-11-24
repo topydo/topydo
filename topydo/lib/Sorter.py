@@ -57,7 +57,7 @@ def get_field_function(p_field):
     elif p_field == 'project' or p_field == 'projects':
         result = lambda a: sorted([c.lower() for c in a.projects()])
     elif p_field == 'text':
-        result = lambda a: a.text()
+        result = lambda a: a.text().lower()
     else:
         # try to find the corresponding tag
         # when a tag is not present, push it to the end of the list by giving
