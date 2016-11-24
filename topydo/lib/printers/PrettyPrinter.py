@@ -80,8 +80,9 @@ class PrettyPrinter(Printer):
         result = []
 
         for key, todos in p_groups:
+            result.append(TopydoString(''))
             result.append(TopydoString(key))
-            result.append(TopydoString("\n===\n"))
+            result.append(TopydoString("==="))
             result += self.print_list(todos)
 
         return result
