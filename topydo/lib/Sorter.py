@@ -135,8 +135,8 @@ class Sorter(object):
             oldresult = result
             result = OrderedDict()
             for oldkey, oldgroup in oldresult.items():
-                for key, group in groupby(oldgroup, function):
-                    newgroup = list(group)
+                for key, _group in groupby(oldgroup, function):
+                    newgroup = list(_group)
 
                     if not isinstance(key, list):
                         key = [key]
@@ -150,8 +150,8 @@ class Sorter(object):
                             result[newkey] = newgroup
 
         # sort all groups
-        for key, group in result.items():
-            result[key] = self.sort(group)
+        for key, _group in result.items():
+            result[key] = self.sort(_group)
 
         return result
 
