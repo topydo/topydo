@@ -135,10 +135,10 @@ class DepCommand(Command):
         """ Handles the dot subsubcommand. """
         self.printer = DotPrinter(self.todolist)
 
-        arg = self.argument(1)
-
         try:
+            arg = self.argument(1)
             todo = self.todolist.todo(arg)
+            arg = self.argument(1)
             todos = set([self.todolist.todo(arg)])
             todos |= set(self.todolist.children(todo))
             todos |= set(self.todolist.parents(todo))
@@ -147,6 +147,8 @@ class DepCommand(Command):
             self.out(self.printer.print_list(todos))
         except InvalidTodoException:
             self.error("Invalid todo number given.")
+        except InvalidCommandArgument:
+            self.error(self.usage())
 
 
     def execute(self):
