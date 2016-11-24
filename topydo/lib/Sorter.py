@@ -98,7 +98,7 @@ class Sorter(object):
 
     def __init__(self, p_sortstring="desc:priority", p_groupstring=""):
         self.groupfunctions = self._parse(p_groupstring) if p_groupstring else []
-        self.sortfunctions = self._parse(p_groupstring + ',' + p_sortstring)
+        self.sortfunctions = self._parse(p_sortstring)
 
     def sort(self, p_todos):
         """
@@ -121,6 +121,11 @@ class Sorter(object):
         Groups the todos according to the given group string. Assumes that the
         given todos have already been sorted with self.sort().
         """
+        # preorder todos for the group sort
+        for function, _ in self.groupfunctions:
+            p_todos = sorted(p_todos, key=function)
+
+        # initialize result with a single group
         result = OrderedDict([((), p_todos)])
 
         for function, _ in self.groupfunctions:
@@ -140,6 +145,10 @@ class Sorter(object):
                             result[newkey] = result[newkey] + newgroup
                         else:
                             result[newkey] = newgroup
+
+        # sort all groups
+        for key, group in result.items():
+            result[key] = self.sort(group)
 
         return result
 
