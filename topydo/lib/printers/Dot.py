@@ -111,7 +111,7 @@ class DotPrinter(Printer):
             children = set(p_todos) & set(self.todolist.children(todo,
                 p_only_direct=True))
 
-            for child in children:
+            for child in sorted(list(children), key=lambda t: t.text()):
                 result += '  {} -> {}\n'.format(
                     node_name(todo),
                     node_name(child)
