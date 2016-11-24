@@ -79,7 +79,7 @@ class PrettyPrinter(Printer):
     def print_groups(self, p_groups):
         result = []
 
-        for key, todos in p_groups:
+        for key, todos in p_groups.items():
             result.append(TopydoString(''))
             result.append(TopydoString(key))
             result.append(TopydoString("==="))
