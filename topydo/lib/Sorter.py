@@ -71,6 +71,16 @@ def get_field_function(p_field):
     return result
 
 
+def _apply_sort_functions(p_todos, p_functions):
+    sorted_todos = p_todos
+
+    for function, order in reversed(p_functions):
+        sorted_todos = sorted(sorted_todos, key=function,
+                              reverse=(order == 'desc'))
+
+    return sorted_todos
+
+
 class Sorter(object):
     """
     This class sorts a todo list.
@@ -109,21 +119,14 @@ class Sorter(object):
         sort operation is done first, relying on the stability of the sorted()
         function.
         """
-        sorted_todos = p_todos
-        for function, order in reversed(self.sortfunctions):
-            sorted_todos = sorted(sorted_todos, key=function,
-                                  reverse=(order == 'desc'))
-
-        return sorted_todos
+        return _apply_sort_functions(p_todos, self.sortfunctions)
 
     def group(self, p_todos):
         """
-        Groups the todos according to the given group string. Assumes that the
-        given todos have already been sorted with self.sort().
+        Groups the todos according to the given group string.
         """
         # preorder todos for the group sort
-        for function, _ in self.groupfunctions:
-            p_todos = sorted(p_todos, key=function)
+        p_todos = _apply_sort_functions(p_todos, self.groupfunctions)
 
         # initialize result with a single group
         result = OrderedDict([((), p_todos)])
