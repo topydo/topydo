@@ -142,6 +142,7 @@ class DepCommand(Command):
             todos = set([self.todolist.todo(arg)])
             todos |= set(self.todolist.children(todo))
             todos |= set(self.todolist.parents(todo))
+            todos = sorted(todos, key=lambda t: t.text())
 
             self.out(self.printer.print_list(todos))
         except InvalidTodoException:
