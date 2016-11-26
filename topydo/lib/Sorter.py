@@ -16,7 +16,7 @@
 
 """ This module provides functionality to sort lists with todo items. """
 
-from collections import OrderedDict
+from collections import OrderedDict, namedtuple
 from itertools import groupby
 import re
 from datetime import date
@@ -24,56 +24,91 @@ from datetime import date
 from topydo.lib.Importance import average_importance, importance
 
 
-def is_priority_field(p_field):
-    """ Returns True when the field name denotes the priority. """
-    return p_field.startswith('prio')
+Field = namedtuple('Field', ['sort', 'group', 'label'])
 
-def get_field_function(p_field, p_group=False):
-    """
-    Given a property (string) of a todo, return a function that attempts to
-    access that property. If the property could not be located, return the
-    identity function.
-    """
-    # default result
-    result = lambda a: a
-
-    lower = lambda s: s if p_group else s.lower()
-
-    if is_priority_field(p_field):
-        # assign dummy priority when a todo has no priority
-        result = lambda a: a.priority() or ('None' if p_group else 'ZZ')
-    elif p_field == 'context' or p_field == 'contexts':
-        result = lambda a: sorted([lower(c) for c in a.contexts()])
-    elif p_field == 'creationdate' or p_field == 'creation':
+FIELDS = {
+    'completed': Field(
+        # when a task has no completion date, push it to the end by assigning it
+        # the maximum possible date.
+        sort=(lambda t: t.completion_date() if t.completion_date() else date.max),
+        group=(lambda t: t.completion_date() if t.completion_date() else 'None'),
+        label='Completed',
+    ),
+    'context': Field(
+        sort=lambda t: sorted(c.lower() for c in t.contexts()),
+        group=lambda t: sorted(t.contexts()),
+        label='Context'
+    ),
+    'created': Field(
         # when a task has no creation date, push it to the end by assigning it
         # the maximum possible date.
-        result = (lambda a: a.creation_date() if a.creation_date()
-                  else ('None' if p_group else date.max))
-    elif p_field == 'done' or p_field == 'completed' or p_field == 'completion':
-        result = (lambda a: a.completion_date() if a.completion_date()
-                  else ('None' if p_group else date.max))
-    elif p_field == 'importance':
-        result = importance
-    elif p_field == 'importance-avg' or p_field == 'importance-average':
-        result = average_importance
-    elif p_field == 'length':
-        result = lambda a: a.length()
-    elif p_field == 'project' or p_field == 'projects':
-        result = lambda a: sorted([lower(p) for p in a.projects()])
-    elif p_field == 'text':
-        result = lambda a: a.text()
-    else:
-        # try to find the corresponding tag
-        # when a tag is not present, push it to the end of the list by giving
-        # it an artificially higher value
-        if p_group:
-            result = (lambda a: a.tag_value(p_field) if a.has_tag(p_field) else '')
-        else:
-            result = (lambda a: "0" + a.tag_value(p_field) if a.has_tag(p_field)
-                      else "1")
+        sort=(lambda t: t.creation_date() if t.creation_date() else date.max),
+        group=(lambda t: t.creation_date() if t.creation_date() else 'None'),
+        label='Created',
+    ),
+    'importance': Field(
+        sort=importance,
+        group=importance,
+        label='Importance',
+    ),
+    'importance-avg': Field(
+        sort= average_importance,
+        group=average_importance,
+        label='Importance (avg)',
+    ),
+    'length': Field(
+        sort=lambda t: t.length(),
+        group=lambda t: t.length(),
+        label='Length',
+    ),
+    'priority': Field(
+        sort=(lambda t: t.priority() or 'ZZ'),
+        group=(lambda t: t.priority() or 'None'),
+        label='Priority',
+    ),
+    'project': Field(
+        sort=lambda t: sorted(p.lower() for p in t.projects()),
+        group=lambda t: sorted(t.projects()),
+        label='Project',
+    ),
+    'text': Field(
+        sort=lambda t: t.text().lower(),
+        group=lambda t: t.text(),
+        label='Text',
+    ),
+}
 
-    return result
+# map UI properties to properties in the FIELDS hash
+FIELD_MAP = {
+    'completed': 'completed',
+    'completion': 'completed',
+    'completion_date': 'completed',
+    'done': 'completed',
 
+    'context': 'context',
+    'contexts': 'context',
+
+    'created': 'created',
+    'creation': 'created',
+    'creation_date': 'created',
+
+    'importance': 'importance',
+
+    'importance-avg': 'importance-avg',
+    'importance-average': 'importance-avg',
+
+    'length': 'length',
+    'len': 'length',
+
+    'prio': 'priority',
+    'priorities': 'priority',
+    'priority': 'priority',
+
+    'project': 'project',
+    'projects': 'project',
+
+    'text': 'text',
+}
 
 def _apply_sort_functions(p_todos, p_functions):
     sorted_todos = p_todos
@@ -136,7 +171,7 @@ class Sorter(object):
         # initialize result with a single group
         result = OrderedDict([((), p_todos)])
 
-        for function, _ in self.groupfunctions:
+        for (function, label), _ in self.groupfunctions:
             oldresult = result
             result = OrderedDict()
             for oldkey, oldgroup in oldresult.items():
@@ -147,6 +182,7 @@ class Sorter(object):
                         key = [key]
 
                     for subkey in key:
+                        subkey = "{}: {}".format(label, subkey)
                         newkey = oldkey + (subkey,)
 
                         if newkey in result:
@@ -162,9 +198,26 @@ class Sorter(object):
 
     def _parse(self, p_string, p_group):
         """
-        Parses a sort string and returns a list of functions and the
+        Parses a sort/group string and returns a list of functions and the
         desired order.
         """
+        def get_field_function(p_field, p_group=False):
+            """
+            Turns a field, part of a sort/group string, into a lambda that
+            takes a todo item and returns the field value.
+            """
+            compose = lambda i: i.sort if not p_group else (i.group, i.label)
+
+            if p_field in FIELD_MAP:
+                return compose(FIELDS[FIELD_MAP[p_field]])
+            else:
+                # treat it as a tag value
+                return compose(Field(
+                    sort=lambda t: '0' + t.tag_value(p_field) if t.has_tag(p_field) else '1',
+                    group=lambda t: t.tag_value(p_field) if t.has_tag(p_field) else '',
+                    label=p_field,
+                ))
+
         result = []
         fields = p_string.lower().split(',')
 
@@ -185,7 +238,7 @@ class Sorter(object):
 
                 # reverse order for priority: lower characters have higher
                 # priority
-                if is_priority_field(field):
+                if field in FIELD_MAP and FIELD_MAP[field] == 'priority':
                     order = 'asc' if order == 'desc' else 'desc'
 
                 result.append((function, order))
