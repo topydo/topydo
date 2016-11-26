@@ -28,8 +28,7 @@ def is_priority_field(p_field):
     """ Returns True when the field name denotes the priority. """
     return p_field.startswith('prio')
 
-
-def get_field_function(p_field):
+def get_field_function(p_field, p_group=False):
     """
     Given a property (string) of a todo, return a function that attempts to
     access that property. If the property could not be located, return the
@@ -38,19 +37,21 @@ def get_field_function(p_field):
     # default result
     result = lambda a: a
 
+    lower = lambda s: s if p_group else s.lower()
+
     if is_priority_field(p_field):
         # assign dummy priority when a todo has no priority
-        result = lambda a: a.priority() or 'ZZ'
+        result = lambda a: a.priority() or ('None' if p_group else 'ZZ')
     elif p_field == 'context' or p_field == 'contexts':
-        result = lambda a: sorted([c.lower() for c in a.contexts()])
+        result = lambda a: sorted([lower(c) for c in a.contexts()])
     elif p_field == 'creationdate' or p_field == 'creation':
         # when a task has no creation date, push it to the end by assigning it
         # the maximum possible date.
         result = (lambda a: a.creation_date() if a.creation_date()
-                  else date.max)
+                  else ('None' if p_group else date.max))
     elif p_field == 'done' or p_field == 'completed' or p_field == 'completion':
         result = (lambda a: a.completion_date() if a.completion_date()
-                  else date.max)
+                  else ('None' if p_group else date.max))
     elif p_field == 'importance':
         result = importance
     elif p_field == 'importance-avg' or p_field == 'importance-average':
@@ -58,15 +59,18 @@ def get_field_function(p_field):
     elif p_field == 'length':
         result = lambda a: a.length()
     elif p_field == 'project' or p_field == 'projects':
-        result = lambda a: sorted([c.lower() for c in a.projects()])
+        result = lambda a: sorted([lower(p) for p in a.projects()])
     elif p_field == 'text':
         result = lambda a: a.text()
     else:
         # try to find the corresponding tag
         # when a tag is not present, push it to the end of the list by giving
         # it an artificially higher value
-        result = (lambda a: "0" + a.tag_value(p_field) if a.has_tag(p_field)
-                  else "1")
+        if p_group:
+            result = (lambda a: a.tag_value(p_field) if a.has_tag(p_field) else '')
+        else:
+            result = (lambda a: "0" + a.tag_value(p_field) if a.has_tag(p_field)
+                      else "1")
 
     return result
 
@@ -107,8 +111,9 @@ class Sorter(object):
     """
 
     def __init__(self, p_sortstring="desc:priority", p_groupstring=""):
-        self.groupfunctions = self._parse(p_groupstring) if p_groupstring else []
-        self.sortfunctions = self._parse(p_sortstring)
+        self.groupfunctions = self._parse(p_groupstring, p_group=True) if p_groupstring else []
+        self.pregroupfunctions = self._parse(p_groupstring, p_group=False) if p_groupstring else []
+        self.sortfunctions = self._parse(p_sortstring, p_group=False)
 
     def sort(self, p_todos):
         """
@@ -126,7 +131,7 @@ class Sorter(object):
         Groups the todos according to the given group string.
         """
         # preorder todos for the group sort
-        p_todos = _apply_sort_functions(p_todos, self.groupfunctions)
+        p_todos = _apply_sort_functions(p_todos, self.pregroupfunctions)
 
         # initialize result with a single group
         result = OrderedDict([((), p_todos)])
@@ -155,7 +160,7 @@ class Sorter(object):
 
         return result
 
-    def _parse(self, p_string):
+    def _parse(self, p_string, p_group):
         """
         Parses a sort string and returns a list of functions and the
         desired order.
@@ -176,7 +181,7 @@ class Sorter(object):
 
             field = parsed_field.group('field')
             if field:
-                function = get_field_function(field)
+                function = get_field_function(field, p_group)
 
                 # reverse order for priority: lower characters have higher
                 # priority
