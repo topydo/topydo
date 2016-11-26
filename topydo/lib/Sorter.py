@@ -245,19 +245,3 @@ class Sorter(object):
 
         return result
 
-
-if __name__ == '__main__':
-    from topydo.lib.Todo import Todo
-    todos = [
-        Todo('Foo +A @A type:a'),
-        Todo('Foo +A @B type:b'),
-        Todo('Bar +B @B type:b'),
-        Todo('Baz +A +B @B'),
-    ]
-
-    s = Sorter('desc:context', 'project,type')
-
-    for key, group in s.group(todos).items():
-        print(key)
-        for item2 in group:
-            print(item2.source())
