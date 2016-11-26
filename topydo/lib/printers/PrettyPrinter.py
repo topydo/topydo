@@ -78,14 +78,23 @@ class PrettyPrinter(Printer):
 
     def print_groups(self, p_groups):
         result = []
+        first = True
+
+        def print_header(p_key):
+            """ Prints a header for the given key. """
+            if not first:
+                result.append('')
+
+            key_string = ", ".join(p_key)
+            result.append(key_string)
+            result.append("=" * len(key_string))
 
         for key, todos in p_groups.items():
-            result.append(TopydoString(''))
-            result.append(TopydoString(key))
-            result.append(TopydoString("==="))
+            print_header(key)
+            first = False
             result += self.print_list(todos)
 
-        return result
+        return [TopydoString(s) for s in result]
 
 def pretty_printer_factory(p_todolist, p_additional_filters=None):
     """ Returns a pretty printer suitable for the ls and dep subcommands. """
