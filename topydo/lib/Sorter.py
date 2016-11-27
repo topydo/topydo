@@ -35,8 +35,8 @@ FIELDS = {
         label='Completed',
     ),
     'context': Field(
-        sort=lambda t: sorted(c.lower() for c in t.contexts()),
-        group=lambda t: sorted(t.contexts()),
+        sort=lambda t: sorted(c.lower() for c in t.contexts()) or ['zz'],
+        group=lambda t: sorted(t.contexts()) or ['None'],
         label='Context'
     ),
     'created': Field(
@@ -67,8 +67,8 @@ FIELDS = {
         label='Priority',
     ),
     'project': Field(
-        sort=lambda t: sorted(p.lower() for p in t.projects()),
-        group=lambda t: sorted(t.projects()),
+        sort=lambda t: sorted(p.lower() for p in t.projects()) or ['zz'],
+        group=lambda t: sorted(t.projects()) or ['None'],
         label='Project',
     ),
     'text': Field(
