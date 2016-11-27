@@ -413,7 +413,7 @@ class UIApplication(CLIApplicationBase):
         """
         Converts a dictionary describing a view to an actual UIView instance.
         """
-        sorter = Sorter(p_data['sortexpr'])
+        sorter = Sorter(p_data['sortexpr'], p_data['groupexpr'])
         filters = []
 
         if not p_data['show_all']:
@@ -607,6 +607,7 @@ class UIApplication(CLIApplicationBase):
             dummy = {
                 "title": "All tasks",
                 "sortexpr": "desc:prio",
+                "groupexpr": "",
                 "filterexpr": "",
                 "show_all": True,
             }
