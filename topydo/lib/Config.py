@@ -107,6 +107,8 @@ class _Config:
                 'metadata_color': 'green',
                 'link_color': 'cyan',
                 'priority_colors': 'A:cyan,B:yellow,C:blue',
+                'focus_background_color': 'gray',
+                'marked_background_color': 'blue'
             },
 
             'aliases': {
@@ -370,6 +372,18 @@ class _Config:
             return Color(self.cp.getint('colorscheme', 'link_color'))
         except ValueError:
             return Color(self.cp.get('colorscheme', 'link_color'))
+
+    def focus_background_color(self):
+        try:
+            return Color(self.cp.getint('colorscheme', 'focus_background_color'))
+        except ValueError:
+            return Color(self.cp.get('colorscheme', 'focus_background_color'))
+
+    def marked_background_color(self):
+        try:
+            return Color(self.cp.getint('colorscheme', 'marked_background_color'))
+        except ValueError:
+            return Color(self.cp.get('colorscheme', 'marked_background_color'))
 
     def auto_creation_date(self):
         try:

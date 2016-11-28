@@ -30,7 +30,7 @@ from topydo.lib.Sorter import Sorter
 from topydo.lib.Filter import get_filter_list, RelevanceFilter, DependencyFilter
 from topydo.lib.Utils import get_terminal_size
 from topydo.lib.View import View
-from topydo.lib import TodoFile
+from topydo.lib.TodoFileWatched import TodoFileWatched
 from topydo.lib import TodoList
 from topydo.ui.CLIApplicationBase import CLIApplicationBase, error
 from topydo.ui.columns.CommandLineWidget import CommandLineWidget
@@ -115,7 +115,7 @@ class UIApplication(CLIApplicationBase):
             self._redraw()
 
         self.column_width = config().column_width()
-        self.todofile = TodoFile.TodoFile(config().todotxt(), callback)
+        self.todofile = TodoFileWatched(config().todotxt(), callback)
         self.todolist = TodoList.TodoList(self.todofile.read())
 
         self.marked_todos = []
@@ -193,18 +193,20 @@ class UIApplication(CLIApplicationBase):
         context_color = to_urwid_color(config().context_color())
         metadata_color = to_urwid_color(config().metadata_color())
         link_color = to_urwid_color(config().link_color())
+        focus_background_color = to_urwid_color(config().focus_background_color())
+        marked_background_color = to_urwid_color(config().marked_background_color())
 
         palette = [
             (PaletteItem.PROJECT, '', '', '', project_color, ''),
-            (PaletteItem.PROJECT_FOCUS, '', 'light gray', '', project_color, None),
+            (PaletteItem.PROJECT_FOCUS, '', 'light gray', '', project_color, focus_background_color),
             (PaletteItem.CONTEXT, '', '', '', context_color, ''),
-            (PaletteItem.CONTEXT_FOCUS, '', 'light gray', '', context_color, None),
+            (PaletteItem.CONTEXT_FOCUS, '', 'light gray', '', context_color, focus_background_color),
             (PaletteItem.METADATA, '', '', '', metadata_color, ''),
-            (PaletteItem.METADATA_FOCUS, '', 'light gray', '', metadata_color, None),
+            (PaletteItem.METADATA_FOCUS, '', 'light gray', '', metadata_color, focus_background_color),
             (PaletteItem.LINK, '', '', '', link_color, ''),
-            (PaletteItem.LINK_FOCUS, '', 'light gray', '', link_color, None),
-            (PaletteItem.DEFAULT_FOCUS, 'black', 'light gray'),
-            (PaletteItem.MARKED, '', 'light blue'),
+            (PaletteItem.LINK_FOCUS, '', 'light gray', '', link_color, focus_background_color),
+            (PaletteItem.DEFAULT_FOCUS, '', 'light gray', '', '', focus_background_color),
+            (PaletteItem.MARKED, '', 'light blue', '', '', marked_background_color),
         ]
 
         for C in ascii_uppercase:
@@ -217,7 +219,7 @@ class UIApplication(CLIApplicationBase):
                 'pri_' + C, '', '', '', pri_color, ''
             ))
             palette.append((
-                'pri_' + C + '_focus', '', 'light gray', '', pri_color_focus, None
+                'pri_' + C + '_focus', '', 'light gray', '', pri_color_focus, focus_background_color
             ))
 
         return palette

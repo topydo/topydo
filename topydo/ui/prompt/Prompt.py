@@ -37,7 +37,7 @@ except ConfigError as config_error:
     sys.exit(1)
 
 from topydo.Commands import get_subcommand
-from topydo.lib import TodoFile
+from topydo.lib.TodoFileWatched import TodoFileWatched
 from topydo.lib import TodoList
 
 
@@ -52,7 +52,7 @@ class PromptApplication(CLIApplicationBase):
 
         self._process_flags()
         self.completer = None
-        self.todofile = TodoFile.TodoFile(config().todotxt(), self._load_file)
+        self.todofile = TodoFileWatched(config().todotxt(), self._load_file)
 
     def _load_file(self):
         """

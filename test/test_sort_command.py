@@ -33,14 +33,14 @@ class SortCommandTest(CommandTest):
         command.execute()
 
         self.assertEqual(self.todolist.print_todos(),
-                         "First\n(A) Foo\n2014-06-14 Last")
+                         "first\n(A) Foo\n2014-06-14 Last")
 
     def test_sort2(self):
         command = SortCommand([], self.todolist, self.out, self.error)
         command.execute()
 
         self.assertEqual(self.todolist.print_todos(),
-                         "(A) Foo\n2014-06-14 Last\nFirst")
+                         "(A) Foo\n2014-06-14 Last\nfirst")
 
     def test_sort3(self):
         """ Check that order does not influence the UID of a todo. """

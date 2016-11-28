@@ -28,42 +28,8 @@ class TodoFile(object):
     to.
     """
 
-    def __init__(self, p_path, p_on_update=None):
+    def __init__(self, p_path):
         self.path = os.path.abspath(p_path)
-        self.write_lock = False
-
-        if p_on_update:
-            from watchdog.observers import Observer
-            from watchdog.events import FileSystemEventHandler, FileModifiedEvent, FileCreatedEvent
-
-            class EventHandler(FileSystemEventHandler):
-                """
-                Event handler to catch modifications (or creations) of the
-                current todo.txt file.
-                """
-                def __init__(self, p_file):
-                    super().__init__()
-                    self.file = p_file
-
-                def _handle(self, p_event):
-                    right_type = isinstance(p_event, FileModifiedEvent) or isinstance(p_event, FileCreatedEvent)
-
-                    if not self.file.write_lock and right_type and p_event.src_path == self.file.path:
-                        p_on_update()
-
-                def on_created(self, p_event):
-                    """
-                    Because vim deletes and creates a file on buffer save, also
-                    catch a creation event.
-                    """
-                    self._handle(p_event)
-
-                def on_modified(self, p_event):
-                    self._handle(p_event)
-
-            observer = Observer()
-            observer.schedule(EventHandler(self), os.path.dirname(self.path))
-            observer.start()
 
     def read(self):
         """ Reads the todo.txt file and returns a list of todo items. """
@@ -85,10 +51,6 @@ class TodoFile(object):
         to the file.
         """
 
-        # make sure not to reread the todo file because this instance is
-        # actually writing it
-        self.write_lock = True
-
         todofile = codecs.open(self.path, 'w', encoding="utf-8")
 
         if p_todos is list:
@@ -100,4 +62,3 @@ class TodoFile(object):
         todofile.write("\n")
 
         todofile.close()
-        self.write_lock = False
