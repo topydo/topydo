@@ -21,7 +21,9 @@ from itertools import groupby
 import re
 from datetime import date
 
+from topydo.lib.Config import config
 from topydo.lib.Importance import average_importance, importance
+from topydo.lib.Utils import humanize_date
 
 
 Field = namedtuple('Field', ['sort', 'group', 'label'])
@@ -31,7 +33,7 @@ FIELDS = {
         # when a task has no completion date, push it to the end by assigning it
         # the maximum possible date.
         sort=(lambda t: t.completion_date() if t.completion_date() else date.max),
-        group=(lambda t: t.completion_date() if t.completion_date() else 'None'),
+        group=(lambda t: humanize_date(t.completion_date()) if t.completion_date() else 'None'),
         label='Completed',
     ),
     'context': Field(
@@ -43,7 +45,7 @@ FIELDS = {
         # when a task has no creation date, push it to the end by assigning it
         # the maximum possible date.
         sort=(lambda t: t.creation_date() if t.creation_date() else date.max),
-        group=(lambda t: t.creation_date() if t.creation_date() else 'None'),
+        group=(lambda t: humanize_date(t.creation_date()) if t.creation_date() else 'None'),
         label='Created',
     ),
     'importance': Field(
@@ -208,13 +210,31 @@ class Sorter(object):
             """
             compose = lambda i: i.sort if not p_group else (i.group, i.label)
 
+            def group_value(p_todo):
+                """
+                Returns a value to assign the given todo to a group. Date tags
+                are grouped according to the relative date (1 day, 1 month,
+                ...)
+                """
+                result = 'No value'
+
+                if p_todo.has_tag(p_field):
+                    if p_field == config().tag_due():
+                        result = humanize_date(p_todo.due_date())
+                    elif p_field == config().tag_start():
+                        result = humanize_date(p_todo.start_date())
+                    else:
+                        result = p_todo.tag_value()
+
+                return result
+
             if p_field in FIELD_MAP:
                 return compose(FIELDS[FIELD_MAP[p_field]])
             else:
                 # treat it as a tag value
                 return compose(Field(
                     sort=lambda t: '0' + t.tag_value(p_field) if t.has_tag(p_field) else '1',
-                    group=lambda t: t.tag_value(p_field) if t.has_tag(p_field) else '',
+                    group=group_value,
                     label=p_field,
                 ))
 
