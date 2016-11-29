@@ -224,7 +224,7 @@ class Sorter(object):
                     elif p_field == config().tag_start():
                         result = humanize_date(p_todo.start_date())
                     else:
-                        result = p_todo.tag_value()
+                        result = p_todo.tag_value(p_field)
 
                 return result
 
