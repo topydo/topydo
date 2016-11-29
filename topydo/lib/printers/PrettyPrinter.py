@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from itertools import chain
+
 from topydo.lib.prettyprinters.Colors import PrettyPrinterColorFilter
 from topydo.lib.prettyprinters.Numbers import PrettyPrinterNumbers
 from topydo.lib.TopydoString import TopydoString
@@ -32,6 +34,10 @@ class Printer(object):
     def print_list(self, p_todos):
         for todo in p_todos:
             self.print_todo(todo)
+
+    def print_groups(self, p_groups):
+        todos = list(chain.from_iterable(p_groups.values()))
+        return self.print_list(todos)
 
 
 class PrettyPrinter(Printer):
