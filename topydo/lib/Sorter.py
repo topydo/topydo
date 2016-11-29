@@ -55,7 +55,7 @@ FIELDS = {
     ),
     'importance-avg': Field(
         sort= average_importance,
-        group=average_importance,
+        group=lambda t: round(average_importance(t), 1),
         label='Importance (avg)',
     ),
     'length': Field(
