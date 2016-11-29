@@ -32,8 +32,12 @@ class Printer(object):
         raise NotImplementedError
 
     def print_list(self, p_todos):
+        result = ''
+
         for todo in p_todos:
-            self.print_todo(todo)
+            result += self.print_todo(todo)
+
+        return result
 
     def print_groups(self, p_groups):
         todos = list(chain.from_iterable(p_groups.values()))
