@@ -34,6 +34,7 @@ class TodoFileWatched(TodoFile):
 
     def __init__(self, p_path, p_on_update):
         super().__init__(p_path)
+        self.self_write = False
 
         class EventHandler(FileSystemEventHandler):
             """
