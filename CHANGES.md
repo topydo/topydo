@@ -1,3 +1,9 @@
+0.12 (to be released)
+---------------------
+
+* Change: output in column UI remains visible when : is pressed (instead of
+  Enter or Escape to discard).
+
 0.11
 ----
 
@@ -26,9 +32,7 @@
 * Change: Performance improvements for the column UI, it scales better with
   large todo lists.
 * Change: temporary files (for editing) will be detected as todo.txt files by
-   the todo.txt-vim plugin.
-* Change: output in column UI remains visible when : is pressed (instead of
-  Enter or Escape to discard).
+  the todo.txt-vim plugin.
 
 0.10.1
 ------

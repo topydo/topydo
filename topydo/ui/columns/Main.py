@@ -142,9 +142,10 @@ class UIApplication(CLIApplicationBase):
                              self._execute_handler)
 
         def hide_console(p_focus_commandline=False):
-            self._console_visible = False
             if p_focus_commandline:
                 self._focus_commandline()
+            else:
+                self._console_visible = False
         urwid.connect_signal(self.console, 'close', hide_console)
 
         # view widget
@@ -261,6 +262,7 @@ class UIApplication(CLIApplicationBase):
         Executes a command, given as a string.
         """
         p_output = p_output or self._output
+        self._console_visible = False
 
         self._last_cmd = (p_command, p_output == self._output)
 
@@ -329,6 +331,7 @@ class UIApplication(CLIApplicationBase):
         self._update_all_columns()
 
     def _blur_commandline(self):
+        self._console_visible = False
         self.mainwindow.focus_item = 0
 
     def _focus_commandline(self):
