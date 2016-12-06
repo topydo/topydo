@@ -204,9 +204,9 @@ class ListCommand(ExpressionCommand):
         return True
 
     def usage(self):
-        return """Synopsis: ls [-x] [-s <SORT EXPRESSION>] [-f <OUTPUT FORMAT>]
-[-F <FORMAT STRING>] [-i <NUMBER 1>[,<NUMBER 2> ...]] [-N | -n <INTEGER>]
-[EXPRESSION]"""
+        return """Synopsis: ls [-x] [-s <SORT EXPRESSION>]
+[-g <GROUP EXPRESSION>] [-f <OUTPUT FORMAT>] [-F <FORMAT STRING>]
+[-i <NUMBER 1>[,<NUMBER 2> ...]] [-N | -n <INTEGER>] [EXPRESSION]"""
 
     def help(self):
         return """\
@@ -261,11 +261,14 @@ When an EXPRESSION is given, only the todos matching that EXPRESSION are shown.
      (empty string) when an item has no priority set.
 
      A tab character serves as a marker to start right alignment.
+-g : Group items according to a GROUP EXPRESSION. A group expression is similar
+     to a sort expression. Defaults to the group expression in the
+     configuration.
 -i : Comma separated list of todo IDs to print.
 -n : Number of items to display. Defaults to the value in the configuration.
 -N : Limit number of items displayed such that they fit on the terminal.
--s : Sort the list according to a SORT EXPRESSION. Defaults to the expression
-     in the configuration.
+-s : Sort the list according to a SORT EXPRESSION. Defaults to the sort
+     expression in the configuration.
 -x : Show all todos (i.e. do not filter on dependencies, relevance, or hidden
      status).\
 """
