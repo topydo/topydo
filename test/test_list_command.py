@@ -719,5 +719,58 @@ Project: A
 | 18| Inner sort 1 +A test:test_group9
 """)
 
+    def test_group10(self):
+        todolist = load_file_to_todolist("test/data/ListCommandGroupTest.txt")
+
+        command = ListCommand(["-x", "-g"], todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(todolist.dirty)
+
+        self.assertEqual(self.output, "")
+        self.assertEqual(self.errors, "option -g requires argument\n")
+
+    def test_group11(self):
+        config(p_overrides={('sort', 'group_string'): 'project'})
+        todolist = load_file_to_todolist("test/data/ListCommandGroupTest.txt")
+
+        command = ListCommand(["test:test_group1"], todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(todolist.dirty)
+
+        self.assertEqual(self.output, """\
+Project: A
+==========
+|  1| +A only test:test_group1
+|  3| +A and +B test:test_group1
+
+Project: B
+==========
+|  3| +A and +B test:test_group1
+|  2| +B only test:test_group1
+
+Project: None
+=============
+|  4| No project test:test_group1
+""")
+        self.assertEqual(self.errors, "")
+
+    def test_group12(self):
+        todolist = load_file_to_todolist("test/data/ListCommandGroupTest.txt")
+
+        command = ListCommand(["-g", ",", "test:test_group1"], todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(todolist.dirty)
+
+        self.assertEqual(self.output, """\
+|  1| +A only test:test_group1
+|  2| +B only test:test_group1
+|  3| +A and +B test:test_group1
+|  4| No project test:test_group1
+""")
+        self.assertEqual(self.errors, "")
+
 if __name__ == '__main__':
     unittest.main()
