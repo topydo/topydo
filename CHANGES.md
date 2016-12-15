@@ -1,3 +1,32 @@
+0.11
+----
+
+* New: `ls` can group items with the `-g` flag, accepting a group expression
+  (which has the same format as a sort expression). To group items by project,
+  run: `topydo ls -g project`.
+* New: `ls` can print todo items in the Graphviz Dot format, such that
+  dependencies can be visualized. Use `ls -f dot`, or
+  `topydo ls -f dot +ProjectA | dot -Tsvg -o projectA.svg` to make a graph for
+  project A.
+* New: Focus and mark colors are customizable in the column UI (thanks to
+  @colinsullivan).
+* New: todo items can be hidden by adding a `h:1` tag (thanks to @MinchinWeb).
+* New: an alternative column definition file can be given with the `-l` flag:
+  `topydo columns -ls /path/to/columns.conf` (thanks to @mruwek).
+
+* Fix: column UI reloads automatically when the todo.txt file was changed
+  externally.
+* Fix: `edit` did not work on some operating systems (e.g. Mac OS X).
+* Fix: relative dates were sometimes one day off.
+* Fix: Minor importance calculation fix during the weekend for distant mondays
+  (thanks to @aetherknight).
+* Fix: tests were made more deterministic.
+
+* Change: Performance improvements for the column UI, it scales better with
+  large todo lists.
+* Change: temporary files (for editing) will be detected as todo.txt files by
+   the todo.txt-vim plugin.
+
 0.10.1
 ------
 
