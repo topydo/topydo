@@ -100,7 +100,11 @@ class PrettyPrinter(Printer):
             result.append("=" * len(key_string))
 
         for key, todos in p_groups.items():
-            print_header(key)
+            if key != ():
+                # don't print a header for the case that no valid grouping
+                # could be made (e.g. an invalid group expression)
+                print_header(key)
+
             first = False
             result += self.print_list(todos)
 
