@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from itertools import chain
+
 from topydo.lib.prettyprinters.Colors import PrettyPrinterColorFilter
 from topydo.lib.prettyprinters.Numbers import PrettyPrinterNumbers
 from topydo.lib.TopydoString import TopydoString
@@ -30,8 +32,16 @@ class Printer(object):
         raise NotImplementedError
 
     def print_list(self, p_todos):
+        result = ''
+
         for todo in p_todos:
-            self.print_todo(todo)
+            result += self.print_todo(todo)
+
+        return result
+
+    def print_groups(self, p_groups):
+        todos = list(chain.from_iterable(p_groups.values()))
+        return self.print_list(todos)
 
 
 class PrettyPrinter(Printer):
@@ -76,6 +86,29 @@ class PrettyPrinter(Printer):
         """
         return [self.print_todo(todo) for todo in p_todos]
 
+    def print_groups(self, p_groups):
+        result = []
+        first = True
+
+        def print_header(p_key):
+            """ Prints a header for the given key. """
+            if not first:
+                result.append('')
+
+            key_string = ", ".join(p_key)
+            result.append(key_string)
+            result.append("=" * len(key_string))
+
+        for key, todos in p_groups.items():
+            if key != ():
+                # don't print a header for the case that no valid grouping
+                # could be made (e.g. an invalid group expression)
+                print_header(key)
+
+            first = False
+            result += self.print_list(todos)
+
+        return [TopydoString(s) for s in result]
 
 def pretty_printer_factory(p_todolist, p_additional_filters=None):
     """ Returns a pretty printer suitable for the ls and dep subcommands. """

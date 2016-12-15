@@ -24,16 +24,18 @@ class ViewWidget(urwid.LineBox):
 
         self.titleedit = urwid.Edit("Title: ", "")
         self.sortedit = urwid.Edit("Sort expression: ", "")
+        self.groupedit = urwid.Edit("Group expression: ", "")
         self.filteredit = urwid.Edit("Filter expression: ", "")
 
-        group = []
-        self.relevantradio = urwid.RadioButton(group, "Only show relevant todo items", True)
-        self.allradio = urwid.RadioButton(group, "Show all todo items")
+        radiogroup = []
+        self.relevantradio = urwid.RadioButton(radiogroup, "Only show relevant todo items", True)
+        self.allradio = urwid.RadioButton(radiogroup, "Show all todo items")
 
         self.pile = urwid.Pile([
             self.filteredit,
             self.titleedit,
             self.sortedit,
+            self.groupedit,
             self.relevantradio,
             self.allradio,
             urwid.Button("Save", lambda _: urwid.emit_signal(self, 'save')),
@@ -51,6 +53,7 @@ class ViewWidget(urwid.LineBox):
         return {
             'title': self.titleedit.edit_text or self.filteredit.edit_text,
             'sortexpr': self.sortedit.edit_text or config().sort_string(),
+            'groupexpr': self.groupedit.edit_text or config().group_string(),
             'filterexpr': self.filteredit.edit_text,
             'show_all': self.allradio.state,
         }
@@ -59,6 +62,7 @@ class ViewWidget(urwid.LineBox):
     def data(self, p_data):
         self.titleedit.edit_text = p_data['title']
         self.sortedit.edit_text = p_data['sortexpr']
+        self.groupedit.edit_text = p_data['groupexpr']
         self.filteredit.edit_text = p_data['filterexpr']
         self.relevantradio.set_state(not p_data['show_all'])
         self.allradio.set_state(p_data['show_all'])

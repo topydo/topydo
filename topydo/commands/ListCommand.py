@@ -24,7 +24,9 @@ from topydo.lib.Filter import HiddenTagFilter, InstanceFilter
 from topydo.lib.printers.PrettyPrinter import pretty_printer_factory
 from topydo.lib.prettyprinters.Format import PrettyPrinterFormatFilter
 from topydo.lib.TodoListBase import InvalidTodoException
+from topydo.lib.Sorter import Sorter
 from topydo.lib.Utils import get_terminal_size
+from topydo.lib.View import View
 
 
 class ListCommand(ExpressionCommand):
@@ -37,6 +39,7 @@ class ListCommand(ExpressionCommand):
 
         self.printer = None
         self.sort_expression = config().sort_string()
+        self.group_expression = config().group_string()
         self.show_all = False
         self.ids = None
         self.format = config().list_format()
@@ -55,7 +58,7 @@ class ListCommand(ExpressionCommand):
         return True
 
     def _process_flags(self):
-        opts, args = self.getopt('f:F:i:n:Ns:x')
+        opts, args = self.getopt('f:F:g:i:n:Ns:x')
 
         for opt, value in opts:
             if opt == '-x':
@@ -81,6 +84,8 @@ class ListCommand(ExpressionCommand):
                     self.printer = None
             elif opt == '-F':
                 self.format = value
+            elif opt == '-g':
+                self.group_expression = value
             elif opt == '-N':
                 # 2 lines are assumed to be taken up by printing the next prompt
                 # display at least one item
@@ -143,7 +148,16 @@ class ListCommand(ExpressionCommand):
 
             self.printer = pretty_printer_factory(self.todolist, filters)
 
-        self.out(self.printer.print_list(self._view().todos))
+        if self.group_expression:
+            self.out(self.printer.print_groups(self._view().groups))
+        else:
+            self.out(self.printer.print_list(self._view().todos))
+
+    def _view(self):
+        sorter = Sorter(self.sort_expression, self.group_expression)
+        filters = self._filters()
+
+        return View(sorter, filters, self.todolist)
 
     def _N_lines(self):
         ''' Determine how many lines to print, such that the number of items
@@ -190,9 +204,9 @@ class ListCommand(ExpressionCommand):
         return True
 
     def usage(self):
-        return """Synopsis: ls [-x] [-s <SORT EXPRESSION>] [-f <OUTPUT FORMAT>]
-[-F <FORMAT STRING>] [-i <NUMBER 1>[,<NUMBER 2> ...]] [-N | -n <INTEGER>]
-[EXPRESSION]"""
+        return """Synopsis: ls [-x] [-s <SORT EXPRESSION>]
+[-g <GROUP EXPRESSION>] [-f <OUTPUT FORMAT>] [-F <FORMAT STRING>]
+[-i <NUMBER 1>[,<NUMBER 2> ...]] [-N | -n <INTEGER>] [EXPRESSION]"""
 
     def help(self):
         return """\
@@ -247,11 +261,14 @@ When an EXPRESSION is given, only the todos matching that EXPRESSION are shown.
      (empty string) when an item has no priority set.
 
      A tab character serves as a marker to start right alignment.
+-g : Group items according to a GROUP EXPRESSION. A group expression is similar
+     to a sort expression. Defaults to the group expression in the
+     configuration.
 -i : Comma separated list of todo IDs to print.
 -n : Number of items to display. Defaults to the value in the configuration.
 -N : Limit number of items displayed such that they fit on the terminal.
--s : Sort the list according to a SORT EXPRESSION. Defaults to the expression
-     in the configuration.
+-s : Sort the list according to a SORT EXPRESSION. Defaults to the sort
+     expression in the configuration.
 -x : Show all todos (i.e. do not filter on dependencies, relevance, or hidden
      status).\
 """

@@ -1,0 +1,19 @@
++A only test:test_group1
++B only test:test_group1
++A and +B test:test_group1
+No project test:test_group1
+Different item test:test_group2 l:1
+Another item test:test_group2 l:0
+Test 1 due:2016-12-06 test:test_group3
+Test 2 due:2016-12-07 test:test_group3
+Test 1 t:2016-12-06 test:test_group4 test:test_group5
+Test 2 t:2016-12-07 test:test_group4 test:test_group5
+Group by non-existing tag test:test_group6
+Sort descending +A test:test_group7
+Sort descending +B test:test_group7
+Inner sort 1 +A @A test:test_group8
+Inner sort 2 +A @B test:test_group8
+Inner sort 3 +B @A test:test_group8
+Inner sort 4 +B @B test:test_group8
+Inner sort 1 +A test:test_group9
+Inner sort 2 +A test:test_group9

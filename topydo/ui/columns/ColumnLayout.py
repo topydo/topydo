@@ -30,6 +30,7 @@ def columns(p_alt_layout_path=None):
         column_dict['title'] = p_cp.get(p_column, 'title')
         column_dict['filterexpr'] = p_cp.get(p_column, 'filterexpr')
         column_dict['sortexpr'] = p_cp.get(p_column, 'sortexpr')
+        column_dict['groupexpr'] = p_cp.get(p_column, 'groupexpr')
         column_dict['show_all'] = p_cp.getboolean(p_column, 'show_all')
 
         return column_dict
@@ -38,6 +39,7 @@ def columns(p_alt_layout_path=None):
             'title':  'Yet another column',
             'filterexpr': '',
             'sortexpr': config().sort_string(),
+            'groupexpr': config().group_string(),
             'show_all': '0',
     }
 

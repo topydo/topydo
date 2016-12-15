@@ -92,6 +92,7 @@ class _Config:
             'sort': {
                 'keep_sorted': '0',
                 'sort_string': 'desc:importance,due,desc:priority',
+                'group_string': '',
                 'ignore_weekends': '1',
             },
 
@@ -271,6 +272,9 @@ class _Config:
 
     def sort_string(self):
         return self.cp.get('sort', 'sort_string')
+
+    def group_string(self):
+        return self.cp.get('sort', 'group_string')
 
     def ignore_weekends(self):
         try:
