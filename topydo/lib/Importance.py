@@ -31,12 +31,14 @@ IMPORTANCE_VALUE = {'A': 3, 'B': 2, 'C': 1}
 
 
 def is_due_next_monday(p_todo):
-    """ Returns True when the given task is due next Monday. """
+    """ Returns True when today is Friday (or the weekend) and the given task
+    is due next Monday.
+    """
     today = date.today()
     due = p_todo.due_date()
 
     return due and due.weekday() == 0 and today.weekday() >= 4 and \
-        p_todo.days_till_due()
+        p_todo.days_till_due() <= 3
 
 
 def importance(p_todo, p_ignore_weekend=config().ignore_weekends()):

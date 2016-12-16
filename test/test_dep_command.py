@@ -295,6 +295,39 @@ class DepCommandTest(CommandTest):
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors, command.usage() + "\n")
 
+    def test_dot1(self):
+        command = DepCommand(["dot"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.dirty)
+        self.assertEqual(self.output, "")
+        self.assertEqual(self.errors, command.usage() + "\n")
+
+    def test_dot2(self):
+        self.maxDiff = None
+        command = DepCommand(["dot", "1"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.dirty)
+        self.assertEqual(self.output, """digraph topydo {
+node [ shape="none" margin="0" fontsize="9" fontname="Helvetica" ]
+  _2 [label=<<TABLE CELLBORDER="0" CELLSPACING="1" VALIGN="top"><TR><TD><B>2</B></TD><TD BALIGN="LEFT"><B>Bar</B></TD></TR></TABLE>> style=filled fillcolor="#008000" fontcolor="#ffffff"]
+  _3 [label=<<TABLE CELLBORDER="0" CELLSPACING="1" VALIGN="top"><TR><TD><B>3</B></TD><TD BALIGN="LEFT"><B>Baz</B></TD></TR></TABLE>> style=filled fillcolor="#008000" fontcolor="#ffffff"]
+  _1 [label=<<TABLE CELLBORDER="0" CELLSPACING="1" VALIGN="top"><TR><TD><B>1</B></TD><TD BALIGN="LEFT"><B>Foo</B></TD></TR></TABLE>> style=filled fillcolor="#008000" fontcolor="#ffffff"]
+  _1 -> _2
+  _1 -> _3
+}\n
+""")
+        self.assertEqual(self.errors, "")
+
+    def test_dot3(self):
+        command = DepCommand(["dot", "99"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.dirty)
+        self.assertEqual(self.output, "")
+        self.assertEqual(self.errors, "Invalid todo number given." + "\n")
+
     def gc_helper(self, p_subcommand):
         command = DepCommand([p_subcommand], self.todolist, self.out,
                              self.error)

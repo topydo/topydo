@@ -77,6 +77,7 @@ class _Config:
 
             'ls': {
                 'hide_tags': 'id,p,ical',
+                'hidden_item_tags': 'h,hide',
                 'indent': '0',
                 'list_limit': '-1',
                 'list_format': '|%I| %x %{(}p{)} %c %s %k %{due:}d %{t:}t',
@@ -91,6 +92,7 @@ class _Config:
             'sort': {
                 'keep_sorted': '0',
                 'sort_string': 'desc:importance,due,desc:priority',
+                'group_string': '',
                 'ignore_weekends': '1',
             },
 
@@ -105,6 +107,8 @@ class _Config:
                 'metadata_color': 'green',
                 'link_color': 'cyan',
                 'priority_colors': 'A:cyan,B:yellow,C:blue',
+                'focus_background_color': 'gray',
+                'marked_background_color': 'blue'
             },
 
             'aliases': {
@@ -269,6 +273,9 @@ class _Config:
     def sort_string(self):
         return self.cp.get('sort', 'sort_string')
 
+    def group_string(self):
+        return self.cp.get('sort', 'group_string')
+
     def ignore_weekends(self):
         try:
             return self.cp.getboolean('sort', 'ignore_weekends')
@@ -310,6 +317,13 @@ class _Config:
         # pylint: disable=no-member
         return [] if hidden_tags == '' else [tag.strip() for tag in
                                              hidden_tags.split(',')]
+
+    def hidden_item_tags(self):
+        """ Returns a list of tags which hide an item from the 'ls' output. """
+        hidden_item_tags = self.cp.get('ls', 'hidden_item_tags')
+        # pylint: disable=no-member
+        return [] if hidden_item_tags == '' else [tag.strip() for tag in
+                                                  hidden_item_tags.split(',')]
 
     def priority_color(self, p_priority):
         """
@@ -358,6 +372,18 @@ class _Config:
             return Color(self.cp.getint('colorscheme', 'link_color'))
         except ValueError:
             return Color(self.cp.get('colorscheme', 'link_color'))
+
+    def focus_background_color(self):
+        try:
+            return Color(self.cp.getint('colorscheme', 'focus_background_color'))
+        except ValueError:
+            return Color(self.cp.get('colorscheme', 'focus_background_color'))
+
+    def marked_background_color(self):
+        try:
+            return Color(self.cp.getint('colorscheme', 'marked_background_color'))
+        except ValueError:
+            return Color(self.cp.get('colorscheme', 'marked_background_color'))
 
     def auto_creation_date(self):
         try:

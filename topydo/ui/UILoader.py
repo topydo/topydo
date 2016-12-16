@@ -44,13 +44,13 @@ def main():
                 from topydo.ui.prompt.Prompt import PromptApplication
                 PromptApplication().run()
             except ImportError:
-                error("You have to install prompt-toolkit to run prompt mode.")
+                error("Some additional dependencies for prompt mode were not installed, please install with 'pip install topydo[prompt]'")
         elif args[0] == 'columns':
             try:
                 from topydo.ui.columns.Main import UIApplication
                 UIApplication().run()
             except ImportError:
-                error("You have to install urwid to run column mode.")
+                error("Some additional dependencies for column mode were not installed, please install with 'pip install topydo[columns]'")
         else:
             CLIApplication().run()
     except IndexError:

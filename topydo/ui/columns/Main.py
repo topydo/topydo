@@ -15,7 +15,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import datetime
+import getopt
 import shlex
+import sys
 import time
 import urwid
 
@@ -28,12 +30,13 @@ from topydo.lib.Sorter import Sorter
 from topydo.lib.Filter import get_filter_list, RelevanceFilter, DependencyFilter
 from topydo.lib.Utils import get_terminal_size
 from topydo.lib.View import View
-from topydo.lib import TodoFile
+from topydo.lib.TodoFileWatched import TodoFileWatched
 from topydo.lib import TodoList
-from topydo.ui.CLIApplicationBase import CLIApplicationBase
+from topydo.ui.CLIApplicationBase import CLIApplicationBase, error
 from topydo.ui.columns.CommandLineWidget import CommandLineWidget
 from topydo.ui.columns.ConsoleWidget import ConsoleWidget
 from topydo.ui.columns.KeystateWidget import KeystateWidget
+from topydo.ui.columns.TodoWidget import TodoWidget
 from topydo.ui.columns.TodoListWidget import TodoListWidget
 from topydo.ui.columns.Utils import PaletteItem, to_urwid_color
 from topydo.ui.columns.ViewWidget import ViewWidget
@@ -91,10 +94,28 @@ class UIApplication(CLIApplicationBase):
     def __init__(self):
         super().__init__()
 
-        self._process_flags()
+        args = self._process_flags()
+
+        try:
+            opts, args = getopt.getopt(args[1:], 'l:')
+        except getopt.GetoptError as e:
+            error(str(e))
+            sys.exit(1)
+
+        self.alt_layout_path = None
+
+        for opt, value in opts:
+            if opt == "-l":
+                self.alt_layout_path = value
+
+        def callback():
+            self.todolist.erase()
+            self.todolist.add_list(self.todofile.read())
+            self._update_all_columns()
+            self._redraw()
 
         self.column_width = config().column_width()
-        self.todofile = TodoFile.TodoFile(config().todotxt())
+        self.todofile = TodoFileWatched(config().todotxt(), callback)
         self.todolist = TodoList.TodoList(self.todofile.read())
 
         self.marked_todos = []
@@ -172,18 +193,20 @@ class UIApplication(CLIApplicationBase):
         context_color = to_urwid_color(config().context_color())
         metadata_color = to_urwid_color(config().metadata_color())
         link_color = to_urwid_color(config().link_color())
+        focus_background_color = to_urwid_color(config().focus_background_color())
+        marked_background_color = to_urwid_color(config().marked_background_color())
 
         palette = [
             (PaletteItem.PROJECT, '', '', '', project_color, ''),
-            (PaletteItem.PROJECT_FOCUS, '', 'light gray', '', project_color, None),
+            (PaletteItem.PROJECT_FOCUS, '', 'light gray', '', project_color, focus_background_color),
             (PaletteItem.CONTEXT, '', '', '', context_color, ''),
-            (PaletteItem.CONTEXT_FOCUS, '', 'light gray', '', context_color, None),
+            (PaletteItem.CONTEXT_FOCUS, '', 'light gray', '', context_color, focus_background_color),
             (PaletteItem.METADATA, '', '', '', metadata_color, ''),
-            (PaletteItem.METADATA_FOCUS, '', 'light gray', '', metadata_color, None),
+            (PaletteItem.METADATA_FOCUS, '', 'light gray', '', metadata_color, focus_background_color),
             (PaletteItem.LINK, '', '', '', link_color, ''),
-            (PaletteItem.LINK_FOCUS, '', 'light gray', '', link_color, None),
-            (PaletteItem.DEFAULT_FOCUS, 'black', 'light gray'),
-            (PaletteItem.MARKED, '', 'light blue'),
+            (PaletteItem.LINK_FOCUS, '', 'light gray', '', link_color, focus_background_color),
+            (PaletteItem.DEFAULT_FOCUS, '', 'light gray', '', '', focus_background_color),
+            (PaletteItem.MARKED, '', 'light blue', '', '', marked_background_color),
         ]
 
         for C in ascii_uppercase:
@@ -196,7 +219,7 @@ class UIApplication(CLIApplicationBase):
                 'pri_' + C, '', '', '', pri_color, ''
             ))
             palette.append((
-                'pri_' + C + '_focus', '', 'light gray', '', pri_color_focus, None
+                'pri_' + C + '_focus', '', 'light gray', '', pri_color_focus, focus_background_color
             ))
 
         return palette
@@ -220,6 +243,7 @@ class UIApplication(CLIApplicationBase):
 
     def _set_alarm_for_next_midnight_update(self):
         def callback(p_loop, p_data):
+            TodoWidget.wipe_cache()
             self._update_all_columns()
             self._set_alarm_for_next_midnight_update()
 
@@ -299,6 +323,8 @@ class UIApplication(CLIApplicationBase):
                               self._output if verbosity else lambda _: None)
 
     def _reset_state(self):
+        for widget in TodoWidget.cache.values():
+            widget.unmark()
         self.marked_todos = []
         self._update_all_columns()
 
@@ -389,7 +415,7 @@ class UIApplication(CLIApplicationBase):
         """
         Converts a dictionary describing a view to an actual UIView instance.
         """
-        sorter = Sorter(p_data['sortexpr'])
+        sorter = Sorter(p_data['sortexpr'], p_data['groupexpr'])
         filters = []
 
         if not p_data['show_all']:
@@ -535,13 +561,16 @@ class UIApplication(CLIApplicationBase):
         self._console_visible = True
         self.console.print_text(p_text)
 
+    def _redraw(self):
+        self.mainloop.draw_screen()
+
     def _input(self, p_question):
         self._print_to_console(p_question)
 
         # don't wait for the event loop to enter idle, there is a command
         # waiting for input right now, so already go ahead and draw the
         # question on screen.
-        self.mainloop.draw_screen()
+        self._redraw()
 
         user_input = self.mainloop.screen.get_input()
         self._console_visible = False
@@ -572,7 +601,7 @@ class UIApplication(CLIApplicationBase):
             return False
 
     def run(self):
-        layout = columns()
+        layout = columns(self.alt_layout_path)
         if len(layout) > 0:
             for column in layout:
                 self._add_column(self._viewdata_to_view(column))
@@ -580,6 +609,7 @@ class UIApplication(CLIApplicationBase):
             dummy = {
                 "title": "All tasks",
                 "sortexpr": "desc:prio",
+                "groupexpr": "",
                 "filterexpr": "",
                 "show_all": True,
             }

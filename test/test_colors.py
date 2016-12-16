@@ -154,6 +154,14 @@ class ColorsTest(TopydoTest):
         self.assertEqual(color_b, '')
         self.assertEqual(color_c, '')
 
+    def test_focus_color(self):
+        config(p_overrides={('colorscheme', 'focus_background_color'): 'gray'})
+        self.assertEqual(config().focus_background_color().as_ansi(), '\033[0;37m')
+
+    def test_mark_color(self):
+        config(p_overrides={('colorscheme', 'marked_background_color'): 'blue'})
+        self.assertEqual(config().marked_background_color().as_ansi(), '\033[0;34m')
+
     def test_empty_color_values(self):
         config("test/data/ColorsTest5.conf")
         project_color = config().project_color().as_ansi(p_decoration='bold')

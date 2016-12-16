@@ -20,6 +20,7 @@ import os
 import sys
 import unittest
 from collections import namedtuple
+from freezegun import freeze_time
 
 from test.command_testcase import CommandTest
 from test.facilities import load_file_to_todolist
@@ -72,7 +73,7 @@ class ListCommandTest(CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.dirty)
-        self.assertEqual(self.output, "|  1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n|  3| (C) Baz @Context1 +Project1 key:value\n|  4| (C) Drink beer @ home\n|  5| (C) 13 + 29 = 42\n|  2| (D) Bar @Context1 +Project2\n|  6| x 2014-12-12 Completed but with date:2014-12-12\n")
+        self.assertEqual(self.output, "|  1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n|  3| (C) Baz @Context1 +Project1 key:value\n|  4| (C) Drink beer @ home\n|  5| (C) 13 + 29 = 42\n|  2| (D) Bar @Context1 +Project2\n|  7| hidden item h:1\n|  6| x 2014-12-12 Completed but with date:2014-12-12\n")
         self.assertEqual(self.errors, "")
 
     def test_list06(self):
@@ -147,7 +148,7 @@ class ListCommandTest(CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.dirty)
-        self.assertEqual(self.output, "|  1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n|  3| (C) Baz @Context1 +Project1 key:value\n|  4| (C) Drink beer @ home\n|  5| (C) 13 + 29 = 42\n|  6| x 2014-12-12 Completed but with date:2014-12-12\n")
+        self.assertEqual(self.output, "|  1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n|  3| (C) Baz @Context1 +Project1 key:value\n|  4| (C) Drink beer @ home\n|  5| (C) 13 + 29 = 42\n|  7| hidden item h:1\n|  6| x 2014-12-12 Completed but with date:2014-12-12\n")
         self.assertEqual(self.errors, "")
 
     def test_list14(self):
@@ -275,7 +276,7 @@ class ListCommandTest(CommandTest):
         command = ListCommand(["-x", "-n", "foo"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEqual(self.output, "|  1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n|  3| (C) Baz @Context1 +Project1 key:value\n|  4| (C) Drink beer @ home\n|  5| (C) 13 + 29 = 42\n|  2| (D) Bar @Context1 +Project2\n|  6| x 2014-12-12 Completed but with date:2014-12-12\n")
+        self.assertEqual(self.output, "|  1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n|  3| (C) Baz @Context1 +Project1 key:value\n|  4| (C) Drink beer @ home\n|  5| (C) 13 + 29 = 42\n|  2| (D) Bar @Context1 +Project2\n|  7| hidden item h:1\n|  6| x 2014-12-12 Completed but with date:2014-12-12\n")
         self.assertEqual(self.errors, "")
 
     def test_list36(self):
@@ -332,8 +333,11 @@ class ListCommandTest(CommandTest):
         self.assertEqual(self.output, "|  1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n")
         self.assertEqual(self.errors, "")
 
-    def test_list43(self):
+    @mock.patch('topydo.commands.ListCommand.get_terminal_size')
+    def test_list43(self, mock_terminal_size):
         """Test basic 'N' parameter."""
+        mock_terminal_size.return_value = self.terminal_size(81, 100)
+
         command = ListCommand(["-N"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -522,6 +526,250 @@ class ListCommandIcalTest(CommandTest):
 
         self.assertEqual(replace_ical_tags(self.output),
                          replace_ical_tags(icaltext))
+        self.assertEqual(self.errors, "")
+
+
+@freeze_time('2016, 11, 17')
+class ListCommandDotTest(CommandTest):
+    def setUp(self):
+        self.maxDiff = None
+
+    def test_dot(self):
+        todolist = load_file_to_todolist("test/data/ListCommandDotTest.txt")
+
+        command = ListCommand(["-x", "-f", "dot"], todolist, self.out,
+                              self.error)
+        command.execute()
+
+        self.assertFalse(todolist.dirty)
+
+        dottext = ""
+        with codecs.open('test/data/ListCommandTest.dot', 'r',
+                         encoding='utf-8') as dot:
+            dottext = dot.read()
+
+        self.assertEqual(self.output, dottext)
+        self.assertEqual(self.errors, "")
+
+
+@freeze_time('2016, 12, 6')
+class ListCommandGroupTest(CommandTest):
+    def test_group1(self):
+        todolist = load_file_to_todolist("test/data/ListCommandGroupTest.txt")
+
+        command = ListCommand(["-g", "project", "test:test_group1"], todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(todolist.dirty)
+
+        self.assertEqual(self.output, """\
+Project: A
+==========
+|  1| +A only test:test_group1
+|  3| +A and +B test:test_group1
+
+Project: B
+==========
+|  3| +A and +B test:test_group1
+|  2| +B only test:test_group1
+
+Project: None
+=============
+|  4| No project test:test_group1
+""")
+
+    def test_group2(self):
+        todolist = load_file_to_todolist("test/data/ListCommandGroupTest.txt")
+
+        command = ListCommand(["-g", "l", "test:test_group2"], todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(todolist.dirty)
+
+        self.assertEqual(self.output, """\
+l: 0
+====
+|  6| Another item l:0 test:test_group2
+
+l: 1
+====
+|  5| Different item l:1 test:test_group2
+""")
+
+    def test_group3(self):
+        todolist = load_file_to_todolist("test/data/ListCommandGroupTest.txt")
+
+        command = ListCommand(["-g", "due", "test:test_group3"], todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(todolist.dirty)
+
+        self.assertEqual(self.output, """\
+due: today
+==========
+|  7| Test 1 test:test_group3 due:2016-12-06
+
+due: in a day
+=============
+|  8| Test 2 test:test_group3 due:2016-12-07
+""")
+
+    def test_group4(self):
+        todolist = load_file_to_todolist("test/data/ListCommandGroupTest.txt")
+
+        command = ListCommand(["-g", "t", "test:test_group4"], todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(todolist.dirty)
+
+        self.assertEqual(self.output, """\
+t: today
+========
+|  9| Test 1 test:test_group4 test:test_group5 t:2016-12-06
+""")
+
+    def test_group5(self):
+        todolist = load_file_to_todolist("test/data/ListCommandGroupTest.txt")
+
+        command = ListCommand(["-x", "-g", "t", "test:test_group5"], todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(todolist.dirty)
+
+        self.assertEqual(self.output, """\
+t: today
+========
+|  9| Test 1 test:test_group4 test:test_group5 t:2016-12-06
+
+t: in a day
+===========
+| 10| Test 2 test:test_group4 test:test_group5 t:2016-12-07
+""")
+
+    def test_group6(self):
+        todolist = load_file_to_todolist("test/data/ListCommandGroupTest.txt")
+
+        command = ListCommand(["-x", "-g", "fake", "test_group6"], todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(todolist.dirty)
+
+        self.assertEqual(self.output, """\
+fake: No value
+==============
+| 11| Group by non-existing tag test:test_group6
+""")
+
+    def test_group7(self):
+        todolist = load_file_to_todolist("test/data/ListCommandGroupTest.txt")
+
+        command = ListCommand(["-x", "-g", "desc:project", "test_group7"], todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(todolist.dirty)
+
+        self.assertEqual(self.output, """\
+Project: B
+==========
+| 13| Sort descending +B test:test_group7
+
+Project: A
+==========
+| 12| Sort descending +A test:test_group7
+""")
+
+    def test_group8(self):
+        todolist = load_file_to_todolist("test/data/ListCommandGroupTest.txt")
+
+        command = ListCommand(["-x", "-g", "project,desc:context", "test_group8"], todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(todolist.dirty)
+
+        self.assertEqual(self.output, """\
+Project: A, Context: B
+======================
+| 15| Inner sort 2 +A @B test:test_group8
+
+Project: A, Context: A
+======================
+| 14| Inner sort 1 +A @A test:test_group8
+
+Project: B, Context: B
+======================
+| 17| Inner sort 4 +B @B test:test_group8
+
+Project: B, Context: A
+======================
+| 16| Inner sort 3 +B @A test:test_group8
+""")
+
+    def test_group9(self):
+        todolist = load_file_to_todolist("test/data/ListCommandGroupTest.txt")
+
+        command = ListCommand(["-x", "-g", "project", "-s", "desc:text", "test_group9"], todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(todolist.dirty)
+
+        self.assertEqual(self.output, """\
+Project: A
+==========
+| 19| Inner sort 2 +A test:test_group9
+| 18| Inner sort 1 +A test:test_group9
+""")
+
+    def test_group10(self):
+        todolist = load_file_to_todolist("test/data/ListCommandGroupTest.txt")
+
+        command = ListCommand(["-x", "-g"], todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(todolist.dirty)
+
+        self.assertEqual(self.output, "")
+        self.assertEqual(self.errors, "option -g requires argument\n")
+
+    def test_group11(self):
+        config(p_overrides={('sort', 'group_string'): 'project'})
+        todolist = load_file_to_todolist("test/data/ListCommandGroupTest.txt")
+
+        command = ListCommand(["test:test_group1"], todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(todolist.dirty)
+
+        self.assertEqual(self.output, """\
+Project: A
+==========
+|  1| +A only test:test_group1
+|  3| +A and +B test:test_group1
+
+Project: B
+==========
+|  3| +A and +B test:test_group1
+|  2| +B only test:test_group1
+
+Project: None
+=============
+|  4| No project test:test_group1
+""")
+        self.assertEqual(self.errors, "")
+
+    def test_group12(self):
+        todolist = load_file_to_todolist("test/data/ListCommandGroupTest.txt")
+
+        command = ListCommand(["-g", ",", "test:test_group1"], todolist, self.out, self.error)
+        command.execute()
+
+        self.assertFalse(todolist.dirty)
+
+        self.assertEqual(self.output, """\
+|  1| +A only test:test_group1
+|  2| +B only test:test_group1
+|  3| +A and +B test:test_group1
+|  4| No project test:test_group1
+""")
         self.assertEqual(self.errors, "")
 
 if __name__ == '__main__':

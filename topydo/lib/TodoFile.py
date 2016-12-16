@@ -19,6 +19,7 @@ This module deals with todo.txt files.
 """
 
 import codecs
+import os.path
 
 
 class TodoFile(object):
@@ -28,7 +29,7 @@ class TodoFile(object):
     """
 
     def __init__(self, p_path):
-        self.path = p_path
+        self.path = os.path.abspath(p_path)
 
     def read(self):
         """ Reads the todo.txt file and returns a list of todo items. """
@@ -49,6 +50,7 @@ class TodoFile(object):
         p_todos can be a list of todo items, or a string that is just written
         to the file.
         """
+
         todofile = codecs.open(self.path, 'w', encoding="utf-8")
 
         if p_todos is list:

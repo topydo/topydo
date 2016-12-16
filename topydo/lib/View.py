@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-""" A view is a list of todos, sorted and filtered. """
+""" A view is a list of todos, sorted, grouped and filtered. """
 
 
 class View(object):
@@ -29,12 +29,22 @@ class View(object):
         self._sorter = p_sorter
         self._filters = p_filters
 
-    @property
-    def todos(self):
-        """ Returns a sorted and filtered list of todos in this view. """
-        result = self._sorter.sort(self.todolist.todos())
+    def _apply_filters(self, p_todos):
+        """ Applies the filters to the list of todo items. """
+        result = p_todos
 
         for _filter in self._filters:
             result = _filter.filter(result)
 
         return result
+
+    @property
+    def todos(self):
+        """ Returns a sorted and filtered list of todos in this view. """
+        result = self._sorter.sort(self.todolist.todos())
+        return self._apply_filters(result)
+
+    @property
+    def groups(self):
+        result = self._apply_filters(self.todolist.todos())
+        return self._sorter.group(result)

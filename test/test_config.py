@@ -128,6 +128,18 @@ class ConfigTest(TopydoTest):
         self.assertEqual(config("test/data/ConfigTest5.conf").link_color().color, 6)
 
     def test_config24(self):
+        """ No focus background color value. """
+        self.assertEqual(config("test/data/ConfigTest5.conf").focus_background_color().color, 7)
+
+    def test_config25(self):
+        """ No mark background color value. """
+        self.assertEqual(config("test/data/ConfigTest5.conf").marked_background_color().color, 4)
+
+    def test_config26(self):
+        self.assertTrue(config("test/data/ConfigTest4.conf").focus_background_color().is_neutral())
+        self.assertTrue(config("test/data/ConfigTest4.conf").marked_background_color().is_neutral())
+
+    def test_config27(self):
         """ column_keymap test. """
         keymap, keystates = config("test/data/ConfigTest6.conf").column_keymap()
 

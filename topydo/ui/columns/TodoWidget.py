@@ -53,7 +53,7 @@ def _markup(p_todo, p_focus):
 
 
 class TodoWidget(urwid.WidgetWrap):
-    def __init__(self, p_todo, p_number):
+    def __init__(self, p_todo):
         # clients use this to associate this widget with the given todo item
         self.todo = p_todo
 
@@ -87,21 +87,21 @@ class TodoWidget(urwid.WidgetWrap):
             else:
                 txt_markup.append(substring)
 
-        id_widget = urwid.Text(str(p_number), align='right')
+        self.id_widget = urwid.Text('', align='right')
         priority_widget = urwid.Text(priority_text)
         self.text_widget = urwid.Text(txt_markup)
 
         progress = to_urwid_color(progress_color(p_todo)) if config().colors() else PaletteItem.DEFAULT
-        progress_bar = urwid.AttrMap(
+        self.progress_bar = urwid.AttrMap(
                 urwid.SolidFill(' '),
-                urwid.AttrSpec(PaletteItem.DEFAULT, progress, 256),
-                urwid.AttrSpec(PaletteItem.DEFAULT, progress, 256),
+                {},
         )
+        self.update_progress()
 
         self.columns = urwid.Columns(
             [
-                (1, progress_bar),
-                (4, id_widget),
+                (1, self.progress_bar),
+                (4, self.id_widget),
                 (3, priority_widget),
                 ('weight', 1, self.text_widget),
             ],
@@ -128,6 +128,21 @@ class TodoWidget(urwid.WidgetWrap):
         # make sure that ListBox will highlight this widget
         return True
 
+    @property
+    def number(self):
+        pass
+
+    @number.setter
+    def number(self, p_number):
+        self.id_widget.set_text(str(p_number))
+
+    def update_progress(self):
+        color = to_urwid_color(progress_color(self.todo)) if config().colors() else PaletteItem.DEFAULT
+
+        self.progress_bar.set_attr_map(
+            {None: urwid.AttrSpec(PaletteItem.DEFAULT, color, 256)}
+        )
+
     def mark(self):
         attr_map = {
             None:                 PaletteItem.MARKED,
@@ -140,3 +155,45 @@ class TodoWidget(urwid.WidgetWrap):
 
     def unmark(self):
         self.widget.set_attr_map(_markup(self.todo, False))
+
+    cache = {}
+
+    @classmethod
+    def create(p_class, p_todo):
+        """
+        Creates a TodoWidget instance for the given todo. Widgets are
+        cached, the same object is returned for the same todo item.
+        """
+
+        def parent_progress_may_have_changed(p_todo):
+            """
+            Returns True when a todo's progress should be updated because it is
+            dependent on the parent's progress.
+            """
+            return p_todo.has_tag('p') and not p_todo.has_tag('due')
+
+        source = p_todo.source()
+
+        if source in p_class.cache:
+            widget = p_class.cache[source]
+
+            if p_todo is not widget.todo:
+                # same source text but different todo instance (could happen
+                # after an edit where a new Todo instance is created with the
+                # same text as before)
+                # simply fix the reference in the stored widget.
+                widget.todo = p_todo
+
+            if parent_progress_may_have_changed(p_todo):
+                widget.update_progress()
+        else:
+            widget = p_class(p_todo)
+            p_class.cache[source] = widget
+
+        return widget
+
+    @classmethod
+    def wipe_cache(p_class):
+        """ Wipes the cache """
+        p_class.cache = {}
+

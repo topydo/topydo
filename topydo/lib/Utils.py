@@ -18,6 +18,7 @@
 Various utility functions.
 """
 
+import arrow
 import re
 
 from collections import namedtuple
@@ -109,3 +110,10 @@ def translate_key_to_config(p_key):
         key = p_key
 
     return key
+
+def humanize_date(p_datetime):
+    """ Returns a relative date string from a datetime object. """
+    now = arrow.now()
+    date = now.replace(day=p_datetime.day, month=p_datetime.month, year=p_datetime.year)
+    return date.humanize(now).replace('just now', 'today')
+

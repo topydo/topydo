@@ -15,10 +15,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import configparser
+from os.path import expanduser
 
 from topydo.lib.Config import home_config_path, config
 
-def columns():
+
+def columns(p_alt_layout_path=None):
     """
     Returns list with complete column configuration dicts.
     """
@@ -28,6 +30,7 @@ def columns():
         column_dict['title'] = p_cp.get(p_column, 'title')
         column_dict['filterexpr'] = p_cp.get(p_column, 'filterexpr')
         column_dict['sortexpr'] = p_cp.get(p_column, 'sortexpr')
+        column_dict['groupexpr'] = p_cp.get(p_column, 'groupexpr')
         column_dict['show_all'] = p_cp.getboolean(p_column, 'show_all')
 
         return column_dict
@@ -36,6 +39,7 @@ def columns():
             'title':  'Yet another column',
             'filterexpr': '',
             'sortexpr': config().sort_string(),
+            'groupexpr': config().group_string(),
             'show_all': '0',
     }
 
@@ -49,6 +53,8 @@ def columns():
         "/etc/topydo_columns.conf",
     ]
 
+    if p_alt_layout_path is not None:
+        files.insert(0, expanduser(p_alt_layout_path))
     for filename in files:
         if cp.read(filename):
             break

@@ -92,10 +92,17 @@ class TodoListWidget(urwid.LineBox):
 
         del self.todolist[:]
 
-        for todo in self.view.todos:
-            todowidget = TodoWidget(todo, self.view.todolist.number(todo))
-            self.todolist.append(todowidget)
-            self.todolist.append(urwid.Divider('-'))
+        for group, todos in self.view.groups.items():
+            if len(self.view.groups) > 1:
+                grouplabel = ", ".join(group)
+                self.todolist.append(urwid.Text(grouplabel))
+                self.todolist.append(urwid.Divider('-'))
+
+            for todo in todos:
+                todowidget = TodoWidget.create(todo)
+                todowidget.number = self.view.todolist.number(todo)
+                self.todolist.append(todowidget)
+                self.todolist.append(urwid.Divider('-'))
 
         if old_focus_position:
             try:

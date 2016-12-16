@@ -17,7 +17,7 @@
 import unittest
 
 from test.topydo_testcase import TopydoTest
-from topydo.lib.JsonPrinter import JsonPrinter
+from topydo.lib.printers.Json import JsonPrinter
 from topydo.lib.Todo import Todo
 
 
