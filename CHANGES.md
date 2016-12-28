@@ -20,6 +20,7 @@
 * Fix: relative dates were sometimes one day off.
 * Fix: Minor importance calculation fix during the weekend for distant mondays
   (thanks to @aetherknight).
+* Fix: completed items are displayed correctly in the column UI.
 * Fix: tests were made more deterministic.
 
 * Change: Performance improvements for the column UI, it scales better with
