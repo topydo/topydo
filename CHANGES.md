@@ -12,7 +12,7 @@
   @colinsullivan).
 * New: todo items can be hidden by adding a `h:1` tag (thanks to @MinchinWeb).
 * New: an alternative column definition file can be given with the `-l` flag:
-  `topydo columns -ls /path/to/columns.conf` (thanks to @mruwek).
+  `topydo columns -l /path/to/columns.conf` (thanks to @mruwek).
 
 * Fix: column UI reloads automatically when the todo.txt file was changed
   externally.
