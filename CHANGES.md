@@ -27,6 +27,8 @@
   large todo lists.
 * Change: temporary files (for editing) will be detected as todo.txt files by
    the todo.txt-vim plugin.
+* Change: output in column UI remains visible when : is pressed (instead of
+  Enter or Escape to discard).
 
 0.10.1
 ------
