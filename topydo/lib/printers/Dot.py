@@ -40,6 +40,16 @@ class DotPrinter(Printer):
             """
             Prints an HTML table for a node label with some todo details.
             """
+            def escape_dot_label(p_string):
+                """
+                HTML like labels in Dot may not have raw ampersands, quotes or
+                angle brackets. These should be properly replaced with the
+                escaped character notation.
+                """
+
+                return p_string.replace('&', '&amp;').replace('"', '&quot;').replace(
+                    '<', '&lt;').replace('>', '&gt;')
+
             node_result = '<<TABLE CELLBORDER="0" CELLSPACING="1" VALIGN="top">'
 
             def print_row(p_value1, p_value2):
@@ -48,7 +58,7 @@ class DotPrinter(Printer):
             node_result += '<TR><TD><B>{}</B></TD><TD BALIGN="LEFT"><B>{}{}{}</B></TD></TR>'.format(
                 self.todolist.number(p_todo),
                 "<S>" if todo.is_completed() else "",
-                "<BR />".join(wrap(p_todo.text(), 35)),
+                "<BR />".join(map(escape_dot_label, wrap(p_todo.text(), 35))),
                 "</S>" if todo.is_completed() else "",
             )
 
