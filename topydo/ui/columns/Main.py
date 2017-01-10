@@ -155,8 +155,11 @@ class UIApplication(CLIApplicationBase):
                              lambda: self._update_view(self.viewwidget.data))
 
         def hide_viewwidget():
-            self._viewwidget_visible = False
-            self._blur_commandline()
+            # prevent the view widget to be hidden when the last column was
+            # deleted
+            if self.columns.contents:
+                self._viewwidget_visible = False
+                self._blur_commandline()
 
         urwid.connect_signal(self.viewwidget, 'close', hide_viewwidget)
 
@@ -376,7 +379,7 @@ class UIApplication(CLIApplicationBase):
             if self.columns.contents:
                 self.columns.focus_position = focus
             else:
-                self._focus_commandline()
+                self._append_column()
         except IndexError:
             # no columns
             pass
