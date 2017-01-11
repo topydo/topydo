@@ -1,67 +1,75 @@
-topydo
-======
+topydo - a powerful todo.txt application
+========================================
 
 [![Build Status](https://travis-ci.org/bram85/topydo.svg?branch=master)](https://travis-ci.org/bram85/topydo) [![codecov.io](https://codecov.io/github/bram85/topydo/coverage.svg?branch=master)](https://codecov.io/github/bram85/topydo?branch=master) [![Join the chat at https://gitter.im/bram85/topydo](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/bram85/topydo?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=bram85&url=https://github.com/bram85/topydo&title=topydo&language=&tags=github&category=software) 
 
-topydo is a todo list application using the [todo.txt format][1]. It is heavily
-inspired by the [todo.txt CLI][2] by Gina Trapani. This tool is actually a
-merge between the todo.txt CLI and a [number of extensions][3] that I wrote
-on top of the CLI. These extensions are:
+topydo is a powerful todo list application using the [todo.txt format][1].
 
-* Set **due** and **start dates**;
-* Custom sorting;
-* Dealing with tags;
+It has three user interfaces:
+
+* Command Line Interface (CLI) - originally inspired by the [todo.txt CLI][2]
+  by Gina Trapani.
+* Prompt mode - a convenience mode for the CLI. Launch with `topydo prompt`.
+* Column mode - a text based user interface (TUI) with customizable columns and
+  vim-like bindings. Launch with `topydo columns`.
+
+![png][6]
+
+Features
+--------
+
+Feature-wise, the todo.txt format is quite limited, but can be extended using
+tags. topydo natively supports some of these tags to implement:
+
+* **Due** and **start dates**;
 * Maintain **dependencies** between todo items;
-* Allow todo items to **recur**;
+* **recurring** todo items;
+
+topydo also offers:
+
+* Fine-grained control on **sorting** and **grouping** items;
+* Customizable output;
 * Some conveniences when adding new items (e.g. adding creation date and use
   **relative dates**);
+* Additional output formats to iCalendar, JSON and Graphviz Dot;
+* Aliases for frequently used commands.
+* Text based todo identifiers, which are more stable and convenient than
+  line-based todo identifiers.
+
+Yet, topydo is fully todo.txt compliant. The text file can be processed by
+other todo.txt tools (but they may not interpret the tags properly).
 
 The documentation on [topydo.org][4] provides more information about the
 features and how to use topydo.
 
-Install
--------
+Installation
+------------
 
 Simply install with:
 
     pip install topydo
 
-### Dependencies
+If you wish to use column mode: install additional dependencies with:
 
-* [arrow][8]          : Used to turn dates into a human readable version.
+    pip install topydo[columns]
 
-#### Optional dependencies:
+Similarly, for prompt mode you can install additional dependencies with:
 
-* [icalendar][7]      : To print your todo.txt file as an iCalendar file
-                        (not supported for PyPy3).
-* [prompt-toolkit][6] : For topydo's _prompt_ mode, which offers a shell-like
-                        interface with auto-completion.
-* [arrow][8]          : Used to turn dates into a human readable version.
-* [urwid][12]         : For topydo's _columns_ mode, a TUI with columns for
-                        your todo items.
-* [backports.shutil_get_terminal_size][9] : Used to determine your terminal
-                                            window size. This function was
-                                            added to the standard library in
-                                            Python 3.3 and so is only
-                                            required for PyPy3.
-* [mock][11]          : Used for testing. This was added to the standard
-                        library in Python 3.3.
+    pip install topydo[prompt]
+
+topydo is written in Python 3. Therefore, on some systems, `pip` should be
+called as `pip3`.
 
 Demo
 ----
 
-![gif][5]
+CLI mode:
 
+![gif][5]
 
 [1]: https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format
 [2]: https://github.com/ginatrapani/todo.txt-cli
 [3]: https://github.com/bram85/todo.txt-tools
 [4]: https://www.topydo.org
 [5]: https://raw.githubusercontent.com/bram85/topydo/master/doc/topydo.gif
-[6]: https://github.com/jonathanslenders/python-prompt-toolkit
-[7]: https://github.com/collective/icalendar
-[8]: https://github.com/crsmithdev/arrow
-[9]: https://github.com/chrippa/backports.shutil_get_terminal_size
-[10]: https://dateutil.readthedocs.org/
-[11]: https://github.com/testing-cabal/mock
-[12]: https://github.com/urwid/urwid
+[6]: https://raw.githubusercontent.com/bram85/topydo/master/doc/columns.png
