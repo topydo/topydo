@@ -173,6 +173,35 @@ class TagCommandTest(CommandTest):
         self.assertEqual(self.output, "|  3| Baz due:2014-10-20 foo:today\n")
         self.assertEqual(self.errors, "")
 
+    @freeze_time('2017, 1, 12')
+    def test_set_tag13(self):
+        """
+        Convert relative dates when forced to.
+        """
+
+        command = TagCommand(["-r", "3", "foo", "today"], self.todolist,
+                             self.out, self.error)
+
+        command.execute()
+
+        self.assertTrue(self.todolist.dirty)
+        self.assertEqual(self.output, "|  3| Baz due:2014-10-20 foo:2017-01-12\n")
+        self.assertEqual(self.errors, "")
+
+    def test_set_tag14(self):
+        """
+        Leave the original value when an invalid relative date was given.
+        """
+
+        command = TagCommand(["-r", "3", "foo", "bar"], self.todolist,
+                             self.out, self.error)
+
+        command.execute()
+
+        self.assertTrue(self.todolist.dirty)
+        self.assertEqual(self.output, "|  3| Baz due:2014-10-20 foo:bar\n")
+        self.assertEqual(self.errors, "")
+
     def test_rm_tag01(self):
         command = TagCommand(["1", "due"], self.todolist, self.out, self.error)
         command.execute()

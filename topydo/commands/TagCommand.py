@@ -31,6 +31,7 @@ class TagCommand(Command):
 
         self.force = False
         self.force_add = False
+        self.relative_date = False
         self.todo = None
         self.tag = None
         self.value = None
@@ -38,12 +39,14 @@ class TagCommand(Command):
         self.current_values = []
 
     def _process_flags(self):
-        flags, args = self.getopt("af")
+        flags, args = self.getopt("afr")
         for flag, _ in flags:
             if flag == "-a":
                 self.force_add = True
             elif flag == "-f":
                 self.force = True
+            elif flag == "-r":
+                self.relative_date = True
 
         self.args = args
 
@@ -93,7 +96,10 @@ class TagCommand(Command):
         return answer
 
     def _convert_relative_dates(self):
-        if self.tag == config().tag_start() or self.tag == config().tag_due():
+        is_start_tag = self.tag == config().tag_start()
+        is_due_tag = self.tag == config().tag_due()
+
+        if self.relative_date or is_start_tag or is_due_tag:
             real_date = relative_date_to_date(self.value)
 
             if real_date:
@@ -143,5 +149,7 @@ is omitted, the TAG is removed from the todo item.
 -a : Do not change the current value of the TAG if it exists, but add a new
      VALUE for the given TAG.
 -f : Force setting/removing all values of the TAG. Prevents interaction with
-     the user.\
+     the user.
+-r : Interpret the given value as a relative date and convert it to an absolute
+     date.\
 """
