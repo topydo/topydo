@@ -139,7 +139,7 @@ class TagCommand(Command):
             self._set()
 
     def usage(self):
-        return """Synopsis: tag [-a] [-f] <NUMBER> <TAG> [<VALUE>]"""
+        return """Synopsis: tag [-a] [-f] [-r] <NUMBER> <TAG> [<VALUE>]"""
 
     def help(self):
         return """\
