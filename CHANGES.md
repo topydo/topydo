@@ -1,5 +1,14 @@
-0.12 (to be released)
----------------------
+0.12
+----
+
+* New: The `tag` subcommand understands relative dates with the `-r` flag:
+  `tag -r foo value` will interpret value as a relative date and convert to an
+  absolute date.
+
+* Fix: escape special characters in Dot output.
+* Fix: when deleting the last column in column mode, no new columns could be
+  added. This is fixed by showing the column definition view to add a new
+  column.
 
 * Change: output in column UI remains visible when : is pressed (instead of
   Enter or Escape to discard).
