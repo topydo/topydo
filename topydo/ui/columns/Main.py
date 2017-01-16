@@ -38,6 +38,7 @@ from topydo.ui.columns.ConsoleWidget import ConsoleWidget
 from topydo.ui.columns.KeystateWidget import KeystateWidget
 from topydo.ui.columns.TodoWidget import TodoWidget
 from topydo.ui.columns.TodoListWidget import TodoListWidget
+from topydo.ui.columns.Transaction import Transaction
 from topydo.ui.columns.Utils import PaletteItem, to_urwid_color
 from topydo.ui.columns.ViewWidget import ViewWidget
 from topydo.ui.columns.ColumnLayout import columns
@@ -269,11 +270,6 @@ class UIApplication(CLIApplicationBase):
 
         self._last_cmd = (p_command, p_output == self._output)
 
-        if '{}' in p_command:
-            if self._has_marked_todos():
-                p_todo_id = ' '.join(self.marked_todos)
-            p_command = p_command.format(p_todo_id)
-
         try:
             p_command = shlex.split(p_command)
         except ValueError as verr:
@@ -281,24 +277,30 @@ class UIApplication(CLIApplicationBase):
             return
 
         try:
-            (subcommand, args) = get_subcommand(p_command)
+            subcommand, args = get_subcommand(p_command)
         except ConfigError as cerr:
             self._print_to_console(
                 'Error: {}. Check your aliases configuration.'.format(cerr))
             return
 
-        self._backup(subcommand, args)
+        env_args = (self.todolist, p_output, self._output, self._input)
+        ids = None
+
+        if '{}' in args:
+            ids = self.marked_todos if self._has_marked_todos() else [p_todo_id]
+
+        transaction = Transaction(subcommand, env_args, ids)
+        transaction.prepare(args)
 
         try:
-            command = subcommand(
-                args,
-                self.todolist,
-                p_output,
-                self._output,
-                self._input,
-            )
+            self._backup(subcommand, args)
+        except TypeError:
+            self._print_to_console('Error: no todo item was marked for this'
+                                   ' action.')
+            return
 
-            if command.execute() != False:
+        try:
+            if transaction.execute():
                 self._post_execute()
 
         except TypeError:
