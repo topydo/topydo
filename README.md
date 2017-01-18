@@ -47,18 +47,15 @@ Installation
 
 Simply install with:
 
-    pip install topydo
+    pip3 install topydo
 
 If you wish to use column mode: install additional dependencies with:
 
-    pip install topydo[columns]
+    pip3 install topydo[columns]
 
 Similarly, for prompt mode you can install additional dependencies with:
 
-    pip install topydo[prompt]
-
-topydo is written in Python 3. Therefore, on some systems, `pip` should be
-called as `pip3`.
+    pip3 install topydo[prompt]
 
 Demo
 ----
