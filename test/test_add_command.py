@@ -140,7 +140,7 @@ class AddCommandTest(CommandTest):
                          self.today + " Bar id:1")
         self.assertEqual(self.errors, "")
 
-    def test_add_de04(self):
+    def test_add_dep04(self):
         """ Test for using an after: tag with non-existing value. """
         command = AddCommand.AddCommand(["Foo after:1"], self.todolist,
                                         self.out, self.error)
@@ -375,6 +375,13 @@ class AddCommandTest(CommandTest):
 
         self.assertEqual(self.output, u"|  1| {tod} Foo @fo\u00f3b\u0105r due:{tod} id:1\n|  2| {tod} Bar +baz t:{tod} p:1\n".format(tod=self.today))
         self.assertEqual(self.errors, "")
+
+    def test_add_file_not_found(self):
+        command = AddCommand.AddCommand(["-f", "test/data/AddCommandTest-from_Foo.txt"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEqual(self.output, "")
+        self.assertEqual(self.errors, "File not found: test/data/AddCommandTest-from_Foo.txt\n")
 
     def test_add_task_without_date(self):
         config(p_overrides={('add', 'auto_creation_date'): '0'})
