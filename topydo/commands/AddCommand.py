@@ -86,10 +86,13 @@ class AddCommand(WriteCommand):
         self._process_flags()
 
         if self.from_file:
-            new_todos = self.get_todos_from_file()
+            try:
+                new_todos = self.get_todos_from_file()
 
-            for todo in new_todos:
-                self._add_todo(todo)
+                for todo in new_todos:
+                    self._add_todo(todo)
+            except (IOError, OSError):
+                self.error('File not found: ' + self.from_file)
         else:
             if self.text:
                 self._add_todo(self.text)
