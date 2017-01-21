@@ -119,7 +119,7 @@ class UIApplication(CLIApplicationBase):
         self.todofile = TodoFileWatched(config().todotxt(), callback)
         self.todolist = TodoList.TodoList(self.todofile.read())
 
-        self.marked_todos = []
+        self.marked_todos = set()
 
         self.columns = urwid.Columns([], dividechars=0,
             min_width=config().column_width())
@@ -261,6 +261,24 @@ class UIApplication(CLIApplicationBase):
     def _output(self, p_text):
         self._print_to_console(p_text)
 
+    def _check_id_validity(self, p_ids):
+        """
+        Checks if there are any invalid todo IDs in p_ids list.
+
+        Returns proper error message if any ID is invalid and None otherwise.
+        """
+        errors = []
+        valid_ids = self.todolist.ids()
+
+        if len(p_ids) == 0:
+            errors.append('No todo item was selected')
+        else:
+            errors = ["Invalid todo ID: {}".format(todo_id)
+                      for todo_id in p_ids - valid_ids]
+
+        errors = '\n'.join(errors) if errors else None
+        return errors
+
     def _execute_handler(self, p_command, p_todo_id=None, p_output=None):
         """
         Executes a command, given as a string.
@@ -283,26 +301,29 @@ class UIApplication(CLIApplicationBase):
                 'Error: {}. Check your aliases configuration.'.format(cerr))
             return
 
+        self._backup(subcommand, args)
+
         env_args = (self.todolist, p_output, self._output, self._input)
         ids = None
 
         if '{}' in args:
-            ids = self.marked_todos if self._has_marked_todos() else [p_todo_id]
+            if self._has_marked_todos():
+                ids = self.marked_todos
+            else:
+                ids = {p_todo_id} if p_todo_id else set()
+
+            invalid_ids = self._check_id_validity(ids)
+
+            if invalid_ids:
+                self._print_to_console('Error: ' + invalid_ids)
+                return
 
         transaction = Transaction(subcommand, env_args, ids)
         transaction.prepare(args)
 
         try:
-            self._backup(subcommand, args)
-        except TypeError:
-            self._print_to_console('Error: no todo item was marked for this'
-                                   ' action.')
-            return
-
-        try:
             if transaction.execute():
                 self._post_execute()
-
         except TypeError:
             # TODO: show error message
             pass
@@ -332,7 +353,7 @@ class UIApplication(CLIApplicationBase):
     def _reset_state(self):
         for widget in TodoWidget.cache.values():
             widget.unmark()
-        self.marked_todos = []
+        self.marked_todos.clear()
         self._update_all_columns()
 
     def _blur_commandline(self):
@@ -602,7 +623,7 @@ class UIApplication(CLIApplicationBase):
         False otherwise.
         """
         if p_todo_id not in self.marked_todos:
-            self.marked_todos.append(p_todo_id)
+            self.marked_todos.add(p_todo_id)
             return True
         else:
             self.marked_todos.remove(p_todo_id)

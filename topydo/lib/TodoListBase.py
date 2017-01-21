@@ -280,3 +280,11 @@ class TodoListBase(object):
         """
         printer = PrettyPrinter()
         return "\n".join([str(s) for s in printer.print_list(self._todos)])
+
+    def ids(self):
+        """ Returns set with all todo IDs. """
+        if config().identifiers() == 'text':
+            ids = self._id_todo_map.keys()
+        else:
+            ids = [str(i + 1) for i in range(self.count())]
+        return set(ids)
