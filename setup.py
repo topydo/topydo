@@ -21,6 +21,7 @@ def find_version(*file_paths):
     raise RuntimeError("Unable to find version string.")
 
 WATCHDOG = 'watchdog >= 0.8.3'
+ICALENDAR = 'icalendar'
 
 setup(
     name = "topydo",
@@ -37,9 +38,9 @@ setup(
         ':sys_platform=="win32"': ['colorama>=0.2.5'],
         ':python_version=="3.2"': ['backports.shutil_get_terminal_size>=1.0.0'],
         'columns': ['urwid >= 1.3.0', WATCHDOG],
-        'ical': ['icalendar'],
+        'ical': [ICALENDAR],
         'prompt': ['prompt_toolkit >= 0.53', WATCHDOG],
-        'test': ['coverage>=4.3', 'freezegun', 'green', ],
+        'test': ['coverage>=4.3', 'freezegun', 'green', ICALENDAR],
         'test:python_version=="3.2"': ['mock'],
     },
     entry_points= {
