@@ -48,7 +48,7 @@ class RevertCommand(Command):
             self.error('No backup was found for the current state of ' + config().todotxt())
 
         last_change.close()
-
+        return True
 
     def usage(self):
         return """Synopsis: revert"""
