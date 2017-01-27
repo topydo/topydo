@@ -246,8 +246,17 @@ class OrdinalTagFilter(OrdinalFilter):
         As a last resort, it falls back to using a Grep filter to see if the
         user given expression is contained in the todo text.
         """
+        def resort_to_grep_filter():
+            grep = GrepFilter(self.expression)
+            return grep.match(p_todo)
+
         if not self.key or not p_todo.has_tag(self.key):
             return False
+
+        if len(p_todo.tag_values(self.key)) > 1:
+            # we cannot apply an ordening on a tag that appears more than once
+            # in this todo item, therefore use a simple value match
+            return resort_to_grep_filter()
 
         try:
             operand1 = date_string_to_date(p_todo.tag_value(self.key))
@@ -264,8 +273,7 @@ class OrdinalTagFilter(OrdinalFilter):
                 operand1 = int(operand1)
                 operand2 = int(operand2)
             except ValueError:
-                grep = GrepFilter(self.expression)
-                return grep.match(p_todo)
+                return resort_to_grep_filter()
 
         return self.compare_operands(operand1, operand2)
 

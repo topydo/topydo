@@ -313,12 +313,14 @@ class OrdinalTagFilterTest(TopydoTest):
         self.todo2 = "Bar due:{}".format(self.tomorrow)
         self.todo3 = "Baz due:Nonsense"
         self.todo4 = "Fnord due:2014-10-32"
+        self.todo5 = "Double tags key:value1 key:value2"
 
         self.todos = [
             Todo(self.todo1),
             Todo(self.todo2),
             Todo(self.todo3),
             Todo(self.todo4),
+            Todo(self.todo5),
         ]
 
     def test_filter1(self):
@@ -377,6 +379,18 @@ class OrdinalTagFilterTest(TopydoTest):
 
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0].source(), self.todo3)
+
+    def test_filter8(self):
+        """
+        OrdinalTagFilter should resort to a simple GrepFilter when a tag
+        appears more than once.
+        """
+        otf = Filter.OrdinalTagFilter('key:value2')
+
+        result = otf.filter(self.todos)
+
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0].source(), self.todo5)
 
 
 class CreationFilterTest(TopydoTest):
