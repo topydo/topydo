@@ -43,11 +43,11 @@ def get_backup_path():
 class ChangeSet(object):
     """ Class for operations related with backup management. """
 
-    def __init__(self, p_todolist=None, p_archive=None, p_call=[]):
+    def __init__(self, p_todolist=None, p_archive=None, p_label=[]):
         self.todolist = deepcopy(p_todolist)
         self.archive = deepcopy(p_archive)
         self.timestamp = str(int(time.time()))
-        self.call = ' '.join(p_call)
+        self.label = ' '.join(p_label)
 
         try:
             self.json_file = open(get_backup_path(), 'r+b')
@@ -104,7 +104,7 @@ class ChangeSet(object):
         except AttributeError:
             list_archive = []
 
-        self.backup_dict[self.timestamp] = (list_todo, list_archive,  self.call)
+        self.backup_dict[self.timestamp] = (list_todo, list_archive,  self.label)
 
         index = self._get_index()
         index.insert(0, (self.timestamp, current_hash))
@@ -161,7 +161,7 @@ class ChangeSet(object):
     def get_backup(self, p_todolist):
         """
         Retrieves a backup for p_todolist from backup file and sets todolist,
-        archive and call attributes to appropriate data from it.
+        archive and label attributes to appropriate data from it.
         """
         change_hash = hash_todolist(p_todolist)
 
@@ -172,7 +172,7 @@ class ChangeSet(object):
 
         self.todolist = TodoList(d[0])
         self.archive = TodoList(d[1])
-        self.call = d[2]
+        self.label = d[2]
 
     def apply(self, p_todolist, p_archive):
         """ Applies backup on supplied p_todolist. """

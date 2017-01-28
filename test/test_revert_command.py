@@ -57,7 +57,7 @@ class RevertCommandTest(CommandTest):
         self.archive = TodoList([])
 
     def test_revert01(self):
-        backup = ChangeSet(p_call=['do 1'])
+        backup = ChangeSet(p_label=['do 1'])
         backup.add_todolist(self.todolist)
         backup.add_archive(self.archive)
         backup.timestamp = '1'

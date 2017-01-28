@@ -247,12 +247,13 @@ class CLIApplicationBase(object):
                 READ_ONLY_COMMANDS)
         return p_command.__module__.endswith(read_only_commands)
 
-    def _backup(self, p_command, p_args):
+    def _backup(self, p_command, p_args=[], p_label=None):
         if config().backup_count() > 0 and p_command and not self.is_read_only(p_command):
             call = [p_command.__module__.lower()[16:-7]] + p_args # strip "topydo.commands" and "Command"
 
             from topydo.lib.ChangeSet import ChangeSet
-            self.backup = ChangeSet(self.todolist, p_call=call)
+            label = p_label if p_label else call
+            self.backup = ChangeSet(self.todolist, p_label=label)
 
     def _execute(self, p_command, p_args):
         """

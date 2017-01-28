@@ -27,6 +27,8 @@ class Transaction(object):
         self._cmd = lambda op: p_subcommand(op, *p_env_args)
         self._todo_ids = p_todo_ids
         self._operations = []
+        self._cmd_name = p_subcommand.__module__.lower()[16:-7]
+        self.label = []
 
     def prepare(self, p_args):
         """
@@ -48,6 +50,17 @@ class Transaction(object):
                     self._operations.append(operation_args)
         else:
             self._operations.append(p_args)
+
+        self._create_label()
+
+    def _create_label(self):
+        if len(self._operations) > 1:
+            for operation in self._operations:
+                self.label.append(self._cmd_name + ' ' +
+                                  ' '.join(operation) + ';')
+        else:
+            self.label.append(self._cmd_name + ' ' +
+                              ' '.join(self._operations[0]))
 
     def execute(self):
         """

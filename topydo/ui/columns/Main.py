@@ -301,8 +301,6 @@ class UIApplication(CLIApplicationBase):
                 'Error: {}. Check your aliases configuration.'.format(cerr))
             return
 
-        self._backup(subcommand, args)
-
         env_args = (self.todolist, p_output, self._output, self._input)
         ids = None
 
@@ -320,6 +318,8 @@ class UIApplication(CLIApplicationBase):
 
         transaction = Transaction(subcommand, env_args, ids)
         transaction.prepare(args)
+        label = transaction.label
+        self._backup(subcommand, p_label=label)
 
         try:
             if transaction.execute():
