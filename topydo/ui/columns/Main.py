@@ -26,6 +26,7 @@ from string import ascii_uppercase
 
 from topydo.Commands import get_subcommand
 from topydo.lib.Config import config, ConfigError
+from topydo.lib.Completer import CompleterBase
 from topydo.lib.Sorter import Sorter
 from topydo.lib.Filter import get_filter_list, RelevanceFilter, DependencyFilter
 from topydo.lib.Utils import get_terminal_size
@@ -123,7 +124,8 @@ class UIApplication(CLIApplicationBase):
 
         self.columns = urwid.Columns([], dividechars=0,
             min_width=config().column_width())
-        self.commandline = CommandLineWidget('topydo> ')
+        completer = CompleterBase(self.todolist)
+        self.commandline = CommandLineWidget(completer, 'topydo> ')
         self.keystate_widget = KeystateWidget()
         self.status_line = urwid.Columns([
             ('weight', 1, urwid.Filler(self.commandline)),

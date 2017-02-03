@@ -16,13 +16,27 @@
 
 import urwid
 
+
+def _get_word_before_pos(p_text, p_pos):
+    is_first_word = False
+    text = p_text
+    pos = p_pos
+    start = text.rfind(' ', 0, pos) + 1
+
+    if pos == 0 or text.lstrip().rfind(' ', 0, pos) == -1:
+        is_first_word = True
+
+    return (text[start:pos], is_first_word)
+
+
 class CommandLineWidget(urwid.Edit):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, p_completer, *args, **kwargs):
 
         self.history = []
         self.history_pos = None
         # temporary history storage for edits before cmd execution
         self.history_tmp = []
+        self.completer = p_completer
 
         super().__init__(*args, **kwargs)
         urwid.register_signal(CommandLineWidget, ['blur', 'execute_command'])
@@ -71,12 +85,35 @@ class CommandLineWidget(urwid.Edit):
         if self.history_pos != 0:
             self._history_move(-1)
 
+    def _complete(self):
+        pos = self.edit_pos
+        text = self.edit_text
+
+        word_before_cursor, is_first = _get_word_before_pos(text, pos)
+        completions = self.completer.get_completions(word_before_cursor,
+                                                     is_first)
+
+        if not completions:
+            return
+        elif len(completions) > 1:  # TODO multiple completions
+            return
+        else:
+            replacement = completions[0]
+            if replacement == word_before_cursor:
+                return  # Don't complete what is already completed
+
+            offset = len(replacement) - len(word_before_cursor)
+            final_text = text[:pos] + replacement[-offset:] + text[pos:]
+            self.set_edit_text(final_text)
+            self.set_edit_pos(pos + offset)
+
     def keypress(self, p_size, p_key):
         dispatch = {
             'enter': self._emit_command,
             'esc': self._blur,
             'up': self._history_back,
-            'down': self._history_next
+            'down': self._history_next,
+            'tab': self._complete
         }
 
         try:
