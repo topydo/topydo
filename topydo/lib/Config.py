@@ -101,6 +101,9 @@ class _Config:
                 'append_parent_contexts': '0',
             },
 
+            'edit': {
+            },
+
             'colorscheme': {
                 'project_color': 'red',
                 'context_color': 'magenta',
@@ -447,6 +450,23 @@ class _Config:
                     keymap_dict[combo + c] = 'cmd pri {} ' + c
 
         return (keymap_dict, keystates)
+
+    def editor(self):
+        """
+        Returns the editor to invoke. It returns a list with the command in
+        the first position and its arguments in the remainder.
+        """
+        result = 'vi'
+        if 'TOPYDO_EDITOR' in os.environ and os.environ['TOPYDO_EDITOR']:
+            result = os.environ['TOPYDO_EDITOR']
+        else:
+            try:
+                result = str(self.cp.get('edit', 'editor'))
+            except configparser.NoOptionError:
+                if 'EDITOR' in os.environ and os.environ['EDITOR']:
+                    result = os.environ['EDITOR']
+
+        return shlex.split(result)
 
 
 def config(p_path=None, p_overrides=None):
