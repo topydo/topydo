@@ -324,6 +324,8 @@ class UIApplication(CLIApplicationBase):
         try:
             if transaction.execute():
                 self._post_execute()
+            else:
+                self._rollback()
         except TypeError:
             # TODO: show error message
             pass
@@ -340,6 +342,12 @@ class UIApplication(CLIApplicationBase):
 
         if dirty or self.marked_todos:
             self._reset_state()
+
+    def _rollback(self):
+        try:
+            self.backup.apply(self.todolist, p_archive=None)
+        except AttributeError:
+            pass
 
     def _repeat_last_cmd(self, p_todo_id=None):
         try:
