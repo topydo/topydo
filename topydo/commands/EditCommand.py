@@ -17,6 +17,7 @@
 import os
 import codecs
 import tempfile
+import shlex
 from subprocess import CalledProcessError, check_call
 
 from topydo.lib.Config import config
@@ -48,7 +49,7 @@ class EditCommand(MultiCommand):
             self.edit_archive = True
             self.multi_mode = False
         elif p_opt == '-E':
-            self.editor = p_value
+            self.editor = shlex.split(p_value)
 
     def _process_flags(self):
         """
@@ -82,7 +83,7 @@ class EditCommand(MultiCommand):
 
     def _open_in_editor(self, p_file):
         try:
-            return check_call(config().editor() + [p_file])
+            return check_call(self.editor + [p_file])
         except CalledProcessError:
             self.error('Something went wrong in the editor...')
             return 1
