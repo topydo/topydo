@@ -38,6 +38,11 @@ class ListProjectCommandTest(CommandTest):
         self.assertEqual(self.output, "Project1\nProject2\n")
         self.assertFalse(self.errors)
 
+    def test_listproject_name(self):
+        name = ListProjectCommand.name()
+
+        self.assertEqual(name, 'listproject')
+
     def test_help(self):
         command = ListProjectCommand(["help"], None, self.out, self.error)
         command.execute()

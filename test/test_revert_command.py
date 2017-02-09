@@ -318,6 +318,11 @@ class RevertCommandTest(CommandTest):
 
         self.assertEqual(config().backup_count(), 5)
 
+    def test_revert_name(self):
+        name = RevertCommand.name()
+
+        self.assertEqual(name, 'revert')
+
     def test_help(self):
         command = RevertCommand(["help"], self.todolist, self.out, self.error)
         command.execute()

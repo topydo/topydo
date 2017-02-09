@@ -27,7 +27,7 @@ class Transaction(object):
         self._cmd = lambda op: p_subcommand(op, *p_env_args)
         self._todo_ids = p_todo_ids
         self._operations = []
-        self._cmd_name = p_subcommand.__module__.lower()[16:-7]
+        self._cmd_name = p_subcommand.name()
         self.label = []
 
     def prepare(self, p_args):

@@ -288,6 +288,11 @@ class TagCommandTest(CommandTest):
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors, command.usage() + "\n")
 
+    def test_tag_name(self):
+        name = TagCommand.name()
+
+        self.assertEqual(name, 'tag')
+
     def test_help(self):
         command = TagCommand(["help"], self.todolist, self.out, self.error)
         command.execute()

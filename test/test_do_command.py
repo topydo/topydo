@@ -454,6 +454,11 @@ class DoCommandTest(CommandTest):
         self.assertFalse(self.output)
         self.assertEqual(self.errors, command.usage() + "\n")
 
+    def test_do_name(self):
+        name = DoCommand.name()
+
+        self.assertEqual(name, 'do')
+
     def test_help(self):
         command = DoCommand(["help"], self.todolist, self.out, self.error)
         command.execute()

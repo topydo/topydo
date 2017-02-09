@@ -102,6 +102,11 @@ class AppendCommandTest(CommandTest):
                 "|  2| Qux due:%s t:%s p:1 p:2\n" % (self.today, self.today))
         self.assertEqual(self.errors, "")
 
+    def test_append_name(self):
+        name = AppendCommand.name()
+
+        self.assertEqual(name, 'append')
+
     def test_help(self):
         command = AppendCommand(["help"], self.todolist, self.out, self.error)
         command.execute()

@@ -249,7 +249,7 @@ class CLIApplicationBase(object):
 
     def _backup(self, p_command, p_args=[], p_label=None):
         if config().backup_count() > 0 and p_command and not self.is_read_only(p_command):
-            call = [p_command.__module__.lower()[16:-7]] + p_args # strip "topydo.commands" and "Command"
+            call = [p_command.name()]+ p_args
 
             from topydo.lib.ChangeSet import ChangeSet
             label = p_label if p_label else call

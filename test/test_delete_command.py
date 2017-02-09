@@ -243,6 +243,11 @@ class DeleteCommandTest(CommandTest):
         self.assertFalse(self.output)
         self.assertEqual(self.errors, command.usage() + "\n")
 
+    def test_delete_name(self):
+        name = DeleteCommand.name()
+
+        self.assertEqual(name, 'delete')
+
     def test_help(self):
         command = DeleteCommand(["help"], self.todolist, self.out, self.error)
         command.execute()

@@ -167,6 +167,11 @@ class DepriCommandTest(CommandTest):
         self.assertFalse(self.output)
         self.assertEqual(self.errors, command.usage() + "\n")
 
+    def test_depri_name(self):
+        name = DepriCommand.name()
+
+        self.assertEqual(name, 'depri')
+
     def test_help(self):
         command = DepriCommand(["help"], self.todolist, self.out, self.error)
         command.execute()
