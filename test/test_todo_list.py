@@ -247,6 +247,20 @@ class TodoListTester(TopydoTest):
             self.assertEqual(todo.src, results[i])
             i += 1
 
+    def test_ids_linenumber(self):
+        """ Confirms the ids method lists all todo IDs as line-numbers. """
+        config(p_overrides={('topydo', 'identifiers'): 'linenumber'})
+        results = {'1', '2', '3', '4', '5'}
+
+        self.assertEqual(results, self.todolist.ids())
+
+    def test_ids_uids(self):
+        """ Confirms the ids method lists all todo IDs as text uids. """
+        config("test/data/todolist-uid.conf")
+        results = {'n8m', 'mfg', 'z63', 't5c', 'wa5'}
+
+        self.assertEqual(results, self.todolist.ids())
+
 
 class TodoListDependencyTester(TopydoTest):
     def setUp(self):

@@ -57,7 +57,7 @@ class RevertCommandTest(CommandTest):
         self.archive = TodoList([])
 
     def test_revert01(self):
-        backup = ChangeSet(p_call=['do 1'])
+        backup = ChangeSet(p_label=['do 1'])
         backup.add_todolist(self.todolist)
         backup.add_archive(self.archive)
         backup.timestamp = '1'
@@ -317,6 +317,11 @@ class RevertCommandTest(CommandTest):
         config(p_overrides={('topydo', 'backup_count'): 'foo'})
 
         self.assertEqual(config().backup_count(), 5)
+
+    def test_revert_name(self):
+        name = RevertCommand.name()
+
+        self.assertEqual(name, 'revert')
 
     def test_help(self):
         command = RevertCommand(["help"], self.todolist, self.out, self.error)

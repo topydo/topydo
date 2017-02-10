@@ -43,7 +43,7 @@ class RevertCommand(Command):
             archive_file.write(archive.print_todos())
             last_change.delete()
 
-            self.out("Successfully reverted: " + last_change.call)
+            self.out("Successfully reverted: " + last_change.label)
         except (ValueError, KeyError):
             self.error('No backup was found for the current state of ' + config().todotxt())
 

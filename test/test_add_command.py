@@ -405,6 +405,11 @@ class AddCommandTest(CommandTest):
             "|  1| x 2015-01-01 {} Already completed\n".format(self.today))
         self.assertEqual(self.errors, "")
 
+    def test_add_name(self):
+        name = AddCommand.AddCommand.name()
+
+        self.assertEqual(name, 'add')
+
     def test_help(self):
         command = AddCommand.AddCommand(["help"], self.todolist, self.out,
                                         self.error)

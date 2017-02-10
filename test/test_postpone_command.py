@@ -314,6 +314,11 @@ class PostponeCommandTest(CommandTest):
         self.assertEqual(self.output, result)
         self.assertEqual(self.errors, "")
 
+    def test_postpone_name(self):
+        name = PostponeCommand.name()
+
+        self.assertEqual(name, 'postpone')
+
     def test_help(self):
         command = PostponeCommand(["help"], self.todolist, self.out,
                                   self.error)

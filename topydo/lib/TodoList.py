@@ -289,4 +289,3 @@ class TodoList(TodoListBase):
         self._depgraph.transitively_reduce()
         clean_parent_relations()
         clean_orphan_relations()
-

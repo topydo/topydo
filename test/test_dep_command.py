@@ -360,6 +360,11 @@ node [ shape="none" margin="0" fontsize="9" fontname="Helvetica" ]
         self.assertEqual(self.errors, command.usage() + "\n")
         self.assertFalse(self.todolist.dirty)
 
+    def test_dep_name(self):
+        name = DepCommand.name()
+
+        self.assertEqual(name, 'dep')
+
     def test_help(self):
         command = DepCommand(["help"], self.todolist, self.out, self.error)
         command.execute()

@@ -249,6 +249,11 @@ class PriorityCommandTest(CommandTest):
         self.assertFalse(self.output)
         self.assertEqual(self.errors, command.usage() + "\n")
 
+    def test_priority_name(self):
+        name = PriorityCommand.name()
+
+        self.assertEqual(name, 'priority')
+
     def test_help(self):
         command = PriorityCommand(["help"], self.todolist, self.out,
                                   self.error)

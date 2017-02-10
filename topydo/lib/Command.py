@@ -85,6 +85,11 @@ class Command(object):
 
         return result
 
+    @classmethod
+    def name(cls):
+        """" Returns short-name of the command. """
+        return cls.__name__[:-7].lower()  # strip 'Command'
+
     def usage(self):
         """ Returns a one-line synopsis for this command. """
         raise NotImplementedError

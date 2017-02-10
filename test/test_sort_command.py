@@ -53,6 +53,11 @@ class SortCommandTest(CommandTest):
 
         self.assertEqual(todo1.source(), todo2.source())
 
+    def test_sort_name(self):
+        name = SortCommand.name()
+
+        self.assertEqual(name, 'sort')
+
     def test_help(self):
         command = SortCommand(["help"], self.todolist, self.out, self.error)
         command.execute()

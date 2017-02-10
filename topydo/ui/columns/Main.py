@@ -38,6 +38,7 @@ from topydo.ui.columns.ConsoleWidget import ConsoleWidget
 from topydo.ui.columns.KeystateWidget import KeystateWidget
 from topydo.ui.columns.TodoWidget import TodoWidget
 from topydo.ui.columns.TodoListWidget import TodoListWidget
+from topydo.ui.columns.Transaction import Transaction
 from topydo.ui.columns.Utils import PaletteItem, to_urwid_color
 from topydo.ui.columns.ViewWidget import ViewWidget
 from topydo.ui.columns.ColumnLayout import columns
@@ -118,7 +119,7 @@ class UIApplication(CLIApplicationBase):
         self.todofile = TodoFileWatched(config().todotxt(), callback)
         self.todolist = TodoList.TodoList(self.todofile.read())
 
-        self.marked_todos = []
+        self.marked_todos = set()
 
         self.columns = urwid.Columns([], dividechars=0,
             min_width=config().column_width())
@@ -260,6 +261,24 @@ class UIApplication(CLIApplicationBase):
     def _output(self, p_text):
         self._print_to_console(p_text)
 
+    def _check_id_validity(self, p_ids):
+        """
+        Checks if there are any invalid todo IDs in p_ids list.
+
+        Returns proper error message if any ID is invalid and None otherwise.
+        """
+        errors = []
+        valid_ids = self.todolist.ids()
+
+        if len(p_ids) == 0:
+            errors.append('No todo item was selected')
+        else:
+            errors = ["Invalid todo ID: {}".format(todo_id)
+                      for todo_id in p_ids - valid_ids]
+
+        errors = '\n'.join(errors) if errors else None
+        return errors
+
     def _execute_handler(self, p_command, p_todo_id=None, p_output=None):
         """
         Executes a command, given as a string.
@@ -269,11 +288,6 @@ class UIApplication(CLIApplicationBase):
 
         self._last_cmd = (p_command, p_output == self._output)
 
-        if '{}' in p_command:
-            if self._has_marked_todos():
-                p_todo_id = ' '.join(self.marked_todos)
-            p_command = p_command.format(p_todo_id)
-
         try:
             p_command = shlex.split(p_command)
         except ValueError as verr:
@@ -281,26 +295,37 @@ class UIApplication(CLIApplicationBase):
             return
 
         try:
-            (subcommand, args) = get_subcommand(p_command)
+            subcommand, args = get_subcommand(p_command)
         except ConfigError as cerr:
             self._print_to_console(
                 'Error: {}. Check your aliases configuration.'.format(cerr))
             return
 
-        self._backup(subcommand, args)
+        env_args = (self.todolist, p_output, self._output, self._input)
+        ids = None
+
+        if '{}' in args:
+            if self._has_marked_todos():
+                ids = self.marked_todos
+            else:
+                ids = {p_todo_id} if p_todo_id else set()
+
+            invalid_ids = self._check_id_validity(ids)
+
+            if invalid_ids:
+                self._print_to_console('Error: ' + invalid_ids)
+                return
+
+        transaction = Transaction(subcommand, env_args, ids)
+        transaction.prepare(args)
+        label = transaction.label
+        self._backup(subcommand, p_label=label)
 
         try:
-            command = subcommand(
-                args,
-                self.todolist,
-                p_output,
-                self._output,
-                self._input,
-            )
-
-            if command.execute() != False:
+            if transaction.execute():
                 self._post_execute()
-
+            else:
+                self._rollback()
         except TypeError:
             # TODO: show error message
             pass
@@ -318,6 +343,12 @@ class UIApplication(CLIApplicationBase):
         if dirty or self.marked_todos:
             self._reset_state()
 
+    def _rollback(self):
+        try:
+            self.backup.apply(self.todolist, p_archive=None)
+        except AttributeError:
+            pass
+
     def _repeat_last_cmd(self, p_todo_id=None):
         try:
             cmd, verbosity = self._last_cmd
@@ -330,7 +361,7 @@ class UIApplication(CLIApplicationBase):
     def _reset_state(self):
         for widget in TodoWidget.cache.values():
             widget.unmark()
-        self.marked_todos = []
+        self.marked_todos.clear()
         self._update_all_columns()
 
     def _blur_commandline(self):
@@ -600,7 +631,7 @@ class UIApplication(CLIApplicationBase):
         False otherwise.
         """
         if p_todo_id not in self.marked_todos:
-            self.marked_todos.append(p_todo_id)
+            self.marked_todos.add(p_todo_id)
             return True
         else:
             self.marked_todos.remove(p_todo_id)

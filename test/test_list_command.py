@@ -420,6 +420,11 @@ class ListCommandTest(CommandTest):
         self.assertEqual(self.output, "|  1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n")
         self.assertEqual(self.errors, "")
 
+    def test_list_name(self):
+        name = ListCommand.name()
+
+        self.assertEqual(name, 'list')
+
     def test_help(self):
         command = ListCommand(["help"], self.todolist, self.out, self.error)
         command.execute()
