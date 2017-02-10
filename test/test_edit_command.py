@@ -162,13 +162,12 @@ class EditCommandTest(CommandTest):
         self.assertEqual(self.output, expected)
         self.assertEqual(self.todolist.print_todos(), u"Foo id:1\nFo\u00f3B\u0105\u017a\nLazy Cat\nLazy Dog")
 
+    @mock.patch.dict(os.environ, {'EDITOR': 'vi'})
     @mock.patch('topydo.commands.EditCommand.check_call')
     def test_edit_archive(self, mock_call):
         """ Edit archive file. """
         mock_call.return_value = 0
 
-        editor = 'vi'
-        os.environ['EDITOR'] = editor
         archive = config().archive()
 
         command = EditCommand(["-d"], self.todolist, self.out, self.error,
@@ -176,15 +175,14 @@ class EditCommandTest(CommandTest):
         command.execute()
 
         self.assertEqual(self.errors, "")
-        mock_call.assert_called_once_with([editor, archive])
+        mock_call.assert_called_once_with(['vi', archive])
 
+    @mock.patch.dict(os.environ, {'EDITOR': 'vi'})
     @mock.patch('topydo.commands.EditCommand.check_call')
     def test_edit_todotxt(self, mock_call):
         """ Edit todo file. """
         mock_call.return_value = 0
 
-        editor = 'vi'
-        os.environ['EDITOR'] = editor
         todotxt = config().todotxt()
 
         result = self.todolist.print_todos()  # copy TodoList content *before* executing command
@@ -194,7 +192,91 @@ class EditCommandTest(CommandTest):
 
         self.assertEqual(self.errors, "")
         self.assertEqual(self.todolist.print_todos(), result)
-        mock_call.assert_called_once_with([editor, todotxt])
+        mock_call.assert_called_once_with(['vi', todotxt])
+
+    @mock.patch.dict(os.environ, {'EDITOR': 'vi'})
+    @mock.patch.dict(os.environ, {'TOPYDO_EDITOR': 'nano'})
+    @mock.patch('topydo.commands.EditCommand.check_call')
+    def test_edit_editor1(self, mock_call):
+        """ $TOPYDO_EDITOR overrides $EDITOR """
+        mock_call.return_value = 0
+
+        todotxt = config().todotxt()
+
+        command = EditCommand([], self.todolist, self.out, self.error, None)
+        command.execute()
+
+        self.assertEqual(self.errors, "")
+        mock_call.assert_called_once_with(['nano', todotxt])
+
+    @mock.patch.dict(os.environ, {'EDITOR': 'vi'})
+    @mock.patch.dict(os.environ, {'TOPYDO_EDITOR': 'nano'})
+    @mock.patch('topydo.commands.EditCommand.check_call')
+    def test_edit_editor2(self, mock_call):
+        """ $TOPYDO_EDITOR overrides $EDITOR """
+        mock_call.return_value = 0
+
+        todotxt = config().todotxt()
+
+        command = EditCommand([], self.todolist, self.out, self.error, None)
+        command.execute()
+
+        self.assertEqual(self.errors, "")
+        mock_call.assert_called_once_with(['nano', todotxt])
+
+    @mock.patch.dict(os.environ, {'EDITOR': 'vi'})
+    @mock.patch.dict(os.environ, {'TOPYDO_EDITOR': 'nano'})
+    @mock.patch('topydo.commands.EditCommand.check_call')
+    def test_edit_editor3(self, mock_call):
+        """ Editor on commandline overrides $TOPYDO_EDITOR """
+        mock_call.return_value = 0
+
+        command = EditCommand(["-E", "foo"], self.todolist, self.out, self.error, None)
+        command.execute()
+
+        self.assertEqual(self.errors, "")
+        mock_call.assert_called_once_with(['foo', config().todotxt()])
+
+    @mock.patch.dict(os.environ, {'EDITOR': 'vi'})
+    @mock.patch.dict(os.environ, {'TOPYDO_EDITOR': 'nano'})
+    @mock.patch('topydo.commands.EditCommand.check_call')
+    def test_edit_editor4(self, mock_call):
+        """ Editor in configuration file is overridden by $TOPYDO_EDITOR """
+        mock_call.return_value = 0
+
+        config(p_overrides={('edit', 'editor'): 'foo'})
+
+        command = EditCommand([], self.todolist, self.out, self.error, None)
+        command.execute()
+
+        self.assertEqual(self.errors, "")
+        mock_call.assert_called_once_with(['nano', config().todotxt()])
+
+    @mock.patch.dict(os.environ, {'EDITOR': 'vi'})
+    @mock.patch('topydo.commands.EditCommand.check_call')
+    def test_edit_editor5(self, mock_call):
+        """ Editor in configuration file overrides $EDITOR """
+        mock_call.return_value = 0
+
+        config(p_overrides={('edit', 'editor'): 'foo'})
+
+        command = EditCommand([], self.todolist, self.out, self.error, None)
+        command.execute()
+
+        self.assertEqual(self.errors, "")
+        mock_call.assert_called_once_with(['foo', config().todotxt()])
+
+    @mock.patch.dict(os.environ, {'EDITOR': ''})
+    @mock.patch('topydo.commands.EditCommand.check_call')
+    def test_edit_editor6(self, mock_call):
+        """ Ultimate fallback is vi """
+        mock_call.return_value = 0
+
+        command = EditCommand([], self.todolist, self.out, self.error, None)
+        command.execute()
+
+        self.assertEqual(self.errors, "")
+        mock_call.assert_called_once_with(['vi', config().todotxt()])
 
     def test_edit_name(self):
         name = EditCommand.name()

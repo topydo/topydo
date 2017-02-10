@@ -17,16 +17,13 @@
 import os
 import codecs
 import tempfile
+import shlex
 from subprocess import CalledProcessError, check_call
 
 from topydo.lib.Config import config
 from topydo.lib.MultiCommand import MultiCommand
 from topydo.lib.prettyprinters.Numbers import PrettyPrinterNumbers
 from topydo.lib.Todo import Todo
-from topydo.lib.TodoList import TodoList
-
-# the true and only editor
-DEFAULT_EDITOR = 'vi'
 
 def _get_file_mtime(p_file):
     return os.stat(p_file.name).st_mtime
@@ -39,19 +36,31 @@ class EditCommand(MultiCommand):
         super().__init__(p_args, p_todolist, p_output,
                                           p_error, p_input)
 
-        if len(self.args) == 0:
-            self.multi_mode = False
-
+        self.editor = config().editor()
         self.is_expression = False
         self.edit_archive = False
         self.last_argument = False
 
     def get_flags(self):
-        return ("d", [])
+        return ("dE:", [])
 
     def process_flag(self, p_opt, p_value):
         if p_opt == '-d':
             self.edit_archive = True
+            self.multi_mode = False
+        elif p_opt == '-E':
+            self.editor = shlex.split(p_value)
+
+    def _process_flags(self):
+        """
+        Override to add an additional check after processing the flags: when
+        there are no flags left after argument parsing, then it means we'll be
+        editing the whole todo.txt file as a whole and therefore we're not in
+        multi mode.
+        """
+        super()._process_flags()
+
+        if len(self.args) == 0:
             self.multi_mode = False
 
     def _todos_to_temp(self):
@@ -74,18 +83,13 @@ class EditCommand(MultiCommand):
 
     def _open_in_editor(self, p_file):
         try:
-            editor = os.environ['EDITOR'] or DEFAULT_EDITOR
-        except(KeyError):
-            editor = DEFAULT_EDITOR
-
-        try:
-            return check_call([editor, p_file])
+            return check_call(self.editor + [p_file])
         except CalledProcessError:
             self.error('Something went wrong in the editor...')
             return 1
-        except(OSError):
-            self.error('There is no such editor as: ' + editor + '. '
-                       'Check your $EDITOR and/or $PATH')
+        except OSError:
+            self.error('There is no such editor as: ' + self.editor + '. '
+                       'Check your configuration file, $TOPYDO_EDITOR, $EDITOR and/or $PATH')
 
     def _catch_todo_errors(self):
         errors = []
@@ -134,12 +138,13 @@ class EditCommand(MultiCommand):
 
             return self._open_in_editor(todo) == 0
 
+
     def usage(self):
         return """Synopsis:
-  edit
-  edit <NUMBER 1> [<NUMBER 2> ...]
-  edit -e [-x] [EXPRESSION]
-  edit -d"""
+  edit [-E <EDITOR>]
+  edit [-E <EDITOR>] <NUMBER 1> [<NUMBER 2> ...]
+  edit [-E <EDITOR>] -e [-x] [EXPRESSION]
+  edit [-E <EDITOR>] -d"""
 
     def help(self):
         return """\
@@ -150,10 +155,15 @@ edit todo item(s) with the given NUMBER(s) or edit relevant todos matching
 the given EXPRESSION. See `topydo help ls` for more information on relevant
 todo items. It is also possible to open the archive file.
 
-By default it will look to your environment variable $EDITOR, otherwise it will
-fall back to 'vi'.
+The editor is chosen as follows:
+    1. Check whether the -E flag is given and use it;
+    2. Use the value of $TOPYDO_EDITOR in the environment;
+    3. Use the value in the configuration file;
+    4. Use the value of $EDITOR in the environment;
+    5. If all else fails, use 'vi'.
 
 -e : Treat the subsequent arguments as an EXPRESSION.
+-E : Editor to start.
 -x : Edit *all* todos matching the EXPRESSION (i.e. do not filter on
      dependencies or relevance).
 -d : Open the archive file.\
