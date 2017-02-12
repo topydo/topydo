@@ -23,7 +23,7 @@ import sys
 
 from topydo.lib.Config import config, ConfigError
 
-_SUBCOMMAND_MAP = {
+SUBCOMMAND_MAP = {
     'add': 'AddCommand',
     'app': 'AppendCommand',
     'append': 'AppendCommand',
@@ -63,9 +63,9 @@ def get_subcommand(p_args):
         """
         Returns the class of the requested subcommand. An invalid p_subcommand
         will result in an ImportError, since this is a programming mistake
-        (most likely an error in the _SUBCOMMAND_MAP).
+        (most likely an error in the SUBCOMMAND_MAP).
         """
-        classname = _SUBCOMMAND_MAP[p_subcommand]
+        classname = SUBCOMMAND_MAP[p_subcommand]
         modulename = 'topydo.commands.{}'.format(classname)
 
         __import__(modulename, globals(), locals(), [classname], 0)
@@ -111,14 +111,14 @@ def get_subcommand(p_args):
 
         if subcommand in alias_map:
             result, args = resolve_alias(subcommand, args[1:])
-        elif subcommand in _SUBCOMMAND_MAP:
+        elif subcommand in SUBCOMMAND_MAP:
             result = import_subcommand(subcommand)
             args = args[1:]
         elif subcommand == 'help':
             try:
                 subcommand = args[1]
 
-                if subcommand in _SUBCOMMAND_MAP:
+                if subcommand in SUBCOMMAND_MAP:
                     args = [subcommand, 'help']
                     return get_subcommand(args)
             except IndexError:
@@ -128,14 +128,14 @@ def get_subcommand(p_args):
             p_command = config().default_command()
             if p_command in alias_map:
                 result, args = resolve_alias(p_command, args)
-            elif p_command in _SUBCOMMAND_MAP:
+            elif p_command in SUBCOMMAND_MAP:
                 result = import_subcommand(p_command)
                 # leave args unchanged
     except IndexError:
         p_command = config().default_command()
         if p_command in alias_map:
             result, args = resolve_alias(p_command, args)
-        elif p_command in _SUBCOMMAND_MAP:
+        elif p_command in SUBCOMMAND_MAP:
             result = import_subcommand(p_command)
 
     return (result, args)

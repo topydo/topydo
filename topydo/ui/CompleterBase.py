@@ -14,34 +14,71 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from topydo.Commands import _SUBCOMMAND_MAP
+import datetime
+
+from functools import lru_cache
+
+from topydo.Commands import SUBCOMMAND_MAP
 from topydo.lib.Config import config
 
 
+@lru_cache(maxsize=1)
 def _get_subcmds():
-    subcmd_map = config().aliases()
-    subcmd_map.update(_SUBCOMMAND_MAP)
+    subcmd_map = config().aliases().copy()
+    subcmd_map.update(SUBCOMMAND_MAP)
 
     return sorted(subcmd_map.keys())
+
+
+def date_suggestions():
+    """
+    Returns a list of relative date that is presented to the user as auto
+    complete suggestions.
+    """
+    # don't use strftime, prevent locales to kick in
+    days_of_week = {
+        0: "Monday",
+        1: "Tuesday",
+        2: "Wednesday",
+        3: "Thursday",
+        4: "Friday",
+        5: "Saturday",
+        6: "Sunday"
+    }
+
+    dates = [
+        'today',
+        'tomorrow',
+    ]
+
+    # show days of week up to next week
+    dow = datetime.date.today().weekday()
+    for i in range(dow + 2 % 7, dow + 7):
+        dates.append(days_of_week[i % 7])
+
+    # and some more relative days starting from next week
+    dates += ["1w", "2w", "1m", "2m", "3m", "1y"]
+
+    return dates
 
 
 class CompleterBase(object):
     def __init__(self, p_todolist):
         self.todolist = p_todolist
-        self._subcmds = _get_subcmds()
+        self._all_subcmds = _get_subcmds()
 
-    def _complete_context(self, p_word):
+    def _contexts(self, p_word):
         completions = ['@' + context for context in self.todolist.contexts() if
                        context.startswith(p_word[1:])]
-        return completions
+        return sorted(completions)
 
-    def _complete_project(self, p_word):
+    def _projects(self, p_word):
         completions = ['+' + project for project in self.todolist.projects() if
                        project.startswith(p_word[1:])]
-        return completions
+        return sorted(completions)
 
-    def _complete_subcmd(self, p_word):
-        completions = [cmd for cmd in self._subcmds if
+    def _subcmds(self, p_word):
+        completions = [cmd for cmd in self._all_subcmds if
                        cmd.startswith(p_word)]
         return completions
 
@@ -49,10 +86,10 @@ class CompleterBase(object):
         completions = []
 
         if p_word.startswith('+'):
-            completions = self._complete_project(p_word)
+            completions = self._projects(p_word)
         elif p_word.startswith('@'):
-            completions = self._complete_context(p_word)
+            completions = self._contexts(p_word)
         elif p_is_first_word:
-            completions = self._complete_subcmd(p_word)
+            completions = self._subcmds(p_word)
 
         return completions
