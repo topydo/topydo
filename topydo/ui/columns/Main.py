@@ -35,6 +35,7 @@ from topydo.lib.TodoFileWatched import TodoFileWatched
 from topydo.lib import TodoList
 from topydo.ui.CLIApplicationBase import CLIApplicationBase, error
 from topydo.ui.columns.CommandLineWidget import CommandLineWidget
+from topydo.ui.columns.CompletionBoxWidget import CompletionBoxWidget
 from topydo.ui.columns.ConsoleWidget import ConsoleWidget
 from topydo.ui.columns.KeystateWidget import KeystateWidget
 from topydo.ui.columns.TodoWidget import TodoWidget
@@ -127,9 +128,11 @@ class UIApplication(CLIApplicationBase):
         completer = CompleterBase(self.todolist)
         self.commandline = CommandLineWidget(completer, 'topydo> ')
         self.keystate_widget = KeystateWidget()
+        self.completion_box = CompletionBoxWidget()
         self.status_line = urwid.Columns([
             ('weight', 1, urwid.Filler(self.commandline)),
         ])
+        self.cli_wrapper = urwid.Pile([(1, self.status_line)])
 
         self.keymap = config().column_keymap()
         self._alarm = None
@@ -143,6 +146,9 @@ class UIApplication(CLIApplicationBase):
         urwid.connect_signal(self.commandline, 'blur', self._blur_commandline)
         urwid.connect_signal(self.commandline, 'execute_command',
                              self._execute_handler)
+        urwid.connect_signal(self.commandline, 'show_completions', self._show_completion_box)
+        urwid.connect_signal(self.completion_box, 'close_completion_box', self._close_completion_box)
+        urwid.connect_signal(self.completion_box, 'send_completion_candidate', self.commandline.insert_completion)
 
         def hide_console(p_focus_commandline=False):
             if p_focus_commandline:
@@ -168,7 +174,7 @@ class UIApplication(CLIApplicationBase):
 
         self.mainwindow = MainPile([
             ('weight', 1, self.columns),
-            (1, self.status_line),
+            ('pack', self.cli_wrapper),
         ])
 
         urwid.connect_signal(self.mainwindow, 'blur_console', hide_console)
@@ -524,6 +530,19 @@ class UIApplication(CLIApplicationBase):
     def _print_keystate(self, p_keystate):
         self.keystate_widget.set_text(p_keystate)
         self._keystate_visible = len(p_keystate) > 0
+
+    def _show_completion_box(self, p_completions):
+        self.completion_box.add_completions(p_completions)
+        contents = self.cli_wrapper.contents
+        contents.insert(0, (self.completion_box, ('given', 4)))
+        self.cli_wrapper.focus_position = 0
+
+    def _close_completion_box(self, p_size, p_key):
+        contents = self.cli_wrapper.contents
+        del contents[0]
+        self.cli_wrapper.focus_position = 0
+        maxcol, _ = p_size
+        self.commandline.keypress((maxcol,), p_key)
 
     def _set_alarm(self, p_callback):
         """ Sets alarm to execute p_action specified in 0.5 sec. """

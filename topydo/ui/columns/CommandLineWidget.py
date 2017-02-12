@@ -16,6 +16,8 @@
 
 import urwid
 
+from os.path import commonprefix
+
 
 def _get_word_before_pos(p_text, p_pos):
     is_first_word = False
@@ -26,7 +28,7 @@ def _get_word_before_pos(p_text, p_pos):
     if pos == 0 or text.lstrip().rfind(' ', 0, pos) == -1:
         is_first_word = True
 
-    return (text[start:pos], is_first_word)
+    return (text[start:pos], is_first_word, start)
 
 
 class CommandLineWidget(urwid.Edit):
@@ -37,9 +39,11 @@ class CommandLineWidget(urwid.Edit):
         # temporary history storage for edits before cmd execution
         self.history_tmp = []
         self.completer = p_completer
+        self.start = None  # text before completion candidate
+        self.end = None    # text after completion candidate
 
         super().__init__(*args, **kwargs)
-        urwid.register_signal(CommandLineWidget, ['blur', 'execute_command'])
+        urwid.register_signal(CommandLineWidget, ['blur', 'execute_command', 'show_completions'])
 
     def clear(self):
         self.set_edit_text("")
@@ -85,27 +89,41 @@ class CommandLineWidget(urwid.Edit):
         if self.history_pos != 0:
             self._history_move(-1)
 
+    def insert_completion(self, p_insert):
+        final_text = self.start + p_insert + self.end
+        self.set_edit_text(final_text)
+        self.set_edit_pos(len(self.start) + len(p_insert))
+
     def _complete(self):
         pos = self.edit_pos
         text = self.edit_text
 
-        word_before_cursor, is_first = _get_word_before_pos(text, pos)
+        word_before_cursor, is_first, start = _get_word_before_pos(text, pos)
         completions = self.completer.get_completions(word_before_cursor,
                                                      is_first)
 
         if not completions:
             return
         elif len(completions) > 1:  # TODO multiple completions
-            return
+            replacement = commonprefix(completions)
+            completions.insert(0, word_before_cursor)
+
+            # set slices before and after completion
+            start, end = text[:start], text[pos:]
+            self.start = start
+            self.end = end
+
+            urwid.emit_signal(self, 'show_completions', completions)
         else:
             replacement = completions[0]
-            if replacement == word_before_cursor:
-                return  # Don't complete what is already completed
 
-            offset = len(replacement) - len(word_before_cursor)
-            final_text = text[:pos] + replacement[-offset:] + text[pos:]
-            self.set_edit_text(final_text)
-            self.set_edit_pos(pos + offset)
+        if replacement == word_before_cursor:
+            return  # Don't complete what is already completed
+
+        offset = len(replacement) - len(word_before_cursor)
+        final_text = text[:pos] + replacement[-offset:] + text[pos:]
+        self.set_edit_text(final_text)
+        self.set_edit_pos(pos + offset)
 
     def keypress(self, p_size, p_key):
         dispatch = {
