@@ -534,7 +534,9 @@ class UIApplication(CLIApplicationBase):
     def _show_completion_box(self, p_completions):
         self.completion_box.add_completions(p_completions)
         contents = self.cli_wrapper.contents
-        contents.insert(0, (self.completion_box, ('given', 4)))
+        candidates = len(self.completion_box.body)
+        box_height = candidates if candidates < 5 else 4
+        contents.insert(0, (self.completion_box, ('given', box_height)))
         self.cli_wrapper.focus_position = 0
 
     def _close_completion_box(self, p_size, p_key):
