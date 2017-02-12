@@ -106,7 +106,11 @@ class CommandLineWidget(urwid.Edit):
             return
         elif len(completions) > 1:  # TODO multiple completions
             replacement = commonprefix(completions)
-            completions.insert(0, word_before_cursor)
+
+            zero_candidate = replacement if replacement else word_before_cursor
+
+            if zero_candidate != completions[0]:
+                completions.insert(0, zero_candidate)
 
             # set slices before and after completion
             start, end = text[:start], text[pos:]
