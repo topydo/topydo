@@ -67,12 +67,12 @@ class CompleterBase(object):
     def contexts(self, p_word):
         completions = ['@' + context for context in self.todolist.contexts() if
                        context.startswith(p_word[1:])]
-        return completions
+        return sorted(completions)
 
     def projects(self, p_word):
         completions = ['+' + project for project in self.todolist.projects() if
                        project.startswith(p_word[1:])]
-        return completions
+        return sorted(completions)
 
     def subcmds(self, p_word):
         completions = [cmd for cmd in self._subcmds if
