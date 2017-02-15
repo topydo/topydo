@@ -108,13 +108,13 @@ class DepCommand(Command):
             arg2 = self.argument(2)
 
             todos = []
-            if arg2 == 'to':
-                # dep ls 1 to ...
-                number = arg1
+            if arg2 == 'to' or arg1 == 'before':
+                # dep ls 1 to OR dep ls before 1
+                number = arg1 if arg2 == 'to' else arg2
                 todo = self.todolist.todo(number)
                 todos = self.todolist.children(todo)
-            elif arg1 == 'to':
-                # dep ls ... to 1
+            elif arg1 in {'to', 'after'}:
+                # dep ls to 1 OR dep ls after 1
                 number = arg2
                 todo = self.todolist.todo(number)
                 todos = self.todolist.parents(todo)
@@ -176,6 +176,7 @@ class DepCommand(Command):
   dep add <NUMBER> <before|partof|after|parents-of|children-of> <NUMBER>
   dep ls <NUMBER> to
   dep ls to <NUMBER>
+  dep ls <before|after> <NUMBER>
   dep dot <NUMBER>
   dep clean"""
 

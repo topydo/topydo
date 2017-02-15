@@ -271,6 +271,42 @@ class DepCommandTest(CommandTest):
         self.assertEqual(self.errors, "Invalid todo number given.\n")
 
     def test_ls5(self):
+        command = DepCommand(["ls", "before", "1"], self.todolist, self.out,
+                             self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.dirty)
+        self.assertEqual(self.output, "|  2| Bar p:1\n|  3| Baz p:1\n")
+        self.assertEqual(self.errors, "")
+
+    def test_ls6(self):
+        command = DepCommand(["ls", "before", "99"], self.todolist, self.out,
+                             self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.dirty)
+        self.assertEqual(self.output, "")
+        self.assertEqual(self.errors, "Invalid todo number given.\n")
+
+    def test_ls7(self):
+        command = DepCommand(["ls", "after", "3"], self.todolist, self.out,
+                             self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.dirty)
+        self.assertEqual(self.output, "|  1| Foo id:1\n")
+        self.assertEqual(self.errors, "")
+
+    def test_ls8(self):
+        command = DepCommand(["ls", "after", "99"], self.todolist, self.out,
+                             self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.dirty)
+        self.assertEqual(self.output, "")
+        self.assertEqual(self.errors, "Invalid todo number given.\n")
+
+    def test_ls9(self):
         command = DepCommand(["ls", "1"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -278,7 +314,7 @@ class DepCommandTest(CommandTest):
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors, command.usage() + "\n")
 
-    def test_ls6(self):
+    def test_ls10(self):
         command = DepCommand(["ls"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -286,7 +322,7 @@ class DepCommandTest(CommandTest):
         self.assertFalse(self.output)
         self.assertEqual(self.errors, command.usage() + "\n")
 
-    def test_ls7(self):
+    def test_ls11(self):
         command = DepCommand(["ls", "top", "99"], self.todolist, self.out,
                              self.error)
         command.execute()
