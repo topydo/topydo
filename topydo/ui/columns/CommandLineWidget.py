@@ -185,6 +185,26 @@ class CommandLineWidget(urwid.Edit):
     def _next_completion(self, p_size):
         self._completion_move(1, p_size)
 
+    def _home(self):
+        """ Moves cursor to the beginning of the line. """
+        self.set_edit_pos(0)
+
+    def _end(self):
+        """ Moves cursor to the end of the line. """
+        end = len(self.edit_text)
+        self.set_edit_pos(end)
+
+    def _home_del(self):
+        """ Deletes the line content before the cursor  """
+        text = self.edit_text[self.edit_pos:]
+        self.set_edit_text(text)
+        self._home()
+
+    def _end_del(self):
+        """ Deletes the line content after the cursor  """
+        text = self.edit_text[:self.edit_pos]
+        self.set_edit_text(text)
+
     def keypress(self, p_size, p_key):
         tab_handler = self._complete
 
@@ -199,6 +219,10 @@ class CommandLineWidget(urwid.Edit):
             'esc': self._blur,
             'up': self._history_back,
             'down': self._history_next,
+            'ctrl a': self._home,
+            'ctrl e': self._end,
+            'ctrl u': self._home_del,
+            'ctrl k': self._end_del,
             'tab': tab_handler,
             'shift tab': lambda: self._prev_completion(p_size)
         }
