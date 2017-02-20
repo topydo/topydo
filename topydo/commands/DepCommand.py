@@ -119,13 +119,12 @@ class DepCommand(Command):
                 todo = self.todolist.todo(number)
                 todos = self.todolist.parents(todo)
             else:
-                self.error(self.usage())
+                raise InvalidCommandArgument
 
-            if todos:
-                sorter = Sorter(config().sort_string())
-                instance_filter = Filter.InstanceFilter(todos)
-                view = View(sorter, [instance_filter], self.todolist)
-                self.out(self.printer.print_list(view.todos))
+            sorter = Sorter(config().sort_string())
+            instance_filter = Filter.InstanceFilter(todos)
+            view = View(sorter, [instance_filter], self.todolist)
+            self.out(self.printer.print_list(view.todos))
         except InvalidTodoException:
             self.error("Invalid todo number given.")
         except InvalidCommandArgument:
