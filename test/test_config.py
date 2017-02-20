@@ -165,5 +165,12 @@ class ConfigTest(TopydoTest):
         self.assertNotIn('<Esc', keystates)
         self.assertIn('<Esc>', keystates)
 
+    def test_config28(self):
+        """ test duplicates. """
+        keymap, keystates = config("test/data/ConfigTest7.conf").column_keymap()
+
+        self.assertEqual(keymap['k'], 'bar')
+        self.assertEqual(keymap['z'], 'foobar')
+
 if __name__ == '__main__':
     unittest.main()

@@ -162,7 +162,7 @@ class _Config:
 
         self.config = {}
 
-        self.cp = configparser.RawConfigParser()
+        self.cp = configparser.RawConfigParser(strict=False)
         # allow uppercase config keys
         self.cp.optionxform = lambda option: option
 
