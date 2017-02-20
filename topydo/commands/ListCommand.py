@@ -21,6 +21,7 @@ import os
 from topydo.lib.Config import config
 from topydo.lib.ExpressionCommand import ExpressionCommand
 from topydo.lib.Filter import HiddenTagFilter, InstanceFilter
+from topydo.lib.ListFormat import ListFormatError
 from topydo.lib.printers.PrettyPrinter import pretty_printer_factory
 from topydo.lib.prettyprinters.Format import PrettyPrinterFormatFilter
 from topydo.lib.TodoListBase import InvalidTodoException
@@ -148,10 +149,14 @@ class ListCommand(ExpressionCommand):
 
             self.printer = pretty_printer_factory(self.todolist, filters)
 
-        if self.group_expression:
-            self.out(self.printer.print_groups(self._view().groups))
-        else:
-            self.out(self.printer.print_list(self._view().todos))
+        try:
+            if self.group_expression:
+                self.out(self.printer.print_groups(self._view().groups))
+            else:
+                self.out(self.printer.print_list(self._view().todos))
+        except ListFormatError:
+            self.error('Error while parsing format string (list_format config'
+                       ' option or -F)')
 
     def _view(self):
         sorter = Sorter(self.sort_expression, self.group_expression)

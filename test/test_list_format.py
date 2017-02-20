@@ -710,6 +710,14 @@ x 2014-12-12 Completed but with date:2014-12-12
 """
         self.assertEqual(self.output, result)
 
+    def test_list_format47(self):
+        command = ListCommand(["-x", "-F", "%(r)"], self.todolist, self.out, self.error)
+        command.execute()
+
+        error = 'Error while parsing format string (list_format config option or -F)\n'
+        self.assertEqual(self.output, '')
+        self.assertEqual(self.errors, error)
+
 
 if __name__ == '__main__':
     unittest.main()

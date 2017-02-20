@@ -129,6 +129,11 @@ def color_block(p_todo):
         config().priority_color(p_todo.priority()).as_ansi(),
     )
 
+
+class ListFormatError(Exception):
+    pass
+
+
 class ListFormatParser(object):
     """ Parser of format string. """
     def __init__(self, p_todolist, p_format=None):
@@ -264,11 +269,14 @@ class ListFormatParser(object):
             if placeholder == 'S':
                 repl_trunc = repl
 
-            if repl == '':
-                substr = re.sub(pattern, '', substr)
-            else:
-                substr = re.sub(pattern, _strip_placeholder_braces, substr)
-                substr = re.sub(r'(?<!\\)%({ph}|\[{ph}\])'.format(ph=placeholder), repl, substr)
+            try:
+                if repl == '':
+                    substr = re.sub(pattern, '', substr)
+                else:
+                    substr = re.sub(pattern, _strip_placeholder_braces, substr)
+                    substr = re.sub(r'(?<!\\)%({ph}|\[{ph}\])'.format(ph=placeholder), repl, substr)
+            except re.error:
+                raise ListFormatError
 
             parsed_list.append(substr)
 
