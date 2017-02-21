@@ -174,6 +174,7 @@ class CLIApplicationBase(object):
         self.todolist = TodoList.TodoList([])
         self.todofile = None
         self.do_archive = True
+        self._post_archive_action = None
         self.backup = None
 
     def _usage(self):
@@ -271,6 +272,7 @@ class CLIApplicationBase(object):
             input)
 
         if command.execute() != False:
+            self._post_archive_action = command.execute_post_archive_actions
             return True
 
         return False
@@ -290,6 +292,8 @@ class CLIApplicationBase(object):
             elif config().archive() and self.backup:
                 archive = _retrieve_archive()[0]
                 self.backup.add_archive(archive)
+
+            self._post_archive_action()
 
             if config().keep_sorted():
                 from topydo.commands.SortCommand import SortCommand

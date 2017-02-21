@@ -327,6 +327,8 @@ class UIApplication(CLIApplicationBase):
 
         try:
             if transaction.execute():
+                post_archive_action = transaction.execute_post_archive_actions
+                self._post_archive_action = post_archive_action
                 self._post_execute()
             else:
                 self._rollback()
