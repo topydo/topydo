@@ -49,7 +49,7 @@ def columns(p_alt_layout_path=None):
             'show_all': '0',
     }
 
-    cp = RawConfigParser(defaults)
+    cp = RawConfigParser(defaults, strict=False)
     files = [
         "topydo_columns.ini",
         "topydo_columns.conf",
