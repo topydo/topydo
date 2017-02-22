@@ -659,7 +659,11 @@ class UIApplication(CLIApplicationBase):
         # make sure that the first column is focused on startup
         self.columns.focus_position = 0
 
-        self.mainloop.run()
+        while True:
+            try:
+                self.mainloop.run()
+            except KeyboardInterrupt:
+                self._print_to_console("Use the 'quit' command to exit topydo.")
 
 if __name__ == '__main__':
     UIApplication().run()
