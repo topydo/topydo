@@ -20,7 +20,7 @@ import os.path
 import shlex
 import sys
 
-from topydo.ui.CLIApplicationBase import CLIApplicationBase, error, usage
+from topydo.ui.CLIApplicationBase import CLIApplicationBase, error, GENERIC_HELP
 from topydo.ui.prompt.TopydoCompleter import TopydoCompleter
 from prompt_toolkit.shortcuts import prompt
 from prompt_toolkit.history import InMemoryHistory
@@ -94,7 +94,7 @@ class PromptApplication(CLIApplicationBase):
                 if self._execute(subcommand, args) != False:
                     self._post_execute()
             except TypeError:
-                usage()
+                print(GENERIC_HELP)
 
 
 def main():

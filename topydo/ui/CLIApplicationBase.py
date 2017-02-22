@@ -29,25 +29,7 @@ MAIN_OPTS = "ac:C:d:ht:v"
 MAIN_LONG_OPTS = ('version')
 READ_ONLY_COMMANDS = ('List', 'ListContext', 'ListProject')
 
-
-def usage():
-    """ Prints the command-line usage of topydo. """
-
-    print("""\
-Synopsis: topydo [-a] [-c <config>] [-C <colormode>] [-d <archive>] [-t <todo.txt>] subcommand [help|args]
-          topydo -h
-          topydo -v
-
--a : Do not archive todo items on completion.
--c : Specify an alternative configuration file.
--C : Specify color mode (0 = disable, 1 = enable 16 colors,
-     16 = enable 16 colors, 256 = enable 256 colors, auto (default))
--d : Specify an alternative archive file (done.txt)
--h : This help text
--t : Specify an alternative todo file
--v : Print version and exit
-
-Available commands:
+GENERIC_HELP="""Available commands:
 
 * add
 * append (app)
@@ -66,7 +48,26 @@ Available commands:
 * tag
 
 Run `topydo help <subcommand>` for command-specific help.\
-""")
+"""
+
+def usage():
+    """ Prints the command-line usage of topydo. """
+
+    print("""\
+Synopsis: topydo [-a] [-c <config>] [-C <colormode>] [-d <archive>] [-t <todo.txt>] subcommand [help|args]
+          topydo -h
+          topydo -v
+
+-a : Do not archive todo items on completion.
+-c : Specify an alternative configuration file.
+-C : Specify color mode (0 = disable, 1 = enable 16 colors,
+     16 = enable 16 colors, 256 = enable 256 colors, auto (default))
+-d : Specify an alternative archive file (done.txt)
+-h : This help text
+-t : Specify an alternative todo file
+-v : Print version and exit
+
+""" + GENERIC_HELP)
 
 def write(p_file, p_string):
     """

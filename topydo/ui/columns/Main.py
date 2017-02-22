@@ -32,7 +32,7 @@ from topydo.lib.Utils import get_terminal_size
 from topydo.lib.View import View
 from topydo.lib.TodoFileWatched import TodoFileWatched
 from topydo.lib import TodoList
-from topydo.ui.CLIApplicationBase import CLIApplicationBase, error
+from topydo.ui.CLIApplicationBase import CLIApplicationBase, error, GENERIC_HELP
 from topydo.ui.columns.CommandLineWidget import CommandLineWidget
 from topydo.ui.columns.ConsoleWidget import ConsoleWidget
 from topydo.ui.columns.KeystateWidget import KeystateWidget
@@ -299,6 +299,10 @@ class UIApplication(CLIApplicationBase):
         except ConfigError as cerr:
             self._print_to_console(
                 'Error: {}. Check your aliases configuration.'.format(cerr))
+            return
+
+        if subcommand is None:
+            self._print_to_console(GENERIC_HELP)
             return
 
         env_args = (self.todolist, p_output, self._output, self._input)
