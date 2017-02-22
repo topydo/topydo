@@ -47,6 +47,7 @@ class DeleteCommandTest(CommandTest):
         command = DeleteCommand(["1"], self.todolist, self.out, self.error,
                                 _no_prompt)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.todolist.todo(1).source(), "Bar")
@@ -57,6 +58,7 @@ class DeleteCommandTest(CommandTest):
         command = DeleteCommand(["Foo"], self.todolist, self.out, self.error,
                                 _no_prompt)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.todolist.todo(1).source(), "Bar")
@@ -67,6 +69,7 @@ class DeleteCommandTest(CommandTest):
         command = DeleteCommand(["1"], self.todolist, self.out, self.error,
                                 _yes_prompt)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.todolist.count(), 2)
@@ -78,6 +81,7 @@ class DeleteCommandTest(CommandTest):
         command = DeleteCommand(["-f", "1"], self.todolist, self.out,
                                 self.error, _yes_prompt)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.todolist.count(), 3)  # force won't delete subtasks
@@ -88,6 +92,7 @@ class DeleteCommandTest(CommandTest):
         command = DeleteCommand(["--force", "1"], self.todolist, self.out,
                                 self.error, _yes_prompt)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.todolist.count(), 3)  # force won't delete subtasks
@@ -97,6 +102,7 @@ class DeleteCommandTest(CommandTest):
     def test_del5(self):
         command = DeleteCommand(["2"], self.todolist, self.out, self.error)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.todolist.todo(1).source(), "Foo")
@@ -106,6 +112,7 @@ class DeleteCommandTest(CommandTest):
     def test_del7(self):
         command = DeleteCommand(["99"], self.todolist, self.out, self.error)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertFalse(self.todolist.dirty)
         self.assertEqual(self.output, "")
@@ -114,6 +121,7 @@ class DeleteCommandTest(CommandTest):
     def test_del8(self):
         command = DeleteCommand(["A"], self.todolist, self.out, self.error)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertFalse(self.todolist.dirty)
         self.assertEqual(self.output, "")
@@ -125,6 +133,7 @@ class DeleteCommandTest(CommandTest):
 
         command = DeleteCommand(["8to"], self.todolist, self.out, self.error)
         command.execute()
+        command.execute_post_archive_actions()
 
         result = "Foo\na @test with due:2015-06-03\na @test with +project"
 
@@ -136,6 +145,7 @@ class DeleteCommandTest(CommandTest):
         command = DeleteCommand(["1", "2"], self.todolist, self.out,
                                 self.error, _no_prompt)
         command.execute()
+        command.execute_post_archive_actions()
 
         result = "a @test with due:2015-06-03\na @test with +project"
 
@@ -147,6 +157,7 @@ class DeleteCommandTest(CommandTest):
         command = DeleteCommand(["1", "2"], self.todolist, self.out,
                                 self.error, _yes_prompt)
         command.execute()
+        command.execute_post_archive_actions()
 
         result = "a @test with due:2015-06-03\na @test with +project"
 
@@ -158,6 +169,7 @@ class DeleteCommandTest(CommandTest):
         command = DeleteCommand(["99", "2"], self.todolist, self.out,
                                 self.error, _yes_prompt)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertFalse(self.todolist.dirty)
         self.assertEqual(self.output, "")
@@ -168,6 +180,7 @@ class DeleteCommandTest(CommandTest):
         command = DeleteCommand(["99", "A"], self.todolist, self.out,
                                 self.error, _yes_prompt)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertFalse(self.todolist.dirty)
         self.assertEqual(self.output, "")
@@ -180,6 +193,7 @@ class DeleteCommandTest(CommandTest):
         command = DeleteCommand([u"Fo\u00d3B\u0105r", "Bar"], self.todolist,
                                 self.out, self.error, None)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertFalse(self.todolist.dirty)
         self.assertEqual(self.output, "")
@@ -190,6 +204,7 @@ class DeleteCommandTest(CommandTest):
         command = DeleteCommand(["-e", "@test"], self.todolist, self.out,
                                 self.error, None)
         command.execute()
+        command.execute_post_archive_actions()
 
         result = "Removed: a @test with due:2015-06-03\nRemoved: a @test with +project\n"
 
@@ -202,6 +217,7 @@ class DeleteCommandTest(CommandTest):
         command = DeleteCommand(["-e", "@test", "due:2015-06-03"],
                                 self.todolist, self.out, self.error, None)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.output, "Removed: a @test with due:2015-06-03\n")
@@ -211,6 +227,7 @@ class DeleteCommandTest(CommandTest):
         command = DeleteCommand(["-e", "@test", "due:2015-06-03", "+project"],
                                 self.todolist, self.out, self.error, None)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertFalse(self.todolist.dirty)
 
@@ -219,6 +236,7 @@ class DeleteCommandTest(CommandTest):
         command = DeleteCommand(["-e", ""], self.todolist, self.out,
                                 self.error, None)
         command.execute()
+        command.execute_post_archive_actions()
 
         result = "Foo"
 
@@ -231,6 +249,7 @@ class DeleteCommandTest(CommandTest):
         command = DeleteCommand(["-xe", ""], self.todolist, self.out,
                                 self.error, _yes_prompt)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.todolist.count(), 0)
@@ -238,6 +257,7 @@ class DeleteCommandTest(CommandTest):
     def test_empty(self):
         command = DeleteCommand([], self.todolist, self.out, self.error)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertFalse(self.todolist.dirty)
         self.assertFalse(self.output)
@@ -251,6 +271,7 @@ class DeleteCommandTest(CommandTest):
     def test_help(self):
         command = DeleteCommand(["help"], self.todolist, self.out, self.error)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors,

@@ -60,6 +60,7 @@ class DoCommandTest(CommandTest):
         command = DoCommand(["3"], self.todolist, self.out, self.error,
                             _no_prompt)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertTrue(self.todolist.dirty)
         self.assertTrue(self.todolist.todo(3).is_completed())
@@ -71,6 +72,7 @@ class DoCommandTest(CommandTest):
         command = DoCommand(["1"], self.todolist, self.out, self.error,
                             _yes_prompt)
         command.execute()
+        command.execute_post_archive_actions()
 
         result = "|  2| Bar p:1\n|  3| Baz p:1\nCompleted: x {today} Bar p:1\nCompleted: x {today} Baz p:1\nCompleted: x {today} Foo id:1\n".format(today=self.today)
 
@@ -86,6 +88,7 @@ class DoCommandTest(CommandTest):
         command = DoCommand(["1"], self.todolist, self.out, self.error,
                             _no_prompt)
         command.execute()
+        command.execute_post_archive_actions()
 
         result = "|  2| Bar p:1\n|  3| Baz p:1\nCompleted: x {} Foo id:1\n".format(self.today)
 
@@ -106,6 +109,7 @@ class DoCommandTest(CommandTest):
         command = DoCommand(["-f", "1"], self.todolist, self.out, self.error,
                             prompt)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertFalse(prompt_shown)
         self.assertEqual(self.errors, "")
@@ -121,6 +125,7 @@ class DoCommandTest(CommandTest):
         command = DoCommand(["--force", "1"], self.todolist, self.out,
                             self.error, prompt)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertFalse(prompt_shown)
         self.assertEqual(self.errors, "")
@@ -129,6 +134,7 @@ class DoCommandTest(CommandTest):
     def _recurrence_helper(self, p_flags):
         command = DoCommand(p_flags, self.todolist, self.out, self.error)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.errors, "")
@@ -140,7 +146,9 @@ class DoCommandTest(CommandTest):
         self._recurrence_helper(["4"])
 
         self.assertTrue(self.todolist.todo(4).is_completed())
-        result = "| 12| {today} Recurring! rec:1d due:{tomorrow}\nCompleted: x {today} Recurring! rec:1d\n".format(today=self.today, tomorrow=self.tomorrow)
+        result = """Completed: x {today} Recurring! rec:1d
+The following todo item(s) became active:
+| 12| {today} Recurring! rec:1d due:{tomorrow}\n""".format(today=self.today, tomorrow=self.tomorrow)
         self.assertEqual(self.output, result)
 
         todo = self.todolist.todo(10)
@@ -149,18 +157,23 @@ class DoCommandTest(CommandTest):
 
     def test_strict_recurrence1(self):
         self._recurrence_helper(["-s", "8"])
-        result = "| 12| {today} Strict due:2014-01-02 rec:1d\nCompleted: x {today} Strict due:2014-01-01 rec:1d\n".format(today=self.today)
+        result = """Completed: x {today} Strict due:2014-01-01 rec:1d
+The following todo item(s) became active:
+| 12| {today} Strict due:2014-01-02 rec:1d\n""".format(today=self.today)
         self.assertEqual(self.output, result)
 
     def test_strict_recurrence2(self):
         self._recurrence_helper(["--strict", "8"])
 
-        result = "| 12| {today} Strict due:2014-01-02 rec:1d\nCompleted: x {today} Strict due:2014-01-01 rec:1d\n".format(today=self.today)
+        result = """Completed: x {today} Strict due:2014-01-01 rec:1d
+The following todo item(s) became active:
+| 12| {today} Strict due:2014-01-02 rec:1d\n""".format(today=self.today)
         self.assertEqual(self.output, result)
 
     def test_invalid1(self):
         command = DoCommand(["99"], self.todolist, self.out, self.error)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertFalse(self.todolist.dirty)
         self.assertFalse(self.output)
@@ -169,6 +182,7 @@ class DoCommandTest(CommandTest):
     def test_invalid2(self):
         command = DoCommand(["AAA"], self.todolist, self.out, self.error)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertFalse(self.todolist.dirty)
         self.assertFalse(self.output)
@@ -178,6 +192,7 @@ class DoCommandTest(CommandTest):
         command = DoCommand(["01"], self.todolist, self.out, self.error,
                             _yes_prompt)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertFalse(self.todolist.dirty)
         self.assertFalse(self.output)
@@ -186,6 +201,7 @@ class DoCommandTest(CommandTest):
     def test_activated_todos1(self):
         command = DoCommand(["2"], self.todolist, self.out, self.error)
         command.execute()
+        command.execute_post_archive_actions()
 
         first_output = "Completed: x {} Bar p:1\n".format(self.today)
 
@@ -194,6 +210,7 @@ class DoCommandTest(CommandTest):
 
         command = DoCommand(["3"], self.todolist, self.out, self.error)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertEqual(self.output, first_output + "Completed: x {} Baz p:1\nThe following todo item(s) became active:\n|  1| Foo id:1\n".format(self.today))
         self.assertEqual(self.errors, "")
@@ -201,6 +218,7 @@ class DoCommandTest(CommandTest):
     def test_activated_todos2(self):
         command = DoCommand(["7"], self.todolist, self.out, self.error)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertEqual(self.output, "Completed: x {} Subtodo of inactive p:2\n".format(self.today))
         self.assertEqual(self.errors, "")
@@ -208,6 +226,7 @@ class DoCommandTest(CommandTest):
     def test_already_complete(self):
         command = DoCommand(["5"], self.todolist, self.out, self.error)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertFalse(self.todolist.dirty)
         self.assertEqual(self.todolist.todo(5).completion_date(),
@@ -218,6 +237,7 @@ class DoCommandTest(CommandTest):
     def test_do_regex1(self):
         command = DoCommand(["baz"], self.todolist, self.out, self.error)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertTrue(self.todolist.dirty)
         self.assertTrue(self.todolist.todo(3).is_completed())
@@ -229,6 +249,7 @@ class DoCommandTest(CommandTest):
         command = DoCommand(["-d", "2014-11-18", "3"], self.todolist, self.out,
                             self.error)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.output, "Completed: x 2014-11-18 Baz p:1\n")
@@ -238,6 +259,7 @@ class DoCommandTest(CommandTest):
         command = DoCommand(["-d", "2014-11-18", "1"], self.todolist, self.out,
                             self.error, _yes_prompt)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.output, "|  2| Bar p:1\n|  3| Baz p:1\nCompleted: x 2014-11-18 Bar p:1\nCompleted: x 2014-11-18 Baz p:1\nCompleted: x 2014-11-18 Foo id:1\n")
@@ -247,6 +269,7 @@ class DoCommandTest(CommandTest):
         command = DoCommand(["--date=2014-11-18", "3"], self.todolist,
                             self.out, self.error)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.output, "Completed: x 2014-11-18 Baz p:1\n")
@@ -256,6 +279,7 @@ class DoCommandTest(CommandTest):
         command = DoCommand(["-d", "foo", "3"], self.todolist, self.out,
                             self.error)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.output,
@@ -270,9 +294,12 @@ class DoCommandTest(CommandTest):
         command = DoCommand(["-d", self.yesterday, "4"], self.todolist,
                             self.out, self.error)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertTrue(self.todolist.dirty)
-        self.assertEqual(self.output, "| 12| {today} Recurring! rec:1d due:{today}\nCompleted: x {yesterday} Recurring! rec:1d\n".format(today=self.today, yesterday=self.yesterday))
+        self.assertEqual(self.output, """Completed: x {yesterday} Recurring! rec:1d
+The following todo item(s) became active:
+| 12| {today} Recurring! rec:1d due:{today}\n""".format(today=self.today, yesterday=self.yesterday))
         self.assertEqual(self.errors, "")
 
     def test_do_custom_date6(self):
@@ -284,9 +311,12 @@ class DoCommandTest(CommandTest):
         command = DoCommand(["-s", "-d", self.yesterday, "4"], self.todolist,
                             self.out, self.error)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertTrue(self.todolist.dirty)
-        self.assertEqual(self.output, "| 12| {today} Recurring! rec:1d due:{today}\nCompleted: x {yesterday} Recurring! rec:1d\n".format(today=self.today, yesterday=self.yesterday))
+        self.assertEqual(self.output, """Completed: x {yesterday} Recurring! rec:1d
+The following todo item(s) became active:
+| 12| {today} Recurring! rec:1d due:{today}\n""".format(today=self.today, yesterday=self.yesterday))
         self.assertEqual(self.errors, "")
 
     def test_do_custom_date7(self):
@@ -297,9 +327,12 @@ class DoCommandTest(CommandTest):
         command = DoCommand(["-s", "-d", self.yesterday, "8"], self.todolist,
                             self.out, self.error)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertTrue(self.todolist.dirty)
-        self.assertEqual(self.output, "| 12| {today} Strict due:2014-01-02 rec:1d\nCompleted: x {yesterday} Strict due:2014-01-01 rec:1d\n".format(today=self.today, yesterday=self.yesterday))
+        self.assertEqual(self.output, """Completed: x {yesterday} Strict due:2014-01-01 rec:1d
+The following todo item(s) became active:
+| 12| {today} Strict due:2014-01-02 rec:1d\n""".format(today=self.today, yesterday=self.yesterday))
         self.assertEqual(self.errors, "")
 
     def test_do_custom_date8(self):
@@ -309,10 +342,10 @@ class DoCommandTest(CommandTest):
         command = DoCommand(["-d", "yesterday", "3"], self.todolist, self.out,
                             self.error)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertTrue(self.todolist.dirty)
-        self.assertEqual(self.output,
-                         "Completed: x {} Baz p:1\n".format(self.yesterday))
+        self.assertEqual(self.output, "Completed: x {} Baz p:1\n".format(self.yesterday))
         self.assertEqual(self.errors, "")
 
     def test_do_custom_date9(self):
@@ -322,6 +355,7 @@ class DoCommandTest(CommandTest):
         command = DoCommand(["-d", "-1d", "3"], self.todolist, self.out,
                             self.error)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.output,
@@ -332,6 +366,7 @@ class DoCommandTest(CommandTest):
         command = DoCommand(["1", "3"], self.todolist, self.out, self.error,
                             _yes_prompt)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertTrue(self.todolist.todo(1).is_completed())
         self.assertTrue(self.todolist.todo(2).is_completed())
@@ -343,6 +378,7 @@ class DoCommandTest(CommandTest):
         command = DoCommand(["1", "3"], self.todolist, self.out, self.error,
                             _no_prompt)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertTrue(self.todolist.todo(1).is_completed())
         self.assertFalse(self.todolist.todo(2).is_completed())
@@ -354,6 +390,7 @@ class DoCommandTest(CommandTest):
         command = DoCommand(["3", "3"], self.todolist, self.out, self.error,
                             _no_prompt)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertTrue(self.todolist.todo(3).is_completed())
         self.assertEqual(self.output,
@@ -363,6 +400,7 @@ class DoCommandTest(CommandTest):
         command = DoCommand(["99", "3"], self.todolist, self.out, self.error,
                             _no_prompt)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertFalse(self.todolist.todo(3).is_completed())
         self.assertEqual(self.errors, "Invalid todo number given: 99.\n")
@@ -374,6 +412,7 @@ class DoCommandTest(CommandTest):
         command = DoCommand(["99", "15"], self.todolist, self.out, self.error,
                             _no_prompt)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertEqual(self.errors, "Invalid todo number given: 99.\nInvalid todo number given: 15.\n")
 
@@ -384,6 +423,7 @@ class DoCommandTest(CommandTest):
         command = DoCommand([u"Fo\u00d3B\u0105r", "Bar"], self.todolist,
                             self.out, self.error, None)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertFalse(self.todolist.dirty)
         self.assertEqual(self.errors,
@@ -393,6 +433,7 @@ class DoCommandTest(CommandTest):
         command = DoCommand(["-e", "@test"], self.todolist, self.out,
                             self.error, None)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.output, "Completed: x {t} a @test with due:2015-06-03\nCompleted: x {t} a @test with +project\n".format(t=self.today))
@@ -402,6 +443,7 @@ class DoCommandTest(CommandTest):
         command = DoCommand(["-e", "@test", "due:2015-06-03"], self.todolist,
                             self.out, self.error, None)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.output, "Completed: x {} a @test with due:2015-06-03\n".format(self.today))
@@ -411,6 +453,7 @@ class DoCommandTest(CommandTest):
         command = DoCommand(["-e", "@test", "due:2015-06-03", "+project"],
                             self.todolist, self.out, self.error, None)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertFalse(self.todolist.dirty)
 
@@ -419,6 +462,7 @@ class DoCommandTest(CommandTest):
         command = DoCommand(["-e", "Foo"], self.todolist, self.out, self.error,
                             None)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertFalse(self.todolist.dirty)
 
@@ -427,6 +471,7 @@ class DoCommandTest(CommandTest):
         command = DoCommand(["-xe", "Foo"], self.todolist, self.out,
                             self.error, _yes_prompt)
         command.execute()
+        command.execute_post_archive_actions()
 
         result = "|  2| Bar p:1\n|  3| Baz p:1\nCompleted: x {t} Bar p:1\nCompleted: x {t} Baz p:1\nCompleted: x {t} Foo id:1\n".format(t=self.today)
 
@@ -441,6 +486,7 @@ class DoCommandTest(CommandTest):
         command = DoCommand(["9"], self.todolist, self.out, self.error,
                             _no_prompt)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertEqual(self.output,
                          "Completed: x {} Invalid rec:1\n".format(self.today))
@@ -449,6 +495,7 @@ class DoCommandTest(CommandTest):
     def test_empty(self):
         command = DoCommand([], self.todolist, self.out, self.error)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertFalse(self.todolist.dirty)
         self.assertFalse(self.output)
@@ -462,6 +509,7 @@ class DoCommandTest(CommandTest):
     def test_help(self):
         command = DoCommand(["help"], self.todolist, self.out, self.error)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertEqual(self.output, "")
         self.assertEqual(self.errors,
