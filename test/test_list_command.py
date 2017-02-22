@@ -26,6 +26,7 @@ from test.command_testcase import CommandTest
 from test.facilities import load_file_to_todolist
 from topydo.commands.ListCommand import ListCommand
 from topydo.lib.Config import config
+from topydo.lib.TodoList import TodoList
 
 # We're searching for 'mock'
 # 'mock' was added as 'unittest.mock' in Python 3.3, but PyPy 3 is based on Python 3.2
@@ -418,6 +419,19 @@ class ListCommandTest(CommandTest):
         command.execute()
 
         self.assertEqual(self.output, "|  1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n")
+        self.assertEqual(self.errors, "")
+
+    def test_list49(self):
+        """ Only show the top todo. """
+        todolist = TodoList([
+            "This item is hidden h:1",
+            "This item is visible",
+        ])
+
+        command = ListCommand(["-n", "1"], todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEqual(self.output, '|  2| This item is visible\n')
         self.assertEqual(self.errors, "")
 
     def test_list_name(self):

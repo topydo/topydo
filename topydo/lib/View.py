@@ -33,7 +33,7 @@ class View(object):
         """ Applies the filters to the list of todo items. """
         result = p_todos
 
-        for _filter in self._filters:
+        for _filter in sorted(self._filters, key=lambda f: f.order):
             result = _filter.filter(result)
 
         return result

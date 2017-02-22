@@ -32,6 +32,10 @@ class Filter(object):
     def match(self, _):
         raise NotImplementedError
 
+    @property
+    def order(self):
+        return 50
+
 
 class NegationFilter(Filter):
     def __init__(self, p_filter):
@@ -107,6 +111,13 @@ class RelevanceFilter(Filter):
 
         return active and is_due
 
+    @property
+    def order(self):
+        """
+        Perform just after the DependencyFilter, but before any other filters.
+        """
+        return 20
+
 
 class DependencyFilter(Filter):
     """ Matches when a todo has no unfinished child tasks.  """
@@ -129,6 +140,14 @@ class DependencyFilter(Filter):
         uncompleted = [todo for todo in children if not todo.is_completed()]
 
         return not uncompleted
+
+    @property
+    def order(self):
+        """
+        Perform early before any other items are filtered out, possibly
+        breaking the dependency chain.
+        """
+        return 10
 
 
 class InstanceFilter(Filter):
@@ -184,6 +203,11 @@ class LimitFilter(Filter):
 
     def filter(self, p_todos):
         return p_todos[:self.limit] if self.limit >= 0 else p_todos
+
+    @property
+    def order(self):
+        # should be performed at the very last step
+        return 100
 
 _OPERATOR_MATCH = r"(?P<operator><=?|=|>=?|!)?"
 
