@@ -23,6 +23,7 @@ import getopt
 import sys
 
 from topydo.lib.Color import AbstractColor, Color
+from topydo.lib.TodoFile import TodoFileException
 from topydo.lib.TopydoString import TopydoString
 
 MAIN_OPTS = "ac:C:d:ht:v"
@@ -157,7 +158,12 @@ def _retrieve_archive():
     and the second element is a TodoFile.
     """
     archive_file = TodoFile.TodoFile(config().archive())
-    archive = TodoListBase.TodoListBase(archive_file.read())
+
+    try:
+        archive = TodoListBase.TodoListBase(archive_file.read())
+    except TodoFileException as err:
+        error('Could not read archive file: {}.'.format(err))
+        archive = None
 
     return (archive, archive_file)
 
@@ -234,7 +240,10 @@ class CLIApplicationBase(object):
             command.execute()
 
             if archive.dirty:
-                archive_file.write(archive.print_todos())
+                try:
+                    archive_file.write(archive.print_todos())
+                except TodoFileException as err:
+                    error('Item(s) could not be archived: {}'.format(str(err)))
 
     def _help(self, args):
         if args is None:
@@ -298,8 +307,12 @@ class CLIApplicationBase(object):
             if self.backup:
                 self.backup.save(self.todolist)
 
-            self.todofile.write(self.todolist.print_todos())
-            self.todolist.dirty = False
+            try:
+                self.todofile.write(self.todolist.print_todos())
+                self.todolist.dirty = False
+            except TodoFileException as err:
+                error(str(err))
+                error('The last operation could not be saved.')
 
         self.backup = None
 

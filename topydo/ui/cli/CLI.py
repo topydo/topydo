@@ -19,7 +19,7 @@
 import sys
 
 from topydo.ui.CLIApplicationBase import CLIApplicationBase, error
-from topydo.lib import TodoFile
+from topydo.lib.TodoFile import TodoFile, TodoFileException
 from topydo.lib.Config import config, ConfigError
 
 # First thing is to poke the configuration and check whether it's sane
@@ -32,7 +32,7 @@ except ConfigError as config_error:
     sys.exit(1)
 
 from topydo.Commands import get_subcommand
-from topydo.lib import TodoList
+from topydo.lib.TodoList import TodoList
 
 
 class CLIApplication(CLIApplicationBase):
@@ -47,8 +47,12 @@ class CLIApplication(CLIApplicationBase):
         """ Main entry function. """
         args = self._process_flags()
 
-        self.todofile = TodoFile.TodoFile(config().todotxt())
-        self.todolist = TodoList.TodoList(self.todofile.read())
+        self.todofile = TodoFile(config().todotxt())
+
+        try:
+            self.todolist = TodoList(self.todofile.read())
+        except TodoFileException as err:
+            error('Could not read todo file: {}'.format(str(err)))
 
         try:
             (subcommand, args) = get_subcommand(args)

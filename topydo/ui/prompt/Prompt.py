@@ -20,6 +20,7 @@ import os.path
 import shlex
 import sys
 
+from topydo.lib.TodoFile import TodoFileException
 from topydo.ui.CLIApplicationBase import CLIApplicationBase, error, GENERIC_HELP
 from topydo.ui.prompt.TopydoCompleter import TopydoCompleter
 from prompt_toolkit.shortcuts import prompt
@@ -60,7 +61,12 @@ class PromptApplication(CLIApplicationBase):
         instance.
         """
         self.todolist.erase()
-        self.todolist.add_list(self.todofile.read())
+
+        try:
+            self.todolist.add_list(self.todofile.read())
+        except TodoFileException as err:
+            error('Could not read todo file: {}'.format(str(err)))
+
         self.completer = TopydoCompleter(self.todolist)
 
     def run(self):

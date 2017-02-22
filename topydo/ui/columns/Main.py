@@ -30,8 +30,9 @@ from topydo.lib.Sorter import Sorter
 from topydo.lib.Filter import get_filter_list, RelevanceFilter, DependencyFilter
 from topydo.lib.Utils import get_terminal_size
 from topydo.lib.View import View
+from topydo.lib.TodoFile import TodoFileException
 from topydo.lib.TodoFileWatched import TodoFileWatched
-from topydo.lib import TodoList
+from topydo.lib.TodoList import TodoList
 from topydo.ui.CLIApplicationBase import CLIApplicationBase, error, GENERIC_HELP
 from topydo.ui.columns.CommandLineWidget import CommandLineWidget
 from topydo.ui.columns.ConsoleWidget import ConsoleWidget
@@ -110,14 +111,26 @@ class UIApplication(CLIApplicationBase):
                 self.alt_layout_path = value
 
         def callback():
-            self.todolist.erase()
-            self.todolist.add_list(self.todofile.read())
-            self._update_all_columns()
-            self._redraw()
+            try:
+                todos = self.todofile.read()
+                self.todolist.erase()
+                self.todolist.add_list(todos)
+                self._update_all_columns()
+                self._redraw()
+            except TodoFileException as err:
+                self._print_to_console(
+                    'Error: Could not read todo file: {}'.format(err))
 
         self.column_width = config().column_width()
         self.todofile = TodoFileWatched(config().todotxt(), callback)
-        self.todolist = TodoList.TodoList(self.todofile.read())
+
+        try:
+            todos = self.todofile.read()
+        except TodoFileException as err:
+            error('Error: Could not read todo file: {}'.format(err))
+            sys.exit(1)
+
+        self.todolist = TodoList(todos)
 
         self.marked_todos = set()
 

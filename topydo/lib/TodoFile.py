@@ -21,6 +21,9 @@ This module deals with todo.txt files.
 import codecs
 import os.path
 
+class TodoFileException(Exception):
+    pass
+
 
 class TodoFile(object):
     """
@@ -38,8 +41,9 @@ class TodoFile(object):
             todofile = codecs.open(self.path, 'r', encoding="utf-8")
             todos = todofile.readlines()
             todofile.close()
-        except IOError:
-            pass
+        except (PermissionError, IOError, UnicodeDecodeError) as err:
+            raise TodoFileException('Error while reading: {}'.format(str(err))) from err
+            todofile.close()
 
         return todos
 
@@ -51,14 +55,17 @@ class TodoFile(object):
         to the file.
         """
 
-        todofile = codecs.open(self.path, 'w', encoding="utf-8")
+        try:
+            todofile = codecs.open(self.path, 'w', encoding="utf-8")
 
-        if p_todos is list:
-            for todo in p_todos:
-                todofile.write(str(todo))
-        else:
-            todofile.write(p_todos)
+            if p_todos is list:
+                for todo in p_todos:
+                    todofile.write(str(todo))
+            else:
+                todofile.write(p_todos)
 
-        todofile.write("\n")
-
-        todofile.close()
+            todofile.write("\n")
+            todofile.close()
+        except (PermissionError, IOError) as err:
+            raise TodoFileException('Error while writing: {}'.format(str(err))) from err
+            todofile.close()
