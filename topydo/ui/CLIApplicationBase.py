@@ -27,7 +27,7 @@ from topydo.lib.TopydoString import TopydoString
 
 MAIN_OPTS = "ac:C:d:ht:v"
 MAIN_LONG_OPTS = ('version')
-READ_ONLY_COMMANDS = ('List', 'ListContext', 'ListProject')
+READ_ONLY_COMMANDS = ('list', 'listcontext', 'listproject')
 
 GENERIC_HELP="""Available commands:
 
@@ -245,9 +245,9 @@ class CLIApplicationBase(object):
 
     def is_read_only(self, p_command):
         """ Returns True when the given command class is read-only. """
-        read_only_commands = tuple(cmd + 'Command' for cmd in ('Revert', ) +
-                READ_ONLY_COMMANDS)
-        return p_command.__module__.endswith(read_only_commands)
+        read_only_commands = tuple(cmd for cmd
+                                   in ('revert', ) + READ_ONLY_COMMANDS)
+        return p_command.name() in read_only_commands
 
     def _backup(self, p_command, p_args=[], p_label=None):
         if config().backup_count() > 0 and p_command and not self.is_read_only(p_command):
