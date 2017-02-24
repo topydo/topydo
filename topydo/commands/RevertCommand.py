@@ -14,7 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from topydo.lib.Command import Command
+import arrow
+
+from topydo.lib.Command import Command, InvalidCommandArgument
 from topydo.lib.ChangeSet import ChangeSet
 from topydo.lib import TodoFile
 from topydo.lib import TodoList
@@ -28,33 +30,81 @@ class RevertCommand(Command):
                  p_prompt=lambda a: None):
         super().__init__(p_args, p_todolist, p_out, p_err, p_prompt)
 
-        self._archive = None
+        self._backup = None
         self._archive_file = None
+        self._archive = None
 
     def execute(self):
         if not super().execute():
             return False
 
+        self._backup = ChangeSet()
         archive_path = config().archive()
         if archive_path:
-            self._archive_file = TodoFile.TodoFile(archive_path)
+            self._archive_file = TodoFile.TodoFile(config().archive())
             self._archive = TodoList.TodoList(self._archive_file.read())
 
-        last_change = ChangeSet()
+        if len(self.args) > 0:
+            self._handle_args()
+        else:
+            try:
+                self._revert_last()
+            except (ValueError, KeyError):
+                self.error('No backup was found for the current state of '
+                           + config().todotxt())
 
+        self._backup.close()
+
+    def _revert(self, p_timestamp=None):
+        if p_timestamp is None:
+            self._backup.get_backup_from_todolist(self.todolist)
+        else:
+            self._backup.get_backup_from_timestamp(p_timestamp)
+
+        self._backup.apply(self.todolist, self._archive)
+        if self._archive:
+            self._archive_file.write(self._archive.print_todos())
+        self.out("Reverted to state before: " + self._backup.label)
+
+    def _revert_last(self):
+        self._revert()
+        self._backup.delete()
+
+    def _revert_to_specific(self, p_position):
+        timestamps = [timestamp for timestamp, _ in self._backup]
+        position = int(p_position)
         try:
-            last_change.get_backup(self.todolist)
-            last_change.apply(self.todolist, self._archive)
-            if self._archive:
-                self._archive_file.write(self._archive.print_todos())
-            last_change.delete()
+            timestamp = timestamps[position]
+            self._revert(timestamp)
+            for timestamp in timestamps[:position + 1]:
+                self._backup.get_backup_from_timestamp(timestamp)
+                self._backup.delete()
+        except IndexError:
+            self.error('Specified index is out range')
 
-            self.out("Successfully reverted: " + last_change.label)
-        except (ValueError, KeyError):
-            self.error('No backup was found for the current state of '
-                       + config().todotxt())
+    def _handle_args(self):
+        arg = self.argument(0)
+        try:
+            if arg == 'ls':
+                self._handle_ls()
+            elif arg.isdigit():
+                self._revert_to_specific(arg)
+            else:
+                raise InvalidCommandArgument
+        except InvalidCommandArgument:
+            self.error(self.usage())
 
-        last_change.close()
+    def _handle_ls(self):
+        num = 0
+        changes = []
+        for timestamp, change in self._backup:
+            label = change[2]
+            time = arrow.get(timestamp).format('YYYY-MM-DD HH:mm:ss')
+
+            changes.append(str(num) + ' | ' + time + ' | ' + label + '\n')
+            num += 1
+
+        self.out(''.join(changes).rstrip())
 
     def usage(self):
         return """Synopsis: revert"""

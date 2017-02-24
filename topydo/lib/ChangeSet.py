@@ -56,6 +56,11 @@ class ChangeSet(object):
 
         self._read()
 
+    def __iter__(self):
+        items = {key: self.backup_dict[key]
+                 for key in self.backup_dict if key != 'index'}.items()
+        return iter(sorted(items, reverse=True))
+
     def _read(self):
         """
         Reads backup file from json_file property and sets backup_dict property
@@ -158,7 +163,18 @@ class ChangeSet(object):
         for changeset in index[backup_limit:]:
             self.delete(changeset[0], p_write=False)
 
-    def get_backup(self, p_todolist):
+    def _get_backup(self):
+        d = self.backup_dict[self.timestamp]
+
+        self.todolist = TodoList(d[0])
+        self.archive = TodoList(d[1])
+        self.label = d[2]
+
+    def get_backup_from_timestamp(self, p_timestamp):
+        self.timestamp = p_timestamp
+        self._get_backup()
+
+    def get_backup_from_todolist(self, p_todolist):
         """
         Retrieves a backup for p_todolist from backup file and sets todolist,
         archive and label attributes to appropriate data from it.
@@ -167,12 +183,7 @@ class ChangeSet(object):
 
         index = self._get_index()
         self.timestamp = index[[change[1] for change in index].index(change_hash)][0]
-
-        d = self.backup_dict[self.timestamp]
-
-        self.todolist = TodoList(d[0])
-        self.archive = TodoList(d[1])
-        self.label = d[2]
+        self._get_backup()
 
     def apply(self, p_todolist, p_archive):
         """ Applies backup on supplied p_todolist. """
