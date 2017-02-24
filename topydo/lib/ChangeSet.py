@@ -1,5 +1,5 @@
 # Topydo - A todo.txt client written in Python.
-# Copyright (C) 2014 - 2015 Bram Schoenmakers <bram@topydo.org>
+# Copyright (C) 2014 - 2017 Bram Schoenmakers <bram@topydo.org>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -46,7 +46,7 @@ class ChangeSet(object):
     def __init__(self, p_todolist=None, p_archive=None, p_label=[]):
         self.todolist = deepcopy(p_todolist)
         self.archive = deepcopy(p_archive)
-        self.timestamp = str(int(time.time()))
+        self.timestamp = str(time.time())
         self.label = ' '.join(p_label)
 
         try:
@@ -55,6 +55,11 @@ class ChangeSet(object):
             self.json_file = open(get_backup_path(), 'w+b')
 
         self._read()
+
+    def __iter__(self):
+        items = {key: self.backup_dict[key]
+                 for key in self.backup_dict if key != 'index'}.items()
+        return iter(sorted(items, reverse=True))
 
     def _read(self):
         """
@@ -158,15 +163,18 @@ class ChangeSet(object):
         for changeset in index[backup_limit:]:
             self.delete(changeset[0], p_write=False)
 
-    def get_backup(self, p_todolist):
+    def read_backup(self, p_todolist=None, p_timestamp=None):
         """
-        Retrieves a backup for p_todolist from backup file and sets todolist,
-        archive and label attributes to appropriate data from it.
+        Retrieves a backup for p_timestamp or p_todolist (if p_timestamp is not
+        specified) from backup file and sets timestamp, todolist, archive and
+        label attributes to appropriate data from it.
         """
-        change_hash = hash_todolist(p_todolist)
-
-        index = self._get_index()
-        self.timestamp = index[[change[1] for change in index].index(change_hash)][0]
+        if not p_timestamp:
+            change_hash = hash_todolist(p_todolist)
+            index = self._get_index()
+            self.timestamp = index[[change[1] for change in index].index(change_hash)][0]
+        else:
+            self.timestamp = p_timestamp
 
         d = self.backup_dict[self.timestamp]
 
