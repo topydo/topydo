@@ -77,7 +77,7 @@ class RevertCommandTest(CommandTest):
         result = TodoList(self.archive_file.read()).print_todos()
 
         self.assertEqual(self.errors, "")
-        self.assertTrue(self.output.endswith("Successfully reverted: do 1\n"))
+        self.assertTrue(self.output.endswith("Reverted to state before: do 1\n"))
         self.assertEqual(result, "")
         self.assertEqual(self.todolist.print_todos(), "Foo\nBar\nBaz")
 
@@ -109,7 +109,7 @@ class RevertCommandTest(CommandTest):
         result = TodoList(self.archive_file.read()).print_todos()
 
         self.assertEqual(self.errors, "")
-        self.assertTrue(self.output.endswith("Successfully reverted: do Bar\n"))
+        self.assertTrue(self.output.endswith("Reverted to state before: do Bar\n"))
         self.assertEqual(result, "x {} Foo".format(self.today))
         self.assertEqual(self.todolist.print_todos(), "Bar\nBaz")
 
@@ -182,7 +182,7 @@ class RevertCommandTest(CommandTest):
         self.assertEqual(len(changesets), 4)
         self.assertEqual(result, [])
         self.assertEqual(self.errors, "")
-        self.assertTrue(self.output.endswith("Successfully reverted: add Seven\n"))
+        self.assertTrue(self.output.endswith("Reverted to state before: add Seven\n"))
 
     def test_revert05(self):
         """ Test for possible backup collisions """
@@ -219,31 +219,31 @@ class RevertCommandTest(CommandTest):
         revert_command = RevertCommand([], self.todolist, self.out, self.error, None)
         revert_command.execute()
         self.assertEqual(self.errors, "")
-        self.assertTrue(self.output.endswith("Successfully reverted: add Four\n"))
+        self.assertTrue(self.output.endswith("Reverted to state before: add Four\n"))
         self.assertEqual(self.todolist.print_todos(), "Foo\nBar\nBaz\n{t} One\n{t} Two".format(t=self.today))
 
         revert_command = RevertCommand([], self.todolist, self.out, self.error, None)
         revert_command.execute()
         self.assertEqual(self.errors, "")
-        self.assertTrue(self.output.endswith("Successfully reverted: delete Three\n"))
+        self.assertTrue(self.output.endswith("Reverted to state before: delete Three\n"))
         self.assertEqual(self.todolist.print_todos(), "Foo\nBar\nBaz\n{t} One\n{t} Two\n{t} Three".format(t=self.today))
 
         revert_command = RevertCommand([], self.todolist, self.out, self.error, None)
         revert_command.execute()
         self.assertEqual(self.errors, "")
-        self.assertTrue(self.output.endswith("Successfully reverted: add Three\n"))
+        self.assertTrue(self.output.endswith("Reverted to state before: add Three\n"))
         self.assertEqual(self.todolist.print_todos(), "Foo\nBar\nBaz\n{t} One\n{t} Two".format(t=self.today))
 
         revert_command = RevertCommand([], self.todolist, self.out, self.error, None)
         revert_command.execute()
         self.assertEqual(self.errors, "")
-        self.assertTrue(self.output.endswith("Successfully reverted: add Two\n"))
+        self.assertTrue(self.output.endswith("Reverted to state before: add Two\n"))
         self.assertEqual(self.todolist.print_todos(), "Foo\nBar\nBaz\n{t} One".format(t=self.today))
 
         revert_command = RevertCommand([], self.todolist, self.out, self.error, None)
         revert_command.execute()
         self.assertEqual(self.errors, "")
-        self.assertTrue(self.output.endswith("Successfully reverted: add One\n"))
+        self.assertTrue(self.output.endswith("Reverted to state before: add One\n"))
         self.assertEqual(self.todolist.print_todos(), "Foo\nBar\nBaz")
 
     def test_revert06(self):
