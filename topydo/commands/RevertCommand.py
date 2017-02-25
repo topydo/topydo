@@ -20,35 +20,41 @@ from topydo.lib import TodoFile
 from topydo.lib import TodoList
 from topydo.lib.Config import config
 
+
 class RevertCommand(Command):
-    def __init__(self, p_args, p_todolist, #pragma: no branch
+    def __init__(self, p_args, p_todolist,  # pragma: no branch
                  p_out=lambda a: None,
                  p_err=lambda a: None,
                  p_prompt=lambda a: None):
-        super().__init__(p_args, p_todolist, p_out, p_err,
-                p_prompt)
+        super().__init__(p_args, p_todolist, p_out, p_err, p_prompt)
+
+        self._archive = None
+        self._archive_file = None
 
     def execute(self):
         if not super().execute():
             return False
 
-        archive_file = TodoFile.TodoFile(config().archive())
-        archive = TodoList.TodoList(archive_file.read())
+        archive_path = config().archive()
+        if archive_path:
+            self._archive_file = TodoFile.TodoFile(archive_path)
+            self._archive = TodoList.TodoList(self._archive_file.read())
 
         last_change = ChangeSet()
 
         try:
             last_change.get_backup(self.todolist)
-            last_change.apply(self.todolist, archive)
-            archive_file.write(archive.print_todos())
+            last_change.apply(self.todolist, self._archive)
+            if self._archive:
+                self._archive_file.write(self._archive.print_todos())
             last_change.delete()
 
             self.out("Successfully reverted: " + last_change.label)
         except (ValueError, KeyError):
-            self.error('No backup was found for the current state of ' + config().todotxt())
+            self.error('No backup was found for the current state of '
+                       + config().todotxt())
 
         last_change.close()
-
 
     def usage(self):
         return """Synopsis: revert"""

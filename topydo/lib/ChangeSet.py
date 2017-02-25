@@ -176,10 +176,10 @@ class ChangeSet(object):
 
     def apply(self, p_todolist, p_archive):
         """ Applies backup on supplied p_todolist. """
-        if self.todolist:
+        if self.todolist and p_todolist:
             p_todolist.replace(self.todolist.todos())
 
-        if self.archive:
+        if self.archive and p_archive:
             p_archive.replace(self.archive.todos())
 
     def close(self):
