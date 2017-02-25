@@ -46,7 +46,7 @@ class ChangeSet(object):
     def __init__(self, p_todolist=None, p_archive=None, p_label=[]):
         self.todolist = deepcopy(p_todolist)
         self.archive = deepcopy(p_archive)
-        self.timestamp = str(int(time.time()))
+        self.timestamp = str(time.time())
         self.label = ' '.join(p_label)
 
         try:
