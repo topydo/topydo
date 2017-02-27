@@ -27,6 +27,7 @@ class Transaction(object):
         self._cmd = lambda op: p_subcommand(op, *p_env_args)
         self._todo_ids = p_todo_ids
         self._operations = []
+        self._post_archive_actions = []
         self._cmd_name = p_subcommand.name()
         self.label = []
 
@@ -72,5 +73,13 @@ class Transaction(object):
 
             if command.execute() is False:
                 return False
-            elif i == last_operation:
-                return True
+            else:
+                action = command.execute_post_archive_actions
+                self._post_archive_actions.append(action)
+
+                if i == last_operation:
+                    return True
+
+    def execute_post_archive_actions(self):
+        for action in self._post_archive_actions:
+            action()

@@ -90,6 +90,10 @@ class Command(object):
         """" Returns short-name of the command. """
         return cls.__name__[:-7].lower()  # strip 'Command'
 
+    def execute_post_archive_actions(self):
+        """ Runs various hooks that should take place after archiving. """
+        pass
+
     def usage(self):
         """ Returns a one-line synopsis for this command. """
         raise NotImplementedError

@@ -35,9 +35,8 @@ class DCommand(MultiCommand):
             p_args, p_todolist, p_out, p_err, p_prompt)
 
         self.force = False
+        self._delta = []
 
-        # to determine newly activated todos
-        self.length = len(self.todolist.todos())
 
     def get_flags(self):
         return ("f", ["force"])
@@ -76,11 +75,10 @@ class DCommand(MultiCommand):
                     self.execute_specific_core(child)
                     self.out(self.prefix() + self.printer.print_todo(child))
 
-    def _print_unlocked_todos(self, p_old, p_new):
-        delta = [todo for todo in p_new if todo not in p_old]
-        if delta:
+    def _print_unlocked_todos(self):
+        if self._delta:
             self.out("The following todo item(s) became active:")
-            self._print_list(delta)
+            self._print_list(self._delta)
 
     def _active_todos(self):
         """
@@ -92,7 +90,7 @@ class DCommand(MultiCommand):
         Since these todos pop up at the end of the list, we cut off the list
         just before that point.
         """
-        return [todo for todo in self.todolist.todos()[:self.length]
+        return [todo for todo in self.todolist.todos()
                 if not self._uncompleted_children(todo) and todo.is_active()]
 
     def condition(self, _):
@@ -125,4 +123,8 @@ class DCommand(MultiCommand):
                 self.error(self.condition_failed_text())
 
         current_active = self._active_todos()
-        self._print_unlocked_todos(old_active, current_active)
+        self._delta = [todo for todo in current_active
+                       if todo not in old_active]
+
+    def execute_post_archive_actions(self):
+        self._print_unlocked_todos()

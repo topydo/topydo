@@ -18,7 +18,6 @@ from datetime import date
 
 from topydo.lib.DCommand import DCommand
 from topydo.lib.printers.PrettyPrinter import PrettyPrinter
-from topydo.lib.prettyprinters.Numbers import PrettyPrinterNumbers
 from topydo.lib.Recurrence import NoRecurrenceException, advance_recurring_todo
 from topydo.lib.RelativeDate import relative_date_to_date
 from topydo.lib.Utils import date_string_to_date
@@ -67,9 +66,6 @@ class DoCommand(DCommand):
 
                 self.todolist.add_todo(new_todo)
 
-                printer = PrettyPrinter()
-                printer.add_filter(PrettyPrinterNumbers(self.todolist))
-                self.out(printer.print_todo(new_todo))
             except NoRecurrenceException:
                 self.error("Warning: todo item has an invalid recurrence pattern.")
 

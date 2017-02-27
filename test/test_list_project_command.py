@@ -26,6 +26,7 @@ class ListProjectCommandTest(CommandTest):
         todolist = load_file_to_todolist("test/data/TodoListTest.txt")
         command = ListProjectCommand([""], todolist, self.out, self.error)
         command.execute()
+        command.execute_post_archive_actions()  # test default implementation of post_archive
 
         self.assertEqual(self.output, "Project1\nProject2\n")
         self.assertFalse(self.errors)
@@ -34,6 +35,7 @@ class ListProjectCommandTest(CommandTest):
         todolist = load_file_to_todolist("test/data/TodoListTest.txt")
         command = ListProjectCommand(["aaa"], todolist, self.out, self.error)
         command.execute()
+        command.execute_post_archive_actions()
 
         self.assertEqual(self.output, "Project1\nProject2\n")
         self.assertFalse(self.errors)

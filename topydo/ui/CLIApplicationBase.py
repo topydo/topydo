@@ -27,7 +27,7 @@ from topydo.lib.TopydoString import TopydoString
 
 MAIN_OPTS = "ac:C:d:ht:v"
 MAIN_LONG_OPTS = ('version')
-READ_ONLY_COMMANDS = ('List', 'ListContext', 'ListProject')
+READ_ONLY_COMMANDS = ('list', 'listcontext', 'listproject')
 
 GENERIC_HELP="""Available commands:
 
@@ -174,6 +174,7 @@ class CLIApplicationBase(object):
         self.todolist = TodoList.TodoList([])
         self.todofile = None
         self.do_archive = True
+        self._post_archive_action = None
         self.backup = None
 
     def _usage(self):
@@ -244,9 +245,9 @@ class CLIApplicationBase(object):
 
     def is_read_only(self, p_command):
         """ Returns True when the given command class is read-only. """
-        read_only_commands = tuple(cmd + 'Command' for cmd in ('Revert', ) +
-                READ_ONLY_COMMANDS)
-        return p_command.__module__.endswith(read_only_commands)
+        read_only_commands = tuple(cmd for cmd
+                                   in ('revert', ) + READ_ONLY_COMMANDS)
+        return p_command.name() in read_only_commands
 
     def _backup(self, p_command, p_args=[], p_label=None):
         if config().backup_count() > 0 and p_command and not self.is_read_only(p_command):
@@ -271,6 +272,7 @@ class CLIApplicationBase(object):
             input)
 
         if command.execute() != False:
+            self._post_archive_action = command.execute_post_archive_actions
             return True
 
         return False
@@ -290,6 +292,8 @@ class CLIApplicationBase(object):
             elif config().archive() and self.backup:
                 archive = _retrieve_archive()[0]
                 self.backup.add_archive(archive)
+
+            self._post_archive_action()
 
             if config().keep_sorted():
                 from topydo.commands.SortCommand import SortCommand
