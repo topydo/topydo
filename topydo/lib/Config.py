@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import configparser
+from functools import lru_cache
 import os
 import re
 import shlex
@@ -328,6 +329,7 @@ class _Config:
         return [] if hidden_item_tags == '' else [tag.strip() for tag in
                                                   hidden_item_tags.split(',')]
 
+    @lru_cache(maxsize=26)
     def priority_color(self, p_priority):
         """
         Returns a dict with priorities as keys and color numbers as value.
@@ -394,6 +396,7 @@ class _Config:
         except ValueError:
             return self.defaults['add']['auto_creation_date'] == '1'
 
+    @lru_cache(maxsize=1)
     def aliases(self):
         """
         Returns dict with aliases names as keys and pairs of actual
@@ -429,6 +432,7 @@ class _Config:
         except ValueError:
             return int(self.defaults['columns']['column_width'])
 
+    @lru_cache(maxsize=1)
     def column_keymap(self):
         """ Returns keymap and keystates used in column mode """
         keystates = set()
