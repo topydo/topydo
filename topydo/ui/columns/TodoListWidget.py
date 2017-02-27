@@ -220,6 +220,13 @@ class TodoListWidget(urwid.LineBox):
             # No todo item selected
             pass
 
+    def _mark_all(self):
+        for todo in self.listbox.body:
+            if isinstance(todo, TodoWidget):
+                todo_id = str(self.view.todolist.number(todo.todo))
+                urwid.emit_signal(self, 'toggle_mark', todo_id, 'mark')
+                todo.mark()
+
     def _execute_on_selected(self, p_cmd_str, p_execute_signal):
         """
         Executes command specified by p_cmd_str on selected todo item.
@@ -272,7 +279,7 @@ class TodoListWidget(urwid.LineBox):
         'first_column', 'last_column', 'prev_column', 'next_column',
         'append_column', 'insert_column', 'edit_column', 'delete_column',
         'copy_column', swap_right', 'swap_left', 'postpone', 'postpone_s',
-        'pri', 'mark', 'reset' and 'repeat'.
+        'pri', 'mark', 'mark_all, 'reset' and 'repeat'.
         """
         column_actions = ['first_column',
                           'last_column',
@@ -302,6 +309,8 @@ class TodoListWidget(urwid.LineBox):
             pass
         elif p_action_str == 'mark':
             self._toggle_marked_status()
+        elif p_action_str == 'mark_all':
+            self._mark_all()
         elif p_action_str == 'repeat':
             self._repeat_cmd()
 
