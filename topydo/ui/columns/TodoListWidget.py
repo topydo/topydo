@@ -99,7 +99,8 @@ class TodoListWidget(urwid.LineBox):
                 self.todolist.append(urwid.Divider('-'))
 
             for todo in todos:
-                todowidget = TodoWidget.create(todo)
+                text_id = self.view.todolist.uid(todo)
+                todowidget = TodoWidget.create(todo, text_id)
                 todowidget.number = self.view.todolist.number(todo)
                 self.todolist.append(todowidget)
                 self.todolist.append(urwid.Divider('-'))

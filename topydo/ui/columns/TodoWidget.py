@@ -159,7 +159,7 @@ class TodoWidget(urwid.WidgetWrap):
     cache = {}
 
     @classmethod
-    def create(p_class, p_todo):
+    def create(p_class, p_todo, p_text_id):
         """
         Creates a TodoWidget instance for the given todo. Widgets are
         cached, the same object is returned for the same todo item.
@@ -174,8 +174,8 @@ class TodoWidget(urwid.WidgetWrap):
 
         source = p_todo.source()
 
-        if source in p_class.cache:
-            widget = p_class.cache[source]
+        if (source, p_text_id) in p_class.cache:
+            widget = p_class.cache[(source, p_text_id)]
 
             if p_todo is not widget.todo:
                 # same source text but different todo instance (could happen
@@ -188,7 +188,7 @@ class TodoWidget(urwid.WidgetWrap):
                 widget.update_progress()
         else:
             widget = p_class(p_todo)
-            p_class.cache[source] = widget
+            p_class.cache[(source, p_text_id)] = widget
 
         return widget
 
