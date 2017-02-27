@@ -70,7 +70,7 @@ class RevertCommand(Command):
 
     def _revert_to_specific(self, p_position):
         timestamps = [timestamp for timestamp, _ in self._backup]
-        position = int(p_position)
+        position = int(p_position) - 1
         try:
             timestamp = timestamps[position]
             self._revert(timestamp)
@@ -93,7 +93,7 @@ class RevertCommand(Command):
             self.error(self.usage())
 
     def _handle_ls(self):
-        num = 0
+        num = 1
         changes = []
         for timestamp, change in self._backup:
             label = change[2]
