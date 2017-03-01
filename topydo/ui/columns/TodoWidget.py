@@ -130,7 +130,7 @@ class TodoWidget(urwid.WidgetWrap):
 
     @property
     def number(self):
-        pass
+        return self.id_widget.text
 
     @number.setter
     def number(self, p_number):

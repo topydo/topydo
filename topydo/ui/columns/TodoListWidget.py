@@ -215,8 +215,7 @@ class TodoListWidget(urwid.LineBox):
 
     def _toggle_marked_status(self):
         try:
-            todo = self.listbox.focus.todo
-            todo_id = str(self.view.todolist.number(todo))
+            todo_id = self.listbox.focus.number
             if urwid.emit_signal(self, 'toggle_mark', todo_id):
                 self.listbox.focus.mark()
             else:
@@ -243,8 +242,7 @@ class TodoListWidget(urwid.LineBox):
         be one of 'execute_command' or 'execute_command_silent'.
         """
         try:
-            todo = self.listbox.focus.todo
-            todo_id = str(self.view.todolist.number(todo))
+            todo_id = self.listbox.focus.number
 
             urwid.emit_signal(self, p_execute_signal, p_cmd_str, todo_id)
 
@@ -371,8 +369,7 @@ class TodoListWidget(urwid.LineBox):
 
     def _repeat_cmd(self):
         try:
-            todo = self.listbox.focus.todo
-            todo_id = str(self.view.todolist.number(todo))
+            todo_id = self.listbox.focus.number
         except AttributeError:
             todo_id = None
 
