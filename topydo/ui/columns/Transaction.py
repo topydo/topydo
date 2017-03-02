@@ -23,6 +23,7 @@ class Transaction(object):
     todo items.
     """
     def __init__(self, p_subcommand=None, p_env_args=(), p_todo_ids=None):
+        self._todolist = p_env_args[0]
         self._multi = issubclass(p_subcommand, MultiCommand)
         self._cmd = lambda op: p_subcommand(op, *p_env_args)
         self._todo_ids = p_todo_ids
@@ -37,6 +38,8 @@ class Transaction(object):
         todo items contained in _todo_ids attribute and _subcommand
         attribute.
         """
+        operations_for_label = []
+
         if self._todo_ids:
             id_position = p_args.index('{}')
 
@@ -46,22 +49,29 @@ class Transaction(object):
                 self._operations.append(p_args)
             else:
                 for todo_id in self._todo_ids:
+                    todo = self._todolist.todo(todo_id)
                     operation_args = p_args[:]
-                    operation_args[id_position] = todo_id
+                    operation_args[id_position] = todo
+
+                    operation_label = p_args[:]
+                    operation_label[id_position] = todo_id
+
                     self._operations.append(operation_args)
+                    operations_for_label.append(operation_label)
         else:
             self._operations.append(p_args)
 
-        self._create_label()
+        self._create_label(operations_for_label)
 
-    def _create_label(self):
-        if len(self._operations) > 1:
-            for operation in self._operations:
+    def _create_label(self, p_operations):
+        operations = p_operations if p_operations else self._operations
+        if len(operations) > 1:
+            for operation in operations:
                 self.label.append(self._cmd_name + ' ' +
                                   ' '.join(operation) + ';')
         else:
             self.label.append(self._cmd_name + ' ' +
-                              ' '.join(self._operations[0]))
+                              ' '.join(operations[0]))
 
     def execute(self):
         """

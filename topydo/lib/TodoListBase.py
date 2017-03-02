@@ -125,16 +125,22 @@ class TodoListBase(object):
 
             return result
 
-        result = todo_by_uid(p_identifier)
+        try:
+            result = todo_by_uid(p_identifier)
 
-        if not result:
-            result = todo_by_linenumber(p_identifier)
+            if not result:
+                result = todo_by_linenumber(p_identifier)
 
-        if not result:
-            # convert integer to text so we pass on a valid regex
-            result = todo_by_regexp(str(p_identifier))
+            if not result:
+                # convert integer to text so we pass on a valid regex
+                result = todo_by_regexp(str(p_identifier))
 
-        return result
+            return result
+        except InvalidTodoException:
+            if p_identifier in self._todos:
+                return p_identifier
+            else:
+                raise
 
     def add(self, p_src):
         """
