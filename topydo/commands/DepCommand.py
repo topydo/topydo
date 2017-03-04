@@ -40,8 +40,31 @@ class DepCommand(Command):
         self.printer = pretty_printer_factory(self.todolist)
 
     def _handle_add(self):
+        from_todos = []
+        to_todos = []
+
         for from_todo, to_todo in self._get_todos():
             self.todolist.add_dependency(from_todo, to_todo)
+
+            if from_todo not in from_todos:
+                from_todos.append(from_todo)
+            if to_todo not in to_todos:
+                to_todos.append(to_todo)
+
+        if from_todos and to_todos:
+            if len(from_todos) == 1:
+                following = 'item'
+                depend = 'depends'
+            else:
+                following = 'items'
+                depend = 'depend'
+
+            item = 'item' if len(to_todos) == 1 else 'items'
+
+            self.out('Following todo ' + following + ':')
+            self.out(self.printer.print_list(from_todos))
+            self.out(depend +' now on todo ' + item +' below:')
+            self.out(self.printer.print_list(to_todos))
 
     def _handle_rm(self):
         for from_todo, to_todo in self._get_todos():
