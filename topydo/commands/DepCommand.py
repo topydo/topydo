@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from itertools import product
+
 from topydo.lib import Filter
 from topydo.lib.Command import Command, InvalidCommandArgument
 from topydo.lib.Config import config
@@ -39,6 +41,40 @@ class DepCommand(Command):
 
         self.printer = pretty_printer_factory(self.todolist)
 
+    def _preprocess(self):
+        operators = {
+            'after': 'get_after_deps',
+            'before': 'get_before_deps',
+            'child-of': 'get_child_deps',
+            'childof': 'get_child_deps',
+            'children-of': 'get_child_deps',
+            'childrenof': 'get_child_deps',
+            'parent-of': 'get_parent_deps',
+            'parentof': 'get_parent_deps',
+            'parents-of': 'get_parent_deps',
+            'parentsof': 'get_parent_deps',
+            'partof': 'get_before_deps',
+            'to': 'get_to',  # 'to' is special so don't be definitive here
+        }
+
+        try:
+            matching_operators = set(self.args[1:]).intersection(set(operators))
+            if len(matching_operators) == 1:
+                operator = matching_operators.pop()
+            else:
+                raise InvalidCommandArgument
+
+            operator_pos = self.args.index(operator)
+            first_todo_nrs = self.args[1:operator_pos]
+            second_todo_nrs = self.args[operator_pos + 1:]
+
+            if not first_todo_nrs and not second_todo_nrs:
+                raise InvalidCommandArgument
+
+            return (first_todo_nrs, second_todo_nrs, operators[operator])
+        except (KeyError, IndexError):
+            raise InvalidCommandArgument
+
     def _handle_add(self):
         from_todos = []
         to_todos = []
@@ -63,7 +99,7 @@ class DepCommand(Command):
 
             self.out('Following todo ' + following + ':')
             self.out(self.printer.print_list(from_todos))
-            self.out(depend +' now on todo ' + item +' below:')
+            self.out(depend + ' now on todo ' + item + ' below:')
             self.out(self.printer.print_list(to_todos))
 
     def _handle_rm(self):
@@ -74,49 +110,53 @@ class DepCommand(Command):
         result = []
 
         def get_parent_dependencies():
-            child_todo = first_todo
-            sibling_todo = second_todo
+            result = set()
+            child_todos = first_todos
+            sibling_todos = second_todos
 
-            return [(parent, child_todo) for parent in self.todolist.parents(sibling_todo)]
+            combinations = list(product(child_todos, sibling_todos))
+            for child, sibling in combinations:
+                result.update([(parent, child) for parent in self.todolist.parents(sibling)])
+
+            return list(result)
 
         def get_child_dependencies():
-            parent_todo = first_todo
-            sibling_todo = second_todo
+            result = set()
+            parent_todos = first_todos
+            sibling_todos = second_todos
 
-            return [(parent_todo, child) for child in self.todolist.children(sibling_todo)]
+            combinations = list(product(parent_todos, sibling_todos))
+            for parent, sibling in combinations:
+                result.update([(parent, child) for child in self.todolist.children(sibling)])
 
-        get_before_dependency = lambda: [(second_todo, first_todo)]
-        get_after_dependency = lambda: [(first_todo, second_todo)]
+            return list(result)
 
-        operators = {
-            "after": get_after_dependency,
-            "before": get_before_dependency,
-            "child-of": get_child_dependencies,
-            "childof": get_child_dependencies,
-            "children-of": get_child_dependencies,
-            "childrenof": get_child_dependencies,
-            "parent-of": get_parent_dependencies,
-            "parentof": get_parent_dependencies,
-            "parents-of": get_parent_dependencies,
-            "parentsof": get_parent_dependencies,
-            "partof": get_before_dependency,
-            "to": get_after_dependency,
+        def get_before_dependencies():
+            return list(product(second_todos, first_todos))
+
+        def get_after_dependencies():
+            return list(product(first_todos, second_todos))
+
+        actions = {
+            'get_after_deps': get_after_dependencies,
+            'get_before_deps': get_before_dependencies,
+            'get_child_deps': get_child_dependencies,
+            'get_parent_deps': get_parent_dependencies,
+            'get_to': get_after_dependencies,
         }
 
         try:
-            first_todo_nr = self.argument(1)
-            operator = self.argument(2)
-
-            if operator in operators:
-                second_todo_nr = self.argument(3)
+            if len(self.args) == 3:
+                first_todo_nrs = [self.argument(1)]
+                action = "get_to"
+                second_todo_nrs = [self.argument(2)]
             else:
-                second_todo_nr = self.argument(2)
-                operator = "to"
+                first_todo_nrs, second_todo_nrs, action = self._preprocess()
 
-            first_todo = self.todolist.todo(first_todo_nr)
-            second_todo = self.todolist.todo(second_todo_nr)
+            first_todos = [self.todolist.todo(todo_nr) for todo_nr in first_todo_nrs]
+            second_todos = [self.todolist.todo(todo_nr) for todo_nr in second_todo_nrs]
 
-            result = operators[operator]()
+            result = actions[action]()
         except (InvalidTodoException):
             self.error("Invalid todo number given.")
         except InvalidCommandArgument:
@@ -126,26 +166,50 @@ class DepCommand(Command):
 
     def _handle_ls(self):
         """ Handles the ls subsubcommand. """
-        try:
-            arg1 = self.argument(1)
-            arg2 = self.argument(2)
 
-            todos = []
-            if arg2 == 'to' or arg1 == 'before':
-                # dep ls 1 to OR dep ls before 1
-                number = arg1 if arg2 == 'to' else arg2
-                todo = self.todolist.todo(number)
-                todos = self.todolist.children(todo)
-            elif arg1 in {'to', 'after'}:
-                # dep ls to 1 OR dep ls after 1
-                number = arg2
-                todo = self.todolist.todo(number)
-                todos = self.todolist.parents(todo)
+        def get_parents():
+            parents = []
+            for todo in todos:
+                parents.append(self.todolist.parents(todo))
+
+            intersection = set(parents[0]).intersection(*parents)
+            return list(intersection)
+
+        def get_children():
+            children = []
+            for todo in todos:
+                children.append(self.todolist.children(todo))
+
+            intersection = set(children[0]).intersection(*children)
+            return list(intersection)
+
+        def handle_to_operator():
+            if self.argument(-1) == 'to':
+                return get_children()
             else:
+                return get_parents()
+
+        actions = {
+            'get_after_deps': get_parents,
+            'get_before_deps': get_children,
+            'get_child_deps': get_children,
+            'get_parent_deps': get_parents,
+            'get_to': handle_to_operator,
+        }
+
+        try:
+            first_todo_nrs, second_todo_nrs, action = self._preprocess()
+
+            if first_todo_nrs and second_todo_nrs:
                 raise InvalidCommandArgument
 
+            todo_nrs = second_todo_nrs or first_todo_nrs
+            todos = [self.todolist.todo(todo_nr) for todo_nr in todo_nrs]
+
+            result = actions[action]()
+
             sorter = Sorter(config().sort_string())
-            instance_filter = Filter.InstanceFilter(todos)
+            instance_filter = Filter.InstanceFilter(result)
             view = View(sorter, [instance_filter], self.todolist)
             self.out(self.printer.print_list(view.todos))
         except InvalidTodoException:
@@ -158,12 +222,15 @@ class DepCommand(Command):
         self.printer = DotPrinter(self.todolist)
 
         try:
-            arg = self.argument(1)
-            todo = self.todolist.todo(arg)
-            arg = self.argument(1)
-            todos = set([self.todolist.todo(arg)])
-            todos |= set(self.todolist.children(todo))
-            todos |= set(self.todolist.parents(todo))
+            todos = set()
+
+            for todo_nr in self.args[1:]:
+                todo = self.todolist.todo(todo_nr)
+
+                todos |= {todo}
+                todos |= set(self.todolist.children(todo))
+                todos |= set(self.todolist.parents(todo))
+
             todos = sorted(todos, key=lambda t: t.text())
 
             self.out(self.printer.print_list(todos))
@@ -171,7 +238,6 @@ class DepCommand(Command):
             self.error("Invalid todo number given.")
         except InvalidCommandArgument:
             self.error(self.usage())
-
 
     def execute(self):
         if not super().execute():
