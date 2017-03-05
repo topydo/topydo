@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from topydo.lib.MultiCommand import MultiCommand
+from topydo.commands.DepCommand import DepCommand
 
 
 class Transaction(object):
@@ -23,7 +24,7 @@ class Transaction(object):
     todo items.
     """
     def __init__(self, p_subcommand=None, p_env_args=(), p_todo_ids=None):
-        self._multi = issubclass(p_subcommand, MultiCommand)
+        self._multi = issubclass(p_subcommand, (MultiCommand, DepCommand))
         self._cmd = lambda op: p_subcommand(op, *p_env_args)
         self._todo_ids = p_todo_ids
         self._operations = []
