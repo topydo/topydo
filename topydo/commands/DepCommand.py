@@ -99,6 +99,8 @@ class DepCommand(Command):
             self.out(self.printer.print_list(from_todos))
             self.out(depend + ' now on todo ' + item + ' below:')
             self.out(self.printer.print_list(to_todos))
+        else:
+            self.out('')
 
     def _handle_rm(self):
         from_todos = set()
@@ -124,7 +126,8 @@ class DepCommand(Command):
             self.out(self.printer.print_list(from_todos))
             self.out(depend + ' on todo ' + item + ' below:')
             self.out(self.printer.print_list(to_todos))
-
+        else:
+            self.out('')
 
     def _get_todos(self):
         result = []
