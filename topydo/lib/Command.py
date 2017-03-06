@@ -77,8 +77,24 @@ class Command(object):
     def getopt(self, p_flags, p_long=None):
         p_long = p_long or []
 
+        args_copy = self.args[:]
+        non_safe_args = []
+        non_safe_arg_placeholder = '<non_text_arg>'
+
+        # filter out non-text args and store them for later use
+        for arg in args_copy:
+            if not isinstance(arg, str):
+                args_copy[args_copy.index(arg)] = non_safe_arg_placeholder
+                non_safe_args.append(arg)
         try:
-            result = getopt.getopt(self.args, p_flags, p_long)
+            flags, args = getopt.getopt(args_copy, p_flags, p_long)
+
+            # reapply non-text args in their proper place
+            for arg in args:
+                if arg == non_safe_arg_placeholder:
+                    args[args.index(arg)] = non_safe_args.pop(0)
+
+            result = (flags, args)
         except getopt.GetoptError as goe:
             self.error(str(goe))
             result = ([], self.args)
