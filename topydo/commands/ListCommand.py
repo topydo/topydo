@@ -59,7 +59,7 @@ class ListCommand(ExpressionCommand):
         return True
 
     def _process_flags(self):
-        opts, args = self.getopt('f:F:g:i:n:Ns:x')
+        opts, args = self.getopt('f:F:g:in:Ns:x')
 
         for opt, value in opts:
             if opt == '-x':
@@ -97,7 +97,10 @@ class ListCommand(ExpressionCommand):
                 except ValueError:
                     pass  # use default value in configuration
             elif opt == '-i':
-                self.ids = value.split(',')
+                self.ids = args
+                # don't show args to other filters - user requested only
+                # specific IDs
+                args = []
 
                 # when a user requests a specific ID, it should always be shown
                 self.show_all = True
@@ -176,7 +179,7 @@ class ListCommand(ExpressionCommand):
 
             Otherwise, it looks for a newline ('\n') in the environmental variable
             PS1.
-        '''  
+        '''
         lines_in_prompt = 1     # prompt is assumed to take up one line, even
                                 #   without any newlines in it
         if "win32" in sys.platform:
