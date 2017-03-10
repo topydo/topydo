@@ -630,13 +630,21 @@ class UIApplication(CLIApplicationBase):
     def _has_marked_todos(self):
         return len(self.marked_todos) > 0
 
-    def _process_mark_toggle(self, p_todo_id):
+    def _process_mark_toggle(self, p_todo_id, p_force=None):
         """
         Adds p_todo_id to marked_todos attribute and returns True if p_todo_id
-        is not already present. Removes p_todo_id from marked_todos and returns
+        is not already marked. Removes p_todo_id from marked_todos and returns
         False otherwise.
+
+        p_force parameter accepting 'mark' or 'unmark' values, if set, can force
+        desired action without checking p_todo_id presence in marked_todos.
         """
-        if p_todo_id not in self.marked_todos:
+        if p_force in ['mark', 'unmark']:
+            action = p_force
+        else:
+            action = 'mark' if p_todo_id not in self.marked_todos else 'unmark'
+
+        if action == 'mark':
             self.marked_todos.add(p_todo_id)
             return True
         else:
