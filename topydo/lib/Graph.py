@@ -197,10 +197,10 @@ class DirectedGraph(object):
         """ Prints the graph in Dot format. """
         out = 'digraph g {\n'
 
-        for from_node, neighbors in self._edges.items():
+        for from_node, neighbors in sorted(self._edges.items()):
             out += "  {}\n".format(from_node)
 
-            for neighbor in neighbors:
+            for neighbor in sorted(neighbors):
                 out += "  {} -> {}".format(from_node, neighbor)
 
                 edge_id = self.edge_id(from_node, neighbor)
