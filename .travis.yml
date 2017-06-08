@@ -12,8 +12,6 @@ matrix:
   include:
     - python: "pypy3"
       env: GREEN_OPTS='--processes 1'
-  allow_failures:
-    - python: "3.6"
 
 install:
   - "python -m pip install pip --upgrade"
