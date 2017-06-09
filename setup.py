@@ -40,7 +40,7 @@ setup(
         'columns': ['urwid >= 1.3.0', WATCHDOG],
         'ical': [ICALENDAR],
         'prompt': ['prompt_toolkit >= 0.53', WATCHDOG],
-        'test': ['coverage>=4.3', 'freezegun', 'green', ICALENDAR],
+        'test': ['coverage>=4.3', 'freezegun', 'green', ICALENDAR, 'pylint>=1.7.1'],
         'test:python_version=="3.2"': ['mock'],
     },
     entry_points= {
