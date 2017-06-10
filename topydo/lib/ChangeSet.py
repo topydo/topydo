@@ -163,27 +163,19 @@ class ChangeSet(object):
         for changeset in index[backup_limit:]:
             self.delete(changeset[0], p_write=False)
 
-    def _get_backup(self):
+    def get_backup(self, p_todolist=None, p_timestamp=None):
+        if not p_timestamp:
+            change_hash = hash_todolist(p_todolist)
+            index = self._get_index()
+            self.timestamp = index[[change[1] for change in index].index(change_hash)][0]
+        else:
+            self.timestamp = p_timestamp
+
         d = self.backup_dict[self.timestamp]
 
         self.todolist = TodoList(d[0])
         self.archive = TodoList(d[1])
         self.label = d[2]
-
-    def get_backup_from_timestamp(self, p_timestamp):
-        self.timestamp = p_timestamp
-        self._get_backup()
-
-    def get_backup_from_todolist(self, p_todolist):
-        """
-        Retrieves a backup for p_todolist from backup file and sets todolist,
-        archive and label attributes to appropriate data from it.
-        """
-        change_hash = hash_todolist(p_todolist)
-
-        index = self._get_index()
-        self.timestamp = index[[change[1] for change in index].index(change_hash)][0]
-        self._get_backup()
 
     def apply(self, p_todolist, p_archive):
         """ Applies backup on supplied p_todolist. """

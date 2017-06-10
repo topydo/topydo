@@ -16,8 +16,8 @@
 
 import arrow
 
-from topydo.lib.Command import Command, InvalidCommandArgument
 from topydo.lib.ChangeSet import ChangeSet
+from topydo.lib.Command import Command, InvalidCommandArgument
 from topydo.lib import TodoFile
 from topydo.lib import TodoList
 from topydo.lib.Config import config
@@ -56,14 +56,12 @@ class RevertCommand(Command):
         self._backup.close()
 
     def _revert(self, p_timestamp=None):
-        if p_timestamp is None:
-            self._backup.get_backup_from_todolist(self.todolist)
-        else:
-            self._backup.get_backup_from_timestamp(p_timestamp)
-
+        self._backup.get_backup(self.todolist, p_timestamp)
         self._backup.apply(self.todolist, self._archive)
+
         if self._archive:
             self._archive_file.write(self._archive.print_todos())
+
         self.out("Reverted to state before: " + self._backup.label)
 
     def _revert_last(self):
@@ -77,7 +75,7 @@ class RevertCommand(Command):
             timestamp = timestamps[position]
             self._revert(timestamp)
             for timestamp in timestamps[:position + 1]:
-                self._backup.get_backup_from_timestamp(timestamp)
+                self._backup.get_backup(p_timestamp=timestamp)
                 self._backup.delete()
         except IndexError:
             self.error('Specified index is out range')
