@@ -94,15 +94,12 @@ class RevertCommand(Command):
 
     def _handle_ls(self):
         num = 1
-        changes = []
         for timestamp, change in self._backup:
             label = change[2]
             time = arrow.get(timestamp).format('YYYY-MM-DD HH:mm:ss')
 
-            changes.append(str(num) + ' | ' + time + ' | ' + label + '\n')
+            self.out('{0: >3}| {1} | {2}'.format(str(num), time, label))
             num += 1
-
-        self.out(''.join(changes).rstrip())
 
     def usage(self):
         return """Synopsis: revert"""
