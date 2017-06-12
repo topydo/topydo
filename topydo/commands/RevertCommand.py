@@ -56,7 +56,7 @@ class RevertCommand(Command):
         self._backup.close()
 
     def _revert(self, p_timestamp=None):
-        self._backup.get_backup(self.todolist, p_timestamp)
+        self._backup.read_backup(self.todolist, p_timestamp)
         self._backup.apply(self.todolist, self._archive)
 
         if self._archive:
@@ -75,7 +75,7 @@ class RevertCommand(Command):
             timestamp = timestamps[position]
             self._revert(timestamp)
             for timestamp in timestamps[:position + 1]:
-                self._backup.get_backup(p_timestamp=timestamp)
+                self._backup.read_backup(p_timestamp=timestamp)
                 self._backup.delete()
         except IndexError:
             self.error('Specified index is out range')

@@ -163,7 +163,7 @@ class ChangeSet(object):
         for changeset in index[backup_limit:]:
             self.delete(changeset[0], p_write=False)
 
-    def get_backup(self, p_todolist=None, p_timestamp=None):
+    def read_backup(self, p_todolist=None, p_timestamp=None):
         if not p_timestamp:
             change_hash = hash_todolist(p_todolist)
             index = self._get_index()
