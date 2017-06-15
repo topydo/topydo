@@ -19,6 +19,7 @@ import tempfile
 import unittest
 
 from datetime import date
+from freezegun import freeze_time
 from glob import glob
 from uuid import uuid4
 
@@ -33,6 +34,25 @@ from topydo.lib.Config import config
 from topydo.lib.TodoFile import TodoFile
 from topydo.lib.TodoList import TodoList
 
+
+class BackupSimulator(object):
+    def __init__(self, p_todolist, p_archive, p_timestamp, p_label):
+        self.backup = ChangeSet(p_todolist, p_archive, p_label)
+        self.backup.timestamp = p_timestamp
+
+    def save(self, p_todolist):
+        self.backup.save(p_todolist)
+
+
+def command_executer(p_cmd, p_args, p_todolist, p_archive=None, *params):
+    command = p_cmd(p_args, p_todolist, *params)
+    command.execute()
+    if p_archive:
+        archive_command = ArchiveCommand(p_todolist, p_archive)
+        archive_command.execute()
+
+
+@freeze_time('2015, 11, 06')
 class RevertCommandTest(CommandTest):
     def setUp(self):
         super().setUp()
@@ -57,14 +77,8 @@ class RevertCommandTest(CommandTest):
         self.archive = TodoList([])
 
     def test_revert01(self):
-        backup = ChangeSet(p_label=['do 1'])
-        backup.add_todolist(self.todolist)
-        backup.add_archive(self.archive)
-        backup.timestamp = '1'
-        command = DoCommand(["1"], self.todolist, self.out, self.error, None)
-        command.execute()
-        archive_command = ArchiveCommand(self.todolist, self.archive)
-        archive_command.execute()
+        backup = BackupSimulator(self.todolist, self.archive, '1', ['do 1'])
+        command_executer(DoCommand, ["1"], self.todolist, self.archive, self.out, self.error, None)
         self.archive_file.write(self.archive.print_todos())
         backup.save(self.todolist)
 
@@ -82,21 +96,17 @@ class RevertCommandTest(CommandTest):
         self.assertEqual(self.todolist.print_todos(), "Foo\nBar\nBaz")
 
     def test_revert02(self):
-        backup = ChangeSet(self.todolist, self.archive, ['do 1'])
-        backup.timestamp = '1'
-        command1 = DoCommand(["1"], self.todolist, self.out, self.error, None)
-        command1.execute()
-        archive_command1 = ArchiveCommand(self.todolist, self.archive)
-        archive_command1.execute()
+        backup = BackupSimulator(self.todolist, self.archive, '1', ['do 1'])
+        command_executer(DoCommand, ["1"], self.todolist, self.archive, self.out, self.error, None)
         self.archive_file.write(self.archive.print_todos())
         backup.save(self.todolist)
 
-        backup = ChangeSet(self.todolist, self.archive, ['do Bar'])
+        # Use add_todolist and add_archive to also cover them
+        backup = ChangeSet(p_label=['do Bar'])
+        backup.add_todolist(self.todolist)
+        backup.add_archive(self.archive)
         backup.timestamp = '2'
-        command2 = DoCommand(["Bar"], self.todolist, self.out, self.error, None)
-        command2.execute()
-        archive_command2 = ArchiveCommand(self.todolist, self.archive)
-        archive_command2.execute()
+        command_executer(DoCommand, ["Bar"], self.todolist, self.archive, self.out, self.error, None)
         self.archive_file.write(self.archive.print_todos())
         backup.save(self.todolist)
 
@@ -122,49 +132,35 @@ class RevertCommandTest(CommandTest):
 
     def test_revert04(self):
         """ Test trimming of the backup_file """
-        backup = ChangeSet(self.todolist, self.archive, ['add One'])
-        backup.timestamp = '1'
-        command1 = AddCommand(["One"], self.todolist, self.out, self.error, None)
-        command1.execute()
+        backup = BackupSimulator(self.todolist, self.archive, '1', ['add One'])
+        command_executer(AddCommand, ["One"], self.todolist, None, self.out, self.error, None)
         backup.save(self.todolist)
 
-        backup = ChangeSet(self.todolist, self.archive, ['add Two'])
-        backup.timestamp = '2'
-        command2 = AddCommand(["Two"], self.todolist, self.out, self.error, None)
-        command2.execute()
+        backup = BackupSimulator(self.todolist, self.archive, '2', ['add Two'])
+        command_executer(AddCommand, ["Two"], self.todolist, None, self.out, self.error, None)
         backup.save(self.todolist)
 
-        backup = ChangeSet(self.todolist, self.archive, ['add Three'])
-        backup.timestamp = '3'
-        command3 = AddCommand(["Three"], self.todolist, self.out, self.error, None)
-        command3.execute()
+        backup = BackupSimulator(self.todolist, self.archive, '3', ['add Three'])
+        command_executer(AddCommand, ["Three"], self.todolist, None, self.out, self.error, None)
         backup.save(self.todolist)
 
-        backup = ChangeSet(self.todolist, self.archive, ['add Four'])
-        backup.timestamp = '4'
-        command4 = AddCommand(["Four"], self.todolist, self.out, self.error, None)
-        command4.execute()
+        backup = BackupSimulator(self.todolist, self.archive, '4', ['add Four'])
+        command_executer(AddCommand, ["Four"], self.todolist, None, self.out, self.error, None)
         backup.save(self.todolist)
 
-        backup = ChangeSet(self.todolist, self.archive, ['add Five'])
-        backup.timestamp = '5'
-        command5 = AddCommand(["Five"], self.todolist, self.out, self.error, None)
-        command5.execute()
+        backup = BackupSimulator(self.todolist, self.archive, '5', ['add Five'])
+        command_executer(AddCommand, ["Five"], self.todolist, None, self.out, self.error, None)
         backup.save(self.todolist)
 
         result = len(ChangeSet().backup_dict.keys())
         self.assertEqual(result, 6)
 
-        backup = ChangeSet(self.todolist, self.archive, ['add Six'])
-        backup.timestamp = '6'
-        command6 = AddCommand(["Six"], self.todolist, self.out, self.error, None)
-        command6.execute()
+        backup = BackupSimulator(self.todolist, self.archive, '6', ['add Six'])
+        command_executer(AddCommand, ["Six"], self.todolist, None, self.out, self.error, None)
         backup.save(self.todolist)
 
-        backup = ChangeSet(self.todolist, self.archive, ['add Seven'])
-        backup.timestamp = '7'
-        command7 = AddCommand(["Seven"], self.todolist, self.out, self.error, None)
-        command7.execute()
+        backup = BackupSimulator(self.todolist, self.archive, '7', ['add Seven'])
+        command_executer(AddCommand, ["Seven"], self.todolist, None, self.out, self.error, None)
         backup.save(self.todolist)
 
         result = len(ChangeSet().backup_dict.keys())
@@ -186,34 +182,24 @@ class RevertCommandTest(CommandTest):
 
     def test_revert05(self):
         """ Test for possible backup collisions """
-        backup = ChangeSet(self.todolist, self.archive, ['add One'])
-        backup.timestamp = '1'
-        command1 = AddCommand(["One"], self.todolist, self.out, self.error, None)
-        command1.execute()
+        backup = BackupSimulator(self.todolist, self.archive, '1', ['add One'])
+        command_executer(AddCommand, ["One"], self.todolist, None, self.out, self.error, None)
         backup.save(self.todolist)
 
-        backup = ChangeSet(self.todolist, self.archive, ['add Two'])
-        backup.timestamp = '2'
-        command2 = AddCommand(["Two"], self.todolist, self.out, self.error, None)
-        command2.execute()
+        backup = BackupSimulator(self.todolist, self.archive, '2', ['add Two'])
+        command_executer(AddCommand, ["Two"], self.todolist, None, self.out, self.error, None)
         backup.save(self.todolist)
 
-        backup = ChangeSet(self.todolist, self.archive, ['add Three'])
-        backup.timestamp = '3'
-        command3 = AddCommand(["Three"], self.todolist, self.out, self.error, None)
-        command3.execute()
+        backup = BackupSimulator(self.todolist, self.archive, '3', ['add Three'])
+        command_executer(AddCommand, ["Three"], self.todolist, None, self.out, self.error, None)
         backup.save(self.todolist)
 
-        backup = ChangeSet(self.todolist, self.archive, ['delete Three'])
-        backup.timestamp = '4'
-        command4 = DeleteCommand(["Three"], self.todolist, self.out, self.error, None)
-        command4.execute()
+        backup = BackupSimulator(self.todolist, self.archive, '4', ['delete Three'])
+        command_executer(DeleteCommand, ["Three"], self.todolist, None, self.out, self.error, None)
         backup.save(self.todolist)
 
-        backup = ChangeSet(self.todolist, self.archive, ['add Four'])
-        backup.timestamp = '5'
-        command4 = AddCommand(["Four"], self.todolist, self.out, self.error, None)
-        command4.execute()
+        backup = BackupSimulator(self.todolist, self.archive, '5', ['add Four'])
+        command_executer(AddCommand, ["Four"], self.todolist, None, self.out, self.error, None)
         backup.save(self.todolist)
 
         revert_command = RevertCommand([], self.todolist, self.out, self.error, None)
@@ -248,28 +234,20 @@ class RevertCommandTest(CommandTest):
 
     def test_revert06(self):
         """ Test attempt of deletion with non-existing backup key"""
-        backup = ChangeSet(self.todolist, self.archive, ['add One'])
-        backup.timestamp = '1'
-        command1 = AddCommand(["One"], self.todolist, self.out, self.error, None)
-        command1.execute()
+        backup = BackupSimulator(self.todolist, self.archive, '1', ['add One'])
+        command_executer(AddCommand, ["One"], self.todolist, None, self.out, self.error, None)
         backup.save(self.todolist)
 
-        backup = ChangeSet(self.todolist, self.archive, ['add Two'])
-        backup.timestamp = '2'
-        command2 = AddCommand(["Two"], self.todolist, self.out, self.error, None)
-        command2.execute()
+        backup = BackupSimulator(self.todolist, self.archive, '2', ['add Two'])
+        command_executer(AddCommand, ["Two"], self.todolist, None, self.out, self.error, None)
         backup.save(self.todolist)
 
-        backup = ChangeSet(self.todolist, self.archive, ['add Three'])
-        backup.timestamp = '3'
-        command3 = AddCommand(["Three"], self.todolist, self.out, self.error, None)
-        command3.execute()
+        backup = BackupSimulator(self.todolist, self.archive, '3', ['add Three'])
+        command_executer(AddCommand, ["Three"], self.todolist, None, self.out, self.error, None)
         backup.save(self.todolist)
 
-        backup = ChangeSet(self.todolist, self.archive, ['delete Three'])
-        backup.timestamp = '4'
-        command4 = DeleteCommand(["Three"], self.todolist, self.out, self.error, None)
-        command4.execute()
+        backup = BackupSimulator(self.todolist, self.archive, '4', ['delete Three'])
+        command_executer(DeleteCommand, ["Three"], self.todolist, None, self.out, self.error, None)
         backup.save(self.todolist)
 
         backup = ChangeSet()
@@ -288,8 +266,7 @@ class RevertCommandTest(CommandTest):
         """ Test backup when no archive file is set """
         backup = ChangeSet(self.todolist, None, ['add One'])
         backup.timestamp = '1'
-        command1 = AddCommand(["One"], self.todolist, self.out, self.error, None)
-        command1.execute()
+        command_executer(AddCommand, ["One"], self.todolist, None, self.out, self.error, None)
         backup.save(self.todolist)
 
         changesets = list(backup.backup_dict.keys())
@@ -297,6 +274,74 @@ class RevertCommandTest(CommandTest):
 
         self.assertEqual(len(changesets), 1)
         self.assertEqual(self.errors, "")
+
+    def test_revert_ls(self):
+        backup = BackupSimulator(self.todolist, self.archive, '1', ['add One'])
+        command_executer(AddCommand, ["One"], self.todolist, None, self.out, self.error, None)
+        backup.save(self.todolist)
+
+        backup = BackupSimulator(self.todolist, self.archive, '2', ['add Two'])
+        command_executer(AddCommand, ["Two"], self.todolist, None, self.out, self.error, None)
+        backup.save(self.todolist)
+
+        backup = BackupSimulator(self.todolist, self.archive, '3', ['add Three'])
+        command_executer(AddCommand, ["Three"], self.todolist, None, self.out, self.error, None)
+        backup.save(self.todolist)
+
+        backup = BackupSimulator(self.todolist, self.archive, '4', ['delete Three'])
+        command_executer(DeleteCommand, ["Three"], self.todolist, None, self.out, self.error, None)
+        backup.save(self.todolist)
+
+        backup = BackupSimulator(self.todolist, self.archive, '5', ['add Four'])
+        command_executer(AddCommand, ["Four"], self.todolist, None, self.out, self.error, None)
+        backup.save(self.todolist)
+
+        command_executer(RevertCommand, ['ls'], self.todolist, None, self.out, self.error, None)
+
+        self.assertEqual(self.errors, "")
+        self.assertTrue(self.output.endswith("""  1| 1970-01-01 00:00:05 | add Four
+  2| 1970-01-01 00:00:04 | delete Three
+  3| 1970-01-01 00:00:03 | add Three
+  4| 1970-01-01 00:00:02 | add Two
+  5| 1970-01-01 00:00:01 | add One\n"""))
+
+    def test_revert_08(self):
+        backup = BackupSimulator(self.todolist, self.archive, '1', ['add One'])
+        command_executer(AddCommand, ["One"], self.todolist, None, self.out, self.error, None)
+        backup.save(self.todolist)
+
+        backup = BackupSimulator(self.todolist, self.archive, '2', ['add Two'])
+        command_executer(AddCommand, ["Two"], self.todolist, None, self.out, self.error, None)
+        backup.save(self.todolist)
+
+        backup = BackupSimulator(self.todolist, self.archive, '3', ['add Three'])
+        command_executer(AddCommand, ["Three"], self.todolist, None, self.out, self.error, None)
+        backup.save(self.todolist)
+
+        backup = BackupSimulator(self.todolist, self.archive, '4', ['delete Three'])
+        command_executer(DeleteCommand, ["Three"], self.todolist, None, self.out, self.error, None)
+        backup.save(self.todolist)
+
+        backup = BackupSimulator(self.todolist, self.archive, '5', ['add Four'])
+        command_executer(AddCommand, ["Four"], self.todolist, None, self.out, self.error, None)
+        backup.save(self.todolist)
+
+        command_executer(RevertCommand, ['3'], self.todolist, None, self.out, self.error, None)
+
+        self.assertEqual(self.errors, "")
+        self.assertTrue(self.output.endswith("Reverted to state before: add Three\n"))
+        self.assertEqual(self.todolist.print_todos(), "Foo\nBar\nBaz\n2015-11-06 One\n2015-11-06 Two")
+
+    def test_revert_invalid(self):
+        """ Test invalid input for revert. """
+        command_executer(RevertCommand, ["foo"], self.todolist, None, self.out, self.error, None)
+        self.assertEqual(self.errors, RevertCommand([], self.todolist).usage() + '\n')
+
+    def test_revert_out_of_range(self):
+        command_executer(RevertCommand, ["158"], self.todolist, None, self.out, self.error, None)
+        self.assertEqual(self.errors, "Specified index is out range\n")
+
+
 
     def test_backup_config01(self):
         config(p_overrides={('topydo', 'backup_count'): '1'})
