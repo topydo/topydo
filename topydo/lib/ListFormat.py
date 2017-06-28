@@ -176,6 +176,12 @@ class ListFormatParser(object):
             'K': lambda t: ' '.join([u'{}:{}'.format(tag, value)
                                      for tag, value in sorted(t.tags())]),
 
+            # line number
+            'n': lambda t: str(self.todolist.linenumber(t)),
+
+            # line number, pre-filled with 1 or 2 spaces if its length <3
+            'N': lambda t: _filler(str(self.todolist.linenumber(t)), 3),
+
             # priority
             'p': lambda t: t.priority() if t.priority() else '',
 
@@ -196,6 +202,12 @@ class ListFormatParser(object):
 
             # relative start date
             'T': lambda t: humanize_date(t.start_date()) if t.start_date() else '',
+
+            # unique text ID
+            'u': lambda t: self.todolist.uid(t),
+
+            # unique text ID, pre-filled with 1 or 2 spaces if its length <3
+            'U': lambda t: _filler(self.todolist.uid(t), 3),
 
             # absolute completion date
             'x': lambda t: 'x ' + t.completion_date().isoformat() if t.is_completed() else '',

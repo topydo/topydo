@@ -247,18 +247,33 @@ class TodoListBase(object):
             p_todo.set_priority(p_priority)
             self.dirty = True
 
+    def linenumber(self, p_todo):
+        """
+        Returns the line number of the todo item.
+        """
+        try:
+            return self._todos.index(p_todo) + 1
+        except ValueError as ex:
+            raise InvalidTodoException from ex
+
+    def uid(self, p_todo):
+        """
+        Returns the unique text-based ID for a todo item.
+        """
+        try:
+            return self._todo_id_map[p_todo]
+        except KeyError as ex:
+            raise InvalidTodoException from ex
+
     def number(self, p_todo):
         """
         Returns the line number or text ID of a todo (depends on the
         configuration.
         """
-        try:
-            if config().identifiers() == 'text':
-                return self._todo_id_map[p_todo]
-            else:
-                return self._todos.index(p_todo) + 1
-        except (ValueError, KeyError) as ex:
-            raise InvalidTodoException from ex
+        if config().identifiers() == "text":
+            return self.uid(p_todo)
+        else:
+            return self.linenumber(p_todo)
 
     def _update_todo_ids(self):
         # the idea is to have a hash that is independent of the position of the

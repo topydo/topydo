@@ -226,6 +226,11 @@ class TodoListTester(TopydoTest):
         config(p_overrides={('topydo', 'identifiers'): 'linenumber'})
         self.assertRaises(InvalidTodoException, self.todolist.todo, '11a')
 
+    def test_uid5(self):
+        """ Handle bogus UIDs """
+        todo = Todo('invalid')
+        self.assertRaises(InvalidTodoException, self.todolist.uid, todo)
+
     def test_new_uid(self):
         """ Make sure that item has new text ID after append. """
         config("test/data/todolist-uid.conf")

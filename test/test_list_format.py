@@ -718,6 +718,65 @@ x 2014-12-12 Completed but with date:2014-12-12
         self.assertEqual(self.output, '')
         self.assertEqual(self.errors, error)
 
+    def test_list_format48(self):
+        """
+        Test line numbers
+        """
+        command = ListCommand(["-F %n"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = """ 1
+ 3
+ 4
+ 5
+"""
+        self.assertEqual(self.output, result)
+        self.assertEqual(self.errors, "")
+
+    def test_list_format49(self):
+        """
+        Test padded line numbers
+        """
+        command = ListCommand(["-F %N"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = """   1
+   3
+   4
+   5
+"""
+        self.assertEqual(self.output, result)
+        self.assertEqual(self.errors, "")
+
+    def test_list_format50(self):
+        """
+        Test line numbers
+        """
+        command = ListCommand(["-F %u"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = """ mfg
+ t5c
+ n8m
+ wa5
+"""
+        self.assertEqual(self.output, result)
+        self.assertEqual(self.errors, "")
+
+    def test_list_format51(self):
+        """
+        Test padded identifiers
+        """
+        command = ListCommand(["-F %U"], self.todolist, self.out, self.error)
+        command.execute()
+
+        result = """ mfg
+ t5c
+ n8m
+ wa5
+"""
+        self.assertEqual(self.output, result)
+        self.assertEqual(self.errors, "")
 
 if __name__ == '__main__':
     unittest.main()
