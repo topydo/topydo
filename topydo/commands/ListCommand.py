@@ -249,12 +249,16 @@ When an EXPRESSION is given, only the todos matching that EXPRESSION are shown.
          %I: Todo number padded with spaces (always 3 characters wide).
          %k: List of tags separated by spaces (excluding hidden tags).
          %K: List of all tags separated by spaces.
+         %l: Line number.
+         %L: Line number padded with spaces (always 3 characters wide).
          %p: Priority.
          %P: Priority or placeholder space if no priority.
          %s: Todo text.
          %S: Todo text, truncated such that an item fits on one line.
          %t: Absolute creation date.
          %T: Relative creation date.
+         %u: Todo's text-based ID.
+         %U: Todo's text-based ID padded with spaces.
          %x: 'x' followed by absolute completion date.
          %X: 'x' followed by relative completion date.
          \%: Literal percent sign.
