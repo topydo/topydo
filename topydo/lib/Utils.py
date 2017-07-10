@@ -27,8 +27,8 @@ from datetime import date
 
 def date_string_to_date(p_date):
     """
-    Given a date in YYYY-MM-DD, returns a Python date object. Returns None
-    if the date is invalid.
+    Given a date in YYYY-MM-DD, returns a Python date object. Throws a
+    ValueError if the date is invalid.
     """
     result = None
 

@@ -69,17 +69,28 @@ def parse_line(p_string):
         result['completed'] = True
 
         completion_date = completed_head.group('completionDate')
-        result['completionDate'] = date_string_to_date(completion_date)
+        try:
+            result['completionDate'] = date_string_to_date(completion_date)
+        except ValueError:
+            pass
 
         creation_date = completed_head.group('creationDate')
-        result['creationDate'] = date_string_to_date(creation_date)
+
+        try:
+            result['creationDate'] = date_string_to_date(creation_date)
+        except ValueError:
+            pass
 
         rest = completed_head.group('rest')
     elif normal_head:
         result['priority'] = normal_head.group('priority')
 
         creation_date = normal_head.group('creationDate')
-        result['creationDate'] = date_string_to_date(creation_date)
+
+        try:
+            result['creationDate'] = date_string_to_date(creation_date)
+        except ValueError:
+            pass
 
         rest = normal_head.group('rest')
 

@@ -114,5 +114,13 @@ class TodoTest(TopydoTest):
         todo = Todo("(C) 2015-11-18 Foo due:2015-11-16)")
         self.assertEqual(todo.length(), 0)
 
+    def test_length10(self):
+        todo = Todo("(C) Foo t:2017-06-30")
+        self.assertEqual(todo.length(), 0)
+
+    def test_length11(self):
+        todo = Todo("(C) Foo t:2017-06-31 due:2017-07-01")
+        self.assertEqual(todo.length(), 0)
+
 if __name__ == '__main__':
     unittest.main()

@@ -45,6 +45,7 @@ class PostponeCommand(MultiCommand):
         def _get_offset(p_todo):
             offset = p_todo.tag_value(
                 config().tag_due(), date.today().isoformat())
+
             offset_date = date_string_to_date(offset)
 
             if offset_date < date.today():
@@ -56,15 +57,22 @@ class PostponeCommand(MultiCommand):
         self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
 
         for todo in self.todos:
-            offset = _get_offset(todo)
+            try:
+                offset = _get_offset(todo)
+            except ValueError:
+                self.error("Postponing todo item failed: invalid due date.")
+                break
+
             new_due = relative_date_to_date(pattern, offset)
 
             if new_due:
-                if self.move_start_date and todo.has_tag(config().tag_start()):
+                if self.move_start_date and todo.start_date():
                     length = todo.length()
                     new_start = new_due - timedelta(length)
                     # pylint: disable=E1103
                     todo.set_tag(config().tag_start(), new_start.isoformat())
+                elif self.move_start_date and not todo.start_date():
+                    self.error("Warning: todo item has no (valid) start date, therefore it was not adjusted.")
 
                 # pylint: disable=E1103
                 todo.set_tag(config().tag_due(), new_due.isoformat())

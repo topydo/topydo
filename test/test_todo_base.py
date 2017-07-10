@@ -240,6 +240,16 @@ class TodoBaseTester(TopydoTest):
 
         self.assertFalse(todo.is_completed())
 
+    def test_completion5(self):
+        """
+        A todo item with an invalid completion date is still considered as
+        completed, but without a creation date.
+        """
+        todo = TodoBase("x 2017-06-31 Invalid date")
+
+        self.assertTrue(todo.is_completed())
+        self.assertIsNone(todo.completion_date())
+
     def test_set_complete1(self):
         todo = TodoBase("(A) Foo")
         todo.set_completed()
@@ -349,6 +359,22 @@ class TodoBaseTester(TopydoTest):
 
         self.assertEqual(todo.creation_date(), creation_date)
         self.assertEqual(todo.src, "x 2014-07-25 2014-07-24 Foo")
+
+    def test_set_creation_date6(self):
+        """
+        A todo item with an invalid creation date is not considered to have
+        one.
+        """
+        todo = TodoBase("2017-06-31 Invalid")
+        self.assertIsNone(todo.creation_date())
+
+    def test_set_creation_date7(self):
+        """
+        A todo item with an invalid creation date is not considered to have
+        one.
+        """
+        todo = TodoBase("x 2017-07-01 2017-06-31 Invalid")
+        self.assertIsNone(todo.creation_date())
 
 if __name__ == '__main__':
     unittest.main()
