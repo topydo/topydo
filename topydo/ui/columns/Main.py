@@ -26,6 +26,7 @@ from string import ascii_uppercase
 
 from topydo.Commands import get_subcommand
 from topydo.lib.Config import config, ConfigError
+from topydo.ui.columns.ColumnCompleter import ColumnCompleter
 from topydo.lib.Sorter import Sorter
 from topydo.lib.Filter import get_filter_list, RelevanceFilter, DependencyFilter
 from topydo.lib.Utils import get_terminal_size
@@ -57,6 +58,21 @@ _APPEND_COLUMN = 1
 _EDIT_COLUMN = 2
 _COPY_COLUMN = 3
 _INSERT_COLUMN = 4
+
+
+class CliWrapper(urwid.Pile):
+    """
+    Simple wrapper widget for CommandLineWidget with KeystateWidget and
+    CompletionBoxWidget rendered dynamically.
+    """
+    def __init__(self, *args, **kwargs):
+        self.width = 0
+
+        super().__init__(*args, **kwargs)
+
+    def render(self, p_size, focus):
+        self.width = p_size[0]
+        return super().render(p_size, focus)
 
 
 class MainPile(urwid.Pile):
@@ -123,11 +139,13 @@ class UIApplication(CLIApplicationBase):
 
         self.columns = urwid.Columns([], dividechars=0,
             min_width=config().column_width())
-        self.commandline = CommandLineWidget('topydo> ')
+        completer = ColumnCompleter(self.todolist)
+        self.commandline = CommandLineWidget(completer, 'topydo> ')
         self.keystate_widget = KeystateWidget()
         self.status_line = urwid.Columns([
             ('weight', 1, urwid.Filler(self.commandline)),
         ])
+        self.cli_wrapper = CliWrapper([(1, self.status_line)])
 
         self.keymap = config().column_keymap()
         self._alarm = None
@@ -141,6 +159,8 @@ class UIApplication(CLIApplicationBase):
         urwid.connect_signal(self.commandline, 'blur', self._blur_commandline)
         urwid.connect_signal(self.commandline, 'execute_command',
                              self._execute_handler)
+        urwid.connect_signal(self.commandline, 'show_completions', self._show_completion_box)
+        urwid.connect_signal(self.commandline, 'hide_completions', self._hide_completion_box)
 
         def hide_console(p_focus_commandline=False):
             if p_focus_commandline:
@@ -166,7 +186,7 @@ class UIApplication(CLIApplicationBase):
 
         self.mainwindow = MainPile([
             ('weight', 1, self.columns),
-            (1, self.status_line),
+            ('pack', self.cli_wrapper),
         ])
 
         urwid.connect_signal(self.mainwindow, 'blur_console', hide_console)
@@ -529,6 +549,33 @@ class UIApplication(CLIApplicationBase):
         self.keystate_widget.set_text(p_keystate)
         self._keystate_visible = len(p_keystate) > 0
 
+    def _show_completion_box(self):
+        contents = self.cli_wrapper.contents
+        if len(contents) == 1:
+            completion_box = self.commandline.completion_box
+            opts = ('given', completion_box.height)
+
+            max_width = self.cli_wrapper.width
+            pos = self.commandline.get_cursor_coords((max_width,))[0]
+            l_margin = pos - completion_box.margin
+            r_margin = max_width - pos - completion_box.min_width + completion_box.margin
+
+            padding = urwid.Padding(completion_box,
+                                    min_width=completion_box.min_width,
+                                    left=l_margin,
+                                    right=r_margin)
+
+            contents.insert(0, (padding, opts))
+            completion_box.focus.set_attr_map({None: PaletteItem.MARKED})
+            self.cli_wrapper.focus_position = 1
+
+    def _hide_completion_box(self):
+        contents = self.cli_wrapper.contents
+        if len(contents) == 2:
+            del contents[0]
+
+        self.cli_wrapper.focus_position = 0
+
     def _set_alarm(self, p_callback):
         """ Sets alarm to execute p_action specified in 0.5 sec. """
         self._alarm = self.mainloop.set_alarm_in(0.5, p_callback)
@@ -622,7 +669,7 @@ class UIApplication(CLIApplicationBase):
 
     def _console_width(self):
         terminal_size = namedtuple('Terminal_Size', 'columns lines')
-        width = self.console.console_width() - 2
+        width = self.cli_wrapper.width - 2
         sz = terminal_size(width, 1)
 
         return sz

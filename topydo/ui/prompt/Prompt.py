@@ -21,7 +21,7 @@ import shlex
 import sys
 
 from topydo.ui.CLIApplicationBase import CLIApplicationBase, error, GENERIC_HELP
-from topydo.ui.prompt.TopydoCompleter import TopydoCompleter
+from topydo.ui.prompt.PromptCompleter import PromptCompleter
 from prompt_toolkit.shortcuts import prompt
 from prompt_toolkit.history import InMemoryHistory
 
@@ -61,7 +61,7 @@ class PromptApplication(CLIApplicationBase):
         """
         self.todolist.erase()
         self.todolist.add_list(self.todofile.read())
-        self.completer = TopydoCompleter(self.todolist)
+        self.completer = PromptCompleter(self.todolist)
 
     def run(self):
         """ Main entry function. """

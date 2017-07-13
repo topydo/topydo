@@ -90,14 +90,6 @@ class ConsoleWidget(urwid.LineBox):
         elif p_key == ':':
             urwid.emit_signal(self, 'close', True)
 
-    def render(self, p_size, focus):
-        """
-        This override intercepts the width of the widget such that it can be
-        stored. The width is used for rendering `ls` output.
-        """
-        self.width = p_size[0]
-        return super().render(p_size, focus)
-
     def selectable(self):
         return True
 
@@ -116,7 +108,3 @@ class ConsoleWidget(urwid.LineBox):
 
     def clear(self):
         self.pile.contents = []
-
-    def console_width(self):
-        # return the last known width (last render)
-        return self.width
