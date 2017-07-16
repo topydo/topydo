@@ -28,7 +28,7 @@ from topydo.Commands import get_subcommand
 from topydo.lib.Config import config, ConfigError
 from topydo.ui.columns.ColumnCompleter import ColumnCompleter
 from topydo.lib.Sorter import Sorter
-from topydo.lib.Filter import get_filter_list, RelevanceFilter, DependencyFilter
+from topydo.lib.Filter import get_filter_list, RelevanceFilter, DependencyFilter, HiddenTagFilter
 from topydo.lib.Utils import get_terminal_size
 from topydo.lib.View import View
 from topydo.lib.TodoFileWatched import TodoFileWatched
@@ -484,6 +484,7 @@ class UIApplication(CLIApplicationBase):
         if not p_data['show_all']:
             filters.append(DependencyFilter(self.todolist))
             filters.append(RelevanceFilter())
+            filters.append(HiddenTagFilter())
 
         filters += get_filter_list(p_data['filterexpr'].split())
 
