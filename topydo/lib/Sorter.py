@@ -23,7 +23,7 @@ from datetime import date
 
 from topydo.lib.Config import config
 from topydo.lib.Importance import average_importance, importance
-from topydo.lib.Utils import humanize_date
+from topydo.lib.Utils import date_string_to_date, humanize_date
 
 
 Field = namedtuple('Field', ['sort', 'group', 'label'])
@@ -225,6 +225,11 @@ class Sorter(object):
                         result = humanize_date(p_todo.start_date())
                     else:
                         result = p_todo.tag_value(p_field)
+
+                        try:
+                            result = humanize_date(date_string_to_date(result))
+                        except ValueError:
+                            pass
 
                 return result
 
