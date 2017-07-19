@@ -33,7 +33,7 @@ def progress_color(p_todo):
         1,   # red
     ]
 
-    # https://upload.wikimedia.org/wikipedia/en/1/15/Xterm_256color_chart.svg
+    # https://commons.wikimedia.org/wiki/File:Xterm_256color_chart.svg
     # a gradient from green to yellow to red
     color256_range = \
         [22, 28, 34, 40, 46, 82, 118, 154, 190, 226, 220, 214, 208, 202, 196]
@@ -106,13 +106,17 @@ def progress_color(p_todo):
         else:
             return 0
 
-    color_range = color256_range if config().colors() == 256 else color16_range
+    use_256_colors = config().colors() == 256
+    color_range = color256_range if use_256_colors else color16_range
     progress = get_progress(p_todo)
 
     # TODO: remove linear scale to exponential scale
     if progress > 1:
         # overdue, return the last color
         return Color(color_range[-1])
+    elif p_todo.is_completed():
+        # return grey
+        return Color(243) if use_256_colors else Color(7)
     else:
         # not overdue, calculate position over color range excl. due date
         # color
