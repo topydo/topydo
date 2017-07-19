@@ -21,28 +21,28 @@ value of each item.
 
 from hashlib import sha1
 
-_TABLE_SIZES = {
+_TABLE_SIZES = [
     # we choose a large table size to reduce the chance of collisions.
-    3: 46649,   # largest prime under zzz_36
-    4: 1679609  # largest prime under zzzz_36
-}
+    (3, 17573, lambda h: _to_base('abcdefghijklmnopqrstuvwxyz', h)),
+    (3, 46649, lambda h: _to_base('0123456789abcdefghijklmnopqrstuvwxyz', h)),
+    (4, 456959, lambda h: _to_base('abcdefghijklmnopqrstuvwxyz', h)),
+    (4, 1679609, lambda h: _to_base('0123456789abcdefghijklmnopqrstuvwxyz', h)),
+]
 
 
-def _to_base36(p_value):
+def _to_base(p_alphabet, p_value):
     """
-    Converts integer to base36 string.
+    Converts integer to text ID with characters from the given alphabet.
 
     Based on answer on
     https://stackoverflow.com/questions/1181919/python-base-36-encoding
     """
-    alphabet = '0123456789abcdefghijklmnopqrstuvwxyz'
-
-    base36 = ''
+    result = ''
     while p_value:
-        p_value, i = divmod(p_value, 36)
-        base36 = alphabet[i] + base36
+        p_value, i = divmod(p_value, len(p_alphabet))
+        result = p_alphabet[i] + result
 
-    return base36 or alphabet[0]
+    return result or p_alphabet[0]
 
 
 def hash_list_values(p_list, p_key=lambda i: i):  # pragma: no branch
@@ -61,8 +61,11 @@ def hash_list_values(p_list, p_key=lambda i: i):  # pragma: no branch
     used = set()
 
     # choose a larger key size if there's >1% chance of collision
-    size = _TABLE_SIZES[3] \
-        if len(p_list) < _TABLE_SIZES[3] * 0.01 else _TABLE_SIZES[4]
+    _, size, converter = _TABLE_SIZES[-1]
+    for __, _size, _converter in _TABLE_SIZES:
+        if len(p_list) < _size * 0.01:
+            size , converter = _size, _converter
+            break
 
     for item in p_list:
         # obtain the to-be-hashed value
@@ -78,6 +81,17 @@ def hash_list_values(p_list, p_key=lambda i: i):  # pragma: no branch
             hash_value = (hash_value + 1) % size
 
         used.add(hash_value)
-        result.append((item, _to_base36(hash_value)))
+        result.append((item, converter(hash_value)))
 
     return result
+
+def max_id_length(p_num):
+    """
+    Returns the length of the IDs used, given the number of items that are
+    assigned an ID.
+    """
+    for length, size, _ in _TABLE_SIZES:
+        if p_num < size * 0.01:
+            return length
+
+    return 4
