@@ -21,13 +21,46 @@ value of each item.
 
 from hashlib import sha1
 
-_TABLE_SIZES = [
-    # we choose a large table size to reduce the chance of collisions.
-    (3, 17573, lambda h: _to_base('abcdefghijklmnopqrstuvwxyz', h)),
-    (3, 46649, lambda h: _to_base('0123456789abcdefghijklmnopqrstuvwxyz', h)),
-    (4, 456959, lambda h: _to_base('abcdefghijklmnopqrstuvwxyz', h)),
-    (4, 1679609, lambda h: _to_base('0123456789abcdefghijklmnopqrstuvwxyz', h)),
-]
+from topydo.lib.Config import config
+
+_DEFAULT_ALPHABET = '0123456789abcdefghijklmnopqrstuvwxyz'
+
+# a two-dimensional lookup table, the first dimension is the length of the
+# configured alphabet, the second dimension is the width of the ID
+# The values are prime numbers that are used for populating the hash table.
+_TABLE_SIZES = {
+        10: { 3: 997, 4: 9973, 5: 99991, 6: 999983 },
+        11: { 3: 1327, 4: 14639, 5: 161047, 6: 1771559 },
+        12: { 3: 1723, 4: 20731, 5: 248827, 6: 2985979 },
+        13: { 3: 2179, 4: 28559, 5: 371291, 6: 4826797 },
+        14: { 3: 2741, 4: 38393, 5: 573811, 6: 7529519 },
+        15: { 3: 3373, 4: 50599, 5: 759371, 6: 11390593 },
+        16: { 3: 4093, 4: 65521, 5: 1048573 },
+        17: { 3: 4909, 4: 83497, 5: 1419839 },
+        18: { 3: 5827, 4: 104971, 5: 1889561 },
+        19: { 3: 6857, 4: 130307, 5: 2476081 },
+        20: { 3: 7993, 4: 159979, 5: 3199997 },
+        21: { 3: 9257, 4: 194479, 5: 4084081 },
+        22: { 3: 10639, 4: 245239, 5: 5153623 },
+        23: { 3: 12163, 4: 279823, 5: 6436327 },
+        24: { 3: 13807, 4: 331769, 5: 7962607 },
+        25: { 3: 15619, 4: 390581, 5: 9765619 },
+        26: { 3: 17573, 4: 456959, 5: 11881357 },
+        27: { 3: 19681, 4: 531383, 5: 14348891 },
+        28: { 3: 21943, 4: 614639, 5: 17210353 },
+        29: { 3: 24379, 4: 707279, 5: 20511143 },
+        30: { 3: 26993, 4: 809993, 5: 24299981 },
+        31: { 3: 29789, 4: 923513, 5: 28629149 },
+        32: { 3: 32749, 4: 1048573 },
+        33: { 3: 35933, 4: 1185907 },
+        34: { 3: 39301, 4: 1336333 },
+        35: { 3: 42863, 4: 1500619 },
+        36: { 3: 46649, 4: 1679609 },
+        37: { 3: 50651, 4: 1874153 },
+        38: { 3: 54869, 4: 2085133 },
+        39: { 3: 59281, 4: 2313439 },
+        40: { 3: 63997, 4: 2559989 },
+}
 
 
 def _to_base(p_alphabet, p_value):
@@ -44,6 +77,19 @@ def _to_base(p_alphabet, p_value):
 
     return result or p_alphabet[0]
 
+class _TableSizeException(Exception):
+    pass
+
+def _get_table_size(p_alphabet, p_num):
+    # choose a larger key size if there's >1% chance of collision
+    try:
+        for width, size in sorted(_TABLE_SIZES[len(p_alphabet)].items()):
+            if p_num < size * 0.01:
+                return width, size
+    except KeyError:
+        pass
+
+    raise _TableSizeException('Could not find appropriate table size for given alphabet')
 
 def hash_list_values(p_list, p_key=lambda i: i):  # pragma: no branch
     """
@@ -59,13 +105,13 @@ def hash_list_values(p_list, p_key=lambda i: i):  # pragma: no branch
     """
     result = []
     used = set()
+    alphabet = config().identifier_alphabet()
 
-    # choose a larger key size if there's >1% chance of collision
-    _, size, converter = _TABLE_SIZES[-1]
-    for __, _size, _converter in _TABLE_SIZES:
-        if len(p_list) < _size * 0.01:
-            size , converter = _size, _converter
-            break
+    try:
+        _, size = _get_table_size(alphabet, len(p_list))
+    except _TableSizeException:
+        alphabet = _DEFAULT_ALPHABET
+        _, size = _get_table_size(alphabet, len(p_list))
 
     for item in p_list:
         # obtain the to-be-hashed value
@@ -81,7 +127,7 @@ def hash_list_values(p_list, p_key=lambda i: i):  # pragma: no branch
             hash_value = (hash_value + 1) % size
 
         used.add(hash_value)
-        result.append((item, converter(hash_value)))
+        result.append((item, _to_base(alphabet, hash_value)))
 
     return result
 
@@ -90,8 +136,10 @@ def max_id_length(p_num):
     Returns the length of the IDs used, given the number of items that are
     assigned an ID.
     """
-    for length, size, _ in _TABLE_SIZES:
-        if p_num < size * 0.01:
-            return length
+    try:
+        alphabet = config().identifier_alphabet()
+        length, _ = _get_table_size(alphabet, p_num)
+    except _TableSizeException:
+        length, _ = _get_table_size(_DEFAULT_ALPHABET, p_num)
 
-    return 4
+    return length

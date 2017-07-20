@@ -70,6 +70,7 @@ class _Config:
                 'filename': 'todo.txt',
                 'archive_filename': 'done.txt',
                 'identifiers': 'linenumber',
+                'identifier_alphabet': '0123456789abcdefghijklmnopqrstuvwxyz',
                 'backup_count': '5',
             },
 
@@ -474,6 +475,8 @@ class _Config:
 
         return shlex.split(result)
 
+    def identifier_alphabet(self):
+        return self.cp.get('topydo', 'identifier_alphabet')
 
 def config(p_path=None, p_overrides=None):
     """
