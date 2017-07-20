@@ -53,7 +53,7 @@ def _markup(p_todo, p_focus):
 
 
 class TodoWidget(urwid.WidgetWrap):
-    def __init__(self, p_todo):
+    def __init__(self, p_todo, p_id_width=4):
         # clients use this to associate this widget with the given todo item
         self.todo = p_todo
 
@@ -101,7 +101,7 @@ class TodoWidget(urwid.WidgetWrap):
         self.columns = urwid.Columns(
             [
                 (1, self.progress_bar),
-                (4, self.id_widget),
+                (p_id_width, self.id_widget),
                 (3, priority_widget),
                 ('weight', 1, self.text_widget),
             ],
@@ -159,7 +159,7 @@ class TodoWidget(urwid.WidgetWrap):
     cache = {}
 
     @classmethod
-    def create(p_class, p_todo):
+    def create(p_class, p_todo, p_id_width=4):
         """
         Creates a TodoWidget instance for the given todo. Widgets are
         cached, the same object is returned for the same todo item.
@@ -187,7 +187,7 @@ class TodoWidget(urwid.WidgetWrap):
             if parent_progress_may_have_changed(p_todo):
                 widget.update_progress()
         else:
-            widget = p_class(p_todo)
+            widget = p_class(p_todo, p_id_width)
             p_class.cache[source] = widget
 
         return widget

@@ -16,6 +16,7 @@
 
 import urwid
 
+from topydo.lib.HashListValues import max_id_length
 from topydo.lib.Utils import translate_key_to_config
 from topydo.ui.columns.TodoWidget import TodoWidget
 
@@ -89,6 +90,7 @@ class TodoListWidget(urwid.LineBox):
         with this list.
         """
         old_focus_position = self.todolist.focus
+        id_length = max_id_length(self.view.todolist.count())
 
         del self.todolist[:]
 
@@ -99,7 +101,7 @@ class TodoListWidget(urwid.LineBox):
                 self.todolist.append(urwid.Divider('-'))
 
             for todo in todos:
-                todowidget = TodoWidget.create(todo)
+                todowidget = TodoWidget.create(todo, id_length)
                 todowidget.number = self.view.todolist.number(todo)
                 self.todolist.append(todowidget)
                 self.todolist.append(urwid.Divider('-'))
