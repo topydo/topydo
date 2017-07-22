@@ -46,9 +46,9 @@ class PostponeCommand(MultiCommand):
                 self.move_start_date = True
 
     def _execute_multi_specific(self):
-        def _get_offset(p_todo):
+        def _get_offset(p_todo, p_tag):
             offset = p_todo.tag_value(
-                config().tag_due(), date.today().isoformat())
+                p_tag, date.today().isoformat())
 
             offset_date = date_string_to_date(offset)
 
@@ -61,32 +61,51 @@ class PostponeCommand(MultiCommand):
         self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
 
         for todo in self.todos:
-            try:
-                offset = _get_offset(todo)
-            except ValueError:
-                self.error("Postponing todo item failed: invalid due date.")
-                break
 
-            new_due = relative_date_to_date(pattern, offset)
+            if self.move_due_date:
+                try:
+                    offset = _get_offset(todo, config().tag_due())
+                except ValueError:
+                    self.error("Postponing todo item failed: invalid due date.")
+                    break
 
-            if new_due:
-                if self.move_start_date and todo.start_date():
-                    length = todo.length()
-                    new_start = new_due - timedelta(length)
-                    # pylint: disable=E1103
-                    todo.set_tag(config().tag_start(), new_start.isoformat())
-                elif self.move_start_date and not todo.start_date():
-                    self.error("Warning: todo item has no (valid) start date, therefore it was not adjusted.")
+                new_due = relative_date_to_date(pattern, offset)
 
-                if self.move_due_date:
+                if new_due:
+                    if self.move_start_date and todo.start_date():
+                        length = todo.length()
+                        new_start = new_due - timedelta(length)
+                        # pylint: disable=E1103
+                        todo.set_tag(config().tag_start(), new_start.isoformat())
+                    elif self.move_start_date and not todo.start_date():
+                        self.error("Warning: todo item has no (valid) start date, therefore it was not adjusted.")
+
                     # pylint: disable=E1103
                     todo.set_tag(config().tag_due(), new_due.isoformat())
 
-                self.todolist.dirty = True
-                self.out(self.printer.print_todo(todo))
+                    self.todolist.dirty = True
+                    self.out(self.printer.print_todo(todo))
+                else:
+                    self.error("Invalid date pattern given.")
+                    break
             else:
-                self.error("Invalid date pattern given.")
-                break
+                try:
+                    offset = _get_offset(todo, config().tag_start())
+                except ValueError:
+                    self.error("Postponing todo item failed: invalid start date.")
+                    break
+
+                new_start = relative_date_to_date(pattern, offset)
+
+                if new_start:
+                    # pylint: disable=E1103
+                    todo.set_tag(config().tag_start(), new_start.isoformat())
+
+                    self.todolist.dirty = True
+                    self.out(self.printer.print_todo(todo))
+                else:
+                    self.error("Invalid date pattern given.")
+                    break
 
     def usage(self):
         return """\
