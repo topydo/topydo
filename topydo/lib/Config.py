@@ -476,7 +476,10 @@ class _Config:
         return shlex.split(result)
 
     def identifier_alphabet(self):
-        return self.cp.get('topydo', 'identifier_alphabet')
+        alphabet = self.cp.get('topydo', 'identifier_alphabet')
+
+        # deduplicate characters alphabet
+        return list({c: None for c in alphabet}.keys())
 
 def config(p_path=None, p_overrides=None):
     """
