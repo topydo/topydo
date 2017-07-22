@@ -344,7 +344,7 @@ class PostponeCommandTest(CommandTest):
                 "|  2| Bar due:{} t:{}\n".format(self.today.isoformat(), start.isoformat()))
         self.assertEqual(self.errors, "")
 
-    def test_postpone27(self):
+    def test_postpone28(self):
         command = PostponeCommand(["-s", "-s", "3", "1w"], self.todolist, self.out,
                                   self.error)
         command.execute()
@@ -356,7 +356,7 @@ class PostponeCommandTest(CommandTest):
         self.assertEqual(self.output, "|  3| Baz due:{} t:{}\n".format(self.today.isoformat(), start.isoformat()))
         self.assertEqual(self.errors, "")
 
-    def test_postpone28(self):
+    def test_postpone29(self):
         command = PostponeCommand(["-s", "-s", "2", "3", "1w"], self.todolist,
                                   self.out, self.error)
         command.execute()
@@ -368,7 +368,7 @@ class PostponeCommandTest(CommandTest):
         self.assertEqual(self.output, "|  2| Bar due:{} t:{}\n|  3| Baz due:{} t:{}\n".format(self.today.isoformat(), start.isoformat(), self.today.isoformat(), start.isoformat()))
         self.assertEqual(self.errors, "")
 
-    def test_postpone29(self):
+    def test_postpone30(self):
         command = PostponeCommand(["-s", "-s", "5", "1w"], self.todolist, self.out,
                                   self.error)
         command.execute()
@@ -380,7 +380,7 @@ class PostponeCommandTest(CommandTest):
         self.assertEqual(self.output, "|  5| Future due:{} t:{}\n".format(self.future.isoformat(), start.isoformat()))
         self.assertEqual(self.errors, "")
 
-    def test_postpone30(self):
+    def test_postpone31(self):
         command = PostponeCommand(["-s", "-s", "7", "1w"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -390,7 +390,7 @@ class PostponeCommandTest(CommandTest):
         self.assertEqual(self.output, "|  7| InvalidDueDate due:2017-06-31 t:{}\n".format(start.isoformat()))
         self.assertEqual(self.errors, "")
 
-    def test_postpone31(self):
+    def test_postpone32(self):
         """
         Todo item has an invalid start date.
         """
