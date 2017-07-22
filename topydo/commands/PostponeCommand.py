@@ -32,14 +32,18 @@ class PostponeCommand(MultiCommand):
             p_args, p_todolist, p_out, p_err, p_prompt)
 
         self.move_start_date = False
+        self.move_due_date = True
         self.last_argument = True
 
     def get_flags(self):
         return("s", [])
 
-    def process_flag(self, p_option, p_value):
-        if p_option == '-s':
-            self.move_start_date = True
+    def process_flag(self, p_opt, p_value):
+        if p_opt == '-s':
+            if self.move_start_date:
+                self.move_due_date = False
+            else:
+                self.move_start_date = True
 
     def _execute_multi_specific(self):
         def _get_offset(p_todo):
@@ -74,8 +78,9 @@ class PostponeCommand(MultiCommand):
                 elif self.move_start_date and not todo.start_date():
                     self.error("Warning: todo item has no (valid) start date, therefore it was not adjusted.")
 
-                # pylint: disable=E1103
-                todo.set_tag(config().tag_due(), new_due.isoformat())
+                if self.move_due_date:
+                    # pylint: disable=E1103
+                    todo.set_tag(config().tag_due(), new_due.isoformat())
 
                 self.todolist.dirty = True
                 self.out(self.printer.print_todo(todo))
@@ -85,7 +90,7 @@ class PostponeCommand(MultiCommand):
 
     def usage(self):
         return """\
-Synopsis: postpone [-s] <NUMBER> [<NUMBER2> ...] <PATTERN>
+Synopsis: postpone [-s [-s]] <NUMBER> [<NUMBER2> ...] <PATTERN>
           postpone [-x] -e <EXPRESSION>\
 """
 
@@ -94,7 +99,8 @@ Synopsis: postpone [-s] <NUMBER> [<NUMBER2> ...] <PATTERN>
 Postpone the todo item(s) with the given NUMBER(s) and the given PATTERN.
 
 Postponing is done by adjusting the due date(s) of the todo(s), and if the -s
-flag is given, the start date accordingly.
+flag is given, the start date accordingly. If the -s flag is repeated, only
+the start date is adjusted.
 
 It is also possible to postpone items as complete with an EXPRESSION using
 the -e flag. Use -x to also process todo items that are normally invisible (as
