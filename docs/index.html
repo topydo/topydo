@@ -10956,12 +10956,13 @@ Business days only take Monday - Friday into account.</pre>
 <pre>Postpone the todo item(s) with the given number(s) and the given pattern.
 
 ```
-postpone [-s] &lt;NUMBER&gt; [&lt;NUMBER2&gt; ...] &lt;PATTERN&gt;&quot;
+postpone [-s [-s]] &lt;NUMBER&gt; [&lt;NUMBER2&gt; ...] &lt;PATTERN&gt;&quot;
 postpone [-x] -e &lt;EXPRESSION&gt;
 ```
 
 Postponing is done by adjusting the [[due date(s)|TagDue]] of the todo(s), and if the `-s`
 flag is given, the [[start date|TagStart]] accordingly.
+If the `-s` flag is repeated, only the [[start date|TagStart]] is adjusted.
 
 It is also possible to postpone items with an expression using
 the `-e` flag. Use `-x` to also process todo items that are normally invisible
