@@ -63,25 +63,19 @@ _TABLE_SIZES = {
 }
 
 
-def _to_base(p_alphabet, p_value):
-    """
-    Converts integer to text ID with characters from the given alphabet.
-
-    Based on answer on
-    https://stackoverflow.com/questions/1181919/python-base-36-encoding
-    """
-    result = ''
-    while p_value:
-        p_value, i = divmod(p_value, len(p_alphabet))
-        result = p_alphabet[i] + result
-
-    return result or p_alphabet[0]
-
 class _TableSizeException(Exception):
     pass
 
 def _get_table_size(p_alphabet, p_num):
-    # choose a larger key size if there's >1% chance of collision
+    """
+    Returns a prime number that is suitable for the hash table size. The size
+    is dependent on the alphabet used, and the number of items that need to be
+    hashed. The table size is at least 100 times larger than the number of
+    items to be hashed, to avoid collisions.
+
+    When the alphabet is too little or too large, then _TableSizeException is
+    raised. Currently an alphabet of 10 to 40 characters is supported.
+    """
     try:
         for width, size in sorted(_TABLE_SIZES[len(p_alphabet)].items()):
             if p_num < size * 0.01:
@@ -96,13 +90,27 @@ def hash_list_values(p_list, p_key=lambda i: i):  # pragma: no branch
     Calculates a unique value for each item in the list, these can be used as
     identifiers.
 
-    The value is based on hashing an item using the p_hash function.
+    The value is based on hashing an item using the p_key function.
 
     Suitable for lists not larger than approx. 16K items.
 
     Returns a tuple with the status and a list of tuples where each item is
     combined with the ID.
     """
+    def to_base(p_alphabet, p_value):
+        """
+        Converts integer to text ID with characters from the given alphabet.
+
+        Based on answer at
+        https://stackoverflow.com/questions/1181919/python-base-36-encoding
+        """
+        result = ''
+        while p_value:
+            p_value, i = divmod(p_value, len(p_alphabet))
+            result = p_alphabet[i] + result
+
+        return result or p_alphabet[0]
+
     result = []
     used = set()
     alphabet = config().identifier_alphabet()
@@ -127,14 +135,14 @@ def hash_list_values(p_list, p_key=lambda i: i):  # pragma: no branch
             hash_value = (hash_value + 1) % size
 
         used.add(hash_value)
-        result.append((item, _to_base(alphabet, hash_value)))
+        result.append((item, to_base(alphabet, hash_value)))
 
     return result
 
 def max_id_length(p_num):
     """
     Returns the length of the IDs used, given the number of items that are
-    assigned an ID.
+    assigned an ID. Used for padding in lists.
     """
     try:
         alphabet = config().identifier_alphabet()
