@@ -6,7 +6,7 @@ node [ shape="none" margin="0" fontsize="9" fontname="Helvetica" ]
   _5 [label=<<TABLE CELLBORDER="0" CELLSPACING="1" VALIGN="top"><TR><TD><B>5</B></TD><TD BALIGN="LEFT"><B>13 + 29 = 42</B></TD></TR><HR/><TR><TD ALIGN="RIGHT">Prio:</TD><TD ALIGN="LEFT">C</TD></TR></TABLE>> style=filled fillcolor="#008000" fontcolor="#ffffff"]
   _7 [label=<<TABLE CELLBORDER="0" CELLSPACING="1" VALIGN="top"><TR><TD><B>7</B></TD><TD BALIGN="LEFT"><B>Special characters &lt;&quot;&amp;&gt;</B></TD></TR><HR/><TR><TD ALIGN="RIGHT">Prio:</TD><TD ALIGN="LEFT">C</TD></TR></TABLE>> style=filled fillcolor="#008000" fontcolor="#ffffff"]
   _2 [label=<<TABLE CELLBORDER="0" CELLSPACING="1" VALIGN="top"><TR><TD><B>2</B></TD><TD BALIGN="LEFT"><B>Bar @Context1 +Project2</B></TD></TR><HR/><TR><TD ALIGN="RIGHT">Prio:</TD><TD ALIGN="LEFT">D</TD></TR></TABLE>> style=filled fillcolor="#008000" fontcolor="#ffffff"]
-  _6 [label=<<TABLE CELLBORDER="0" CELLSPACING="1" VALIGN="top"><TR><TD><B>6</B></TD><TD BALIGN="LEFT"><B><S>Completed but with</S></B></TD></TR></TABLE>> style=filled fillcolor="#008000" fontcolor="#ffffff"]
+  _6 [label=<<TABLE CELLBORDER="0" CELLSPACING="1" VALIGN="top"><TR><TD><B>6</B></TD><TD BALIGN="LEFT"><B><S>Completed but with</S></B></TD></TR></TABLE>> style=filled fillcolor="#c0c0c0" fontcolor="#000000"]
   _3 -> _2
   _1 -> _4 [style="invis"]
   _4 -> _5 [style="invis"]
