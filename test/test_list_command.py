@@ -434,6 +434,48 @@ class ListCommandTest(CommandTest):
         self.assertEqual(self.output, '|2| This item is visible\n')
         self.assertEqual(self.errors, "")
 
+    def test_list50(self):
+        """
+        Fallback to normal alphabet for too short alphabets, fallback on
+        default alphabet.
+        """
+        config(p_overrides={('topydo', 'identifier_alphabet'): 'a', ('topydo', 'identifiers'): 'text'})
+
+        # self.todolist was loaded with old identifier settings
+        todolist = load_file_to_todolist("test/data/ListCommandTest.txt")
+
+        command = ListCommand(["-F", "%I", "Foo"], todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEqual(self.output, "t5c\n")
+        self.assertEqual(self.errors, '')
+
+    def test_list51(self):
+        """ Test hexadecimal IDs """
+        config(p_overrides={('topydo', 'identifier_alphabet'): '0123456789abcdef', ('topydo', 'identifiers'): 'text'})
+
+        # self.todolist was loaded with old identifier settings
+        todolist = load_file_to_todolist("test/data/ListCommandTest.txt")
+
+        command = ListCommand(["-F", "%i", "Foo"], todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEqual(self.output, '2c8\n')
+        self.assertEqual(self.errors, '')
+
+    def test_list52(self):
+        """ Alphabet is too short due to duplicate characters """
+        config(p_overrides={('topydo', 'identifier_alphabet'): '0123456788', ('topydo', 'identifiers'): 'text'})
+
+        # self.todolist was loaded with old identifier settings
+        todolist = load_file_to_todolist("test/data/ListCommandTest.txt")
+
+        command = ListCommand(["-F", "%i", "Foo"], todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEqual(self.output, 't5c\n')
+        self.assertEqual(self.errors, '')
+
     def test_list_name(self):
         name = ListCommand.name()
 

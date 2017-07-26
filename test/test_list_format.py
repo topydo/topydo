@@ -23,6 +23,7 @@ from test.command_testcase import CommandTest
 from test.facilities import load_file_to_todolist
 from topydo.commands.ListCommand import ListCommand
 from topydo.lib.Config import config
+from topydo.lib.TodoListBase import TodoListBase
 
 # We're searching for 'mock'
 # 'mock' was added as 'unittest.mock' in Python 3.3, but PyPy 3 is based on Python 3.2
@@ -762,6 +763,13 @@ x 2014-12-12 Completed but with date:2014-12-12
 """
         self.assertEqual(self.output, result)
         self.assertEqual(self.errors, "")
+
+    def test_list_format52(self):
+        config(p_overrides={('topydo', 'identifier_alphabet'): '0123456789abcdef', ('topydo', 'identifiers'): 'text'})
+
+        # make sure that it fallbacks to the default alphabet
+        todolist = TodoListBase([str(i) for i in range(0, 100 * 16 * 10)])
+        self.assertEqual(4, todolist.max_id_length())
 
 if __name__ == '__main__':
     unittest.main()
