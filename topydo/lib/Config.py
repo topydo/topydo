@@ -20,6 +20,7 @@ import os
 import re
 import shlex
 
+from collections import OrderedDict
 from itertools import accumulate
 from string import ascii_lowercase
 
@@ -478,8 +479,9 @@ class _Config:
     def identifier_alphabet(self):
         alphabet = self.cp.get('topydo', 'identifier_alphabet')
 
-        # deduplicate characters alphabet
-        return list({c: None for c in alphabet}.keys())
+        # deduplicate characters alphabet. Use a dictionary, but an ordered one
+        # to keep determinism.
+        return list(OrderedDict([(c, None) for c in alphabet]).keys())
 
 def config(p_path=None, p_overrides=None):
     """
