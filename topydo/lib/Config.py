@@ -20,6 +20,7 @@ import os
 import re
 import shlex
 
+from collections import OrderedDict
 from itertools import accumulate
 from string import ascii_lowercase
 
@@ -70,6 +71,7 @@ class _Config:
                 'filename': 'todo.txt',
                 'archive_filename': 'done.txt',
                 'identifiers': 'linenumber',
+                'identifier_alphabet': '0123456789abcdefghijklmnopqrstuvwxyz',
                 'backup_count': '5',
             },
 
@@ -474,6 +476,12 @@ class _Config:
 
         return shlex.split(result)
 
+    def identifier_alphabet(self):
+        alphabet = self.cp.get('topydo', 'identifier_alphabet')
+
+        # deduplicate characters alphabet. Use a dictionary, but an ordered one
+        # to keep determinism.
+        return list(OrderedDict([(c, None) for c in alphabet]).keys())
 
 def config(p_path=None, p_overrides=None):
     """

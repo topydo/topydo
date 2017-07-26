@@ -162,9 +162,9 @@ class ListFormatParser(object):
             # todo ID
             'i': lambda t: str(self.todolist.number(t)),
 
-            # todo ID pre-filled with 1 or 2 spaces if its length is <3
-            'I': lambda t: _filler(str(self.todolist.number(t)), 3),
-
+            # todo ID, padded with spaces
+            'I': lambda t: _filler(str(self.todolist.number(t)),
+                self.todolist.max_id_length()),
 
             # list of tags (spaces) without hidden ones and due: and t:
             'k': lambda t: ' '.join([u'{}:{}'.format(tag, value)
@@ -179,8 +179,9 @@ class ListFormatParser(object):
             # line number
             'n': lambda t: str(self.todolist.linenumber(t)),
 
-            # line number, pre-filled with 1 or 2 spaces if its length <3
-            'N': lambda t: _filler(str(self.todolist.linenumber(t)), 3),
+            # line number, padded with spaces
+            'N': lambda t: _filler(str(self.todolist.linenumber(t)),
+                self.todolist.max_id_length()),
 
             # priority
             'p': lambda t: t.priority() if t.priority() else '',
@@ -206,8 +207,9 @@ class ListFormatParser(object):
             # unique text ID
             'u': lambda t: self.todolist.uid(t),
 
-            # unique text ID, pre-filled with 1 or 2 spaces if its length <3
-            'U': lambda t: _filler(self.todolist.uid(t), 3),
+            # unique text ID, padded with spaces
+            'U': lambda t: _filler(self.todolist.uid(t),
+                self.todolist.max_id_length()),
 
             # absolute completion date
             'x': lambda t: 'x ' + t.completion_date().isoformat() if t.is_completed() else '',

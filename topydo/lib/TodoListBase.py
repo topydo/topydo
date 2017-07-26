@@ -18,12 +18,13 @@
 A list of todo items.
 """
 
+import math
 import re
 from datetime import date
 
 from topydo.lib import Filter
 from topydo.lib.Config import config
-from topydo.lib.HashListValues import hash_list_values
+from topydo.lib.HashListValues import hash_list_values, max_id_length
 from topydo.lib.printers.PrettyPrinter import PrettyPrinter
 from topydo.lib.Todo import Todo
 from topydo.lib.View import View
@@ -274,6 +275,19 @@ class TodoListBase(object):
             return self.uid(p_todo)
         else:
             return self.linenumber(p_todo)
+
+    def max_id_length(self):
+        """
+        Returns the maximum length of a todo ID, used for formatting purposes.
+        """
+        if config().identifiers() == "text":
+            return max_id_length(len(self._todos))
+        else:
+            try:
+                return math.ceil(math.log(len(self._todos), 10))
+            except ValueError:
+                return 0
+
 
     def _update_todo_ids(self):
         # the idea is to have a hash that is independent of the position of the

@@ -48,7 +48,7 @@ class ListCommandTest(CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.dirty)
-        self.assertEqual(self.output, "|  1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n|  4| (C) Drink beer @ home\n|  5| (C) 13 + 29 = 42\n|  2| (D) Bar @Context1 +Project2\n")
+        self.assertEqual(self.output, "|1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n|4| (C) Drink beer @ home\n|5| (C) 13 + 29 = 42\n|2| (D) Bar @Context1 +Project2\n")
         self.assertEqual(self.errors, "")
 
     def test_list03(self):
@@ -57,7 +57,7 @@ class ListCommandTest(CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.dirty)
-        self.assertEqual(self.output, "|  2| (D) Bar @Context1 +Project2\n")
+        self.assertEqual(self.output, "|2| (D) Bar @Context1 +Project2\n")
         self.assertEqual(self.errors, "")
 
     def test_list04(self):
@@ -66,7 +66,7 @@ class ListCommandTest(CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.dirty)
-        self.assertEqual(self.output, "|  3| (C) Baz @Context1 +Project1 key:value\n|  2| (D) Bar @Context1 +Project2\n")
+        self.assertEqual(self.output, "|3| (C) Baz @Context1 +Project1 key:value\n|2| (D) Bar @Context1 +Project2\n")
         self.assertEqual(self.errors, "")
 
     def test_list05(self):
@@ -74,7 +74,7 @@ class ListCommandTest(CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.dirty)
-        self.assertEqual(self.output, "|  1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n|  3| (C) Baz @Context1 +Project1 key:value\n|  4| (C) Drink beer @ home\n|  5| (C) 13 + 29 = 42\n|  2| (D) Bar @Context1 +Project2\n|  7| hidden item h:1\n|  6| x 2014-12-12 Completed but with date:2014-12-12\n")
+        self.assertEqual(self.output, "|1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n|3| (C) Baz @Context1 +Project1 key:value\n|4| (C) Drink beer @ home\n|5| (C) 13 + 29 = 42\n|2| (D) Bar @Context1 +Project2\n|7| hidden item h:1\n|6| x 2014-12-12 Completed but with date:2014-12-12\n")
         self.assertEqual(self.errors, "")
 
     def test_list06(self):
@@ -92,7 +92,7 @@ class ListCommandTest(CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.dirty)
-        self.assertEqual(self.output, "|  3| (C) Baz @Context1 +Project1 key:value\n|  1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n")
+        self.assertEqual(self.output, "|3| (C) Baz @Context1 +Project1 key:value\n|1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n")
         self.assertEqual(self.errors, "")
 
     def test_list08(self):
@@ -101,7 +101,7 @@ class ListCommandTest(CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.dirty)
-        self.assertEqual(self.output, "|  4| (C) Drink beer @ home\n|  5| (C) 13 + 29 = 42\n|  2| (D) Bar @Context1 +Project2\n")
+        self.assertEqual(self.output, "|4| (C) Drink beer @ home\n|5| (C) 13 + 29 = 42\n|2| (D) Bar @Context1 +Project2\n")
         self.assertEqual(self.errors, "")
 
     def test_list09(self):
@@ -110,7 +110,7 @@ class ListCommandTest(CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.dirty)
-        self.assertEqual(self.output, "|  5| (C) 13 + 29 = 42\n|  2| (D) Bar @Context1 +Project2\n")
+        self.assertEqual(self.output, "|5| (C) 13 + 29 = 42\n|2| (D) Bar @Context1 +Project2\n")
         self.assertEqual(self.errors, "")
 
     def test_list10(self):
@@ -119,7 +119,7 @@ class ListCommandTest(CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.dirty)
-        self.assertEqual(self.output, "|  2| (D) Bar @Context1 +Project2\n")
+        self.assertEqual(self.output, "|2| (D) Bar @Context1 +Project2\n")
         self.assertEqual(self.errors, "")
 
     def test_list11(self):
@@ -129,7 +129,7 @@ class ListCommandTest(CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.dirty)
-        self.assertEqual(self.output, "|  1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n")
+        self.assertEqual(self.output, "|1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n")
         self.assertEqual(self.errors, "")
 
     def test_list12(self):
@@ -140,7 +140,7 @@ class ListCommandTest(CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.dirty)
-        self.assertEqual(self.output, "|  1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n|  3| (C) Baz @Context1 +Project1 key:value\n|  2| (D) Bar @Context1 +Project2\n")
+        self.assertEqual(self.output, "|1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n|3| (C) Baz @Context1 +Project1 key:value\n|2| (D) Bar @Context1 +Project2\n")
         self.assertEqual(self.errors, "")
 
     def test_list13(self):
@@ -149,7 +149,7 @@ class ListCommandTest(CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.dirty)
-        self.assertEqual(self.output, "|  1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n|  3| (C) Baz @Context1 +Project1 key:value\n|  4| (C) Drink beer @ home\n|  5| (C) 13 + 29 = 42\n|  7| hidden item h:1\n|  6| x 2014-12-12 Completed but with date:2014-12-12\n")
+        self.assertEqual(self.output, "|1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n|3| (C) Baz @Context1 +Project1 key:value\n|4| (C) Drink beer @ home\n|5| (C) 13 + 29 = 42\n|7| hidden item h:1\n|6| x 2014-12-12 Completed but with date:2014-12-12\n")
         self.assertEqual(self.errors, "")
 
     def test_list14(self):
@@ -159,7 +159,7 @@ class ListCommandTest(CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.dirty)
-        self.assertEqual(self.output, " |  1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n |  4| (C) Drink beer @ home\n |  5| (C) 13 + 29 = 42\n |  2| (D) Bar @Context1 +Project2\n")
+        self.assertEqual(self.output, " |1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n |4| (C) Drink beer @ home\n |5| (C) 13 + 29 = 42\n |2| (D) Bar @Context1 +Project2\n")
         self.assertEqual(self.errors, "")
 
     def test_list15(self):
@@ -167,7 +167,7 @@ class ListCommandTest(CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.dirty)
-        self.assertEqual(self.output, "|  2| (D) Bar @Context1 +Project2\n")
+        self.assertEqual(self.output, "|2| (D) Bar @Context1 +Project2\n")
         self.assertEqual(self.errors, "")
 
     def test_list16(self):
@@ -187,7 +187,7 @@ class ListCommandTest(CommandTest):
 
         self.assertFalse(self.todolist.dirty)
         self.assertEqual(self.output,
-                         "|  3| (C) Baz @Context1 +Project1 key:value\n")
+                         "|3| (C) Baz @Context1 +Project1 key:value\n")
         self.assertEqual(self.errors, "")
 
     def test_list18(self):
@@ -196,7 +196,7 @@ class ListCommandTest(CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.dirty)
-        self.assertEqual(self.output, "|  6| x 2014-12-12 Completed but with date:2014-12-12\n")
+        self.assertEqual(self.output, "|6| x 2014-12-12 Completed but with date:2014-12-12\n")
 
     def test_list19(self):
         """ Force showing all tags. """
@@ -207,7 +207,7 @@ class ListCommandTest(CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.dirty)
-        self.assertEqual(self.output, "|  3| (C) Baz @Context1 +Project1 id:1 key:value\n|  1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n")
+        self.assertEqual(self.output, "|3| (C) Baz @Context1 +Project1 id:1 key:value\n|1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n")
         self.assertEqual(self.errors, "")
 
     def test_list20(self):
@@ -215,7 +215,7 @@ class ListCommandTest(CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.dirty)
-        self.assertEqual(self.output, "|  1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n|  4| (C) Drink beer @ home\n|  5| (C) 13 + 29 = 42\n|  2| (D) Bar @Context1 +Project2\n")
+        self.assertEqual(self.output, "|1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n|4| (C) Drink beer @ home\n|5| (C) 13 + 29 = 42\n|2| (D) Bar @Context1 +Project2\n")
         self.assertEqual(self.errors, "")
 
     def test_list21(self):
@@ -224,7 +224,7 @@ class ListCommandTest(CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.dirty)
-        self.assertEqual(self.output, "|  1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n|  4| (C) Drink beer @ home\n|  5| (C) 13 + 29 = 42\n|  2| (D) Bar @Context1 +Project2\n")
+        self.assertEqual(self.output, "|1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n|4| (C) Drink beer @ home\n|5| (C) 13 + 29 = 42\n|2| (D) Bar @Context1 +Project2\n")
         self.assertEqual(self.errors, "")
 
     def test_list22(self):
@@ -236,7 +236,7 @@ class ListCommandTest(CommandTest):
         command.execute()
 
         self.assertFalse(self.todolist.dirty)
-        self.assertEqual(self.output, '|  1| Foo.\n')
+        self.assertEqual(self.output, '|1| Foo.\n')
 
     def test_list31(self):
         """ Don't show any todos with -n 0 """
@@ -251,7 +251,7 @@ class ListCommandTest(CommandTest):
         command = ListCommand(["-n", "1"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEqual(self.output, "|  1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n")
+        self.assertEqual(self.output, "|1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n")
         self.assertEqual(self.errors, "")
 
     def test_list33(self):
@@ -259,7 +259,7 @@ class ListCommandTest(CommandTest):
         command = ListCommand(["-n", "-1"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEqual(self.output, "|  1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n|  4| (C) Drink beer @ home\n|  5| (C) 13 + 29 = 42\n|  2| (D) Bar @Context1 +Project2\n")
+        self.assertEqual(self.output, "|1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n|4| (C) Drink beer @ home\n|5| (C) 13 + 29 = 42\n|2| (D) Bar @Context1 +Project2\n")
         self.assertEqual(self.errors, "")
 
     def test_list34(self):
@@ -269,7 +269,7 @@ class ListCommandTest(CommandTest):
         command = ListCommand(["-n", "foo"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEqual(self.output, "|  1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n|  4| (C) Drink beer @ home\n")
+        self.assertEqual(self.output, "|1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n|4| (C) Drink beer @ home\n")
         self.assertEqual(self.errors, "")
 
     def test_list35(self):
@@ -277,21 +277,21 @@ class ListCommandTest(CommandTest):
         command = ListCommand(["-x", "-n", "foo"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEqual(self.output, "|  1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n|  3| (C) Baz @Context1 +Project1 key:value\n|  4| (C) Drink beer @ home\n|  5| (C) 13 + 29 = 42\n|  2| (D) Bar @Context1 +Project2\n|  7| hidden item h:1\n|  6| x 2014-12-12 Completed but with date:2014-12-12\n")
+        self.assertEqual(self.output, "|1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n|3| (C) Baz @Context1 +Project1 key:value\n|4| (C) Drink beer @ home\n|5| (C) 13 + 29 = 42\n|2| (D) Bar @Context1 +Project2\n|7| hidden item h:1\n|6| x 2014-12-12 Completed but with date:2014-12-12\n")
         self.assertEqual(self.errors, "")
 
     def test_list36(self):
         command = ListCommand(["-i", "1"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEqual(self.output, "|  1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n")
+        self.assertEqual(self.output, "|1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n")
         self.assertEqual(self.errors, "")
 
     def test_list37(self):
         command = ListCommand(["-i", "1,foo,3"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEqual(self.output, "|  1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n|  3| (C) Baz @Context1 +Project1 key:value\n")
+        self.assertEqual(self.output, "|1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n|3| (C) Baz @Context1 +Project1 key:value\n")
         self.assertEqual(self.errors, "")
 
     def test_list38(self):
@@ -316,7 +316,7 @@ class ListCommandTest(CommandTest):
         command = ListCommand(["(<C)"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEqual(self.output, "|  2| (D) Bar @Context1 +Project2\n")
+        self.assertEqual(self.output, "|2| (D) Bar @Context1 +Project2\n")
         self.assertEqual(self.errors, "")
 
     def test_list41(self):
@@ -331,7 +331,7 @@ class ListCommandTest(CommandTest):
                               self.out, self.error)
         command.execute()
 
-        self.assertEqual(self.output, "|  1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n")
+        self.assertEqual(self.output, "|1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n")
         self.assertEqual(self.errors, "")
 
     @mock.patch('topydo.commands.ListCommand.get_terminal_size')
@@ -342,7 +342,7 @@ class ListCommandTest(CommandTest):
         command = ListCommand(["-N"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEqual(self.output, "|  1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n|  4| (C) Drink beer @ home\n|  5| (C) 13 + 29 = 42\n|  2| (D) Bar @Context1 +Project2\n")
+        self.assertEqual(self.output, "|1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n|4| (C) Drink beer @ home\n|5| (C) 13 + 29 = 42\n|2| (D) Bar @Context1 +Project2\n")
         self.assertEqual(self.errors, "")
 
     @mock.patch('topydo.commands.ListCommand.get_terminal_size')
@@ -360,7 +360,7 @@ class ListCommandTest(CommandTest):
         command = ListCommand(["-N"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEqual(self.output, "|  1| (A) item 1\n| 27| (A) item 27\n|  2| (B) item 2\n| 28| (B) item 28\n|  3| (C) item 3\n| 29| (C) item 29\n|  4| (D) item 4\n| 30| (D) item 30\n|  5| (E) item 5\n| 31| (E) item 31\n|  6| (F) item 6\n| 32| (F) item 32\n|  7| (G) item 7\n| 33| (G) item 33\n|  8| (H) item 8\n| 34| (H) item 34\n|  9| (I) item 9\n| 35| (I) item 35\n| 10| (J) item 10\n| 36| (J) item 36\n| 11| (K) item 11\n")
+        self.assertEqual(self.output, "| 1| (A) item 1\n|27| (A) item 27\n| 2| (B) item 2\n|28| (B) item 28\n| 3| (C) item 3\n|29| (C) item 29\n| 4| (D) item 4\n|30| (D) item 30\n| 5| (E) item 5\n|31| (E) item 31\n| 6| (F) item 6\n|32| (F) item 32\n| 7| (G) item 7\n|33| (G) item 33\n| 8| (H) item 8\n|34| (H) item 34\n| 9| (I) item 9\n|35| (I) item 35\n|10| (J) item 10\n|36| (J) item 36\n|11| (K) item 11\n")
         self.assertEqual(self.errors, "")
 
     @mock.patch('topydo.commands.ListCommand.get_terminal_size')
@@ -378,7 +378,7 @@ class ListCommandTest(CommandTest):
         command = ListCommand(["-N"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEqual(self.output, "|  1| (A) item 1\n| 27| (A) item 27\n|  2| (B) item 2\n| 28| (B) item 28\n|  3| (C) item 3\n| 29| (C) item 29\n|  4| (D) item 4\n")
+        self.assertEqual(self.output, "| 1| (A) item 1\n|27| (A) item 27\n| 2| (B) item 2\n|28| (B) item 28\n| 3| (C) item 3\n|29| (C) item 29\n| 4| (D) item 4\n")
         self.assertEqual(self.errors, "")
 
     @mock.patch('topydo.commands.ListCommand.get_terminal_size')
@@ -392,7 +392,7 @@ class ListCommandTest(CommandTest):
         command = ListCommand(["-N"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEqual(self.output, "|  1| (A) item 1\n")
+        self.assertEqual(self.output, "| 1| (A) item 1\n")
         self.assertEqual(self.errors, "")
 
     @mock.patch('topydo.commands.ListCommand.get_terminal_size')
@@ -411,14 +411,14 @@ class ListCommandTest(CommandTest):
         command = ListCommand(["-N"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEqual(self.output, "|  1| (A) item 1\n| 27| (A) item 27\n|  2| (B) item 2\n| 28| (B) item 28\n|  3| (C) item 3\n| 29| (C) item 29\n|  4| (D) item 4\n| 30| (D) item 30\n|  5| (E) item 5\n| 31| (E) item 31\n|  6| (F) item 6\n| 32| (F) item 32\n|  7| (G) item 7\n| 33| (G) item 33\n|  8| (H) item 8\n| 34| (H) item 34\n|  9| (I) item 9\n| 35| (I) item 35\n| 10| (J) item 10\n| 36| (J) item 36\n")
+        self.assertEqual(self.output, "| 1| (A) item 1\n|27| (A) item 27\n| 2| (B) item 2\n|28| (B) item 28\n| 3| (C) item 3\n|29| (C) item 29\n| 4| (D) item 4\n|30| (D) item 30\n| 5| (E) item 5\n|31| (E) item 31\n| 6| (F) item 6\n|32| (F) item 32\n| 7| (G) item 7\n|33| (G) item 33\n| 8| (H) item 8\n|34| (H) item 34\n| 9| (I) item 9\n|35| (I) item 35\n|10| (J) item 10\n|36| (J) item 36\n")
         self.assertEqual(self.errors, "")
 
     def test_list48(self):
         command = ListCommand(["created:2015-11-05"], self.todolist, self.out, self.error)
         command.execute()
 
-        self.assertEqual(self.output, "|  1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n")
+        self.assertEqual(self.output, "|1| (C) 2015-11-05 Foo @Context2 Not@Context +Project1 Not+Project\n")
         self.assertEqual(self.errors, "")
 
     def test_list49(self):
@@ -431,8 +431,50 @@ class ListCommandTest(CommandTest):
         command = ListCommand(["-n", "1"], todolist, self.out, self.error)
         command.execute()
 
-        self.assertEqual(self.output, '|  2| This item is visible\n')
+        self.assertEqual(self.output, '|2| This item is visible\n')
         self.assertEqual(self.errors, "")
+
+    def test_list50(self):
+        """
+        Fallback to normal alphabet for too short alphabets, fallback on
+        default alphabet.
+        """
+        config(p_overrides={('topydo', 'identifier_alphabet'): 'a', ('topydo', 'identifiers'): 'text'})
+
+        # self.todolist was loaded with old identifier settings
+        todolist = load_file_to_todolist("test/data/ListCommandTest.txt")
+
+        command = ListCommand(["-F", "%I", "Foo"], todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEqual(self.output, "t5c\n")
+        self.assertEqual(self.errors, '')
+
+    def test_list51(self):
+        """ Test hexadecimal IDs """
+        config(p_overrides={('topydo', 'identifier_alphabet'): '0123456789abcdef', ('topydo', 'identifiers'): 'text'})
+
+        # self.todolist was loaded with old identifier settings
+        todolist = load_file_to_todolist("test/data/ListCommandTest.txt")
+
+        command = ListCommand(["-F", "%i", "Foo"], todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEqual(self.output, '2c8\n')
+        self.assertEqual(self.errors, '')
+
+    def test_list52(self):
+        """ Alphabet is too short due to duplicate characters """
+        config(p_overrides={('topydo', 'identifier_alphabet'): '0123456788', ('topydo', 'identifiers'): 'text'})
+
+        # self.todolist was loaded with old identifier settings
+        todolist = load_file_to_todolist("test/data/ListCommandTest.txt")
+
+        command = ListCommand(["-F", "%i", "Foo"], todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEqual(self.output, 't5c\n')
+        self.assertEqual(self.errors, '')
 
     def test_list_name(self):
         name = ListCommand.name()
@@ -461,7 +503,7 @@ class ListCommandUnicodeTest(CommandTest):
 
         self.assertFalse(self.todolist.dirty)
 
-        expected = u"|  1| (C) And some sp\u00e9cial tag:\u25c4\n"
+        expected = u"|1| (C) And some sp\u00e9cial tag:\u25c4\n"
 
         self.assertEqual(self.output, expected)
 
@@ -584,17 +626,17 @@ class ListCommandGroupTest(CommandTest):
         self.assertEqual(self.output, """\
 Project: A
 ==========
-|  1| +A only test:test_group1
-|  3| +A and +B test:test_group1
+| 1| +A only test:test_group1
+| 3| +A and +B test:test_group1
 
 Project: B
 ==========
-|  3| +A and +B test:test_group1
-|  2| +B only test:test_group1
+| 3| +A and +B test:test_group1
+| 2| +B only test:test_group1
 
 Project: None
 =============
-|  4| No project test:test_group1
+| 4| No project test:test_group1
 """)
 
     def test_group2(self):
@@ -608,11 +650,11 @@ Project: None
         self.assertEqual(self.output, """\
 l: 0
 ====
-|  6| Another item l:0 test:test_group2
+| 6| Another item l:0 test:test_group2
 
 l: 1
 ====
-|  5| Different item l:1 test:test_group2
+| 5| Different item l:1 test:test_group2
 """)
 
     def test_group3(self):
@@ -626,11 +668,11 @@ l: 1
         self.assertEqual(self.output, """\
 due: today
 ==========
-|  7| Test 1 test:test_group3 due:2016-12-06
+| 7| Test 1 test:test_group3 due:2016-12-06
 
 due: in a day
 =============
-|  8| Test 2 test:test_group3 due:2016-12-07
+| 8| Test 2 test:test_group3 due:2016-12-07
 """)
 
     def test_group4(self):
@@ -644,7 +686,7 @@ due: in a day
         self.assertEqual(self.output, """\
 t: today
 ========
-|  9| Test 1 test:test_group4 test:test_group5 t:2016-12-06
+| 9| Test 1 test:test_group4 test:test_group5 t:2016-12-06
 """)
 
     def test_group5(self):
@@ -658,11 +700,11 @@ t: today
         self.assertEqual(self.output, """\
 t: today
 ========
-|  9| Test 1 test:test_group4 test:test_group5 t:2016-12-06
+| 9| Test 1 test:test_group4 test:test_group5 t:2016-12-06
 
 t: in a day
 ===========
-| 10| Test 2 test:test_group4 test:test_group5 t:2016-12-07
+|10| Test 2 test:test_group4 test:test_group5 t:2016-12-07
 """)
 
     def test_group6(self):
@@ -676,7 +718,7 @@ t: in a day
         self.assertEqual(self.output, """\
 fake: No value
 ==============
-| 11| Group by non-existing tag test:test_group6
+|11| Group by non-existing tag test:test_group6
 """)
 
     def test_group7(self):
@@ -690,11 +732,11 @@ fake: No value
         self.assertEqual(self.output, """\
 Project: B
 ==========
-| 13| Sort descending +B test:test_group7
+|13| Sort descending +B test:test_group7
 
 Project: A
 ==========
-| 12| Sort descending +A test:test_group7
+|12| Sort descending +A test:test_group7
 """)
 
     def test_group8(self):
@@ -708,19 +750,19 @@ Project: A
         self.assertEqual(self.output, """\
 Project: A, Context: B
 ======================
-| 15| Inner sort 2 +A @B test:test_group8
+|15| Inner sort 2 +A @B test:test_group8
 
 Project: A, Context: A
 ======================
-| 14| Inner sort 1 +A @A test:test_group8
+|14| Inner sort 1 +A @A test:test_group8
 
 Project: B, Context: B
 ======================
-| 17| Inner sort 4 +B @B test:test_group8
+|17| Inner sort 4 +B @B test:test_group8
 
 Project: B, Context: A
 ======================
-| 16| Inner sort 3 +B @A test:test_group8
+|16| Inner sort 3 +B @A test:test_group8
 """)
 
     def test_group9(self):
@@ -734,8 +776,8 @@ Project: B, Context: A
         self.assertEqual(self.output, """\
 Project: A
 ==========
-| 19| Inner sort 2 +A test:test_group9
-| 18| Inner sort 1 +A test:test_group9
+|19| Inner sort 2 +A test:test_group9
+|18| Inner sort 1 +A test:test_group9
 """)
 
     def test_group10(self):
@@ -761,17 +803,17 @@ Project: A
         self.assertEqual(self.output, """\
 Project: A
 ==========
-|  1| +A only test:test_group1
-|  3| +A and +B test:test_group1
+| 1| +A only test:test_group1
+| 3| +A and +B test:test_group1
 
 Project: B
 ==========
-|  3| +A and +B test:test_group1
-|  2| +B only test:test_group1
+| 3| +A and +B test:test_group1
+| 2| +B only test:test_group1
 
 Project: None
 =============
-|  4| No project test:test_group1
+| 4| No project test:test_group1
 """)
         self.assertEqual(self.errors, "")
 
@@ -784,10 +826,10 @@ Project: None
         self.assertFalse(todolist.dirty)
 
         self.assertEqual(self.output, """\
-|  1| +A only test:test_group1
-|  2| +B only test:test_group1
-|  3| +A and +B test:test_group1
-|  4| No project test:test_group1
+| 1| +A only test:test_group1
+| 2| +B only test:test_group1
+| 3| +A and +B test:test_group1
+| 4| No project test:test_group1
 """)
         self.assertEqual(self.errors, "")
 

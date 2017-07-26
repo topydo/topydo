@@ -23,6 +23,7 @@ from test.command_testcase import CommandTest
 from test.facilities import load_file_to_todolist
 from topydo.commands.ListCommand import ListCommand
 from topydo.lib.Config import config
+from topydo.lib.TodoListBase import TodoListBase
 
 # We're searching for 'mock'
 # 'mock' was added as 'unittest.mock' in Python 3.3, but PyPy 3 is based on Python 3.2
@@ -37,6 +38,7 @@ except ImportError:
 class ListFormatTest(CommandTest):
     def setUp(self):
         super().setUp()
+        self.maxDiff = None
         self.todolist = load_file_to_todolist("test/data/ListFormat.txt")
         self.terminal_size = namedtuple('terminal_size', ['columns', 'lines'])
 
@@ -45,12 +47,12 @@ class ListFormatTest(CommandTest):
         command = ListCommand(["-x"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = """|  1| (D) 2015-08-31 Bar @Context1 +Project2 due:2015-09-30 t:2015-09-29
-|  2| (Z) 2015-11-06 Lorem ipsum dolorem sit amet. Red @fox +jumped over the and jar due:2015-11-08 lazy:bar t:2015-11-07
-|  3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
-|  4| (C) Baz @Context1 +Project1 key:value
-|  5| Drink beer @ home ical:foobar id:1 p:2
-|  6| x 2014-12-12 Completed but with date:2014-12-12
+        result = """|1| (D) 2015-08-31 Bar @Context1 +Project2 due:2015-09-30 t:2015-09-29
+|2| (Z) 2015-11-06 Lorem ipsum dolorem sit amet. Red @fox +jumped over the and jar due:2015-11-08 lazy:bar t:2015-11-07
+|3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
+|4| (C) Baz @Context1 +Project1 key:value
+|5| Drink beer @ home ical:foobar id:1 p:2
+|6| x 2014-12-12 Completed but with date:2014-12-12
 """
         self.assertEqual(self.output, result)
 
@@ -62,12 +64,12 @@ class ListFormatTest(CommandTest):
         command = ListCommand(["-x"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = """|  1| (D) 2015-08-31 Bar @Context1 +Project2 due:2015-09-30 t:2015-09-29
-|  2| (Z) 2015-11-06 Lorem ipsum dolore... due:2015-11-08 lazy:bar t:2015-11-07
-|  3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
-|  4| (C) Baz @Context1 +Project1 key:value
-|  5| Drink beer @ home ical:foobar id:1 p:2
-|  6| x 2014-12-12 Completed but with date:2014-12-12
+        result = """|1| (D) 2015-08-31 Bar @Context1 +Project2 due:2015-09-30 t:2015-09-29
+|2| (Z) 2015-11-06 Lorem ipsum dolorem ... due:2015-11-08 lazy:bar t:2015-11-07
+|3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
+|4| (C) Baz @Context1 +Project1 key:value
+|5| Drink beer @ home ical:foobar id:1 p:2
+|6| x 2014-12-12 Completed but with date:2014-12-12
 """
         self.assertEqual(self.output, result)
 
@@ -79,12 +81,12 @@ class ListFormatTest(CommandTest):
         command = ListCommand(["-x"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = """|  1| (D) 2015-08-31 Bar @Context1 +Project2 due:2015-09-30 t:2015-09-29
-|  2| (Z) 2015-11-06 Lorem ipsum dolorem sit amet. Red @fox... due:2015-11-08 lazy:bar t:2015-11-07
-|  3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
-|  4| (C) Baz @Context1 +Project1 key:value
-|  5| Drink beer @ home ical:foobar id:1 p:2
-|  6| x 2014-12-12 Completed but with date:2014-12-12
+        result = """|1| (D) 2015-08-31 Bar @Context1 +Project2 due:2015-09-30 t:2015-09-29
+|2| (Z) 2015-11-06 Lorem ipsum dolorem sit amet. Red @fox +... due:2015-11-08 lazy:bar t:2015-11-07
+|3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
+|4| (C) Baz @Context1 +Project1 key:value
+|5| Drink beer @ home ical:foobar id:1 p:2
+|6| x 2014-12-12 Completed but with date:2014-12-12
 """
         self.assertEqual(self.output, result)
 
@@ -96,12 +98,12 @@ class ListFormatTest(CommandTest):
         command = ListCommand(["-x"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = """|  1| (D) 2015-08-31 Bar @Context1 +Project2                            due:2015-09-30 t:2015-09-29
-|  2| (Z) 2015-11-06 Lorem ipsum dolorem sit amet. Red @fox... due:2015-11-08 lazy:bar t:2015-11-07
-|  3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
-|  4| (C) Baz @Context1 +Project1                                                         key:value
-|  5| Drink beer @ home                                                        ical:foobar id:1 p:2
-|  6| x 2014-12-12 Completed but with                                               date:2014-12-12
+        result = """|1| (D) 2015-08-31 Bar @Context1 +Project2                              due:2015-09-30 t:2015-09-29
+|2| (Z) 2015-11-06 Lorem ipsum dolorem sit amet. Red @fox +... due:2015-11-08 lazy:bar t:2015-11-07
+|3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
+|4| (C) Baz @Context1 +Project1                                                           key:value
+|5| Drink beer @ home                                                          ical:foobar id:1 p:2
+|6| x 2014-12-12 Completed but with                                                 date:2014-12-12
 """
         self.assertEqual(self.output, result)
 
@@ -113,12 +115,12 @@ class ListFormatTest(CommandTest):
         command = ListCommand(["-x"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = """|  1| (D) 2015-08-31 Bar @Context1 +Project2        due:2015-09-30 t:2015-09-29
-|  2| (Z) 2015-11-06 Lorem ipsum dolore... due:2015-11-08 lazy:bar t:2015-11-07
-|  3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
-|  4| (C) Baz @Context1 +Project1                                     key:value
-|  5| Drink beer @ home                                    ical:foobar id:1 p:2
-|  6| x 2014-12-12 Completed but with                           date:2014-12-12
+        result = """|1| (D) 2015-08-31 Bar @Context1 +Project2          due:2015-09-30 t:2015-09-29
+|2| (Z) 2015-11-06 Lorem ipsum dolorem ... due:2015-11-08 lazy:bar t:2015-11-07
+|3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
+|4| (C) Baz @Context1 +Project1                                       key:value
+|5| Drink beer @ home                                      ical:foobar id:1 p:2
+|6| x 2014-12-12 Completed but with                             date:2014-12-12
 """
 
         self.assertEqual(self.output, result)
@@ -131,12 +133,12 @@ class ListFormatTest(CommandTest):
         command = ListCommand(["-x"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = """|  1| D Bar @Context1 +Project2                (3 months ago, due a month ago, started a month ago)
-|  2| Z Lorem ipsum dolorem sit amet. Red @fox ... lazy:bar (today, due in 2 days, starts in a day)
-|  3| C Foo @Context2 Not@Context +Project1 Not+Project                              (4 months ago)
-|  4| C Baz @Context1 +Project1 key:value
-|  5| Drink beer @ home
-|  6| x 2014-12-12 Completed but with date:2014-12-12
+        result = """|1| D Bar @Context1 +Project2                  (3 months ago, due a month ago, started a month ago)
+|2| Z Lorem ipsum dolorem sit amet. Red @fox +j... lazy:bar (today, due in 2 days, starts in a day)
+|3| C Foo @Context2 Not@Context +Project1 Not+Project                                (4 months ago)
+|4| C Baz @Context1 +Project1 key:value
+|5| Drink beer @ home
+|6| x 2014-12-12 Completed but with date:2014-12-12
 """
         self.assertEqual(self.output, result)
 
@@ -148,12 +150,12 @@ class ListFormatTest(CommandTest):
         command = ListCommand(["-x"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = """|  1| D Bar @Context1 +Project2                              (due a month ago, started a month ago)
-|  2| Z Lorem ipsum dolorem sit amet. Red @fox +jumped... lazy:bar (due in 2 days, starts in a day)
-|  3| C Foo @Context2 Not@Context +Project1 Not+Project
-|  4| C Baz @Context1 +Project1 key:value
-|  5| Drink beer @ home
-|  6| x 2014-12-12 Completed but with date:2014-12-12
+        result = """|1| D Bar @Context1 +Project2                                (due a month ago, started a month ago)
+|2| Z Lorem ipsum dolorem sit amet. Red @fox +jumped o... lazy:bar (due in 2 days, starts in a day)
+|3| C Foo @Context2 Not@Context +Project1 Not+Project
+|4| C Baz @Context1 +Project1 key:value
+|5| Drink beer @ home
+|6| x 2014-12-12 Completed but with date:2014-12-12
 """
         self.assertEqual(self.output, result)
 
@@ -210,12 +212,12 @@ today | in 2 days | in a day |
         command = ListCommand(["-x"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = """|  1| due:2015-09-30 t:2015-09-29
-|  2| due:2015-11-08 lazy:bar t:2015-11-07
-|  3|
-|  4| key:value
-|  5| ical:foobar id:1 p:2
-|  6| date:2014-12-12
+        result = """|1| due:2015-09-30 t:2015-09-29
+|2| due:2015-11-08 lazy:bar t:2015-11-07
+|3|
+|4| key:value
+|5| ical:foobar id:1 p:2
+|6| date:2014-12-12
 """
         self.assertEqual(self.output, result)
 
@@ -224,12 +226,12 @@ today | in 2 days | in a day |
         command = ListCommand(["-x"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = """|  1| %
-|  2| %
-|  3| %
-|  4| %
-|  5| %
-|  6| %
+        result = """|1| %
+|2| %
+|3| %
+|4| %
+|5| %
+|6| %
 """
         self.assertEqual(self.output, result)
 
@@ -238,12 +240,12 @@ today | in 2 days | in a day |
                               self.todolist, self.out, self.error)
         command.execute()
 
-        result = """|  1| (D) 2015-08-31 Bar @Context1 +Project2 due:2015-09-30 t:2015-09-29
-|  2| (Z) 2015-11-06 Lorem ipsum dolorem sit amet. Red @fox +jumped over the and jar due:2015-11-08 lazy:bar t:2015-11-07
-|  3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
-|  4| (C) Baz @Context1 +Project1 key:value
-|  5| Drink beer @ home ical:foobar id:1 p:2
-|  6| x 2014-12-12 Completed but with date:2014-12-12
+        result = """|1| (D) 2015-08-31 Bar @Context1 +Project2 due:2015-09-30 t:2015-09-29
+|2| (Z) 2015-11-06 Lorem ipsum dolorem sit amet. Red @fox +jumped over the and jar due:2015-11-08 lazy:bar t:2015-11-07
+|3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
+|4| (C) Baz @Context1 +Project1 key:value
+|5| Drink beer @ home ical:foobar id:1 p:2
+|6| x 2014-12-12 Completed but with date:2014-12-12
 """
         self.assertEqual(self.output, result)
 
@@ -254,8 +256,8 @@ today | in 2 days | in a day |
                               self.todolist, self.out, self.error)
         command.execute()
 
-        result = """|  1| (D) 2015-08-31 Bar @Context1 +Project2 due:2015-09-30 t:2015-09-29
-|  4| (C) Baz @Context1 +Project1 key:value
+        result = """|1| (D) 2015-08-31 Bar @Context1 +Project2 due:2015-09-30 t:2015-09-29
+|4| (C) Baz @Context1 +Project1 key:value
 """
 
         self.assertEqual(self.output, result)
@@ -355,12 +357,12 @@ today, due in 2 days, starts in a day
         command = ListCommand(["-x", "-F", "%I"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = """  1
-  2
-  3
-  4
-  5
-  6
+        result = """1
+2
+3
+4
+5
+6
 """
         self.assertEqual(self.output, result)
 
@@ -610,12 +612,12 @@ Z   Z
         command = ListCommand(["-x"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = """|  1| (D) 2015-08-31 Bar @Context1 +Project2                            due:2015-09-30 t:2015-09-29
-|  2| (Z) 2015-11-06 Lorem ipsum dolorem sit amet. Red @fox... due:2015-11-08 lazy:bar t:2015-11-07
-|  3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
-|  4| (C) Baz @Context1 +Project1                                                         key:value
-|  5| Drink beer @ home                                                        ical:foobar id:1 p:2
-|  6| x 2014-12-12 Completed but with                                               date:2014-12-12
+        result = """|1| (D) 2015-08-31 Bar @Context1 +Project2                              due:2015-09-30 t:2015-09-29
+|2| (Z) 2015-11-06 Lorem ipsum dolorem sit amet. Red @fox +... due:2015-11-08 lazy:bar t:2015-11-07
+|3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
+|4| (C) Baz @Context1 +Project1                                                           key:value
+|5| Drink beer @ home                                                          ical:foobar id:1 p:2
+|6| x 2014-12-12 Completed but with                                                 date:2014-12-12
 """
         self.assertEqual(self.output, result)
 
@@ -626,12 +628,12 @@ Z   Z
         command = ListCommand(["-x", "-F", "|%I| %x %{(}p{)} %c %S\\t%K"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = """|  1| (D) 2015-08-31 Bar @Context1 +Project2                            due:2015-09-30 t:2015-09-29
-|  2| (Z) 2015-11-06 Lorem ipsum dolorem sit amet. Red @fox... due:2015-11-08 lazy:bar t:2015-11-07
-|  3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
-|  4| (C) Baz @Context1 +Project1                                                         key:value
-|  5| Drink beer @ home                                                        ical:foobar id:1 p:2
-|  6| x 2014-12-12 Completed but with                                               date:2014-12-12
+        result = """|1| (D) 2015-08-31 Bar @Context1 +Project2                              due:2015-09-30 t:2015-09-29
+|2| (Z) 2015-11-06 Lorem ipsum dolorem sit amet. Red @fox +... due:2015-11-08 lazy:bar t:2015-11-07
+|3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
+|4| (C) Baz @Context1 +Project1                                                           key:value
+|5| Drink beer @ home                                                          ical:foobar id:1 p:2
+|6| x 2014-12-12 Completed but with                                                 date:2014-12-12
 """
         self.assertEqual(self.output, result)
 
@@ -643,12 +645,12 @@ Z   Z
         command = ListCommand(["-x"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = """   |  1| (D) 2015-08-31 Bar @Context1 +Project2                         due:2015-09-30 t:2015-09-29
-   |  2| (Z) 2015-11-06 Lorem ipsum dolorem sit amet. Red @... due:2015-11-08 lazy:bar t:2015-11-07
-   |  3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
-   |  4| (C) Baz @Context1 +Project1                                                      key:value
-   |  5| Drink beer @ home                                                     ical:foobar id:1 p:2
-   |  6| x 2014-12-12 Completed but with                                            date:2014-12-12
+        result = """   |1| (D) 2015-08-31 Bar @Context1 +Project2                           due:2015-09-30 t:2015-09-29
+   |2| (Z) 2015-11-06 Lorem ipsum dolorem sit amet. Red @fo... due:2015-11-08 lazy:bar t:2015-11-07
+   |3| (C) 2015-07-12 Foo @Context2 Not@Context +Project1 Not+Project
+   |4| (C) Baz @Context1 +Project1                                                        key:value
+   |5| Drink beer @ home                                                       ical:foobar id:1 p:2
+   |6| x 2014-12-12 Completed but with                                              date:2014-12-12
 """
         self.assertEqual(self.output, result)
 
@@ -681,19 +683,18 @@ C -
     @mock.patch('topydo.lib.ListFormat.get_terminal_size')
     def test_list_format45(self, mock_terminal_size):
         """ Colorblocks should not affect truncating or right_alignment. """
-        self.maxDiff = None
         mock_terminal_size.return_value = self.terminal_size(100, 25)
 
         config(p_overrides={('ls', 'list_format'): '%z|%I| %x %p %S %k\\t%{(}h{)}'})
         command = ListCommand(["-x"], self.todolist, self.out, self.error)
         command.execute()
 
-        result = u""" |  1| D Bar @Context1 +Project2                             (due a month ago, started a month ago)
- |  2| Z Lorem ipsum dolorem sit amet. Red @fox +jumpe... lazy:bar (due in 2 days, starts in a day)
- |  3| C Foo @Context2 Not@Context +Project1 Not+Project
- |  4| C Baz @Context1 +Project1 key:value
- |  5| Drink beer @ home
- |  6| x 2014-12-12 Completed but with date:2014-12-12
+        result = u""" |1| D Bar @Context1 +Project2                               (due a month ago, started a month ago)
+ |2| Z Lorem ipsum dolorem sit amet. Red @fox +jumped ... lazy:bar (due in 2 days, starts in a day)
+ |3| C Foo @Context2 Not@Context +Project1 Not+Project
+ |4| C Baz @Context1 +Project1 key:value
+ |5| Drink beer @ home
+ |6| x 2014-12-12 Completed but with date:2014-12-12
 """
         self.assertEqual(self.output, result)
 
@@ -733,21 +734,6 @@ x 2014-12-12 Completed but with date:2014-12-12
         self.assertEqual(self.output, result)
         self.assertEqual(self.errors, "")
 
-    def test_list_format49(self):
-        """
-        Test padded line numbers
-        """
-        command = ListCommand(["-F %N"], self.todolist, self.out, self.error)
-        command.execute()
-
-        result = """   1
-   3
-   4
-   5
-"""
-        self.assertEqual(self.output, result)
-        self.assertEqual(self.errors, "")
-
     def test_list_format50(self):
         """
         Test line numbers
@@ -777,6 +763,13 @@ x 2014-12-12 Completed but with date:2014-12-12
 """
         self.assertEqual(self.output, result)
         self.assertEqual(self.errors, "")
+
+    def test_list_format52(self):
+        config(p_overrides={('topydo', 'identifier_alphabet'): '0123456789abcdef', ('topydo', 'identifiers'): 'text'})
+
+        # make sure that it fallbacks to the default alphabet
+        todolist = TodoListBase([str(i) for i in range(0, 100 * 16 * 10)])
+        self.assertEqual(4, todolist.max_id_length())
 
 if __name__ == '__main__':
     unittest.main()
