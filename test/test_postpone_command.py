@@ -16,10 +16,11 @@
 
 import unittest
 from datetime import date, timedelta
-from test.command_testcase import CommandTest
 
 from topydo.commands.PostponeCommand import PostponeCommand
 from topydo.lib.TodoList import TodoList
+
+from .command_testcase import CommandTest
 
 
 class PostponeCommandTest(CommandTest):

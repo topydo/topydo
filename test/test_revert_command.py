@@ -19,7 +19,6 @@ import tempfile
 import unittest
 from datetime import date
 from glob import glob
-from test.command_testcase import CommandTest
 from uuid import uuid4
 
 from topydo.commands.AddCommand import AddCommand
@@ -31,6 +30,8 @@ from topydo.lib.ChangeSet import ChangeSet
 from topydo.lib.Config import config
 from topydo.lib.TodoFile import TodoFile
 from topydo.lib.TodoList import TodoList
+
+from .command_testcase import CommandTest
 
 
 class RevertCommandTest(CommandTest):

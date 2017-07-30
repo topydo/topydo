@@ -16,14 +16,15 @@
 
 import unittest
 from collections import namedtuple
-from test.command_testcase import CommandTest
-from test.facilities import load_file_to_todolist
 
 from freezegun import freeze_time
 
 from topydo.commands.ListCommand import ListCommand
 from topydo.lib.Config import config
 from topydo.lib.TodoListBase import TodoListBase
+
+from .command_testcase import CommandTest
+from .facilities import load_file_to_todolist
 
 # We're searching for 'mock'
 # 'mock' was added as 'unittest.mock' in Python 3.3, but PyPy 3 is based on Python 3.2

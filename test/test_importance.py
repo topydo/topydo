@@ -16,13 +16,14 @@
 
 import unittest
 from datetime import date
-from test.topydo_testcase import TopydoTest
 
 from freezegun import freeze_time
 
 from topydo.lib.Config import config
 from topydo.lib.Importance import importance
 from topydo.lib.Todo import Todo
+
+from .topydo_testcase import TopydoTest
 
 
 @freeze_time("2015, 11, 06")

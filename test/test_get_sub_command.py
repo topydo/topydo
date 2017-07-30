@@ -15,7 +15,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
-from test.topydo_testcase import TopydoTest
 
 from topydo.Commands import get_subcommand
 from topydo.commands.AddCommand import AddCommand
@@ -23,6 +22,8 @@ from topydo.commands.DeleteCommand import DeleteCommand
 from topydo.commands.ListCommand import ListCommand
 from topydo.commands.TagCommand import TagCommand
 from topydo.lib.Config import ConfigError, config
+
+from .topydo_testcase import TopydoTest
 
 
 class GetSubcommandTest(TopydoTest):

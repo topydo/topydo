@@ -15,9 +15,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
-from test.topydo_testcase import TopydoTest
 
 from topydo.lib.Graph import DirectedGraph
+
+from .topydo_testcase import TopydoTest
 
 
 class GraphTest(TopydoTest):

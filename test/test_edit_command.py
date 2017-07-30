@@ -16,12 +16,13 @@
 
 import os
 import unittest
-from test.command_testcase import CommandTest
 
 from topydo.commands.EditCommand import EditCommand
 from topydo.lib.Config import config
 from topydo.lib.Todo import Todo
 from topydo.lib.TodoList import TodoList
+
+from .command_testcase import CommandTest
 
 # We're searching for 'mock'
 # pylint: disable=no-name-in-module

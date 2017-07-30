@@ -15,7 +15,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
-from test.topydo_testcase import TopydoTest
 
 from freezegun import freeze_time
 
@@ -23,6 +22,8 @@ from topydo.lib.Config import config
 from topydo.lib.ProgressColor import progress_color
 from topydo.lib.Todo import Todo
 from topydo.lib.TodoList import TodoList
+
+from .topydo_testcase import TopydoTest
 
 
 def set_256_colors():
