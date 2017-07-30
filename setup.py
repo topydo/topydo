@@ -1,15 +1,15 @@
-from setuptools import setup, find_packages
 import os
 import re
 import codecs
-import sys
 
-here = os.path.abspath(os.path.dirname(__file__))
+from setuptools import setup, find_packages
+
+_HERE = os.path.abspath(os.path.dirname(__file__))
 
 
 def read(*parts):
     # intentionally *not* adding an encoding option to open
-    return codecs.open(os.path.join(here, *parts), 'r').read()
+    return codecs.open(os.path.join(_HERE, *parts), 'r').read()
 
 
 def find_version(*file_paths):
@@ -24,17 +24,17 @@ WATCHDOG = 'watchdog >= 0.8.3'
 ICALENDAR = 'icalendar'
 
 setup(
-    name = "topydo",
-    packages = find_packages(exclude=["test"]),
-    version = find_version('topydo', 'lib', 'Version.py'),
-    description = "A powerful todo.txt application for the console",
-    author = "Bram Schoenmakers",
-    author_email = "bram@topydo.org",
-    url = "https://www.topydo.org",
-    install_requires = [
+    name="topydo",
+    packages=find_packages(exclude=["test"]),
+    version=find_version('topydo', 'lib', 'Version.py'),
+    description="A powerful todo.txt application for the console",
+    author="Bram Schoenmakers",
+    author_email="bram@topydo.org",
+    url="https://www.topydo.org",
+    install_requires=[
         'arrow >= 0.7.0',
     ],
-    extras_require = {
+    extras_require={
         ':sys_platform=="win32"': ['colorama>=0.2.5'],
         ':python_version=="3.2"': ['backports.shutil_get_terminal_size>=1.0.0'],
         'columns': ['urwid >= 1.3.0', WATCHDOG],
@@ -43,10 +43,10 @@ setup(
         'test': ['coverage>=4.3', 'freezegun', 'green', ICALENDAR, 'pylint>=1.7.1'],
         'test:python_version=="3.2"': ['mock'],
     },
-    entry_points= {
-        'console_scripts': ['topydo = topydo.ui.UILoader:main'],
+    entry_points={
+        'console_scripts': ['topydo=topydo.ui.UILoader:main'],
     },
-    classifiers = [
+    classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Environment :: Console",
         "Intended Audience :: End Users/Desktop",
@@ -60,7 +60,7 @@ setup(
         "Programming Language :: Python :: Implementation :: PyPy",
         "Topic :: Utilities",
     ],
-    long_description = """\
+    long_description="""\
 topydo is a powerful and customizable todo.txt application for the console, inspired by the todo.txt CLI by Gina Trapani.
 
 Highlights of the additional features it provides:
@@ -74,5 +74,5 @@ Highlights of the additional features it provides:
 * Some conveniences when adding new items (e.g. adding creation date and use relative dates)
 """,
 
-    test_suite = "test",
+    test_suite="test",
 )

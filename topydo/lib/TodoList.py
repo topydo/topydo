@@ -116,7 +116,7 @@ class TodoList(TodoListBase):
         super().add_todos(p_todos)
 
         for todo in self._todos:
-            todo.parents = types.MethodType(lambda i: self.parents(i), todo)
+            todo.parents = types.MethodType(self.parents, todo)
 
             # only do administration when the dependency info is initialized,
             # otherwise we postpone it until it's really needed (through the

@@ -177,7 +177,8 @@ class CLIApplicationBase(object):
         self._post_archive_action = None
         self.backup = None
 
-    def _usage(self):
+    @staticmethod
+    def _usage():
         usage()
         sys.exit(0)
 
@@ -208,7 +209,7 @@ class CLIApplicationBase(object):
             elif opt in ("-v", "--version"):
                 version()
             else:
-                self._usage()
+                CLIApplicationBase._usage()
 
         if alt_config_path:
             config(alt_config_path, overrides)
@@ -237,21 +238,17 @@ class CLIApplicationBase(object):
             if archive.dirty:
                 archive_file.write(archive.print_todos())
 
-    def _help(self, args):
-        if args is None:
-            pass  # TODO
-        else:
-            pass  # TODO
-
-    def is_read_only(self, p_command):
+    @staticmethod
+    def is_read_only(p_command):
         """ Returns True when the given command class is read-only. """
         read_only_commands = tuple(cmd for cmd
                                    in ('revert', ) + READ_ONLY_COMMANDS)
         return p_command.name() in read_only_commands
 
-    def _backup(self, p_command, p_args=[], p_label=None):
-        if config().backup_count() > 0 and p_command and not self.is_read_only(p_command):
-            call = [p_command.name()]+ p_args
+    def _backup(self, p_command, p_args=None, p_label=None):
+        if config().backup_count() > 0 and p_command and not CLIApplicationBase.is_read_only(p_command):
+            p_args = p_args if p_args else []
+            call = [p_command.name()] + p_args
 
             from topydo.lib.ChangeSet import ChangeSet
             label = p_label if p_label else call

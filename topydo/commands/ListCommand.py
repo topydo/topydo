@@ -90,7 +90,7 @@ class ListCommand(ExpressionCommand):
             elif opt == '-N':
                 # 2 lines are assumed to be taken up by printing the next prompt
                 # display at least one item
-                self.limit = self._N_lines()
+                self.limit = ListCommand._N_lines()
             elif opt == '-n':
                 try:
                     self.limit = int(value)
@@ -164,7 +164,8 @@ class ListCommand(ExpressionCommand):
 
         return View(sorter, filters, self.todolist)
 
-    def _N_lines(self):
+    @staticmethod
+    def _N_lines():
         ''' Determine how many lines to print, such that the number of items
             displayed will fit on the terminal (i.e one 'screen-ful' of items)
 
@@ -176,13 +177,13 @@ class ListCommand(ExpressionCommand):
 
             Otherwise, it looks for a newline ('\n') in the environmental variable
             PS1.
-        '''  
+        '''
         lines_in_prompt = 1     # prompt is assumed to take up one line, even
                                 #   without any newlines in it
         if "win32" in sys.platform:
             lines_in_prompt += 1  # Windows will typically print a free line after
                                   #   the program output
-            a = re.findall('\$_', os.getenv('PROMPT', ''))
+            a = re.findall(r'\$_', os.getenv('PROMPT', ''))
             lines_in_prompt += len(a)
         else:
             a = re.findall('\\n', os.getenv('PS1', ''))

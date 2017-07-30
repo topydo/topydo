@@ -43,11 +43,11 @@ def get_backup_path():
 class ChangeSet(object):
     """ Class for operations related with backup management. """
 
-    def __init__(self, p_todolist=None, p_archive=None, p_label=[]):
+    def __init__(self, p_todolist=None, p_archive=None, p_label=None):
         self.todolist = deepcopy(p_todolist)
         self.archive = deepcopy(p_archive)
         self.timestamp = str(int(time.time()))
-        self.label = ' '.join(p_label)
+        self.label = ' '.join(p_label if p_label else [])
 
         try:
             self.json_file = open(get_backup_path(), 'r+b')

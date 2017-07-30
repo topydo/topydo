@@ -15,7 +15,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
-from unittest import skip
 
 from test.topydo_testcase import TopydoTest
 from topydo.lib.Config import config
@@ -167,7 +166,7 @@ class ConfigTest(TopydoTest):
 
     def test_config28(self):
         """ test duplicates. """
-        keymap, keystates = config("test/data/ConfigTest7.conf").column_keymap()
+        keymap, _ = config("test/data/ConfigTest7.conf").column_keymap()
 
         self.assertEqual(keymap['k'], 'bar')
         self.assertEqual(keymap['z'], 'foobar')

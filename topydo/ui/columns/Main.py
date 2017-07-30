@@ -196,10 +196,63 @@ class UIApplication(CLIApplicationBase):
 
         self._screen = urwid.raw_display.Screen()
 
+        def create_color_palette():
+            project_color = to_urwid_color(config().project_color())
+            context_color = to_urwid_color(config().context_color())
+            metadata_color = to_urwid_color(config().metadata_color())
+            link_color = to_urwid_color(config().link_color())
+            focus_background_color = to_urwid_color(config().focus_background_color())
+            marked_background_color = to_urwid_color(config().marked_background_color())
+
+            palette = [
+                (PaletteItem.PROJECT, '', '', '', project_color, ''),
+                (PaletteItem.PROJECT_FOCUS, '', 'light gray', '', project_color, focus_background_color),
+                (PaletteItem.CONTEXT, '', '', '', context_color, ''),
+                (PaletteItem.CONTEXT_FOCUS, '', 'light gray', '', context_color, focus_background_color),
+                (PaletteItem.METADATA, '', '', '', metadata_color, ''),
+                (PaletteItem.METADATA_FOCUS, '', 'light gray', '', metadata_color, focus_background_color),
+                (PaletteItem.LINK, '', '', '', link_color, ''),
+                (PaletteItem.LINK_FOCUS, '', 'light gray', '', link_color, focus_background_color),
+                (PaletteItem.DEFAULT_FOCUS, '', 'light gray', '', '', focus_background_color),
+                (PaletteItem.MARKED, '', 'light blue', '', '', marked_background_color),
+            ]
+
+            for C in ascii_uppercase:
+                pri_color_cfg = config().priority_color(C)
+
+                pri_color = to_urwid_color(pri_color_cfg)
+                pri_color_focus = pri_color if not pri_color_cfg.is_neutral() else 'black'
+
+                palette.append((
+                    'pri_' + C, '', '', '', pri_color, ''
+                ))
+                palette.append((
+                    'pri_' + C + '_focus', '', 'light gray', '', pri_color_focus, focus_background_color
+                ))
+
+            return palette
+
+        def create_mono_palette():
+            palette = [
+                (PaletteItem.DEFAULT_FOCUS, 'black', 'light gray'),
+                (PaletteItem.PROJECT_FOCUS, PaletteItem.DEFAULT_FOCUS),
+                (PaletteItem.CONTEXT_FOCUS, PaletteItem.DEFAULT_FOCUS),
+                (PaletteItem.METADATA_FOCUS, PaletteItem.DEFAULT_FOCUS),
+                (PaletteItem.LINK_FOCUS, PaletteItem.DEFAULT_FOCUS),
+                (PaletteItem.MARKED, 'default,underline,bold', 'default'),
+            ]
+
+            for C in ascii_uppercase:
+                palette.append(
+                    ('pri_' + C + '_focus', PaletteItem.DEFAULT_FOCUS)
+                )
+
+            return palette
+
         if config().colors():
-            self._screen.register_palette(self._create_color_palette())
+            self._screen.register_palette(create_color_palette())
         else:
-            self._screen.register_palette(self._create_mono_palette())
+            self._screen.register_palette(create_mono_palette())
 
         self._screen.set_terminal_properties(256)
 
@@ -212,59 +265,6 @@ class UIApplication(CLIApplicationBase):
 
         self.column_mode = _APPEND_COLUMN
         self._set_alarm_for_next_midnight_update()
-
-    def _create_color_palette(self):
-        project_color = to_urwid_color(config().project_color())
-        context_color = to_urwid_color(config().context_color())
-        metadata_color = to_urwid_color(config().metadata_color())
-        link_color = to_urwid_color(config().link_color())
-        focus_background_color = to_urwid_color(config().focus_background_color())
-        marked_background_color = to_urwid_color(config().marked_background_color())
-
-        palette = [
-            (PaletteItem.PROJECT, '', '', '', project_color, ''),
-            (PaletteItem.PROJECT_FOCUS, '', 'light gray', '', project_color, focus_background_color),
-            (PaletteItem.CONTEXT, '', '', '', context_color, ''),
-            (PaletteItem.CONTEXT_FOCUS, '', 'light gray', '', context_color, focus_background_color),
-            (PaletteItem.METADATA, '', '', '', metadata_color, ''),
-            (PaletteItem.METADATA_FOCUS, '', 'light gray', '', metadata_color, focus_background_color),
-            (PaletteItem.LINK, '', '', '', link_color, ''),
-            (PaletteItem.LINK_FOCUS, '', 'light gray', '', link_color, focus_background_color),
-            (PaletteItem.DEFAULT_FOCUS, '', 'light gray', '', '', focus_background_color),
-            (PaletteItem.MARKED, '', 'light blue', '', '', marked_background_color),
-        ]
-
-        for C in ascii_uppercase:
-            pri_color_cfg = config().priority_color(C)
-
-            pri_color = to_urwid_color(pri_color_cfg)
-            pri_color_focus = pri_color if not pri_color_cfg.is_neutral() else 'black'
-
-            palette.append((
-                'pri_' + C, '', '', '', pri_color, ''
-            ))
-            palette.append((
-                'pri_' + C + '_focus', '', 'light gray', '', pri_color_focus, focus_background_color
-            ))
-
-        return palette
-
-    def _create_mono_palette(self):
-        palette = [
-            (PaletteItem.DEFAULT_FOCUS, 'black', 'light gray'),
-            (PaletteItem.PROJECT_FOCUS, PaletteItem.DEFAULT_FOCUS),
-            (PaletteItem.CONTEXT_FOCUS, PaletteItem.DEFAULT_FOCUS),
-            (PaletteItem.METADATA_FOCUS, PaletteItem.DEFAULT_FOCUS),
-            (PaletteItem.LINK_FOCUS, PaletteItem.DEFAULT_FOCUS),
-            (PaletteItem.MARKED, 'default,underline,bold', 'default'),
-        ]
-
-        for C in ascii_uppercase:
-            palette.append(
-                ('pri_' + C + '_focus', PaletteItem.DEFAULT_FOCUS)
-            )
-
-        return palette
 
     def _set_alarm_for_next_midnight_update(self):
         def callback(p_loop, p_data):

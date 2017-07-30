@@ -91,7 +91,6 @@ class TodoWidget(urwid.WidgetWrap):
         priority_widget = urwid.Text(priority_text)
         self.text_widget = urwid.Text(txt_markup)
 
-        progress = to_urwid_color(progress_color(p_todo)) if config().colors() else PaletteItem.DEFAULT
         self.progress_bar = urwid.AttrMap(
                 urwid.SolidFill(' '),
                 {},

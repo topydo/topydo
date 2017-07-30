@@ -57,7 +57,7 @@ class CLIApplication(CLIApplicationBase):
             sys.exit(1)
 
         if subcommand is None:
-            self._usage()
+            CLIApplicationBase._usage()
 
         if self._execute(subcommand, args) == False:
             sys.exit(1)

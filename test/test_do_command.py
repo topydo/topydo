@@ -100,18 +100,17 @@ class DoCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_do_subtasks_force1(self):
-        prompt_shown = False
-
         def prompt(p_prompt):
-            global prompt_shown
-            prompt_shown = True
+            prompt.prompt_shown = True
+
+        prompt.prompt_shown = False
 
         command = DoCommand(["-f", "1"], self.todolist, self.out, self.error,
                             prompt)
         command.execute()
         command.execute_post_archive_actions()
 
-        self.assertFalse(prompt_shown)
+        self.assertFalse(prompt.prompt_shown)
         self.assertEqual(self.errors, "")
         self.assertFalse(self.todolist.todo(2).is_completed())
 

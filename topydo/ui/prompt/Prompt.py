@@ -16,7 +16,6 @@
 
 """ Entry file for the topydo Prompt interface (CLI). """
 
-import os.path
 import shlex
 import sys
 
@@ -38,7 +37,6 @@ except ConfigError as config_error:
 
 from topydo.Commands import get_subcommand
 from topydo.lib.TodoFileWatched import TodoFileWatched
-from topydo.lib import TodoList
 
 
 class PromptApplication(CLIApplicationBase):

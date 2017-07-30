@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
-from datetime import date, timedelta
+from datetime import date
 from freezegun import freeze_time
 
 from test.topydo_testcase import TopydoTest

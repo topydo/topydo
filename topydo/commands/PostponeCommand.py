@@ -37,8 +37,8 @@ class PostponeCommand(MultiCommand):
     def get_flags(self):
         return("s", [])
 
-    def process_flag(self, p_opt, p_value):
-        if p_opt == '-s':
+    def process_flag(self, p_option, p_value):
+        if p_option == '-s':
             self.move_start_date = True
 
     def _execute_multi_specific(self):

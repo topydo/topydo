@@ -27,7 +27,7 @@ from topydo.lib.Config import config, ConfigError
 class GetSubcommandTest(TopydoTest):
     def test_normal_cmd(self):
         args = ["add"]
-        real_cmd, final_args = get_subcommand(args)
+        real_cmd, _ = get_subcommand(args)
         self.assertTrue(issubclass(real_cmd, AddCommand))
 
     def test_cmd_help(self):
