@@ -118,7 +118,7 @@ class GetSubcommandTest(TopydoTest):
         config("test/data/aliases.conf")
 
         args = ["baz"]
-        real_cmd, final_args = get_subcommand(args)
+        real_cmd, _ = get_subcommand(args)
         self.assertEqual(real_cmd, None)
 
     def test_alias_quotation(self):
