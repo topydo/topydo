@@ -17,8 +17,8 @@
 import re
 
 from topydo.lib.MultiCommand import MultiCommand
-from topydo.lib.printers.PrettyPrinter import PrettyPrinter
 from topydo.lib.prettyprinters.Numbers import PrettyPrinterNumbers
+from topydo.lib.printers.PrettyPrinter import PrettyPrinter
 
 
 class DCommand(MultiCommand):

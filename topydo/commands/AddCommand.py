@@ -22,9 +22,9 @@ from datetime import date
 from os.path import expanduser
 from sys import stdin
 
-from topydo.lib.WriteCommand import WriteCommand
 from topydo.lib.Config import config
 from topydo.lib.prettyprinters.Numbers import PrettyPrinterNumbers
+from topydo.lib.WriteCommand import WriteCommand
 
 
 class AddCommand(WriteCommand):

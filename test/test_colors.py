@@ -17,12 +17,11 @@
 """ Tests for the colorscheme functionality. """
 
 import unittest
-
 from test.topydo_testcase import TopydoTest
+
 from topydo.lib.Color import Color
 from topydo.lib.Config import config
 from topydo.lib.Todo import Todo
-
 
 NEUTRAL_COLOR = '\033[0m'
 

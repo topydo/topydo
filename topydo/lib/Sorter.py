@@ -16,15 +16,14 @@
 
 """ This module provides functionality to sort lists with todo items. """
 
-from collections import OrderedDict, namedtuple
-from itertools import groupby
 import re
+from collections import OrderedDict, namedtuple
 from datetime import date
+from itertools import groupby
 
 from topydo.lib.Config import config
 from topydo.lib.Importance import average_importance, importance
 from topydo.lib.Utils import date_string_to_date, humanize_date
-
 
 Field = namedtuple('Field', ['sort', 'group', 'label'])
 
@@ -269,4 +268,3 @@ class Sorter(object):
             result[key] = self.sort(_group)
 
         return result
-

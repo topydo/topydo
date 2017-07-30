@@ -15,9 +15,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
-
 from test.facilities import load_file, print_view, todolist_to_string
 from test.topydo_testcase import TopydoTest
+
 from topydo.lib import Filter
 from topydo.lib.Sorter import Sorter
 from topydo.lib.TodoFile import TodoFile

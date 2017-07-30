@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import re
+
 import urwid
 
 from topydo.lib.Config import config
@@ -195,4 +196,3 @@ class TodoWidget(urwid.WidgetWrap):
     def wipe_cache(p_class):
         """ Wipes the cache """
         p_class.cache = {}
-

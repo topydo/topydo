@@ -20,7 +20,6 @@ from topydo.lib.Color import Color
 from topydo.lib.Config import config
 from topydo.lib.Recurrence import relative_date_to_date
 
-
 # when a todo item has not enough information to determine the length, assume
 # this length
 ASSUMED_TODO_LENGTH = 14  # days

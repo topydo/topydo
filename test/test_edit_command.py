@@ -16,8 +16,8 @@
 
 import os
 import unittest
-
 from test.command_testcase import CommandTest
+
 from topydo.commands.EditCommand import EditCommand
 from topydo.lib.Config import config
 from topydo.lib.Todo import Todo

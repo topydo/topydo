@@ -18,6 +18,7 @@ import urwid
 
 from topydo.lib.Config import config
 
+
 class ViewWidget(urwid.LineBox):
     def __init__(self, p_todolist):
         self._todolist = p_todolist

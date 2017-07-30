@@ -14,12 +14,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from topydo.lib.Config import config
 from topydo.lib.Command import InvalidCommandArgument
-from topydo.lib.WriteCommand import WriteCommand
+from topydo.lib.Config import config
 from topydo.lib.prettyprinters.Numbers import PrettyPrinterNumbers
 from topydo.lib.TodoListBase import InvalidTodoException
 from topydo.lib.TodoParser import parse_line
+from topydo.lib.WriteCommand import WriteCommand
+
 
 class AppendCommand(WriteCommand):
     def __init__(self, p_args, p_todolist, #pragma: no branch

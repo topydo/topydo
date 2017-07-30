@@ -1,8 +1,8 @@
+import codecs
 import os
 import re
-import codecs
 
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 _HERE = os.path.abspath(os.path.dirname(__file__))
 

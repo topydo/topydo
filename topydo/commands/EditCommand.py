@@ -14,16 +14,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
 import codecs
-import tempfile
+import os
 import shlex
+import tempfile
 from subprocess import CalledProcessError, check_call
 
 from topydo.lib.Config import config
 from topydo.lib.MultiCommand import MultiCommand
 from topydo.lib.prettyprinters.Numbers import PrettyPrinterNumbers
 from topydo.lib.Todo import Todo
+
 
 def _get_file_mtime(p_file):
     return os.stat(p_file.name).st_mtime

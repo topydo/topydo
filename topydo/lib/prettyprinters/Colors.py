@@ -56,4 +56,3 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
             p_todo_str.append('', AbstractColor.NEUTRAL)
 
         return p_todo_str
-

@@ -19,12 +19,15 @@
 import shlex
 import sys
 
-from topydo.ui.CLIApplicationBase import CLIApplicationBase, error, GENERIC_HELP
-from topydo.ui.prompt.PromptCompleter import PromptCompleter
-from prompt_toolkit.shortcuts import prompt
 from prompt_toolkit.history import InMemoryHistory
+from prompt_toolkit.shortcuts import prompt
 
-from topydo.lib.Config import config, ConfigError
+from topydo.Commands import get_subcommand
+from topydo.lib.Config import ConfigError, config
+from topydo.lib.TodoFileWatched import TodoFileWatched
+from topydo.ui.CLIApplicationBase import (GENERIC_HELP, CLIApplicationBase,
+                                          error)
+from topydo.ui.prompt.PromptCompleter import PromptCompleter
 
 # First thing is to poke the configuration and check whether it's sane
 # The modules below may already read in configuration upon import, so
@@ -35,8 +38,6 @@ except ConfigError as config_error:
     error(str(config_error))
     sys.exit(1)
 
-from topydo.Commands import get_subcommand
-from topydo.lib.TodoFileWatched import TodoFileWatched
 
 
 class PromptApplication(CLIApplicationBase):

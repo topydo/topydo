@@ -15,7 +15,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
-
 from test.facilities import load_file
 from test.topydo_testcase import TopydoTest
 

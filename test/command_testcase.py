@@ -16,6 +16,7 @@
 
 import os
 from test.topydo_testcase import TopydoTest
+
 from topydo.lib.Utils import escape_ansi
 
 

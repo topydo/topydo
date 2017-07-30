@@ -16,9 +16,10 @@
 
 import unittest
 from datetime import date
+from test.topydo_testcase import TopydoTest
+
 from freezegun import freeze_time
 
-from test.topydo_testcase import TopydoTest
 from topydo.lib.RelativeDate import relative_date_to_date
 
 

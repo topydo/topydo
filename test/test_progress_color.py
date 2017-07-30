@@ -14,14 +14,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from freezegun import freeze_time
 import unittest
-
 from test.topydo_testcase import TopydoTest
+
+from freezegun import freeze_time
+
 from topydo.lib.Config import config
 from topydo.lib.ProgressColor import progress_color
 from topydo.lib.Todo import Todo
 from topydo.lib.TodoList import TodoList
+
 
 def set_256_colors():
     config(p_overrides={('topydo', 'colors'): '256'})

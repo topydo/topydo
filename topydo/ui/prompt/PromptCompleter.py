@@ -22,9 +22,10 @@ by the prompt toolkit.
 import re
 
 from prompt_toolkit.completion import Completer, Completion
-from topydo.ui.CompleterBase import CompleterBase, date_suggestions
+
 from topydo.lib.Config import config
 from topydo.lib.RelativeDate import relative_date_to_date
+from topydo.ui.CompleterBase import CompleterBase, date_suggestions
 
 
 def _dates(p_word_before_cursor):

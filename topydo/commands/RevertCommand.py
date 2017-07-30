@@ -14,11 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from topydo.lib.Command import Command
+from topydo.lib import TodoFile, TodoList
 from topydo.lib.ChangeSet import ChangeSet
-from topydo.lib import TodoFile
-from topydo.lib import TodoList
+from topydo.lib.Command import Command
 from topydo.lib.Config import config
+
 
 class RevertCommand(Command):
     def __init__(self, p_args, p_todolist, #pragma: no branch

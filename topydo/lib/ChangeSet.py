@@ -19,13 +19,13 @@
 import json
 import time
 import zlib
-
 from copy import deepcopy
 from hashlib import sha1
 from os import path
 
 from topydo.lib.Config import config
 from topydo.lib.TodoList import TodoList
+
 
 def hash_todolist(p_todolist):
     """ Calculates hash for TodoList.TodoList object. """

@@ -20,8 +20,10 @@ changes.
 """
 
 import os.path
+
+from watchdog.events import (FileCreatedEvent, FileModifiedEvent,
+                             FileSystemEventHandler)
 from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler, FileModifiedEvent, FileCreatedEvent
 
 from topydo.lib.TodoFile import TodoFile
 

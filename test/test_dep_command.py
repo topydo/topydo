@@ -15,8 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
-
 from test.command_testcase import CommandTest
+
 from topydo.commands.DepCommand import DepCommand
 from topydo.lib.TodoList import TodoList
 

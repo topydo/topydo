@@ -14,18 +14,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import re
 import sys
-import os
 
 from topydo.lib.Config import config
 from topydo.lib.ExpressionCommand import ExpressionCommand
 from topydo.lib.Filter import HiddenTagFilter, InstanceFilter
 from topydo.lib.ListFormat import ListFormatError
-from topydo.lib.printers.PrettyPrinter import pretty_printer_factory
 from topydo.lib.prettyprinters.Format import PrettyPrinterFormatFilter
-from topydo.lib.TodoListBase import InvalidTodoException
+from topydo.lib.printers.PrettyPrinter import pretty_printer_factory
 from topydo.lib.Sorter import Sorter
+from topydo.lib.TodoListBase import InvalidTodoException
 from topydo.lib.Utils import get_terminal_size
 from topydo.lib.View import View
 

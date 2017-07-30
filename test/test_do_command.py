@@ -16,8 +16,8 @@
 
 import unittest
 from datetime import date, timedelta
-
 from test.command_testcase import CommandTest
+
 from topydo.commands.DoCommand import DoCommand
 from topydo.lib.TodoList import TodoList
 

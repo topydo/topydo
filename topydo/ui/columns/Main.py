@@ -19,30 +19,32 @@ import getopt
 import shlex
 import sys
 import time
-import urwid
-
 from collections import namedtuple
 from string import ascii_uppercase
 
+import urwid
+
 from topydo.Commands import get_subcommand
-from topydo.lib.Config import config, ConfigError
-from topydo.ui.columns.ColumnCompleter import ColumnCompleter
+from topydo.lib import TodoList
+from topydo.lib.Config import ConfigError, config
+from topydo.lib.Filter import (DependencyFilter, HiddenTagFilter,
+                               RelevanceFilter, get_filter_list)
 from topydo.lib.Sorter import Sorter
-from topydo.lib.Filter import get_filter_list, RelevanceFilter, DependencyFilter, HiddenTagFilter
+from topydo.lib.TodoFileWatched import TodoFileWatched
 from topydo.lib.Utils import get_terminal_size
 from topydo.lib.View import View
-from topydo.lib.TodoFileWatched import TodoFileWatched
-from topydo.lib import TodoList
-from topydo.ui.CLIApplicationBase import CLIApplicationBase, error, GENERIC_HELP
+from topydo.ui.CLIApplicationBase import (GENERIC_HELP, CLIApplicationBase,
+                                          error)
+from topydo.ui.columns.ColumnCompleter import ColumnCompleter
+from topydo.ui.columns.ColumnLayout import columns
 from topydo.ui.columns.CommandLineWidget import CommandLineWidget
 from topydo.ui.columns.ConsoleWidget import ConsoleWidget
 from topydo.ui.columns.KeystateWidget import KeystateWidget
-from topydo.ui.columns.TodoWidget import TodoWidget
 from topydo.ui.columns.TodoListWidget import TodoListWidget
+from topydo.ui.columns.TodoWidget import TodoWidget
 from topydo.ui.columns.Transaction import Transaction
 from topydo.ui.columns.Utils import PaletteItem, to_urwid_color
 from topydo.ui.columns.ViewWidget import ViewWidget
-from topydo.ui.columns.ColumnLayout import columns
 
 
 class UIView(View):

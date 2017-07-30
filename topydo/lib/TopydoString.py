@@ -18,6 +18,7 @@
 
 import collections
 
+
 class TopydoString(collections.UserString):
     """
     Represents a string that also contains color information. A combination of
@@ -50,4 +51,3 @@ class TopydoString(collections.UserString):
     def set_color(self, p_pos, p_color):
         """ Start using a color at the given position. """
         self.colors[p_pos] = p_color
-

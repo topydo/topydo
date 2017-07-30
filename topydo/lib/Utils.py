@@ -18,11 +18,11 @@
 Various utility functions.
 """
 
-import arrow
 import re
-
 from collections import namedtuple
 from datetime import date
+
+import arrow
 
 
 def date_string_to_date(p_date):
@@ -116,4 +116,3 @@ def humanize_date(p_datetime):
     now = arrow.now()
     date = now.replace(day=p_datetime.day, month=p_datetime.month, year=p_datetime.year)
     return date.humanize(now).replace('just now', 'today')
-
