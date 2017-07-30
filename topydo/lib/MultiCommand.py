@@ -35,6 +35,7 @@ class MultiCommand(ExpressionCommand):
         self.is_expression = False
         self.multi_mode = True
 
+    # pylint: disable=no-self-use
     def get_flags(self):
         """ Default implementation of getting specific flags. """
         return ("", [])
