@@ -206,7 +206,7 @@ class ListFormatParser(object):
             'T': lambda t: humanize_date(t.start_date()) if t.start_date() else '',
 
             # unique text ID
-            'u': self.todolist.uid,
+            'u': self.todolist.uid if self.todolist else lambda _ : '',
 
             # unique text ID, padded with spaces
             'U': lambda t: _filler(self.todolist.uid(t),
