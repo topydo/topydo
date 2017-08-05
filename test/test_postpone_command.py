@@ -296,109 +296,201 @@ class PostponeCommandTest(CommandTest):
         self.assertEqual(self.errors, "Warning: todo item has no (valid) start date, therefore it was not adjusted.\n")
 
     def test_postpone24(self):
-        command = PostponeCommand(["-s", "-s", "1", "1w"], self.todolist, self.out,
+        command = PostponeCommand(["-t", "due", "1", "1w"], self.todolist, self.out,
                                   self.error)
         command.execute()
 
-        start = self.today + timedelta(7)
+        due = self.today + timedelta(7)
 
         self.assertTrue(self.todolist.dirty)
-        # pylint: disable=E1103
-        self.assertEqual(self.output, "|  1| Foo t:{}\n".format(start.isoformat()))
+        self.assertEqual(self.output, "|  1| Foo due:{}\n".format(due.isoformat()))
         self.assertEqual(self.errors, "")
 
     def test_postpone25(self):
-        command = PostponeCommand(["-s", "-s", "6", "1w"], self.todolist, self.out,
+        command = PostponeCommand(["-T", "due", "1", "1w"], self.todolist, self.out,
                                   self.error)
         command.execute()
 
-        start = self.future + timedelta(7)
-
         self.assertTrue(self.todolist.dirty)
-        # pylint: disable=E1103
-        self.assertEqual(self.output, "|  6| FutureStart t:{}\n".format(start.isoformat()))
-        self.assertEqual(self.errors, "")
+        self.assertEqual(self.output, "|  1| Foo\n")
+        self.assertEqual(self.errors, "Warning: todo item has no (valid) due date, therefore it was not adjusted.")
 
     def test_postpone26(self):
-        """ -ss instead of -s -s. """
-        command = PostponeCommand(["-ss", "6", "1w"], self.todolist, self.out,
+        command = PostponeCommand(["-T", "t", "1", "1w"], self.todolist, self.out,
                                   self.error)
         command.execute()
 
-        start = self.future + timedelta(7)
-
         self.assertTrue(self.todolist.dirty)
-        # pylint: disable=E1103
-        self.assertEqual(self.output, "|  6| FutureStart t:{}\n".format(start.isoformat()))
-        self.assertEqual(self.errors, "")
+        self.assertEqual(self.output, "|  1| Foo\n")
+        self.assertEqual(self.errors, "Warning: todo item has no (valid) t date, therefore it was not adjusted.")
 
     def test_postpone27(self):
-        command = PostponeCommand(["-s", "-s", "2", "1w"], self.todolist, self.out,
+        command = PostponeCommand(["-t", "due", "2", "1w"], self.todolist, self.out,
                                   self.error)
         command.execute()
 
-        start = self.today + timedelta(7)
+        due = self.today + timedelta(7)
 
         self.assertTrue(self.todolist.dirty)
-        self.assertEqual(self.output,
-                "|  2| Bar due:{} t:{}\n".format(self.today.isoformat(), start.isoformat()))
+        self.assertEqual(self.output, "|  2| Bar due:{}\n".format(due.isoformat()))
         self.assertEqual(self.errors, "")
 
     def test_postpone28(self):
-        command = PostponeCommand(["-s", "-s", "3", "1w"], self.todolist, self.out,
+        command = PostponeCommand(["-T", "due", "2", "1w"], self.todolist, self.out,
                                   self.error)
         command.execute()
 
-        start = self.today + timedelta(7)
+        due = self.today + timedelta(7)
 
         self.assertTrue(self.todolist.dirty)
-        # pylint: disable=E1103
-        self.assertEqual(self.output, "|  3| Baz due:{} t:{}\n".format(self.today.isoformat(), start.isoformat()))
+        self.assertEqual(self.output, "|  2| Bar due:{}\n".format(due.isoformat()))
         self.assertEqual(self.errors, "")
 
     def test_postpone29(self):
-        command = PostponeCommand(["-s", "-s", "2", "3", "1w"], self.todolist,
-                                  self.out, self.error)
-        command.execute()
-
-        start = self.today + timedelta(7)
-
-        self.assertTrue(self.todolist.dirty)
-        # pylint: disable=E1103
-        self.assertEqual(self.output, "|  2| Bar due:{} t:{}\n|  3| Baz due:{} t:{}\n".format(self.today.isoformat(), start.isoformat(), self.today.isoformat(), start.isoformat()))
-        self.assertEqual(self.errors, "")
-
-    def test_postpone30(self):
-        command = PostponeCommand(["-s", "-s", "5", "1w"], self.todolist, self.out,
+        command = PostponeCommand(["-t", "due", "3", "1w"], self.todolist, self.out,
                                   self.error)
         command.execute()
 
-        start = self.today + timedelta(7)
+        due = self.today + timedelta(7)
 
         self.assertTrue(self.todolist.dirty)
-        # pylint: disable=E1103
-        self.assertEqual(self.output, "|  5| Future due:{} t:{}\n".format(self.future.isoformat(), start.isoformat()))
+        self.assertEqual(self.output, "|  3| Baz due:{} t:{}\n".format(due.isoformat(), self.today.isoformat()))
+        self.assertEqual(self.errors, "")
+
+    def test_postpone30(self):
+        command = PostponeCommand(["-T", "due", "3", "1w"], self.todolist, self.out,
+                                  self.error)
+        command.execute()
+
+        due = self.today + timedelta(7)
+
+        self.assertTrue(self.todolist.dirty)
+        self.assertEqual(self.output, "|  3| Baz due:{} t:{}\n".format(due.isoformat(), self.today.isoformat()))
         self.assertEqual(self.errors, "")
 
     def test_postpone31(self):
-        command = PostponeCommand(["-s", "-s", "7", "1w"], self.todolist, self.out, self.error)
+        command = PostponeCommand(["-t", "due", "4", "1w"], self.todolist, self.out,
+                                  self.error)
         command.execute()
 
-        start = self.today + timedelta(7)
+        due = self.today + timedelta(7)
 
         self.assertTrue(self.todolist.dirty)
-        self.assertEqual(self.output, "|  7| InvalidDueDate due:2017-06-31 t:{}\n".format(start.isoformat()))
+        self.assertEqual(self.output, "|  4| Past due:{} t:{}\n".format(due.isoformat()))
         self.assertEqual(self.errors, "")
 
     def test_postpone32(self):
-        """
-        Todo item has an invalid start date.
-        """
-        command = PostponeCommand(["-s", "-s", "8", "1d"], self.todolist, self.out, self.error)
+        command = PostponeCommand(["-T", "due", "4", "1w"], self.todolist, self.out,
+                                  self.error)
+        command.execute()
+
+        due = self.today + timedelta(7)
+
+        self.assertTrue(self.todolist.dirty)
+        self.assertEqual(self.output, "|  4| Past due:{} t:{}\n".format(due.isoformat()))
+        self.assertEqual(self.errors, "")
+
+    def test_postpone33(self):
+        command = PostponeCommand(["-t", "due", "5", "1w"], self.todolist, self.out,
+                                  self.error)
+        command.execute()
+
+        due = self.future + timedelta(7)
+
+        self.assertTrue(self.todolist.dirty)
+        self.assertEqual(self.output, "|  5| Future due:{} t:{}\n".format(due.isoformat(), self.future_start.isoformat()))
+        self.assertEqual(self.errors, "")
+
+    def test_postpone34(self):
+        command = PostponeCommand(["-T", "due", "5", "1w"], self.todolist, self.out,
+                                  self.error)
+        command.execute()
+
+        due = self.future + timedelta(7)
+
+        self.assertTrue(self.todolist.dirty)
+        self.assertEqual(self.output, "|  5| Future due:{} t:{}\n".format(due.isoformat(), self.future_start.isoformat()))
+        self.assertEqual(self.errors, "")
+
+    def test_postpone35(self):
+        command = PostponeCommand(["-t", "t", "5", "1w"], self.todolist, self.out,
+                                  self.error)
+        command.execute()
+
+        t = self.future_start + timedelta(7)
+
+        self.assertTrue(self.todolist.dirty)
+        self.assertEqual(self.output, "|  5| Future due:{} t:{}\n".format(self.future.isoformat(), t.isoformat()))
+        self.assertEqual(self.errors, "")
+
+    def test_postpone36(self):
+        command = PostponeCommand(["-t", "due", "6", "1w"], self.todolist, self.out,
+                                  self.error)
+        command.execute()
+
+        due = self.today + timedelta(7)
+
+        self.assertTrue(self.todolist.dirty)
+        self.assertEqual(self.output, "|  6| FutureStart t:{} due:{}\n".format(self.future.isoformat(), due.isoformat()))
+        self.assertEqual(self.errors, "")
+
+    def test_postpone37(self):
+        command = PostponeCommand(["-T", "due", "6", "1w"], self.todolist, self.out,
+                                  self.error)
+        command.execute()
+
+        self.assertTrue(self.todolist.dirty)
+        self.assertEqual(self.output, "|  6| FutureStart t:{}\n".format(self.future.isoformat()))
+        self.assertEqual(self.errors, "Warning: todo item has no (valid) due date, therefore it was not adjusted.")
+
+    def test_postpone38(self):
+        command = PostponeCommand(["-t", "t", "6", "1w"], self.todolist, self.out,
+                                  self.error)
+        command.execute()
+
+        t = self.future + timedelta(7)
+
+        self.assertTrue(self.todolist.dirty)
+        self.assertEqual(self.output, "|  6| FutureStart t:{}\n".format(t.isoformat()))
+        self.assertEqual(self.errors, "")
+
+    def test_postpone39(self):
+        command = PostponeCommand(["-t", "due", "7", "1w"], self.todolist, self.out,
+                                  self.error)
         command.execute()
 
         self.assertFalse(self.todolist.dirty)
-        self.assertEqual(self.errors, "Postponing todo item failed: invalid start date.\n")
+        self.assertEqual(self.output, "")
+        self.assertEqual(self.errors, "Postponing todo item failed: invalid due date.\n")
+
+    def test_postpone40(self):
+        command = PostponeCommand(["-T", "due", "7", "1w"], self.todolist, self.out,
+                                  self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.dirty)
+        self.assertEqual(self.output, "")
+        self.assertEqual(self.errors, "Postponing todo item failed: invalid due date.\n")
+
+    def test_postpone41(self):
+        command = PostponeCommand(["-t", "due", "8", "1w"], self.todolist, self.out,
+                                  self.error)
+        command.execute()
+
+        due = self.today + timedelta(7)
+
+        self.assertTrue(self.todolist.dirty)
+        self.assertEqual(self.output, "|  8| InvalidStartDate due:{} t:2017-06-31\n".format(due.isoformat()))
+        self.assertEqual(self.errors, "")
+
+    def test_postpone42(self):
+        command = PostponeCommand(["-T", "due", "8", "1w"], self.todolist, self.out,
+                                  self.error)
+        command.execute()
+
+        self.assertTrue(self.todolist.dirty)
+        self.assertEqual(self.output, "|  8| InvalidStartDate t:2017-06-31\n")
+        self.assertEqual(self.errors, "Warning: todo item has no (valid) due date, therefore it was not adjusted.")
 
     def test_expr_postpone1(self):
         command = PostponeCommand(["-e", "due:tod", "2w"], self.todolist,
