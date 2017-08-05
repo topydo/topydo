@@ -31,19 +31,22 @@ class PostponeCommand(MultiCommand):
         super().__init__(
             p_args, p_todolist, p_out, p_err, p_prompt)
 
+        self.tag = config().tag_due()
+        self.due_mode = True
         self.move_start_date = False
-        self.move_due_date = True
         self.last_argument = True
 
     def get_flags(self):
-        return("s", [])
+        return("st:T:", [])
 
     def process_flag(self, p_opt, p_value):
         if p_opt == '-s':
-            if self.move_start_date:
-                self.move_due_date = False
-            else:
-                self.move_start_date = True
+            self.move_start_date = True
+        if p_opt == '-t':
+            self.tag = p_value
+        if p_opt == '-T':
+            self.due_mode = False
+            self.tag = p_value
 
     def _execute_multi_specific(self):
         def _get_offset(p_todo, p_tag):
@@ -61,55 +64,38 @@ class PostponeCommand(MultiCommand):
         self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
 
         for todo in self.todos:
+            try:
+                offset = _get_offset(todo, self.tag)
+            except ValueError:
+                self.error("Postponing todo item failed: invalid due date.")
+                break
 
-            if self.move_due_date:
-                try:
-                    offset = _get_offset(todo, config().tag_due())
-                except ValueError:
-                    self.error("Postponing todo item failed: invalid due date.")
-                    break
+            new_due = relative_date_to_date(pattern, offset)
 
-                new_due = relative_date_to_date(pattern, offset)
-
-                if new_due:
-                    if self.move_start_date and todo.start_date():
-                        length = todo.length()
-                        new_start = new_due - timedelta(length)
-                        # pylint: disable=E1103
-                        todo.set_tag(config().tag_start(), new_start.isoformat())
-                    elif self.move_start_date and not todo.start_date():
-                        self.error("Warning: todo item has no (valid) start date, therefore it was not adjusted.")
-
-                    # pylint: disable=E1103
-                    todo.set_tag(config().tag_due(), new_due.isoformat())
-
-                    self.todolist.dirty = True
-                    self.out(self.printer.print_todo(todo))
-                else:
-                    self.error("Invalid date pattern given.")
-                    break
-            else:
-                try:
-                    offset = _get_offset(todo, config().tag_start())
-                except ValueError:
-                    self.error("Postponing todo item failed: invalid start date.")
-                    break
-
-                new_start = relative_date_to_date(pattern, offset)
-
-                if new_start:
+            if new_due:
+                if self.move_start_date and todo.start_date():
+                    length = todo.length()
+                    new_start = new_due - timedelta(length)
                     # pylint: disable=E1103
                     todo.set_tag(config().tag_start(), new_start.isoformat())
+                elif self.move_start_date and not todo.start_date():
+                    self.error("Warning: todo item has no (valid) start date, therefore it was not adjusted.")
 
-                    self.todolist.dirty = True
-                    self.out(self.printer.print_todo(todo))
+                if not self.due_mode and not todo.get_date(self.tag):
+                    self.error("Warning: todo item has no (valid) {} date, therefore it was not adjusted.".format(self.tag))
                 else:
-                    self.error("Invalid date pattern given.")
-                    break
+                    # pylint: disable=E1103
+                    todo.set_tag(self.tag, new_due.isoformat())
+
+                self.todolist.dirty = True
+                self.out(self.printer.print_todo(todo))
+            else:
+                self.error("Invalid date pattern given.")
+                break
 
     def usage(self):
         return """\
-Synopsis: postpone [-s [-s]] <NUMBER> [<NUMBER2> ...] <PATTERN>
+Synopsis: postpone [-s] [-t <TAG>] [-T <TAG>] <NUMBER> [<NUMBER2> ...] <PATTERN>
           postpone [-x] -e <EXPRESSION>\
 """
 
@@ -118,8 +104,9 @@ Synopsis: postpone [-s [-s]] <NUMBER> [<NUMBER2> ...] <PATTERN>
 Postpone the todo item(s) with the given NUMBER(s) and the given PATTERN.
 
 Postponing is done by adjusting the due date(s) of the todo(s), and if the -s
-flag is given, the start date accordingly. If the -s flag is repeated, only
-the start date is adjusted.
+flag is given, the start date accordingly. If the -t flag is given adjustment
+is applied to TAG. If the -T flag is given adjustment is applied to TAG under
+the condition that it exists.
 
 It is also possible to postpone items as complete with an EXPRESSION using
 the -e flag. Use -x to also process todo items that are normally invisible (as
