@@ -7213,7 +7213,7 @@ These shortcuts are [[fully customizable|ColumnKeyMap]] in the [[configuration f
 |`u`|`cmd revert`|Executes &lt;&lt;cmd revert&gt;&gt;|
 |`x`|`cmd do {}`|Executes &lt;&lt;cmd do&gt;&gt; on highlighted item(s)|</pre>
 </div>
-<div bag="default" caption="Column UI" created="20160609190513558" modified="20170111114842328" revision="0" summary="A text-based interface with columns and a vim-like navigation" tags="UI" title="ColumnUI" type="text/vnd.tiddlywiki">
+<div bag="default" caption="Column UI" created="20160609190513558" modified="20170811100612655" revision="0" summary="A text-based interface with columns and a vim-like navigation" tags="UI" title="ColumnUI" type="text/vnd.tiddlywiki">
 <pre>The column UI is an alternative text-based user interface (TUI) using adjacent [[columns|Column]], each with a customized todo list. You could create a column with all your [[relevant|Relevancy]]  items, one with only overdue items and one column with only [[starred|Starring]] items.
 
 Navigation between items is easy: just use the arrow keys. There are also (configurable) [[keys|ColumnShortcuts]] to perform certain actions, for example press `x` to mark the currently highlighted item as completed. There is also a command line to enter any topydo [[command|Command]], accessible by pressing `:` (just like vi).
@@ -7241,6 +7241,10 @@ topydo columns
 !! Usage
 
 Column UI can be [[controlled with the keyboard|ColumnShortcuts]]. Some simple mouse actions are supported as well, such as scrolling or selecting a todo item.
+
+!! Note for Windows users
+
+Column mode does not work natively on Windows (see topydo issue &lt;&lt;issue 194&gt;&gt;, or urwid issue &lt;&lt;issue 152 urwid/urwid&gt;&gt;). However, you can use column mode under [ext[Cygwin|https://www.cygwin.com/]].
 
 !! Configuration
 
