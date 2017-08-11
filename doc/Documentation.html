@@ -173,6 +173,8 @@ Error message and password prompt
 
 <li>$:/StoryList</li>
 
+<li>$:/temp/advancedsearch</li>
+
 <li>$:/temp/info-plugin</li>
 
 <li>$:/temp/search</li>
@@ -6570,14 +6572,14 @@ Links</pre>
 
 &lt;&lt;dep_op to 1 2&gt;&gt;</pre>
 </div>
-<div bag="default" created="20160518112233398" modified="20161228141822683" revision="0" tags="$:/tags/Macro" title="$:/my/macros/github" type="text/vnd.tiddlywiki">
-<pre>\define issue(number)
+<div bag="default" created="20160518112233398" modified="20170811094124759" revision="0" tags="$:/tags/Macro" title="$:/my/macros/github" type="text/vnd.tiddlywiki">
+<pre>\define issue(number repo:bram85/topydo)
 
-[ext[#$number$|https://github.com/bram85/topydo/issues/$number$]]
+[ext[#$number$|https://github.com/$repo$/issues/$number$]]
 \end
 
 \define pr(number)
-[ext[#$number$|https://github.com/bram85/topydo/pull/$number$]]
+[ext[#$number$|https://github.com/$repo$/pull/$number$]]
 \end
 
 \define ghuser(id)
@@ -6672,6 +6674,9 @@ Links</pre>
 </div>
 <div list="Welcome Features GettingStarted Demo AboutTopydo Links" title="$:/StoryList">
 <pre></pre>
+</div>
+<div created="20170811091932966" modified="20170811091933883" title="$:/temp/advancedsearch">
+<pre>issue</pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
 <pre>{
