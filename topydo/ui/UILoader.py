@@ -22,8 +22,10 @@ import sys
 from topydo.ui.cli.CLI import CLIApplication
 from topydo.ui.CLIApplicationBase import MAIN_OPTS, MAIN_LONG_OPTS, error
 
+_WINDOWS = "win32" in sys.platform
+
 # enable color on windows CMD
-if "win32" in sys.platform:
+if _WINDOWS:
     import colorama
     colorama.init()
 
@@ -51,6 +53,11 @@ def main():
                 UIApplication().run()
             except ImportError:
                 error("Some additional dependencies for column mode were not installed, please install with 'pip3 install topydo[columns]'")
+            except NameError as err:
+                if _WINDOWS:
+                    error("Column mode is not supported on Windows.")
+                else:
+                    error("Could not load column mode: {}".format(err))
         else:
             CLIApplication().run()
     except IndexError:
