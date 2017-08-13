@@ -205,9 +205,13 @@ Error message and password prompt
 
 <li>Backups</li>
 
+<li>ChangeLog</li>
+
 <li>Changelog0.11</li>
 
 <li>Changelog0.12</li>
+
+<li>Changelog0.13</li>
 
 <li>CLI</li>
 
@@ -330,8 +334,6 @@ Error message and password prompt
 <li>DotOutput</li>
 
 <li>Draft of 'CLI'</li>
-
-<li>Draft of 'ConfigIdentifierAlphabet'</li>
 
 <li>edit</li>
 
@@ -6539,13 +6541,14 @@ Error message and password prompt
     }
 }</pre>
 </div>
-<div bag="default" created="20160425190954927" modified="20170719123138734" revision="0" title="$:/DefaultTiddlers" type="text/vnd.tiddlywiki">
+<div bag="default" created="20160425190954927" modified="20170813140347021" revision="0" title="$:/DefaultTiddlers" type="text/vnd.tiddlywiki">
 <pre>Welcome
 Features
 GettingStarted
 Demo
 AboutTopydo
-Links</pre>
+Links
+Changelog0.13</pre>
 </div>
 <div bag="default" revision="0" title="$:/isEncrypted">
 <pre>no</pre>
@@ -6687,13 +6690,13 @@ Links</pre>
 <div created="20170719122741788" modified="20170719122915728" title="$:/state/tab-1749438307">
 <pre>$:/core/ui/ControlPanel/Info</pre>
 </div>
-<div created="20170719121506797" modified="20170813104111986" title="$:/state/tab/sidebar--1835078512">
-<pre>$:/core/ui/SideBar/Tools</pre>
+<div created="20170719121506797" modified="20170813140414376" title="$:/state/tab/sidebar--1835078512">
+<pre>$:/core/ui/SideBar/Open</pre>
 </div>
 <div created="20170719122750165" modified="20170719122750925" title="$:/state/tabs/controlpanel/toolbars-1345989671">
 <pre>$:/core/ui/ControlPanel/Toolbars/PageControls</pre>
 </div>
-<div list="Welcome Features GettingStarted Demo AboutTopydo Links" title="$:/StoryList">
+<div list="Welcome Features GettingStarted Demo AboutTopydo Links Changelog0.13" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20170811091932966" modified="20170813120623608" title="$:/temp/advancedsearch">
@@ -6713,7 +6716,7 @@ Links</pre>
     }
 }</pre>
 </div>
-<div created="20170719121258332" modified="20170813124555948" title="$:/temp/search">
+<div created="20170719121258332" modified="20170813131817350" title="$:/temp/search">
 <pre></pre>
 </div>
 <div author="JeremyRuston" bag="default" core-version="&gt;=5.0.0" dependents="$:/themes/tiddlywiki/vanilla" description="Emphasises individual tiddlers" name="Snow White" plugin-type="theme" revision="0" title="$:/themes/tiddlywiki/snowwhite" type="application/json" version="5.1.11">
@@ -7010,6 +7013,11 @@ One can revert the last command(s) by executing the &lt;&lt;cmd revert&gt;&gt; s
 
 You can not revert to a previous state when the &lt;&lt;path todo.txt&gt;&gt; file was modified with other editors / applications than topydo in the meantime.</pre>
 </div>
+<div created="20170813130313659" modified="20170813130711660" title="ChangeLog">
+<pre>&lt;ul&gt;
+&lt;$list filter=&quot;[tag[ChangeLog]]&quot;&gt;&lt;li&gt;&lt;$link to=&lt;&lt;currentTiddler&gt;&gt;&gt;&lt;&lt;currentTiddler&gt;&gt;&lt;/$link&gt;&lt;/li&gt;&lt;/$list&gt;
+&lt;/ul&gt;</pre>
+</div>
 <div bag="default" created="20161228140022653" modified="20170106090637890" revision="0" tags="ChangeLog" title="Changelog0.11" type="text/vnd.tiddlywiki">
 <pre>* New: &lt;&lt;cmd ls&gt;&gt; can [[group|Group]] items with the `-g` flag, accepting a [[group expression|GroupExpression]] (which has the same format as a [[sort expression|SortExpression]]). To group items by project, run: `topydo ls -g project`.
 * New: &lt;&lt;cmd ls&gt;&gt; can print todo items in the [[Graphviz Dot format|DotOutput]], such that [[dependencies|Dependencies]] can be visualized. Use `ls -f dot`, or `topydo ls -f dot +ProjectA | dot -Tsvg -o projectA.svg` to make a graph for [[project|Project]] A.
@@ -7042,6 +7050,76 @@ will interpret value as a [[relative date|RelativeDates]] and convert to an
 * Fix: when deleting the last column in [[column mode|ColumnUI]], no new columns could be added. This is fixed by showing the column definition view to add a new column.
 
 * Change: output in [[column UI|ColumnUI]] remains visible when `:` is pressed (in contrast to `Enter` or `Escape` which discards output).</pre>
+</div>
+<div bag="default" created="20170813125306256" modified="20170813140139747" revision="0" tags="ChangeLog" title="Changelog0.13" type="text/vnd.tiddlywiki">
+<pre>* New: make the [[text editor|edit]] configurable. It can be specified in the [[configuration|Configuration]] file or the editor can be passed with `topydo edit -E nano`. This makes it also much easier to introduce 'filters', to process (a selection of) todo items through an [[external command|ExternalCommands]].
+
+* New: with `revert ls` you can list all [[backups|Backups]], with `revert NUM` you can restore backup NUM (thanks to &lt;&lt;ghuser mruwek&gt;&gt;).
+
+* New: [[tab-completion|AutoCompletion]] in [[column mode|ColumnUI]] (thanks to &lt;&lt;ghuser mruwek&gt;&gt;).
+
+* New: the [[commandline in column mode|ColumnUICommandLine]] understands basic readline shortcuts:&lt;div&gt;
+
+  * Ctrl-a: move cursor to the beginning
+  * Ctrl-e: move cursor to the end
+  * Ctrl-u: delete from the cursor back to the beginning
+  * Ctrl-k: delete from the cursor to the end
+
+  (thanks to &lt;&lt;ghuser mruwek&gt;&gt;).&lt;/div&gt;
+
+* New: 'Mark all' in column mode: simply use Ctrl-A (thanks to &lt;&lt;ghuser mruwek&gt;&gt;).
+
+* New [[list format specifiers|FormatStrings]] (for `ls -F`):&lt;div&gt;
+
+  * %n: line number
+  * %N: padded line number
+  * %u: text-based ID
+  * %U: padded text-based ID
+
+  The [[identifiers|Identifiers]] `%i` and `%I` print whatever is configured (default: line
+  numbers).
+&lt;/div&gt;
+
+* New: `dep ls` was extended to understand the words `before` and `after`. For example `topydo dep ls before 1` is equivalent to `topydo dep ls 1 to` (thanks to &lt;&lt;ghuser mruwek&gt;&gt;).
+
+* New: introduce [[identifier_alphabet|ConfigIdentifierAlphabet]] option in the [[configuration|Configuration]], allowing you to choose which characters should be used for the text-based [[identifiers|Identifiers]]. This is a convenience for Dvorak typists (like me), to only use characters on the base row (and other conveniently positioned characters).
+
+* Fix: crash when running `help` in column mode.
+
+* Fix: better handling of incorrect dates. The &lt;&lt;cmd postpone&gt;&gt; command would crash when a todo item has an invalid due date (e.g. 2016-06-31).
+
+* Fix: take [[hide tags|ConfigHiddenItemTags]] into account in column mode.
+
+* Fix: print the correct todo IDs in the &lt;&lt;cmd do&gt;&gt; or &lt;&lt;cmd del&gt;&gt; output (thanks to &lt;&lt;ghuser mruwek&gt;&gt;).
+
+* Fix: make `add -f` more robust when the file does not exist (thanks to &lt;&lt;ghuser mruwek&gt;&gt;).
+
+* Fix: `ls -n` would not print anything under some circumstances, e.g. when todos are [[hidden|ConfigHiddenItemTags]].
+
+* Fix: Do not apply [[numerical/date filtering|FilterExpressions]] (&lt;, &gt;, =) when a tag appears more than once.
+
+* Fix: crash when launching [[column mode|ColumnUI]] in Windows. This mode is not supported, you may use Cygwin instead.
+
+* Fix: crash when an option appears twice in the [[configuration|Configuration]] file. The last value for an option will be used (thanks to &lt;&lt;ghuser mruwek&gt;&gt;).
+
+* Fix: fix padding for todo IDs.
+
+* Fix: instruct users to use `pip3` instead of `pip` (thanks to &lt;&lt;ghuser mruwek&gt;&gt;).
+
+* Change: &lt;&lt;cmd tag&gt;&gt;, &lt;&lt;cmd append&gt;&gt; and &lt;&lt;cmd dep&gt;&gt; can work with multiple todo IDs. This allows you to apply these commands on all marked items. Use `{}` as a  placeholder for the multiple IDs, e.g. `tag {} due today` (thanks to &lt;&lt;ghuser mruwek&gt;&gt;).
+
+* Change: completed items have a grey [[progress color|ProgressColors]].
+
+* Change: show [[group|Group]] names with [[relative|RelativeDates]] (humanized) dates when they represent dates.
+
+* Change: print empty output when `dep ls` has no output. Improves feedback to the user in [[column mode|ColumnUI]] (thanks to &lt;&lt;ghuser mruwek&gt;&gt;).
+
+* Change: show an error message when parsing the [[list format|FormatStrings]] fails (thanks to &lt;&lt;ghuser mruwek&gt;&gt;).
+
+* Change: use [[filter expression|FilterExpressions]] when no title was given for a [[column|Column]] in the column definition file (thanks to &lt;&lt;ghuser mruwek&gt;&gt;).
+
+* Change: `Ctrl-C` does not abort [[column mode|ColumnUI]] anymore, use `:quit` or `:exit` instead.
+</pre>
 </div>
 <div bag="default" created="20160620172437687" modified="20160715052254865" revision="0" summary="The default UI that can be invoked right from the shell (Bash, zsh, ...)" tags="UI" title="CLI" type="text/vnd.tiddlywiki">
 <pre>This is the traditional user interface, where topydo is invoked from the shell using [[subcommands|Command]]. Topydo exits after each invocation (exit code 0 if successful, otherwise a value larger than 0).
@@ -7894,9 +7972,6 @@ The background color is the [[progress color|ProgressColors]] of the correspondi
 The &lt;&lt;cmd dep&gt;&gt; command is also Dot aware, which allows you to generate a specific dependency tree.</pre>
 </div>
 <div bag="default" created="20160715052254901" modified="20160715052254901" revision="0" title="Draft of 'CLI'" type="text/vnd.tiddlywiki">
-<pre></pre>
-</div>
-<div modified="20170813120723149" title="Draft of 'ConfigIdentifierAlphabet'">
 <pre></pre>
 </div>
 <div bag="default" command-description="The `edit` subcommand launches a text editor to edit todo items." created="20160503072039997" modified="20170813104546373" revision="0" tags="Command FilterExpressions" title="edit" type="text/vnd.tiddlywiki">
