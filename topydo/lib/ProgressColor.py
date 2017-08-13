@@ -113,12 +113,12 @@ def progress_color(p_todo):
     # TODO: remove linear scale to exponential scale
     if progress > 1:
         # overdue, return the last color
-        return Color(color_range[-1])
+        return Color(color_range[-1], True)
     elif p_todo.is_completed():
         # return grey
-        return Color(243) if use_256_colors else Color(7)
+        return Color(243, True) if use_256_colors else Color(7, True)
     else:
         # not overdue, calculate position over color range excl. due date
         # color
         pos = round(progress * (len(color_range) - 2))
-        return Color(color_range[pos])
+        return Color(color_range[pos], True)
