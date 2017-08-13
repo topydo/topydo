@@ -113,7 +113,7 @@ class RevertCommand(Command):
 Reverts last commands.
 
 * ls       : Lists all backups ordered and numbered chronologically (starting
-             with 1 for latest backup).
+             with 1 for the latest backup).
 * [NUMBER] : revert to specific point in history specified by NUMBER.
 
 Output example for `revert ls`:
@@ -121,11 +121,12 @@ Output example for `revert ls`:
 2 | 1970-01-01 00:00:01 | add Bar
 3 | 1970-01-01 00:00:00 | add Foo
 
-In such example executing `revert 2` will revert todo and archive files to the
-state before execution of `add Bar`.
+In such example executing `revert 2` will revert the todo and archive files to
+the state before execution of `add Bar`.
 
 * `revert` without any further arguments will revert to the latest backup
-  available, provided that this backup matches current state of the todo file.
+  available, provided that this backup matches the current state of the todo
+  file.
   Topydo will refuse to revert, if any changes to todo file were made by
   external application after the latest backup. To force a `revert` action use
   it with a NUMBER.\
