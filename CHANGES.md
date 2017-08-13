@@ -1,3 +1,72 @@
+0.13
+----
+
+* New: make the text editor configurable. It can be specified in the
+  configuration file or the editor can be passed with `topydo edit -E nano`.
+  This makes it also much easier to introduce 'filters', to process (a selection
+  of) todo items through an external command.
+* New: with `revert ls` you can list all backups, with `revert NUM` you can
+  restore backup NUM (thanks to @mruwek).
+* New: tab-completion in column mode (thanks to @mruwek).
+* New: the commandline in column mode understands basic readline shortcuts:
+  - Ctrl-a: move cursor to the beginning
+  - Ctrl-e: move cursor to the end
+  - Ctrl-u: delete from the cursor back to the beginning
+  - Ctrl-k: delete from the cursor to the end
+
+  (thanks to @mruwek).
+* New: 'Mark all' in column mode: simply use Ctrl-A (thanks to @mruwek).
+* New list format specifiers (for `ls -F`):
+  - %n: line number
+  - %N: padded line number
+  - %u: text-based ID
+  - %U: padded text-based ID
+
+  The identifiers %i and %I print whatever is configured (default: line
+  numbers).
+* New: `dep ls` was extended to understand the words `before` and `after`. For
+  example `topydo dep ls before 1` is equivalent to `topydo dep ls 1 to`
+  (thanks to @mruwek).
+* New: introduce 'identifier_alphabet' option in the configuration, allowing
+  you to choose which characters should be used for the text-based identifiers.
+  This is a convenience for Dvorak typists (like me), to only use characters on
+  the base row (and other conveniently positioned characters).
+
+* Fix: crash when running `help` in column mode.
+* Fix: better handling of incorrect dates. The `postpone` command would crash
+  when a todo item has an invalid due date (e.g. 2016-06-31).
+* Fix: take hide tags into account in column mode.
+* Fix: print the correct todo IDs in the `do` or `del` output (thanks to
+  @mruwek).
+* Fix: make `add -f` more robust when the file does not exist (thanks to
+  @mruwek).
+* Fix: `ls -n` would not print anything under some circumstances, e.g. when
+  todos are hidden.
+* Fix: Do not apply ordinal filtering (<, >, =) when a tag appears more than
+  once.
+* Fix: crash when launching column mode in Windows. This mode is not supported,
+  you may use Cygwin instead.
+* Fix: crash when an option appears twice in the configuration file. The
+  last value for an option will be used (thanks to @mruwek).
+* Fix: fix padding for todo IDs.
+* Fix: instruct users to use 'pip3' instead of 'pip' (thanks to @mruwek).
+
+* Change: `tag`, `append` and `dep` can work with multiple todo IDs. This
+  allows you to apply these commands on all marked items. Use {} as a
+  placeholder for the multiple IDs, e.g. `tag {} due today` (thanks to
+  @mruwek).
+* Change: completed items have a grey progress color.
+* Change: show group names with relative (humanized) dates when they represent
+  dates.
+* Change: print empty output when `dep ls` has no output. Improves feedback to
+  user in column mode (thanks to @mruwek).
+* Change: show an error message when parsing the list format fails (thanks to
+  @mruwek).
+* Change: use filter expression when no title was given for a column in the
+  column definition file (thanks to @mruwek).
+* Change: Ctrl-C does not abort column mode anymore, use :quit or :exit
+  instead.
+
 0.12
 ----
 
