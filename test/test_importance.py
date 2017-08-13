@@ -15,13 +15,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
-from datetime import date, timedelta
+from datetime import date
+
 from freezegun import freeze_time
 
-from test.topydo_testcase import TopydoTest
 from topydo.lib.Config import config
 from topydo.lib.Importance import importance
 from topydo.lib.Todo import Todo
+
+from .topydo_testcase import TopydoTest
 
 
 @freeze_time("2015, 11, 06")

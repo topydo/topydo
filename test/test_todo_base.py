@@ -20,8 +20,9 @@ import re
 import unittest
 from datetime import date, timedelta
 
-from test.topydo_testcase import TopydoTest
 from topydo.lib.TodoBase import TodoBase
+
+from .topydo_testcase import TopydoTest
 
 
 class TodoBaseTester(TopydoTest):

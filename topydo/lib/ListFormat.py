@@ -16,12 +16,13 @@
 
 """ Utilities for formatting output with "list_format" option."""
 
-import arrow
 import re
+
+import arrow
 
 from topydo.lib.Config import config
 from topydo.lib.ProgressColor import progress_color
-from topydo.lib.Utils import get_terminal_size, escape_ansi, humanize_date
+from topydo.lib.Utils import escape_ansi, get_terminal_size, humanize_date
 
 MAIN_PATTERN = (r'^({{(?P<before>.+?)}})?'
                 r'(?P<placeholder>{ph}|\[{ph}\])'
@@ -205,7 +206,7 @@ class ListFormatParser(object):
             'T': lambda t: humanize_date(t.start_date()) if t.start_date() else '',
 
             # unique text ID
-            'u': lambda t: self.todolist.uid(t),
+            'u': self.todolist.uid if self.todolist else lambda _ : '',
 
             # unique text ID, padded with spaces
             'U': lambda t: _filler(self.todolist.uid(t),

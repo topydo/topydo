@@ -16,9 +16,10 @@
 
 import unittest
 
-from test.command_testcase import CommandTest
 from topydo.commands.PriorityCommand import PriorityCommand
 from topydo.lib.TodoList import TodoList
+
+from .command_testcase import CommandTest
 
 
 class PriorityCommandTest(CommandTest):

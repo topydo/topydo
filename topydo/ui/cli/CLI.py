@@ -18,9 +18,10 @@
 
 import sys
 
+from topydo.Commands import get_subcommand
+from topydo.lib import TodoFile, TodoList
+from topydo.lib.Config import ConfigError, config
 from topydo.ui.CLIApplicationBase import CLIApplicationBase, error
-from topydo.lib import TodoFile
-from topydo.lib.Config import config, ConfigError
 
 # First thing is to poke the configuration and check whether it's sane
 # The modules below may already read in configuration upon import, so
@@ -31,8 +32,6 @@ except ConfigError as config_error:
     error(str(config_error))
     sys.exit(1)
 
-from topydo.Commands import get_subcommand
-from topydo.lib import TodoList
 
 
 class CLIApplication(CLIApplicationBase):
@@ -57,7 +56,7 @@ class CLIApplication(CLIApplicationBase):
             sys.exit(1)
 
         if subcommand is None:
-            self._usage()
+            CLIApplicationBase._usage()
 
         if self._execute(subcommand, args) == False:
             sys.exit(1)

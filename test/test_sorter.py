@@ -14,14 +14,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from freezegun import freeze_time
 import unittest
 
-from test.facilities import (load_file, load_file_to_todolist, print_view,
-                             todolist_to_string)
-from test.topydo_testcase import TopydoTest
+from freezegun import freeze_time
+
 from topydo.lib.Config import config
 from topydo.lib.Sorter import Sorter
+
+from .facilities import (load_file, load_file_to_todolist, print_view,
+                         todolist_to_string)
+from .topydo_testcase import TopydoTest
 
 
 @freeze_time("2016, 04, 25")

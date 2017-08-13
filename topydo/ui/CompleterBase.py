@@ -15,7 +15,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import datetime
-
 from functools import lru_cache
 
 from topydo.Commands import SUBCOMMAND_MAP

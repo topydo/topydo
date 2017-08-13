@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import re
+
 import urwid
 
 from topydo.lib.Config import config
@@ -91,7 +92,6 @@ class TodoWidget(urwid.WidgetWrap):
         priority_widget = urwid.Text(priority_text)
         self.text_widget = urwid.Text(txt_markup)
 
-        progress = to_urwid_color(progress_color(p_todo)) if config().colors() else PaletteItem.DEFAULT
         self.progress_bar = urwid.AttrMap(
                 urwid.SolidFill(' '),
                 {},
@@ -117,13 +117,15 @@ class TodoWidget(urwid.WidgetWrap):
 
         super().__init__(self.widget)
 
-    def keypress(self, p_size, p_key):
+    # pylint: disable=no-self-use
+    def keypress(self, _, p_key):
         """
         Override keypress to prevent the wrapped Columns widget to
         receive any key.
         """
         return p_key
 
+    # pylint: disable=no-self-use
     def selectable(self):
         # make sure that ListBox will highlight this widget
         return True
@@ -196,4 +198,3 @@ class TodoWidget(urwid.WidgetWrap):
     def wipe_cache(p_class):
         """ Wipes the cache """
         p_class.cache = {}
-

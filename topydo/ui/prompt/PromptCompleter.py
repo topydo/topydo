@@ -22,9 +22,10 @@ by the prompt toolkit.
 import re
 
 from prompt_toolkit.completion import Completer, Completion
-from topydo.ui.CompleterBase import CompleterBase, date_suggestions
+
 from topydo.lib.Config import config
 from topydo.lib.RelativeDate import relative_date_to_date
+from topydo.ui.CompleterBase import CompleterBase, date_suggestions
 
 
 def _dates(p_word_before_cursor):
@@ -52,15 +53,14 @@ class PromptCompleter(CompleterBase, Completer):
         for candidate in candidates:
             yield Completion(candidate, -len(p_word))
 
-    def get_completions(self, p_document, _):
+    def get_completions(self, p_word, p_is_first_word=False):
         # include all characters except whitespaces (for + and @)
-        word_before_cursor = p_document.get_word_before_cursor(True)
+        word_before_cursor = p_word.get_word_before_cursor(True)
         is_first_word = not re.match(r'\s*\S+\s',
-                                     p_document.current_line_before_cursor)
-
+                                     p_word.current_line_before_cursor)
         if word_before_cursor.startswith(config().tag_due() + ':'):
             return _dates(word_before_cursor)
         elif word_before_cursor.startswith(config().tag_start() + ':'):
             return _dates(word_before_cursor)
-        else:
-            return self._completion_generator(word_before_cursor, is_first_word)
+
+        return self._completion_generator(word_before_cursor, is_first_word)

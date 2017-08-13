@@ -14,10 +14,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from configparser import RawConfigParser, NoOptionError
+from configparser import NoOptionError, RawConfigParser
 from os.path import expanduser
 
-from topydo.lib.Config import home_config_path, config
+from topydo.lib.Config import config, home_config_path
 
 
 def columns(p_alt_layout_path=None):

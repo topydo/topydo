@@ -16,8 +16,8 @@
 
 import unittest
 
-from test.facilities import load_file
-from test.topydo_testcase import TopydoTest
+from .facilities import load_file
+from .topydo_testcase import TopydoTest
 
 
 class TodoFileTest(TopydoTest):

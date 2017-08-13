@@ -19,11 +19,11 @@
 import unittest
 from datetime import date, timedelta
 
-from test.facilities import (load_file, load_file_to_todolist,
-                             todolist_to_string)
-from test.topydo_testcase import TopydoTest
 from topydo.lib import Filter
 from topydo.lib.Todo import Todo
+
+from .facilities import load_file, load_file_to_todolist, todolist_to_string
+from .topydo_testcase import TopydoTest
 
 
 class FilterTest(TopydoTest):

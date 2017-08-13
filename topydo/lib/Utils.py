@@ -18,11 +18,11 @@
 Various utility functions.
 """
 
-import arrow
 import re
-
 from collections import namedtuple
 from datetime import date
+
+import arrow
 
 
 def date_string_to_date(p_date):
@@ -81,16 +81,14 @@ def get_terminal_size(p_getter=None):
                     except ImportError:
                         from backports.shutil_get_terminal_size import get_terminal_size as _get_terminal_size  # pylint: disable=import-error
 
-                    sz = _get_terminal_size()
+                    size = _get_terminal_size()
                 except ValueError:
-                    """
-                    This can result from the 'underlying buffer being detached', which
-                    occurs during running the unittest on Windows (but not on Linux?)
-                    """
+                    # This can result from the 'underlying buffer being detached', which
+                    # occurs during running the unittest on Windows (but not on Linux?)
                     terminal_size = namedtuple('Terminal_Size', 'columns lines')
-                    sz = terminal_size(80, 24)
+                    size = terminal_size(80, 24)
 
-                return sz
+                return size
 
             get_terminal_size.getter = inner
 
@@ -114,6 +112,5 @@ def translate_key_to_config(p_key):
 def humanize_date(p_datetime):
     """ Returns a relative date string from a datetime object. """
     now = arrow.now()
-    date = now.replace(day=p_datetime.day, month=p_datetime.month, year=p_datetime.year)
-    return date.humanize(now).replace('just now', 'today')
-
+    _date = now.replace(day=p_datetime.day, month=p_datetime.month, year=p_datetime.year)
+    return _date.humanize(now).replace('just now', 'today')

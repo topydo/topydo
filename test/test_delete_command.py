@@ -16,11 +16,12 @@
 
 import unittest
 
-from test.command_testcase import CommandTest
 from topydo.commands.DeleteCommand import DeleteCommand
 from topydo.lib.Config import config
 from topydo.lib.TodoList import TodoList
 from topydo.lib.TodoListBase import InvalidTodoException
+
+from .command_testcase import CommandTest
 
 
 def _yes_prompt(self):

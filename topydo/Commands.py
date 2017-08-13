@@ -21,7 +21,7 @@ instance based on an argument list.
 
 import sys
 
-from topydo.lib.Config import config, ConfigError
+from topydo.lib.Config import ConfigError, config
 
 SUBCOMMAND_MAP = {
     'add': 'AddCommand',

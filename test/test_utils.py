@@ -16,8 +16,9 @@
 
 import unittest
 
-from test.topydo_testcase import TopydoTest
 from topydo.lib.Utils import translate_key_to_config
+
+from .topydo_testcase import TopydoTest
 
 
 class UtilsTest(TopydoTest):

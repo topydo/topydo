@@ -16,15 +16,14 @@
 
 """ This module provides functionality to sort lists with todo items. """
 
-from collections import OrderedDict, namedtuple
-from itertools import groupby
 import re
+from collections import OrderedDict, namedtuple
 from datetime import date
+from itertools import groupby
 
 from topydo.lib.Config import config
 from topydo.lib.Importance import average_importance, importance
 from topydo.lib.Utils import date_string_to_date, humanize_date
-
 
 Field = namedtuple('Field', ['sort', 'group', 'label'])
 
@@ -148,9 +147,81 @@ class Sorter(object):
     """
 
     def __init__(self, p_sortstring="desc:priority", p_groupstring=""):
-        self.groupfunctions = self._parse(p_groupstring, p_group=True) if p_groupstring else []
-        self.pregroupfunctions = self._parse(p_groupstring, p_group=False) if p_groupstring else []
-        self.sortfunctions = self._parse(p_sortstring, p_group=False)
+        def parse(p_string, p_group):
+            """
+            Parses a sort/group string and returns a list of functions and the
+            desired order.
+            """
+            def get_field_function(p_field, p_group=False):
+                """
+                Turns a field, part of a sort/group string, into a lambda that
+                takes a todo item and returns the field value.
+                """
+                compose = lambda i: i.sort if not p_group else (i.group, i.label)
+
+                def group_value(p_todo):
+                    """
+                    Returns a value to assign the given todo to a group. Date tags
+                    are grouped according to the relative date (1 day, 1 month,
+                    ...)
+                    """
+                    result = 'No value'
+
+                    if p_todo.has_tag(p_field):
+                        if p_field == config().tag_due():
+                            result = humanize_date(p_todo.due_date())
+                        elif p_field == config().tag_start():
+                            result = humanize_date(p_todo.start_date())
+                        else:
+                            result = p_todo.tag_value(p_field)
+
+                            try:
+                                result = humanize_date(date_string_to_date(result))
+                            except ValueError:
+                                pass
+
+                    return result
+
+                if p_field in FIELD_MAP:
+                    return compose(FIELDS[FIELD_MAP[p_field]])
+                else:
+                    # treat it as a tag value
+                    return compose(Field(
+                        sort=lambda t: '0' + t.tag_value(p_field) if t.has_tag(p_field) else '1',
+                        group=group_value,
+                        label=p_field,
+                    ))
+
+            result = []
+            fields = p_string.lower().split(',')
+
+            for field in fields:
+                parsed_field = re.match(
+                    r'(?P<order>(asc|desc)(ending)?:)?(?P<field>\S+)',
+                    field)
+
+                if not parsed_field:
+                    continue
+
+                order = parsed_field.group('order')
+                order = 'desc' if order and order.startswith('desc') else 'asc'
+
+                field = parsed_field.group('field')
+                if field:
+                    function = get_field_function(field, p_group)
+
+                    # reverse order for priority: lower characters have higher
+                    # priority
+                    if field in FIELD_MAP and FIELD_MAP[field] == 'priority':
+                        order = 'asc' if order == 'desc' else 'desc'
+
+                    result.append((function, order))
+
+            return result
+
+        self.groupfunctions = parse(p_groupstring, p_group=True) if p_groupstring else []
+        self.pregroupfunctions = parse(p_groupstring, p_group=False) if p_groupstring else []
+        self.sortfunctions = parse(p_sortstring, p_group=False)
 
     def sort(self, p_todos):
         """
@@ -197,76 +268,3 @@ class Sorter(object):
             result[key] = self.sort(_group)
 
         return result
-
-    def _parse(self, p_string, p_group):
-        """
-        Parses a sort/group string and returns a list of functions and the
-        desired order.
-        """
-        def get_field_function(p_field, p_group=False):
-            """
-            Turns a field, part of a sort/group string, into a lambda that
-            takes a todo item and returns the field value.
-            """
-            compose = lambda i: i.sort if not p_group else (i.group, i.label)
-
-            def group_value(p_todo):
-                """
-                Returns a value to assign the given todo to a group. Date tags
-                are grouped according to the relative date (1 day, 1 month,
-                ...)
-                """
-                result = 'No value'
-
-                if p_todo.has_tag(p_field):
-                    if p_field == config().tag_due():
-                        result = humanize_date(p_todo.due_date())
-                    elif p_field == config().tag_start():
-                        result = humanize_date(p_todo.start_date())
-                    else:
-                        result = p_todo.tag_value(p_field)
-
-                        try:
-                            result = humanize_date(date_string_to_date(result))
-                        except ValueError:
-                            pass
-
-                return result
-
-            if p_field in FIELD_MAP:
-                return compose(FIELDS[FIELD_MAP[p_field]])
-            else:
-                # treat it as a tag value
-                return compose(Field(
-                    sort=lambda t: '0' + t.tag_value(p_field) if t.has_tag(p_field) else '1',
-                    group=group_value,
-                    label=p_field,
-                ))
-
-        result = []
-        fields = p_string.lower().split(',')
-
-        for field in fields:
-            parsed_field = re.match(
-                r'(?P<order>(asc|desc)(ending)?:)?(?P<field>\S+)',
-                field)
-
-            if not parsed_field:
-                continue
-
-            order = parsed_field.group('order')
-            order = 'desc' if order and order.startswith('desc') else 'asc'
-
-            field = parsed_field.group('field')
-            if field:
-                function = get_field_function(field, p_group)
-
-                # reverse order for priority: lower characters have higher
-                # priority
-                if field in FIELD_MAP and FIELD_MAP[field] == 'priority':
-                    order = 'asc' if order == 'desc' else 'desc'
-
-                result.append((function, order))
-
-        return result
-

@@ -14,16 +14,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
 import codecs
-import tempfile
+import os
 import shlex
+import tempfile
 from subprocess import CalledProcessError, check_call
 
 from topydo.lib.Config import config
 from topydo.lib.MultiCommand import MultiCommand
 from topydo.lib.prettyprinters.Numbers import PrettyPrinterNumbers
 from topydo.lib.Todo import Todo
+
 
 def _get_file_mtime(p_file):
     return os.stat(p_file.name).st_mtime
@@ -44,11 +45,11 @@ class EditCommand(MultiCommand):
     def get_flags(self):
         return ("dE:", [])
 
-    def process_flag(self, p_opt, p_value):
-        if p_opt == '-d':
+    def process_flag(self, p_option, p_value):
+        if p_option == '-d':
             self.edit_archive = True
             self.multi_mode = False
-        elif p_opt == '-E':
+        elif p_option == '-E':
             self.editor = shlex.split(p_value)
 
     def _process_flags(self):
@@ -71,9 +72,10 @@ class EditCommand(MultiCommand):
 
         return f
 
-    def _todos_from_temp(self, p_temp_file):
-        f = codecs.open(p_temp_file.name, encoding='utf-8')
-        todos = f.read().splitlines()
+    @staticmethod
+    def _todos_from_temp(p_temp_file):
+        with codecs.open(p_temp_file.name, encoding='utf-8') as temp:
+            todos = temp.read().splitlines()
 
         todo_objs = []
         for todo in todos:
@@ -112,7 +114,7 @@ class EditCommand(MultiCommand):
         orig_mtime = _get_file_mtime(temp_todos)
 
         if not self._open_in_editor(temp_todos.name):
-            new_todos = self._todos_from_temp(temp_todos)
+            new_todos = EditCommand._todos_from_temp(temp_todos)
 
             if _is_edited(orig_mtime, temp_todos):
                 for todo in self.todos:

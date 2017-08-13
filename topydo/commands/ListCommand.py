@@ -14,18 +14,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import re
 import sys
-import os
 
 from topydo.lib.Config import config
 from topydo.lib.ExpressionCommand import ExpressionCommand
 from topydo.lib.Filter import HiddenTagFilter, InstanceFilter
 from topydo.lib.ListFormat import ListFormatError
-from topydo.lib.printers.PrettyPrinter import pretty_printer_factory
 from topydo.lib.prettyprinters.Format import PrettyPrinterFormatFilter
-from topydo.lib.TodoListBase import InvalidTodoException
+from topydo.lib.printers.PrettyPrinter import pretty_printer_factory
 from topydo.lib.Sorter import Sorter
+from topydo.lib.TodoListBase import InvalidTodoException
 from topydo.lib.Utils import get_terminal_size
 from topydo.lib.View import View
 
@@ -90,7 +90,7 @@ class ListCommand(ExpressionCommand):
             elif opt == '-N':
                 # 2 lines are assumed to be taken up by printing the next prompt
                 # display at least one item
-                self.limit = self._N_lines()
+                self.limit = ListCommand._N_lines()
             elif opt == '-n':
                 try:
                     self.limit = int(value)
@@ -164,7 +164,8 @@ class ListCommand(ExpressionCommand):
 
         return View(sorter, filters, self.todolist)
 
-    def _N_lines(self):
+    @staticmethod
+    def _N_lines():
         ''' Determine how many lines to print, such that the number of items
             displayed will fit on the terminal (i.e one 'screen-ful' of items)
 
@@ -176,13 +177,13 @@ class ListCommand(ExpressionCommand):
 
             Otherwise, it looks for a newline ('\n') in the environmental variable
             PS1.
-        '''  
+        '''
         lines_in_prompt = 1     # prompt is assumed to take up one line, even
                                 #   without any newlines in it
         if "win32" in sys.platform:
             lines_in_prompt += 1  # Windows will typically print a free line after
                                   #   the program output
-            a = re.findall('\$_', os.getenv('PROMPT', ''))
+            a = re.findall(r'\$_', os.getenv('PROMPT', ''))
             lines_in_prompt += len(a)
         else:
             a = re.findall('\\n', os.getenv('PS1', ''))

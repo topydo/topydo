@@ -19,8 +19,8 @@ Provides a pretty printer filter that generates a todo string based on a format
 string.
 """
 
-from topydo.lib.PrettyPrinterFilter import PrettyPrinterFilter
 from topydo.lib.ListFormat import ListFormatParser
+from topydo.lib.PrettyPrinterFilter import PrettyPrinterFilter
 
 
 class PrettyPrinterFormatFilter(PrettyPrinterFilter):

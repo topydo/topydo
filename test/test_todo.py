@@ -17,8 +17,9 @@
 import unittest
 from datetime import date, timedelta
 
-from test.topydo_testcase import TopydoTest
 from topydo.lib.Todo import Todo
+
+from .topydo_testcase import TopydoTest
 
 
 def today_date():

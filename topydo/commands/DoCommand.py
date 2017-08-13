@@ -35,6 +35,9 @@ class DoCommand(DCommand):
         super().__init__(
             p_args, p_todolist, p_out, p_err, p_prompt)
 
+        self.condition = lambda todo: not todo.is_completed()
+        self.condition_failed_text = "Todo has already been completed."
+
     def get_flags(self):
         """ Additional flags. """
         opts, long_opts = super().get_flags()
@@ -74,15 +77,6 @@ class DoCommand(DCommand):
 
     def prefix(self):
         return "Completed: "
-
-    def condition(self, p_todo):
-        """
-        An additional condition whether execute_specific should be executed.
-        """
-        return not p_todo.is_completed()
-
-    def condition_failed_text(self):
-        return "Todo has already been completed."
 
     def execute_specific(self, p_todo):
         """ Actions specific to this command. """

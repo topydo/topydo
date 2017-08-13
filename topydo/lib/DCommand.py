@@ -17,8 +17,8 @@
 import re
 
 from topydo.lib.MultiCommand import MultiCommand
-from topydo.lib.printers.PrettyPrinter import PrettyPrinter
 from topydo.lib.prettyprinters.Numbers import PrettyPrinterNumbers
+from topydo.lib.printers.PrettyPrinter import PrettyPrinter
 
 
 class DCommand(MultiCommand):
@@ -36,13 +36,14 @@ class DCommand(MultiCommand):
 
         self.force = False
         self._delta = []
-
+        self.condition = lambda _: True
+        self.condition_failed_text = ""
 
     def get_flags(self):
         return ("f", ["force"])
 
-    def process_flag(self, p_opt, p_value):
-        if p_opt == "-f" or p_opt == "--force":
+    def process_flag(self, p_option, p_value):
+        if p_option == "-f" or p_option == "--force":
             self.force = True
 
     def _uncompleted_children(self, p_todo):
@@ -93,15 +94,6 @@ class DCommand(MultiCommand):
         return [todo for todo in self.todolist.todos()
                 if not self._uncompleted_children(todo) and todo.is_active()]
 
-    def condition(self, _):
-        """
-        An additional condition whether execute_specific should be executed.
-        """
-        return True
-
-    def condition_failed_text(self):
-        raise NotImplementedError
-
     def execute_specific(self, _):
         raise NotImplementedError
 
@@ -120,7 +112,7 @@ class DCommand(MultiCommand):
                 self._process_subtasks(todo)
                 self.execute_specific(todo)
             else:
-                self.error(self.condition_failed_text())
+                self.error(self.condition_failed_text)
 
         current_active = self._active_todos()
         self._delta = [todo for todo in current_active

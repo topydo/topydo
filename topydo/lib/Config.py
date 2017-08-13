@@ -15,16 +15,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import configparser
-from functools import lru_cache
 import os
 import re
 import shlex
-
 from collections import OrderedDict
+from functools import lru_cache
 from itertools import accumulate
 from string import ascii_lowercase
 
 from topydo.lib.Color import Color
+
 
 def home_config_path(p_filename):
     return os.path.join(os.path.expanduser('~'), p_filename)

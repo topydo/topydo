@@ -29,4 +29,3 @@ class PrettyPrinterNumbers(PrettyPrinterFilter):
     def filter(self, p_todo_str, p_todo):
         """ Prepends the number to the todo string. """
         return "|{:>3}| {}".format(self.todolist.number(p_todo), p_todo_str)
-

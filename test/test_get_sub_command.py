@@ -16,18 +16,20 @@
 
 import unittest
 
-from test.topydo_testcase import TopydoTest
 from topydo.Commands import get_subcommand
 from topydo.commands.AddCommand import AddCommand
 from topydo.commands.DeleteCommand import DeleteCommand
 from topydo.commands.ListCommand import ListCommand
 from topydo.commands.TagCommand import TagCommand
-from topydo.lib.Config import config, ConfigError
+from topydo.lib.Config import ConfigError, config
+
+from .topydo_testcase import TopydoTest
+
 
 class GetSubcommandTest(TopydoTest):
     def test_normal_cmd(self):
         args = ["add"]
-        real_cmd, final_args = get_subcommand(args)
+        real_cmd, _ = get_subcommand(args)
         self.assertTrue(issubclass(real_cmd, AddCommand))
 
     def test_cmd_help(self):
@@ -116,7 +118,7 @@ class GetSubcommandTest(TopydoTest):
         config("test/data/aliases.conf")
 
         args = ["baz"]
-        real_cmd, final_args = get_subcommand(args)
+        real_cmd, _ = get_subcommand(args)
         self.assertEqual(real_cmd, None)
 
     def test_alias_quotation(self):

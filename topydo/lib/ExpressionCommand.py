@@ -14,8 +14,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import re
-
 from topydo.lib import Filter
 from topydo.lib.Command import Command
 from topydo.lib.Config import config

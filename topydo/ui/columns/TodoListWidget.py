@@ -207,6 +207,7 @@ class TodoListWidget(urwid.LineBox):
                                    p_row,
                                    p_focus)
 
+    # pylint: disable=no-self-use
     def selectable(self):
         return True
 
