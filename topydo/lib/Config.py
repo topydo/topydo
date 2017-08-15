@@ -95,7 +95,7 @@ class _Config:
 
             'sort': {
                 'keep_sorted': '0',
-                'sort_string': 'desc:importance,due,desc:priority',
+                'sort_string': 'desc:completed,desc:importance,due,desc:priority',
                 'group_string': '',
                 'ignore_weekends': '1',
             },
