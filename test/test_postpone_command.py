@@ -311,7 +311,7 @@ class PostponeCommandTest(CommandTest):
                                   self.error)
         command.execute()
 
-        self.assertTrue(self.todolist.dirty)
+        self.assertFalse(self.todolist.dirty)
         self.assertEqual(self.output, "|  1| Foo\n")
         self.assertEqual(self.errors, "Warning: todo item has no (valid) due date, therefore it was not adjusted.\n")
 
@@ -320,7 +320,7 @@ class PostponeCommandTest(CommandTest):
                                   self.error)
         command.execute()
 
-        self.assertTrue(self.todolist.dirty)
+        self.assertFalse(self.todolist.dirty)
         self.assertEqual(self.output, "|  1| Foo\n")
         self.assertEqual(self.errors, "Warning: todo item has no (valid) t date, therefore it was not adjusted.\n")
 
@@ -439,7 +439,7 @@ class PostponeCommandTest(CommandTest):
                                   self.error)
         command.execute()
 
-        self.assertTrue(self.todolist.dirty)
+        self.assertFalse(self.todolist.dirty)
         self.assertEqual(self.output, "|  6| FutureStart t:{}\n".format(self.future.isoformat()))
         self.assertEqual(self.errors, "Warning: todo item has no (valid) due date, therefore it was not adjusted.\n")
 
@@ -488,7 +488,7 @@ class PostponeCommandTest(CommandTest):
                                   self.error)
         command.execute()
 
-        self.assertTrue(self.todolist.dirty)
+        self.assertFalse(self.todolist.dirty)
         self.assertEqual(self.output, "|  8| InvalidStartDate t:2017-06-31\n")
         self.assertEqual(self.errors, "Warning: todo item has no (valid) due date, therefore it was not adjusted.\n")
 
