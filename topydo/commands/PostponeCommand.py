@@ -33,6 +33,7 @@ class PostponeCommand(MultiCommand):
 
         self.move_and_create_tags = set()
         self.move_tags = set()
+        self.todo_modified = False
         self.last_argument = True
 
     def get_flags(self):
@@ -88,11 +89,15 @@ class PostponeCommand(MultiCommand):
                         todo.set_tag(tag, new_due.isoformat())
                         self.todolist.dirty = True
 
+                    self.todo_modified = True
+
                 else:
                     self.error("Invalid date pattern given.")
                     break
 
-            self.out(self.printer.print_todo(todo))
+            if self.todo_modified:
+                self.out(self.printer.print_todo(todo))
+                self.todo_modified = False
 
     def usage(self):
         return """\
