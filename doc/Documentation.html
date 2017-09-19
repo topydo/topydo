@@ -6690,7 +6690,7 @@ Changelog0.13</pre>
 <div created="20170719122741788" modified="20170719122915728" title="$:/state/tab-1749438307">
 <pre>$:/core/ui/ControlPanel/Info</pre>
 </div>
-<div created="20170719121506797" modified="20170813140414376" title="$:/state/tab/sidebar--1835078512">
+<div created="20170719121506797" modified="20170919103003199" title="$:/state/tab/sidebar--1835078512">
 <pre>$:/core/ui/SideBar/Open</pre>
 </div>
 <div created="20170719122750165" modified="20170719122750925" title="$:/state/tabs/controlpanel/toolbars-1345989671">
@@ -6716,7 +6716,7 @@ Changelog0.13</pre>
     }
 }</pre>
 </div>
-<div created="20170719121258332" modified="20170813131817350" title="$:/temp/search">
+<div created="20170719121258332" modified="20170919102938829" title="$:/temp/search">
 <pre></pre>
 </div>
 <div author="JeremyRuston" bag="default" core-version="&gt;=5.0.0" dependents="$:/themes/tiddlywiki/vanilla" description="Emphasises individual tiddlers" name="Snow White" plugin-type="theme" revision="0" title="$:/themes/tiddlywiki/snowwhite" type="application/json" version="5.1.11">
@@ -6824,8 +6824,8 @@ Changelog0.13</pre>
     }
 }</pre>
 </div>
-<div bag="default" created="20160427171816008" modified="20161118213959101" revision="0" tags="" title="AboutTopydo" type="text/vnd.tiddlywiki">
-<pre>topydo is a powerful todo list application for the console, using the [ext[todo.txt|https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format]] format. It is inspired by the [ext[todo.txt CLI|(https://github.com/ginatrapani/todo.txt-cli]] by Gina Trapani.
+<div bag="default" created="20160427171816008" modified="20170919102813042" revision="0" tags="" title="AboutTopydo" type="text/vnd.tiddlywiki">
+<pre>topydo is a powerful todo list application for the console, using the [ext[todo.txt format|Format]]. It is inspired by the [ext[todo.txt CLI|https://github.com/todotxt/todo.txt-cli]] by Gina Trapani.
 
 topydo is a rewrite of the CLI, incorporating functionality from both the original CLI and [[todo.txt-tools|https://github.com/bram85/todo.txt-tools]].
 
@@ -7644,10 +7644,10 @@ The [[color|Colors]] that is used to print project names in &lt;&lt;cmd ls&gt;&g
 
 This [[tag|TagStar]] is used to indicate a [[starred|Starring]] item.</pre>
 </div>
-<div bag="default" config-default="`t`" config-description="The tag to use to specify start dates" config-group="tags" config-item="tag_start" config-type="String" created="20160603102559455" modified="20160603102845606" revision="0" tags="Configuration" title="ConfigTagStart" type="text/vnd.tiddlywiki">
+<div bag="default" config-default="`t`" config-description="The tag to use to specify start dates" config-group="tags" config-item="tag_start" config-type="String" created="20160603102559455" modified="20170919102904949" revision="0" tags="Configuration" title="ConfigTagStart" type="text/vnd.tiddlywiki">
 <pre>&lt;&lt;config&gt;&gt;
 
-The `t` is a convention around the original [ext[todo.txt CLI|https://bram85.nl/topydo/(https://github.com/ginatrapani/todo.txt-cli]], which stands for //threshold//.</pre>
+The `t` is a convention around the original [ext[todo.txt CLI|https://github.com/todotxt/todo.txt-cli]], which stands for //threshold//.</pre>
 </div>
 <div bag="default" created="20160516144240587" modified="20160627190558538" revision="0" tags="Configuration" title="Configuration" type="text/vnd.tiddlywiki">
 <pre>\define ini-group()
@@ -8221,8 +8221,8 @@ Please note that parentheses have special meaning in the shell so you should put
 
 {{FilterExpressionExamples}}</pre>
 </div>
-<div bag="default" created="20160722192717540" modified="20160722192728679" revision="0" tags="" title="Format" type="text/vnd.tiddlywiki">
-<pre>The todo.txt format is [[documented|https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format]] at the original [[todo.txt CLI project page|https://github.com/ginatrapani/todo.txt-cli]] by Gina Trapani.</pre>
+<div bag="default" created="20160722192717540" modified="20170919102634053" revision="0" tags="" title="Format" type="text/vnd.tiddlywiki">
+<pre>The todo.txt format is [[documented|https://github.com/todotxt/todotxt/blob/master/README.md]] at [[the todo.txt specification repository on Github|https://github.com/todotxt/todotxt/blob/master/README.md]].</pre>
 </div>
 <div bag="default" created="20160520103805679" modified="20170813114947291" revision="0" title="FormatStrings" type="text/vnd.tiddlywiki">
 <pre>The output of &lt;&lt;cmd ls&gt;&gt; can be customized with format strings. A format string contains placeholders that are filled in when an item is printed.
@@ -8455,10 +8455,11 @@ for line in lines:
 for url in urls:
     process = subprocess.Popen([BROWSER, url])</pre>
 </div>
-<div bag="default" created="20160722193556749" modified="20160722194908678" revision="0" tags="" title="Links" type="text/vnd.tiddlywiki">
+<div bag="default" created="20160722193556749" modified="20170919102517251" revision="0" tags="" title="Links" type="text/vnd.tiddlywiki">
 <pre>* [[Github project page|https://github.com/bram85/topydo]]
 * [[topydo at pypi|https://pypi.python.org/pypi/topydo]]
-* Original [[todo.txt CLI|https://github.com/ginatrapani/todo.txt-cli]] by Gina Trapani</pre>
+* [[Original todo.txt CLI|https://github.com/todotxt/todo.txt-cli]] by Gina Trapani
+* [[todo.txt specification repository|https://github.com/todotxt/todotxt|]]</pre>
 </div>
 <div bag="default" command-description="Lists all ([[relevant|Relevancy]]) todo items." created="20160503072057494" modified="20161216180529653" revision="0" tags="Command FilterExpressions" title="ls" type="text/vnd.tiddlywiki">
 <pre>Lists all ([[relevant|Relevancy]]) todo items.
