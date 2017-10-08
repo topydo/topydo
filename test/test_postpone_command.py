@@ -541,8 +541,6 @@ class PostponeCommandTest(CommandTest):
                                   self.error)
         command.execute()
 
-        start = self.today + timedelta(7)
-
         self.assertFalse(self.todolist.dirty)
         self.assertEqual(self.output, "|  1| Foo\n")
         self.assertEqual(self.errors, "Warning: todo item has no (valid) due date, therefore it was not adjusted.\nWarning: todo item has no (valid) t date, therefore it was not adjusted.\n")
