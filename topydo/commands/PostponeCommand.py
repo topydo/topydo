@@ -40,12 +40,12 @@ class PostponeCommand(MultiCommand):
     def get_flags(self):
         return("st:T:", [])
 
-    def process_flag(self, p_opt, p_value):
-        if p_opt == '-s':
+    def process_flag(self, p_option, p_value):
+        if p_option == '-s':
             self.move_start_date = True
-        if p_opt == '-t':
+        if p_option == '-t':
             self.move_and_create_tags.add(p_value)
-        if p_opt == '-T':
+        if p_option == '-T':
             self.move_tags.add(p_value)
 
     def _execute_multi_specific(self):
