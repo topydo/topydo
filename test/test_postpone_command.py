@@ -655,6 +655,24 @@ class PostponeCommandTest(CommandTest):
         self.assertEqual(self.output, "|  1| Foo due:{}\n".format(due.isoformat()))
         self.assertEqual(self.errors, "Warning: todo item has no (valid) t date, therefore it was not adjusted.\n")
 
+    def test_postpone58(self):
+        command = PostponeCommand(["-t", "due", "1", "foo"], self.todolist, self.out,
+                                  self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.dirty)
+        self.assertEqual(self.output, "")
+        self.assertEqual(self.errors, "Invalid date pattern given.\n")
+
+    def test_postpone59(self):
+        command = PostponeCommand(["-T", "due", "1", "foo"], self.todolist, self.out,
+                                  self.error)
+        command.execute()
+
+        self.assertFalse(self.todolist.dirty)
+        self.assertEqual(self.output, "")
+        self.assertEqual(self.errors, "Invalid date pattern given.\n")
+
     def test_expr_postpone1(self):
         command = PostponeCommand(["-e", "due:tod", "2w"], self.todolist,
                                   self.out, self.error, None)
