@@ -31,6 +31,7 @@ class PostponeCommand(MultiCommand):
         super().__init__(
             p_args, p_todolist, p_out, p_err, p_prompt)
 
+        self.move_start_date = False
         self.move_and_create_tags = set()
         self.move_tags = set()
         self.todo_modified = False
@@ -41,8 +42,7 @@ class PostponeCommand(MultiCommand):
 
     def process_flag(self, p_opt, p_value):
         if p_opt == '-s':
-            self.move_and_create_tags.add(config().tag_due())
-            self.move_tags.add(config().tag_start())
+            self.move_start_date = True
         if p_opt == '-t':
             self.move_and_create_tags.add(p_value)
         if p_opt == '-T':
@@ -63,41 +63,67 @@ class PostponeCommand(MultiCommand):
         pattern = self.args[-1]
         self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
 
-        # No tag flags were given?
-        if len(self.move_and_create_tags | self.move_tags) == 0:
-            self.move_and_create_tags.add(config().tag_due())
-
-        # -T flag takes precedence
-        self.move_and_create_tags = self.move_and_create_tags.difference(self.move_tags)
-
-        for todo in self.todos:
-
-            for tag in sorted(self.move_tags | self.move_and_create_tags):
+        # No tag flags were given or -s flag was given
+        if self.move_start_date or len(self.move_and_create_tags | self.move_tags) == 0:
+            for todo in self.todos:
                 try:
-                    offset = _get_offset(todo, tag)
+                    offset = _get_offset(todo, config().tag_due())
                 except ValueError:
-                    self.error("Postponing todo item failed: invalid {} date.".format(tag))
+                    self.error("Postponing todo item failed: invalid due date.")
                     break
 
                 new_due = relative_date_to_date(pattern, offset)
 
                 if new_due:
-                    if not tag in self.move_and_create_tags and not todo.get_date(tag):
-                        self.error("Warning: todo item has no (valid) {} date, therefore it was not adjusted.".format(tag))
-                    else:
+                    if self.move_start_date and todo.start_date():
+                        length = todo.length()
+                        new_start = new_due - timedelta(length)
                         # pylint: disable=E1103
-                        todo.set_tag(tag, new_due.isoformat())
-                        self.todolist.dirty = True
+                        todo.set_tag(config().tag_start(), new_start.isoformat())
+                    elif self.move_start_date and not todo.start_date():
+                        self.error("Warning: todo item has no (valid) start date, therefore it was not adjusted.")
 
-                    self.todo_modified = True
+                    # pylint: disable=E1103
+                    todo.set_tag(config().tag_due(), new_due.isoformat())
 
+                    self.todolist.dirty = True
+                    self.out(self.printer.print_todo(todo))
                 else:
                     self.error("Invalid date pattern given.")
                     break
 
-            if self.todo_modified:
-                self.out(self.printer.print_todo(todo))
-                self.todo_modified = False
+        else:
+            # -T flag takes precedence over -t flag
+            self.move_and_create_tags = self.move_and_create_tags.difference(self.move_tags)
+
+            for todo in self.todos:
+
+                for tag in sorted(self.move_tags | self.move_and_create_tags):
+                    try:
+                        offset = _get_offset(todo, tag)
+                    except ValueError:
+                        self.error("Postponing todo item failed: invalid {} date.".format(tag))
+                        break
+
+                    new_due = relative_date_to_date(pattern, offset)
+
+                    if new_due:
+                        if not tag in self.move_and_create_tags and not todo.get_date(tag):
+                            self.error("Warning: todo item has no (valid) {} date, therefore it was not adjusted.".format(tag))
+                        else:
+                            # pylint: disable=E1103
+                            todo.set_tag(tag, new_due.isoformat())
+                            self.todolist.dirty = True
+
+                        self.todo_modified = True
+
+                    else:
+                        self.error("Invalid date pattern given.")
+                        break
+
+                if self.todo_modified:
+                    self.out(self.printer.print_todo(todo))
+                    self.todo_modified = False
 
     def usage(self):
         return """\
