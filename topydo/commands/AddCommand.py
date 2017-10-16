@@ -21,6 +21,7 @@ import re
 from datetime import date
 from os.path import expanduser
 from sys import stdin
+from uuid import uuid4
 
 from topydo.lib.Config import config
 from topydo.lib.prettyprinters.Numbers import PrettyPrinterNumbers
@@ -74,6 +75,9 @@ class AddCommand(WriteCommand):
 
         if config().auto_creation_date():
             todo.set_creation_date(date.today())
+
+        if config().auto_uuid():
+            todo.set_tag("uuid", str(uuid4()))
 
         self.out(self.printer.print_todo(todo))
 

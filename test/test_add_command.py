@@ -395,6 +395,29 @@ class AddCommandTest(CommandTest):
         self.assertEqual(self.todolist.todo(1).source(), "New todo")
         self.assertEqual(self.errors, "")
 
+    def test_add_task_with_auto_uuid(self):
+        config(p_overrides={('add', 'auto_uuid'): '1'})
+
+        args = ["New todo"]
+        command = AddCommand.AddCommand(args, self.todolist, self.out,
+                                        self.error)
+        command.execute()
+
+        self.assertRegex(self.todolist.todo(1).source(), "{tod} New todo uuid:[0-9a-f-]{{36}}".format(tod=self.today))
+        self.assertEqual(self.errors, "")
+        self.assertTrue(self.todolist.todo(1).has_tag("uuid"))
+
+        first_uuid = self.todolist.todo(1).tag_value("uuid")
+
+        command = AddCommand.AddCommand(args, self.todolist, self.out,
+                                        self.error)
+        command.execute()
+
+        self.assertRegex(self.todolist.todo(2).source(), "{tod} New todo uuid:[0-9a-f-]{{36}}".format(tod=self.today))
+        self.assertEqual(self.errors, "")
+        self.assertTrue(self.todolist.todo(2).has_tag("uuid"))
+        self.assertNotEqual(self.todolist.todo(2).tag_value("uuid"), first_uuid)
+
     def test_add_completed(self):
         """ Add a command that is completed automatically. """
         command = AddCommand.AddCommand(["x 2015-01-01 Already completed"],

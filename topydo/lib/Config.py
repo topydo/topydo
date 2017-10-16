@@ -77,6 +77,7 @@ class _Config:
 
             'add': {
                 'auto_creation_date': '1',
+                'auto_uuid': '0',
             },
 
             'ls': {
@@ -399,6 +400,12 @@ class _Config:
             return self.cp.getboolean('add', 'auto_creation_date')
         except ValueError:
             return self.defaults['add']['auto_creation_date'] == '1'
+
+    def auto_uuid(self):
+        try:
+            return self.cp.getint('add', 'auto_uuid')
+        except ValueError:
+            return self.defaults['add']['auto_uuid'] == '1'
 
     @lru_cache(maxsize=1)
     def aliases(self):

@@ -172,5 +172,10 @@ class ConfigTest(TopydoTest):
         self.assertEqual(keymap['k'], 'bar')
         self.assertEqual(keymap['z'], 'foobar')
 
+    def test_config29(self):
+        """ Bad auto uuid switch value. """
+        self.assertEqual(config("test/data/ConfigTest4.conf").auto_uuid(),
+                         bool(int(config().defaults["add"]["auto_uuid"])))
+
 if __name__ == '__main__':
     unittest.main()
