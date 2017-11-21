@@ -6690,13 +6690,13 @@ Changelog0.13</pre>
 <div created="20170719122741788" modified="20170719122915728" title="$:/state/tab-1749438307">
 <pre>$:/core/ui/ControlPanel/Info</pre>
 </div>
-<div created="20170719121506797" modified="20170919103003199" title="$:/state/tab/sidebar--1835078512">
-<pre>$:/core/ui/SideBar/Open</pre>
+<div created="20170719121506797" modified="20171121092034681" title="$:/state/tab/sidebar--1835078512">
+<pre>$:/core/ui/SideBar/Recent</pre>
 </div>
 <div created="20170719122750165" modified="20170719122750925" title="$:/state/tabs/controlpanel/toolbars-1345989671">
 <pre>$:/core/ui/ControlPanel/Toolbars/PageControls</pre>
 </div>
-<div list="Welcome Features GettingStarted Demo AboutTopydo Links Changelog0.13" title="$:/StoryList">
+<div list="ColumnUI ColumnShortcuts ls ColumnUICommandLine Welcome Features GettingStarted Demo AboutTopydo Links Changelog0.13" title="$:/StoryList">
 <pre></pre>
 </div>
 <div created="20170811091932966" modified="20170813120623608" title="$:/temp/advancedsearch">
@@ -6716,8 +6716,8 @@ Changelog0.13</pre>
     }
 }</pre>
 </div>
-<div created="20170719121258332" modified="20170919102938829" title="$:/temp/search">
-<pre></pre>
+<div created="20170719121258332" modified="20171121091846792" title="$:/temp/search">
+<pre>command</pre>
 </div>
 <div author="JeremyRuston" bag="default" core-version="&gt;=5.0.0" dependents="$:/themes/tiddlywiki/vanilla" description="Emphasises individual tiddlers" name="Snow White" plugin-type="theme" revision="0" title="$:/themes/tiddlywiki/snowwhite" type="application/json" version="5.1.11">
 <pre>{
@@ -7279,7 +7279,7 @@ d =
 <div bag="default" command-description="Starts topydo in [[column mode|ColumnUI]]." created="20160622121259619" modified="20160726201931414" revision="0" tags="Command" title="columns" type="text/vnd.tiddlywiki">
 <pre>Starts topydo in [[column mode|ColumnUI]].</pre>
 </div>
-<div bag="default" created="20160625181857366" modified="20170813114618201" revision="0" tags="ColumnUI" title="ColumnShortcuts" type="text/vnd.tiddlywiki">
+<div bag="default" created="20160625181857366" modified="20171121092242737" revision="0" tags="ColumnUI" title="ColumnShortcuts" type="text/vnd.tiddlywiki">
 <pre>Below you find a list of __default__ keyboard shortcuts that are used in the [[Column UI|ColumnUI]]. Those familiar with the vi editor shouldn't have a hard time to get used to it.
 
 These shortcuts are [[fully customizable|ColumnKeyMap]] in the [[configuration file|Configuration]].
@@ -7295,7 +7295,7 @@ These shortcuts are [[fully customizable|ColumnKeyMap]] in the [[configuration f
 |`G` or `End`|`end`|Move to bottom|
 |`0`|`first_column`|Move to first column|
 |`$`|`last_column`|Move to last column|
-|`:`||Focus the commandline to execute custom commands.|
+|`:`||Focus the [[commandline|ColumnUICommandLine]] to execute custom commands.|
 
 !! [[Column]] actions
 
@@ -7320,6 +7320,8 @@ These shortcuts are [[fully customizable|ColumnKeyMap]] in the [[configuration f
 |`ps`//&amp;lt;period&amp;gt;//|`postpone_s`|Executes &lt;&lt;cmd postpone&gt;&gt; in strict mode on the highlighted item(s) with the given [[period|Period]].|
 |`u`|`cmd revert`|Executes &lt;&lt;cmd revert&gt;&gt;|
 |`x`|`cmd do {}`|Executes &lt;&lt;cmd do&gt;&gt; on highlighted item(s)|
+|`.`|`repeat`|Repeats the last command on the current item. When the last command was entered on the [[commandline|ColumnUICommandLine]],
+ that command should have the `{}` placeholder to insert the current item.|
 
 !! Commandline shortcuts
 
@@ -7378,7 +7380,7 @@ You can [[configure|Configuration]] the column UI with the following options:
 &lt;/$set&gt;
 </pre>
 </div>
-<div created="20170813123010917" modified="20170813124422011" title="ColumnUICommandLine">
+<div created="20170813123010917" modified="20171121090838569" title="ColumnUICommandLine">
 <pre>The commandline is shown at the bottom of the screen in [[column mode|ColumnUI]]. The commandline is activated by pressing `:`, like in `vi`.
 
 !! Key shortcuts
@@ -7394,7 +7396,7 @@ You can [[configure|Configuration]] the column UI with the following options:
 
 !! Run command on marked items
 
-You can enter commands that are applied to the marked items in the columns. These commands must be entered with a `{}` placeholder, which will be substituted with the todo IDs of the marked items.
+You can enter commands that are applied to the marked items in the columns. These commands must be entered with a `{}` placeholder, which will be substituted with the [[todo IDs|Identifiers]] of the marked items.
 
 First, mark all items with `m`. Then, to set a due date for all those items, enter on the commandline:
 
@@ -8461,7 +8463,7 @@ for url in urls:
 * [[Original todo.txt CLI|https://github.com/todotxt/todo.txt-cli]] by Gina Trapani
 * [[todo.txt specification repository|https://github.com/todotxt/todotxt|]]</pre>
 </div>
-<div bag="default" command-description="Lists all ([[relevant|Relevancy]]) todo items." created="20160503072057494" modified="20161216180529653" revision="0" tags="Command FilterExpressions" title="ls" type="text/vnd.tiddlywiki">
+<div bag="default" command-description="Lists all ([[relevant|Relevancy]]) todo items." created="20160503072057494" modified="20171121091016106" revision="0" tags="Command FilterExpressions" title="ls" type="text/vnd.tiddlywiki">
 <pre>Lists all ([[relevant|Relevancy]]) todo items.
 
 ```
@@ -8484,7 +8486,7 @@ There are several ways to filter the todo list such that only those items you're
 
 * [[Filter expressions|FilterExpressions]]
 * `-n &lt;count&gt;` flag: limit the output to the given amount
-* `-N` flag: like `-n`, but the number is determined automatically based on your terminal size.
+* `-N` flag: like `-n`, but the number is determined automatically based on your terminal size. For a correct display, please make sure that the `PS1` environment variable is exported.
 * `-i &lt;id&gt;` flag: limit the output to one particar item with the given [[identifier|ConfigIdentifiers]].
 
 !! Grouping output
