@@ -166,6 +166,8 @@ Error message and password prompt
 
 <li>$:/SiteTitle</li>
 
+<li>$:/state/showeditpreview</li>
+
 <li>$:/StoryList</li>
 
 <li>$:/temp/info-plugin</li>
@@ -9068,7 +9070,10 @@ Changelog0.13</pre>
 <div bag="default" created="20160425182021837" modified="20160425182032971" revision="0" title="$:/SiteTitle" type="text/vnd.tiddlywiki">
 <pre>topydo</pre>
 </div>
-<div list="" title="$:/StoryList">
+<div created="20180130120934155" modified="20180130120934155" title="$:/state/showeditpreview">
+<pre>yes</pre>
+</div>
+<div list="Welcome Features GettingStarted Demo AboutTopydo Links Changelog0.13" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -9084,19 +9089,19 @@ Changelog0.13</pre>
         },
         &quot;$:/info/url/full&quot;: {
             &quot;title&quot;: &quot;$:/info/url/full&quot;,
-            &quot;text&quot;: &quot;https://tiddlywiki.com/upgrade.html&quot;
+            &quot;text&quot;: &quot;file:///C:/Users/brschoen/cygwin/home/brschoen/Projecten/topydo/doc/Documentation.html&quot;
         },
         &quot;$:/info/url/host&quot;: {
             &quot;title&quot;: &quot;$:/info/url/host&quot;,
-            &quot;text&quot;: &quot;tiddlywiki.com&quot;
+            &quot;text&quot;: &quot;&quot;
         },
         &quot;$:/info/url/hostname&quot;: {
             &quot;title&quot;: &quot;$:/info/url/hostname&quot;,
-            &quot;text&quot;: &quot;tiddlywiki.com&quot;
+            &quot;text&quot;: &quot;&quot;
         },
         &quot;$:/info/url/protocol&quot;: {
             &quot;title&quot;: &quot;$:/info/url/protocol&quot;,
-            &quot;text&quot;: &quot;https:&quot;
+            &quot;text&quot;: &quot;file:&quot;
         },
         &quot;$:/info/url/port&quot;: {
             &quot;title&quot;: &quot;$:/info/url/port&quot;,
@@ -9104,7 +9109,7 @@ Changelog0.13</pre>
         },
         &quot;$:/info/url/pathname&quot;: {
             &quot;title&quot;: &quot;$:/info/url/pathname&quot;,
-            &quot;text&quot;: &quot;/upgrade.html&quot;
+            &quot;text&quot;: &quot;/C:/Users/brschoen/cygwin/home/brschoen/Projecten/topydo/doc/Documentation.html&quot;
         },
         &quot;$:/info/url/search&quot;: {
             &quot;title&quot;: &quot;$:/info/url/search&quot;,
@@ -9112,7 +9117,7 @@ Changelog0.13</pre>
         },
         &quot;$:/info/url/origin&quot;: {
             &quot;title&quot;: &quot;$:/info/url/origin&quot;,
-            &quot;text&quot;: &quot;https://tiddlywiki.com&quot;
+            &quot;text&quot;: &quot;file://&quot;
         }
     }
 }</pre>
@@ -11349,7 +11354,7 @@ The name of the tag can be overridden by {{!!tag-config}}.</pre>
 &lt;tr&gt;&lt;td&gt;&lt;$link to=&lt;&lt;currentTiddler&gt;&gt;&gt;&lt;&lt;currentTiddler&gt;&gt;&lt;/$link&gt;&lt;/td&gt;&lt;td&gt;{{!!summary}}&lt;/td&gt;&lt;/tr&gt;
 &lt;/$list&gt;</pre>
 </div>
-<div bag="default" created="20160425182240858" modified="20170719123328219" revision="0" title="Welcome" type="text/vnd.tiddlywiki">
+<div bag="default" created="20160425182240858" modified="20180130121006937" revision="0" title="Welcome" type="text/vnd.tiddlywiki">
 <pre>topydo is a powerful and customizable [[todo.txt|Format]] client for the console.
 
 Simply [[install|Installation]] with:
@@ -11358,7 +11363,15 @@ Simply [[install|Installation]] with:
 pip3 install topydo
 ```
 
-and launch the column UI with:
+to get started.
+
+Optionally, install all required dependencies for the [[column UI|ColumnUI]] with:
+
+```
+pip3 install topydo[columns]
+```
+
+and launch with:
 
 ```
 topydo columns
