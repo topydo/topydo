@@ -172,6 +172,8 @@ Error message and password prompt
 
 <li>$:/temp/info-plugin</li>
 
+<li>$:/temp/search</li>
+
 <li>$:/themes/tiddlywiki/snowwhite</li>
 
 <li>$:/themes/tiddlywiki/vanilla</li>
@@ -9073,7 +9075,7 @@ Changelog0.13</pre>
 <div created="20180130120934155" modified="20180130120934155" title="$:/state/showeditpreview">
 <pre>yes</pre>
 </div>
-<div list="Relevancy Welcome Features GettingStarted Demo AboutTopydo Links Changelog0.13" title="$:/StoryList">
+<div list="RelativeDates Period Welcome Features GettingStarted Demo AboutTopydo Links Changelog0.13" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -9121,6 +9123,9 @@ Changelog0.13</pre>
         }
     }
 }</pre>
+</div>
+<div created="20180228114714013" modified="20180228114725923" title="$:/temp/search">
+<pre></pre>
 </div>
 <div author="JeremyRuston" core-version="&gt;=5.0.0" dependents="$:/themes/tiddlywiki/vanilla" description="Emphasises individual tiddlers" name="Snow White" plugin-type="theme" title="$:/themes/tiddlywiki/snowwhite" type="application/json" version="5.1.15">
 <pre>{
@@ -10930,10 +10935,10 @@ Project: B
 
 &lt;/$list&gt;</pre>
 </div>
-<div bag="default" created="20160625183717732" modified="20160625183953219" revision="0" tags="" title="Period" type="text/vnd.tiddlywiki">
+<div bag="default" created="20160625183717732" modified="20180228114817291" revision="0" tags="" title="Period" type="text/vnd.tiddlywiki">
 <pre>A period is a form of a [[relative date|RelativeDates]].
 
-A period is specified as a number suffixed by `d`, `w`, `m` or `y` (days, weeks, months, years respectively). For example:&lt;div&gt;
+A period is specified as a number suffixed by `d`, `b`, `w`, `m` or `y` (days, business days, weeks, months, years respectively). For example:&lt;div&gt;
 
 ```
 Water flowers due:1w
@@ -10943,7 +10948,9 @@ Negative numbers can also be used, for example to indicate that a todo item was 
 
 ```
 topydo do -d -2d 42
-```</pre>
+```
+
+Business days only take Monday - Friday into account.</pre>
 </div>
 <div bag="default" command-description="Postpone todo item(s)." created="20160503072127862" modified="20160726202354039" revision="0" tags="Command FilterExpressions" title="postpone" type="text/vnd.tiddlywiki">
 <pre>Postpone the todo item(s) with the given number(s) and the given pattern.
