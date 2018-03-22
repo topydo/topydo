@@ -20,12 +20,12 @@ A list of todo items.
 
 import math
 import re
-from datetime import date
 
 from topydo.lib import Filter
 from topydo.lib.Config import config
 from topydo.lib.HashListValues import hash_list_values, max_id_length
 from topydo.lib.printers.PrettyPrinter import PrettyPrinter
+from topydo.lib.Time import today
 from topydo.lib.Todo import Todo
 from topydo.lib.View import View
 
@@ -239,7 +239,7 @@ class TodoListBase(object):
     def todos(self):
         return self._todos
 
-    def set_todo_completed(self, p_todo, p_completion_date=date.today()):
+    def set_todo_completed(self, p_todo, p_completion_date=today()):
         p_todo.set_completed(p_completion_date)
         self.dirty = True
 

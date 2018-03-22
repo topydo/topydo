@@ -18,9 +18,8 @@
 This module provides the Todo class.
 """
 
-from datetime import date
-
 from topydo.lib.Config import config
+from topydo.lib.Time import today
 from topydo.lib.TodoBase import TodoBase
 from topydo.lib.Utils import date_string_to_date
 
@@ -61,7 +60,7 @@ class Todo(TodoBase):
         task has not yet been completed.
         """
         start = self.start_date()
-        return not self.is_completed() and (not start or start <= date.today())
+        return not self.is_completed() and (not start or start <= today())
 
     def is_overdue(self):
         """
@@ -78,7 +77,7 @@ class Todo(TodoBase):
         """
         due = self.due_date()
         if due:
-            diff = due - date.today()
+            diff = due - today()
             return diff.days
         return 0
 
