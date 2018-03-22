@@ -18,10 +18,9 @@
 
 import re
 
-import arrow
-
 from topydo.lib.Config import config
 from topydo.lib.ProgressColor import progress_color
+from topydo.lib.Time import today
 from topydo.lib.Utils import escape_ansi, get_terminal_size, humanize_date
 
 MAIN_PATTERN = (r'^({{(?P<before>.+?)}})?'
@@ -54,7 +53,7 @@ def humanize_dates(p_due=None, p_start=None, p_creation=None):
     if p_due:
         dates_list.append('due ' + humanize_date(p_due))
     if p_start:
-        now = arrow.now().date()
+        now = today()
         dates_list.append('{} {}'.format(
             'started' if p_start <= now else 'starts',
             humanize_date(p_start)

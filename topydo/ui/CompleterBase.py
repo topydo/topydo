@@ -14,11 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import datetime
 from functools import lru_cache
 
 from topydo.Commands import SUBCOMMAND_MAP
 from topydo.lib.Config import config
+from topydo.lib.Time import today
 
 
 @lru_cache(maxsize=1)
@@ -51,7 +51,7 @@ def date_suggestions():
     ]
 
     # show days of week up to next week
-    dow = datetime.date.today().weekday()
+    dow = today().weekday()
     for i in range(dow + 2 % 7, dow + 7):
         dates.append(days_of_week[i % 7])
 
