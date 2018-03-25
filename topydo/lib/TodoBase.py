@@ -19,8 +19,8 @@ This module contains the class that represents a single todo item.
 """
 
 import re
-from datetime import date
 
+from topydo.lib.Time import today
 from topydo.lib.TodoParser import parse_line
 from topydo.lib.Utils import is_valid_priority
 
@@ -198,7 +198,7 @@ class TodoBase(object):
         """
         return self.fields['completionDate']
 
-    def set_completed(self, p_completion_date=date.today()):
+    def set_completed(self, p_completion_date=today()):
         """
         Marks the todo as complete.
         Sets the completed flag and sets the completion date to today.
@@ -213,7 +213,7 @@ class TodoBase(object):
                               'x ' + p_completion_date.isoformat() + ' ',
                               self.src)
 
-    def set_creation_date(self, p_date=date.today()):
+    def set_creation_date(self, p_date=today()):
         """
         Sets the creation date of a todo. Should be passed a date object.
         """

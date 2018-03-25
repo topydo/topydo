@@ -22,7 +22,7 @@ import re
 from collections import namedtuple
 from datetime import date
 
-import arrow
+from topydo.lib.Time import humanize
 
 
 def date_string_to_date(p_date):
@@ -111,6 +111,4 @@ def translate_key_to_config(p_key):
 
 def humanize_date(p_datetime):
     """ Returns a relative date string from a datetime object. """
-    now = arrow.now()
-    _date = now.replace(day=p_datetime.day, month=p_datetime.month, year=p_datetime.year)
-    return _date.humanize(now).replace('just now', 'today')
+    return humanize(p_datetime)

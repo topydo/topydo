@@ -23,9 +23,8 @@ today may have a higher importance than high priority tasks in the distant
 future.
 """
 
-from datetime import date
-
 from topydo.lib.Config import config
+from topydo.lib.Time import today
 
 IMPORTANCE_VALUE = {'A': 3, 'B': 2, 'C': 1}
 
@@ -34,10 +33,10 @@ def is_due_next_monday(p_todo):
     """ Returns True when today is Friday (or the weekend) and the given task
     is due next Monday.
     """
-    today = date.today()
+    today_ = today()
     due = p_todo.due_date()
 
-    return due and due.weekday() == 0 and today.weekday() >= 4 and \
+    return due and due.weekday() == 0 and today_.weekday() >= 4 and \
         p_todo.days_till_due() <= 3
 
 

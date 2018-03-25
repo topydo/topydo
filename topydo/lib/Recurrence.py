@@ -16,10 +16,11 @@
 
 """ This module deals with recurring tasks. """
 
-from datetime import date, timedelta
+from datetime import timedelta
 
 from topydo.lib.Config import config
 from topydo.lib.RelativeDate import relative_date_to_date
+from topydo.lib.Time import today
 from topydo.lib.Todo import Todo
 
 
@@ -51,9 +52,9 @@ def advance_recurring_todo(p_todo, p_offset=None, p_strict=False):
         pattern = pattern[1:]
 
     if p_strict:
-        offset = p_todo.due_date() or p_offset or date.today()
+        offset = p_todo.due_date() or p_offset or today()
     else:
-        offset = p_offset or date.today()
+        offset = p_offset or today()
 
     length = todo.length()
     new_due = relative_date_to_date(pattern, offset)
@@ -68,6 +69,6 @@ def advance_recurring_todo(p_todo, p_offset=None, p_strict=False):
         new_start = new_due - timedelta(length)
         todo.set_tag(config().tag_start(), new_start.isoformat())
 
-    todo.set_creation_date(date.today())
+    todo.set_creation_date(today())
 
     return todo

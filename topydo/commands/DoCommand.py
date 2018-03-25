@@ -14,12 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from datetime import date
-
 from topydo.lib.DCommand import DCommand
 from topydo.lib.printers.PrettyPrinter import PrettyPrinter
 from topydo.lib.Recurrence import NoRecurrenceException, advance_recurring_todo
 from topydo.lib.RelativeDate import relative_date_to_date
+from topydo.lib.Time import today
 from topydo.lib.Utils import date_string_to_date
 
 
@@ -30,7 +29,7 @@ class DoCommand(DCommand):
                  p_prompt=lambda a: None):
 
         self.strict_recurrence = False
-        self.completion_date = date.today()
+        self.completion_date = today()
 
         super().__init__(
             p_args, p_todolist, p_out, p_err, p_prompt)
@@ -56,7 +55,7 @@ class DoCommand(DCommand):
                 if not self.completion_date:
                     self.completion_date = date_string_to_date(p_value)
             except ValueError:
-                self.completion_date = date.today()
+                self.completion_date = today()
 
     def _handle_recurrence(self, p_todo):
         if p_todo.has_tag('rec'):

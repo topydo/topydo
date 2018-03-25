@@ -20,6 +20,8 @@ import calendar
 import re
 from datetime import date, timedelta
 
+from topydo.lib.Time import today
+
 
 def _add_months(p_sourcedate, p_months):
     """
@@ -61,7 +63,7 @@ def _convert_pattern(p_length, p_periodunit, p_offset=None):
     """
     result = None
 
-    p_offset = p_offset or date.today()
+    p_offset = p_offset or today()
     p_length = int(p_length)
 
     if p_periodunit == 'd':
@@ -97,10 +99,10 @@ def _convert_weekday_pattern(p_weekday):
     target_day_string = p_weekday[:2].lower()
     target_day = day_value[target_day_string]
 
-    day = date.today().weekday()
+    day = today().weekday()
 
     shift = 7 - (day - target_day) % 7
-    return date.today() + timedelta(shift)
+    return today() + timedelta(shift)
 
 
 def relative_date_to_date(p_date, p_offset=None):
@@ -115,7 +117,7 @@ def relative_date_to_date(p_date, p_offset=None):
     """
     result = None
     p_date = p_date.lower()
-    p_offset = p_offset or date.today()
+    p_offset = p_offset or today()
 
     relative = re.match('(?P<length>-?[0-9]+)(?P<period>[dwmyb])$',
                         p_date, re.I)

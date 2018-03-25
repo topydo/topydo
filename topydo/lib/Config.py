@@ -73,6 +73,7 @@ class _Config:
                 'identifiers': 'linenumber',
                 'identifier_alphabet': '0123456789abcdefghijklmnopqrstuvwxyz',
                 'backup_count': '5',
+                'time_shift': '0',
             },
 
             'add': {
@@ -259,6 +260,12 @@ class _Config:
             return value
         except ValueError:
             return int(self.defaults['topydo']['backup_count'])
+
+    def time_shift(self):
+        try:
+            return self.cp.getint('topydo', 'time_shift')
+        except ValueError:
+            return int(self.defaults['topydo']['time_shift'])
 
     def list_limit(self):
         try:

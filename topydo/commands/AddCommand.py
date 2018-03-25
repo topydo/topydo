@@ -18,12 +18,12 @@
 
 import codecs
 import re
-from datetime import date
 from os.path import expanduser
 from sys import stdin
 
 from topydo.lib.Config import config
 from topydo.lib.prettyprinters.Numbers import PrettyPrinterNumbers
+from topydo.lib.Time import today
 from topydo.lib.WriteCommand import WriteCommand
 
 
@@ -73,7 +73,7 @@ class AddCommand(WriteCommand):
         self.postprocess_input_todo(todo)
 
         if config().auto_creation_date():
-            todo.set_creation_date(date.today())
+            todo.set_creation_date(today())
 
         self.out(self.printer.print_todo(todo))
 

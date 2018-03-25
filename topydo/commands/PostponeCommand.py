@@ -14,12 +14,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from datetime import date, timedelta
+from datetime import timedelta
 
 from topydo.lib.Config import config
 from topydo.lib.MultiCommand import MultiCommand
 from topydo.lib.prettyprinters.Numbers import PrettyPrinterNumbers
 from topydo.lib.RelativeDate import relative_date_to_date
+from topydo.lib.Time import today
 from topydo.lib.Utils import date_string_to_date
 
 
@@ -44,12 +45,12 @@ class PostponeCommand(MultiCommand):
     def _execute_multi_specific(self):
         def _get_offset(p_todo):
             offset = p_todo.tag_value(
-                config().tag_due(), date.today().isoformat())
+                config().tag_due(), today().isoformat())
 
             offset_date = date_string_to_date(offset)
 
-            if offset_date < date.today():
-                offset_date = date.today()
+            if offset_date < today():
+                offset_date = today()
 
             return offset_date
 
