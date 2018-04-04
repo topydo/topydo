@@ -22,8 +22,11 @@ I/O on the command-line.
 import getopt
 import sys
 
+from topydo.lib import TodoFile, TodoList, TodoListBase
 from topydo.lib.Color import AbstractColor, Color
+from topydo.lib.Config import ConfigError, config
 from topydo.lib.TopydoString import TopydoString
+from topydo.lib.Utils import escape_ansi
 
 MAIN_OPTS = "ac:C:d:ht:v"
 MAIN_LONG_OPTS = ('version')
@@ -134,7 +137,6 @@ def version():
     print(LICENSE)
     sys.exit(0)
 
-from topydo.lib.Config import config, ConfigError
 
 # First thing is to poke the configuration and check whether it's sane
 # The modules below may already read in configuration upon import, so
@@ -145,10 +147,6 @@ except ConfigError as config_error:
     error(str(config_error))
     sys.exit(1)
 
-from topydo.lib import TodoFile
-from topydo.lib import TodoList
-from topydo.lib import TodoListBase
-from topydo.lib.Utils import escape_ansi
 
 
 def _retrieve_archive():

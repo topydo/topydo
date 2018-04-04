@@ -16,10 +16,12 @@
 
 """ This module provides functions that deal with time. """
 
-import arrow
 from datetime import datetime, time, timedelta
 
+import arrow
+
 from topydo.lib.Config import config
+
 
 def _time_shift():
     return config().time_shift()

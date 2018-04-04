@@ -21,10 +21,11 @@ changes.
 
 import os.path
 
-from topydo.lib.TodoFile import TodoFile
 from watchdog.events import (FileCreatedEvent, FileModifiedEvent,
                              FileSystemEventHandler)
 from watchdog.observers import Observer
+
+from topydo.lib.TodoFile import TodoFile
 
 
 class TodoFileWatched(TodoFile):

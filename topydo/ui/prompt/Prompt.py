@@ -21,7 +21,6 @@ import sys
 
 from prompt_toolkit.history import InMemoryHistory
 from prompt_toolkit.shortcuts import prompt
-
 from topydo.Commands import get_subcommand
 from topydo.lib.Config import ConfigError, config
 from topydo.lib.TodoFileWatched import TodoFileWatched
