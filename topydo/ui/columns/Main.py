@@ -30,6 +30,7 @@ from topydo.lib.Config import ConfigError, config
 from topydo.lib.Filter import (DependencyFilter, HiddenTagFilter,
                                RelevanceFilter, get_filter_list)
 from topydo.lib.Sorter import Sorter
+from topydo.lib.Time import next_day_switch
 from topydo.lib.TodoFileWatched import TodoFileWatched
 from topydo.lib.Utils import get_terminal_size
 from topydo.lib.View import View
@@ -266,18 +267,15 @@ class UIApplication(CLIApplicationBase):
         )
 
         self.column_mode = _APPEND_COLUMN
-        self._set_alarm_for_next_midnight_update()
+        self._set_alarm_for_next_update()
 
-    def _set_alarm_for_next_midnight_update(self):
+    def _set_alarm_for_next_update(self):
         def callback(p_loop, p_data):
             TodoWidget.wipe_cache()
             self._update_all_columns()
-            self._set_alarm_for_next_midnight_update()
+            self._set_alarm_for_next_update()
 
-        tomorrow = datetime.datetime.now() + datetime.timedelta(days=1)
-        # turn it into midnight
-        tomorrow = tomorrow.replace(hour=0, minute=0, second=0, microsecond=0)
-
+        tomorrow = next_day_switch()
         self.mainloop.set_alarm_at(time.mktime(tomorrow.timetuple()), callback)
 
     def _output(self, p_text):

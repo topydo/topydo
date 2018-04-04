@@ -17,12 +17,19 @@
 """ This module provides functions that deal with time. """
 
 import arrow
-from datetime import datetime, timedelta
+from datetime import datetime, time, timedelta
 
 from topydo.lib.Config import config
 
+def _time_shift():
+    return config().time_shift()
+
 def today():
-    return (datetime.now() - timedelta(hours=config().time_shift())).date()
+    return (datetime.now() - timedelta(hours=_time_shift())).date()
+
+def next_day_switch():
+    return datetime.combine(today() + timedelta(days=1),
+                            time(hour=_time_shift()))
 
 def humanize(p_datetime):
     return arrow.get(str(p_datetime)) \
