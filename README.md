@@ -64,7 +64,7 @@ CLI mode:
 
 ![gif][5]
 
-[1]: https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format
+[1]: https://github.com/todotxt/todo.txt
 [2]: https://github.com/ginatrapani/todo.txt-cli
 [3]: https://github.com/bram85/todo.txt-tools
 [4]: https://www.topydo.org
