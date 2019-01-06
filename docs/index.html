@@ -240,6 +240,8 @@ Error message and password prompt
 
 <li>ConfigAutoCreation</li>
 
+<li>ConfigAutoWhitespace</li>
+
 <li>ConfigBackupCount</li>
 
 <li>ConfigColors</li>
@@ -9909,6 +9911,12 @@ Automatically add the creation date to a todo item that is added with the &lt;&l
 
 The creation date is used to determine the length of a todo item, in case the [[start date|TagStart]] is missing.</pre>
 </div>
+<div bag="default" config-default="1" config-description="Automatically remove vertical whitespace on load" config-group="topydo" config-item="auto_delete_whitespace" config-type="Boolean" created="20190107003932467" modified="20190107004209208" revision="0" tags="Configuration" title="ConfigAutoWhitespace" type="text/vnd.tiddlywiki">
+<pre>&lt;&lt;config&gt;&gt;
+
+Automatically remove any line that does not contain a space when loading the todo list. This has the effect of eliminating space left from previously deleted tasks, and any other blank lines in the document.
+</pre>
+</div>
 <div bag="default" config-default="5" config-description="The number of [[backups|Backups]] to make (0 disables backups)" config-group="topydo" config-item="backup_count" config-type="Integer" created="20160520103135844" modified="20160622123411778" revision="0" tags="Configuration" title="ConfigBackupCount" type="text/vnd.tiddlywiki">
 <pre>&lt;&lt;config&gt;&gt;
 
@@ -10392,6 +10400,24 @@ which could result in the graph below:
 The background color is the [[progress color|ProgressColors]] of the corresponding todo item.
 
 The &lt;&lt;cmd dep&gt;&gt; command is also Dot aware, which allows you to generate a specific dependency tree.</pre>
+</div>
+<div bag="default" created="20160625135840359" draft.of="$:/my/macros/ConfigTable" draft.title="$:/my/macros/ConfigTable" modified="20190107003309761" revision="0" tags="$:/tags/Macro" title="Draft of '$:/my/macros/ConfigTable'" type="text/vnd.tiddlywiki">
+<pre>\define configTable()
+&lt;!-- Set variable 'group' to display a table for that configuration group --&gt;
+&lt;table&gt;
+&lt;tr&gt;&lt;th&gt;Name&lt;/th&gt;&lt;th&gt;Type&lt;/th&gt;&lt;th&gt;Default&lt;/th&gt;&lt;th&gt;Description&lt;/th&gt;&lt;/tr&gt;
+
+&lt;$list filter=&quot;[tag[Configuration]field:config-group[$(group)$]sort[config-item]]&quot; variable=&quot;item&quot;&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;$link to=&lt;&lt;item&gt;&gt;&gt;&lt;$transclude tiddler=&lt;&lt;item&gt;&gt; field=&quot;config-item&quot;/&gt;&lt;/$link&gt;&lt;/td&gt;
+&lt;td&gt;&lt;$transclude tiddler=&lt;&lt;item&gt;&gt; field=&quot;config-type&quot;/&gt;&lt;/td&gt;
+&lt;td&gt;&lt;$transclude tiddler=&lt;&lt;item&gt;&gt; field=&quot;config-default&quot;/&gt;&lt;/td&gt;
+&lt;td&gt;&lt;$transclude tiddler=&lt;&lt;item&gt;&gt; field=&quot;config-description&quot;/&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/$list&gt;
+&lt;/table&gt;
+
+\end</pre>
 </div>
 <div bag="default" created="20160715052254901" modified="20160715052254901" revision="0" title="Draft of 'CLI'" type="text/vnd.tiddlywiki">
 <pre></pre>

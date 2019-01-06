@@ -146,7 +146,9 @@ class TodoListBase(object):
         return todos[0] if len(todos) else None
 
     def add_list(self, p_srcs):
-        todos = [Todo(src) for src in p_srcs if re.search(r'\S', src)]
+        todos = [Todo(src) for src in p_srcs]
+        if config().auto_delete_whitespace():
+            todos = [todo for todo in todos if re.search(r'\S', todo.source())]
         self.add_todos(todos)
 
         return todos
