@@ -34,6 +34,9 @@ setup(
     install_requires=[
         'arrow >= 0.7.0',
     ],
+    tests_require=[
+        'freezegun',
+    ],
     extras_require={
         ':sys_platform=="win32"': ['colorama>=0.2.5'],
         ':python_version=="3.2"': ['backports.shutil_get_terminal_size>=1.0.0'],
