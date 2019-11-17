@@ -66,7 +66,6 @@ CLI mode:
 
 [1]: https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format
 [2]: https://github.com/ginatrapani/todo.txt-cli
-[3]: https://github.com/bram85/todo.txt-tools
-[4]: https://www.topydo.org
+[3]: https://raw.githubusercontent.com/bram85/topydo/master/docs/columns.png
+[4]: https://cdn.rawgit.com/bram85/topydo/master/docs/index.html
 [5]: https://raw.githubusercontent.com/bram85/topydo/master/docs/topydo.gif
-[6]: https://raw.githubusercontent.com/bram85/topydo/master/docs/columns.png
