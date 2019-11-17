@@ -13,7 +13,7 @@ It has three user interfaces:
 * Column mode - a text based user interface (TUI) with customizable columns and
   vim-like bindings. Launch with `topydo columns`.
 
-![png][6]
+![png][3]
 
 Features
 --------
