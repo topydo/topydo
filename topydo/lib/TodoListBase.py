@@ -173,6 +173,13 @@ class TodoListBase(object):
             # todo item couldn't be found, ignore
             pass
 
+    def modify_todo(self, p_todo, p_new_source):
+        """ Modify source of a Todo item from the list. """
+        assert p_todo in self._todos
+        p_todo.set_source_text(p_new_source)
+        self._update_todo_ids()
+        self.dirty = True
+
     def erase(self):
         """ Erases all todos from the list. """
         self._todos = []

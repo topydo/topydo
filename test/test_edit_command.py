@@ -58,7 +58,7 @@ class EditCommandTest(CommandTest):
 
         self.assertEqual(self.errors, "")
         self.assertTrue(self.todolist.dirty)
-        self.assertEqual(self.todolist.print_todos(), u"Bar p:1 @test\nBaz @test\nFo\u00f3B\u0105\u017a\nFoo id:1")
+        self.assertEqual(self.todolist.print_todos(), u"Foo id:1\nBar p:1 @test\nBaz @test\nFo\u00f3B\u0105\u017a")
 
     @mock.patch('topydo.commands.EditCommand._is_edited')
     @mock.patch('topydo.commands.EditCommand.EditCommand._todos_from_temp')
@@ -75,7 +75,7 @@ class EditCommandTest(CommandTest):
 
         self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.errors, "")
-        self.assertEqual(self.todolist.print_todos(), u"Foo id:1\nBaz @test\nFo\u00f3B\u0105\u017a\nLazy Cat")
+        self.assertEqual(self.todolist.print_todos(), u"Foo id:1\nLazy Cat\nBaz @test\nFo\u00f3B\u0105\u017a")
 
     def test_edit03(self):
         """ Throw an error after invalid todo number given as argument. """
@@ -156,12 +156,49 @@ class EditCommandTest(CommandTest):
                               self.error, None)
         command.execute()
 
-        expected = u"|  3| Lazy Cat\n|  4| Lazy Dog\n"
+        expected = u"|  2| Lazy Cat\n|  3| Lazy Dog\n"
 
         self.assertEqual(self.errors, "")
         self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.output, expected)
-        self.assertEqual(self.todolist.print_todos(), u"Foo id:1\nFo\u00f3B\u0105\u017a\nLazy Cat\nLazy Dog")
+        self.assertEqual(self.todolist.print_todos(), u"Foo id:1\nLazy Cat\nLazy Dog\nFo\u00f3B\u0105\u017a")
+
+    @mock.patch('topydo.commands.EditCommand._is_edited')
+    @mock.patch('topydo.commands.EditCommand.EditCommand._todos_from_temp')
+    @mock.patch('topydo.commands.EditCommand.EditCommand._open_in_editor')
+    def test_edit_addnew(self, mock_open_in_editor, mock_todos_from_temp, mock_is_edited):
+        """ New todos are added in the process of editing. """
+        mock_open_in_editor.return_value = 0
+        mock_todos_from_temp.return_value = [Todo('Bar (edited)'),
+                                             Todo('New1'),
+                                             Todo('New 2')]
+        mock_is_edited.return_value = True
+
+        command = EditCommand(["2"], self.todolist, self.out, self.error, None)
+        command.execute()
+
+        self.assertEqual(self.errors, "")
+        self.assertTrue(self.todolist.dirty)
+        self.assertEqual(self.todolist.print_todos(), u"Foo id:1\nBar (edited)\nBaz @test\nFo\u00f3B\u0105\u017a\nNew1\nNew 2")
+
+    @mock.patch('topydo.commands.EditCommand._is_edited')
+    @mock.patch('topydo.commands.EditCommand.EditCommand._todos_from_temp')
+    @mock.patch('topydo.commands.EditCommand.EditCommand._open_in_editor')
+    def test_edit_remove(self, mock_open_in_editor, mock_todos_from_temp, mock_is_edited):
+        """ Some todos are removed in the process of editing. """
+        mock_open_in_editor.return_value = 0
+        mock_todos_from_temp.return_value = [Todo('Foo (edited)')]
+
+        mock_is_edited.return_value = True
+
+        command = EditCommand(["1", "2"], self.todolist, self.out, self.error, None)
+        command.execute()
+
+        self.assertEqual(self.errors, "")
+        self.assertTrue(self.todolist.dirty)
+        self.assertEqual(self.todolist.print_todos(), u"Foo (edited)\nBaz @test\nFo\u00f3B\u0105\u017a")
+
+
 
     @mock.patch.dict(os.environ, {'EDITOR': 'vi'})
     @mock.patch('topydo.commands.EditCommand.check_call')
