@@ -117,10 +117,15 @@ class EditCommand(MultiCommand):
             new_todos = EditCommand._todos_from_temp(temp_todos)
 
             if _is_edited(orig_mtime, temp_todos):
-                for todo in self.todos:
+                modified = list(zip(self.todos, new_todos))
+                for (todo, new_todo) in modified:
+                    self.todolist.modify_todo(todo, new_todo.src)
+                    self.out(self.printer.print_todo(todo))
+
+                for todo in self.todos[len(modified):]:
                     self.todolist.delete(todo, p_leave_tags=True)
 
-                for todo in new_todos:
+                for todo in new_todos[len(modified):]:
                     self.todolist.add_todo(todo)
                     self.out(self.printer.print_todo(todo))
             else:
