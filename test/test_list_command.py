@@ -558,6 +558,11 @@ class ListCommandIcalTest(CommandTest):
         self.maxDiff = None
 
     def test_ical(self):
+        try:
+            import icalendar
+        except ImportError:
+            raise unittest.SkipTest("The icalendar module is not available")
+
         todolist = load_file_to_todolist("test/data/ListCommandIcalTest.txt")
 
         command = ListCommand(["-x", "-f", "ical"], todolist, self.out,
@@ -576,6 +581,11 @@ class ListCommandIcalTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_ical_unicode(self):
+        try:
+            import icalendar
+        except ImportError:
+            raise unittest.SkipTest("The icalendar module is not available")
+
         todolist = load_file_to_todolist("test/data/ListCommandUnicodeTest.txt")
 
         command = ListCommand(["-f", "ical"], todolist, self.out, self.error)
