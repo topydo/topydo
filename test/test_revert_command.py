@@ -16,6 +16,7 @@
 
 import os
 import tempfile
+import time
 import unittest
 from datetime import date
 from glob import glob
@@ -61,7 +62,7 @@ def command_executer(p_cmd, p_args, p_todolist, p_archive=None, *params):
         archive_command.execute()
 
 
-@freeze_time('2015, 11, 06')
+@freeze_time('2015-11-06 00:00:00', tz_offset=time.timezone/3600)
 class RevertCommandTest(CommandTest):
     def setUp(self):
         super().setUp()

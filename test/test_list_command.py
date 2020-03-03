@@ -18,6 +18,7 @@ import codecs
 import os
 import re
 import sys
+import time
 import unittest
 from collections import namedtuple
 
@@ -592,7 +593,7 @@ class ListCommandIcalTest(CommandTest):
         self.assertEqual(self.errors, "")
 
 
-@freeze_time('2016, 11, 17')
+@freeze_time('2016-11-17 00:00:00', tz_offset = time.timezone/3600)
 class ListCommandDotTest(CommandTest):
     def setUp(self):
         self.maxDiff = None
@@ -615,7 +616,7 @@ class ListCommandDotTest(CommandTest):
         self.assertEqual(self.errors, "")
 
 
-@freeze_time('2016, 12, 6')
+@freeze_time('2016-12-6 00:00:00', tz_offset = time.timezone/3600)
 class ListCommandGroupTest(CommandTest):
     def test_group1(self):
         todolist = load_file_to_todolist("test/data/ListCommandGroupTest.txt")
