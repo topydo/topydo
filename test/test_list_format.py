@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import time
 import unittest
 from collections import namedtuple
 
@@ -35,7 +36,7 @@ except ImportError:
     import mock
 
 
-@freeze_time("2015, 11, 06")
+@freeze_time("2015-11-06 00:00:00", tz_offset = time.timezone/3600)
 class ListFormatTest(CommandTest):
     def setUp(self):
         super().setUp()
