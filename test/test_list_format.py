@@ -223,7 +223,7 @@ today | in 2 days | in a day |
         self.assertEqual(self.output, result)
 
     def test_list_format12(self):
-        config(p_overrides={('ls', 'list_format'): '|%I| \%'})
+        config(p_overrides={('ls', 'list_format'): r'|%I| \%'})
         command = ListCommand(["-x"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -501,7 +501,7 @@ x 11 months ago
         self.assertEqual(self.output, result)
 
     def test_list_format33(self):
-        command = ListCommand(["-x", "-s", "desc:priority", "-F", "%{\%p}p{\%p}"], self.todolist, self.out, self.error)
+        command = ListCommand(["-x", "-s", "desc:priority", "-F", r"%{\%p}p{\%p}"], self.todolist, self.out, self.error)
         command.execute()
 
         result = """%pC%p
