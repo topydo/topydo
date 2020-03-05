@@ -98,7 +98,7 @@ class TodoListBase(object):
 
             if config().identifiers() != 'text':
                 try:
-                    if re.match('[1-9]\d*', p_identifier):
+                    if re.match(r'[1-9]\d*', p_identifier):
                         # the expression is a string and no leading zeroes,
                         # treat it as an integer
                         raise TypeError

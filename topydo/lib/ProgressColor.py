@@ -60,7 +60,7 @@ def progress_color(p_todo):
         if does_recur and due_date and not start_date:
             # add negation, offset is based on due date
             recurrence_pattern = p_todo.tag_value('rec')
-            neg_recurrence_pattern = re.sub('^\+?', '-', recurrence_pattern)
+            neg_recurrence_pattern = re.sub(r'^\+?', '-', recurrence_pattern)
 
             start = relative_date_to_date(neg_recurrence_pattern, due_date)
             result = diff_days(start, due_date)
