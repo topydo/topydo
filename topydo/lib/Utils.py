@@ -77,9 +77,13 @@ def get_terminal_size(p_getter=None):
                     # shutil.get_terminal_size was added to the standard
                     # library in Python 3.3
                     try:
-                        from shutil import get_terminal_size as _get_terminal_size  # pylint: disable=no-name-in-module
+                        from shutil import \
+                            get_terminal_size as \
+                            _get_terminal_size  # pylint: disable=no-name-in-module
                     except ImportError:
-                        from backports.shutil_get_terminal_size import get_terminal_size as _get_terminal_size  # pylint: disable=import-error
+                        from backports.shutil_get_terminal_size import \
+                            get_terminal_size as \
+                            _get_terminal_size  # pylint: disable=import-error
 
                     size = _get_terminal_size()
                 except ValueError:
