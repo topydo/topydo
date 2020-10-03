@@ -1,0 +1,11 @@
+
+coverage:
+  status:
+    project:
+      default:
+        target: auto  # target is increasing coverage
+        threshold: 0.2%
+    patch:
+      default:
+        informational: true  # otherwise this falses way too much
+    
