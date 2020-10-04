@@ -1,7 +1,7 @@
 topydo - a powerful todo.txt application
 ========================================
 
-[![Build Status](https://travis-ci.org/bram85/topydo.svg?branch=master)](https://travis-ci.org/bram85/topydo) [![codecov.io](https://codecov.io/github/bram85/topydo/coverage.svg?branch=master)](https://codecov.io/github/bram85/topydo?branch=master) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/2957b80fffa0460bbb0e1ff7948f0ee7)](https://www.codacy.com/app/bram85/topydo?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=bram85/topydo&amp;utm_campaign=Badge_Grade) [![PyPI version](https://badge.fury.io/py/topydo.svg)](https://badge.fury.io/py/topydo) [![Join the chat at https://gitter.im/bram85/topydo](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/bram85/topydo?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=bram85&url=https://github.com/bram85/topydo&title=topydo&language=&tags=github&category=software) 
+[![Build Status](https://travis-ci.org/topydo/topydo.svg?branch=master)](https://travis-ci.org/topydo/topydo) [![codecov.io](https://codecov.io/github/topydo/topydo/coverage.svg?branch=master)](https://codecov.io/github/topydo/topydo?branch=master) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/2957b80fffa0460bbb0e1ff7948f0ee7)](https://www.codacy.com/app/bram85/topydo?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=bram85/topydo&amp;utm_campaign=Badge_Grade) [![PyPI version](https://badge.fury.io/py/topydo.svg)](https://badge.fury.io/py/topydo) [![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=bram85&url=https://github.com/bram85/topydo&title=topydo&language=&tags=github&category=software)
 
 topydo is a powerful todo list application using the [todo.txt format][1].
 
@@ -68,5 +68,5 @@ CLI mode:
 [2]: https://github.com/ginatrapani/todo.txt-cli
 [3]: https://github.com/bram85/todo.txt-tools
 [4]: https://www.topydo.org
-[5]: https://raw.githubusercontent.com/bram85/topydo/master/docs/topydo.gif
-[6]: https://raw.githubusercontent.com/bram85/topydo/master/docs/columns.png
+[5]: https://raw.githubusercontent.com/topydo/topydo/master/docs/topydo.gif
+[6]: https://raw.githubusercontent.com/topydo/topydo/master/docs/columns.png
