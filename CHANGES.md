@@ -1,3 +1,10 @@
+0.14
+----
+
+* Fix: fix a reported string incompatibility with Python 3.9.
+* Fix: make all internal tests pass.
+* Change: report the new repository home.
+
 0.13
 ----
 
