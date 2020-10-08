@@ -63,7 +63,7 @@ FIELDS = {
         label='Length',
     ),
     'priority': Field(
-        sort=(lambda t: t.priority() or 'ZZ'),
+        sort=(lambda t: t.priority() or 'M'),
         group=(lambda t: t.priority() or 'None'),
         label='Priority',
     ),

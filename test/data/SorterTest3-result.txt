@@ -2,3 +2,5 @@
 (A) Another important task star:1
 (B) Minor
 (C) Useless
+An unprioritized task
+(N) A low priority task
