@@ -495,9 +495,9 @@ x 11 months ago
         result = """{C}
 {C}
 {D}
+
+
 {Z}
-
-
 """
         self.assertEqual(self.output, result)
 
@@ -508,9 +508,9 @@ x 11 months ago
         result = """%pC%p
 %pC%p
 %pD%p
+
+
 %pZ%p
-
-
 """
         self.assertEqual(self.output, result)
 
@@ -521,9 +521,9 @@ x 11 months ago
         result = """CC
 CC
 DD
+
+
 ZZ
-
-
 """
         self.assertEqual(self.output, result)
 
@@ -536,9 +536,9 @@ ZZ
         result = """C  C
 C  C
 D  D
+
+
 Z  Z
-
-
 """
         self.assertEqual(self.output, result)
 
@@ -552,9 +552,9 @@ Z  Z
         result = """C   C
 C   C
 D   D
+
+
 Z   Z
-
-
 """
         self.assertEqual(self.output, result)
 
@@ -567,9 +567,9 @@ Z   Z
         result = """   C
    C
    D
+
+
    Z
-
-
 """
         self.assertEqual(self.output, result)
 
