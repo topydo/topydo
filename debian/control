@@ -1,0 +1,31 @@
+Source: topydo
+Section: text
+Priority: optional
+Maintainer: David Steele <steele@debian.org>
+Build-Depends:
+    debhelper (>= 11),
+    dh-python,
+    python-all,
+    python-setuptools,
+    python3-all,
+    python3-setuptools,
+    python3-arrow,
+    python3-freezegun,
+Standards-Version: 4.1.3
+Homepage: https://github.com/topydo/topydo
+Vcs-Browser: https://github.com/davesteele/topydo
+Vcs-Git: https://github.com/davesteele/topydo.git -b debian
+
+Package: topydo
+Architecture: all
+Depends: ${python3:Depends}, ${misc:Depends}, python3, todo.txt-base
+Provides: todo, todo.txt
+Conflicts: devtodo
+Description: advanced todo.txt terminal utility for managing tasks
+ The Todo.txt project defines a format for supporting context-rich tasking in a
+ plain text file. It supports an ecosystem of tools which allow working with
+ tasks across hosts and operating systems.
+ .
+ This package installs a more advanced version of the command-line tool for
+ working with todo.txt tasking files.
+

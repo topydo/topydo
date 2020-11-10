@@ -1,0 +1,30 @@
+#!/usr/bin/make -f
+
+export PYBUILD_NAME=topydo
+export PYBUILD_INSTALL_ARGS=--install-lib=/usr/share/topydo\
+    --install-scripts=/usr/share/topydo
+
+manpages = $(shell (ls debian/*.md | sed 's/.md//'))
+
+%:
+	dh $@ --with python3 --buildsystem=pybuild
+
+override_dh_auto_build:
+	dh_auto_build
+	for mn in ${manpages}; do \
+	  pandoc $$mn.md -s -t man -o $$mn; \
+	  sed -i 's/\\\[en\]/\\\-/' $$mn; \
+	done
+
+override_dh_auto_install:
+	dh_auto_install
+	mkdir -p debian/topydo/usr/bin/
+	cp debian/topydo-helper debian/topydo/usr/bin/
+	mkdir -p debian/topydo/etc/
+	cp debian/topydo.conf debian/topydo/etc/
+	find debian/topydo -name \*.pyc -exec rm -f {} \;
+	find debian/topydo -name __pycache__ | xargs rm -rf 
+
+override_dh_auto_test:
+	echo "Tests disabled"
+	#python3 setup.py test

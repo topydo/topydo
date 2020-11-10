@@ -1,0 +1,13 @@
+#!/bin/sh
+set -e
+
+case "$1" in
+  remove)
+    update-alternatives --remove todo.txt /usr/bin/todo.txt-base
+    ;;
+esac
+
+#DEBHELPER#
+
+exit 0
+

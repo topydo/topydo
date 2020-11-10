@@ -1,0 +1,19 @@
+#!/bin/sh
+set -e
+
+case "$1" in
+  configure)
+    update-alternatives \
+      --install /usr/bin/todo.txt todo.txt /usr/bin/topydo 100 \
+      --slave /usr/bin/todo todo /usr/bin/todo.txt-base \
+      --slave /usr/bin/todo.txt-helper todo.txt-helper /usr/bin/topydo-helper \
+      --slave /usr/share/man/man8/todo.8.gz todo.8.gz /usr/share/man/man8/todo.txt-base.8.gz \
+      --slave /usr/share/man/man8/todo.txt.8.gz todo.txt.8.gz /usr/share/man/man8/topydo.8.gz \
+      --slave /usr/share/man/man8/todo.txt-helper.8.gz todo.txt-helper.8.gz /usr/share/man/man8/topydo-helper.8.gz
+    ;;
+esac
+
+#DEBHELPER#
+
+exit 0
+

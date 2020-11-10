@@ -1,0 +1,11 @@
+--- a/setup.py
++++ b/setup.py
+@@ -44,7 +44,7 @@
+         'test:python_version=="3.2"': ['mock'],
+     },
+     entry_points={
+-        'console_scripts': ['topydo=topydo.ui.UILoader:main'],
++        'console_scripts': ['topydo.cmd=topydo.ui.UILoader:main'],
+     },
+     classifiers=[
+         "Development Status :: 5 - Production/Stable",
