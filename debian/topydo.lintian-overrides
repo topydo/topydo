@@ -1,5 +1,5 @@
 # this is complaining about documentation line lengths ... in an html file.
-source-is-missing
+source-is-missing doc/Documentation.html
 
 # this tag conflicts with update-alternatives
 command-with-path-in-maintainer-script

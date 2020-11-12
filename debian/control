@@ -3,7 +3,7 @@ Section: text
 Priority: optional
 Maintainer: David Steele <steele@debian.org>
 Build-Depends:
-    debhelper (>= 11),
+    debhelper-compat (= 13),
     dh-python,
     python-all,
     python-setuptools,
