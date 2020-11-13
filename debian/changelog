@@ -1,5 +1,5 @@
-topydo (0.13-1) UNRELEASED; urgency=low
+topydo (0.13-1) unstable; urgency=low
 
   * Initial release (Closes: #972945)
 
- -- David Steele <steele@debian.org>  Wed, 23 Mar 2016 23:07:38 -0400
+ -- David Steele <steele@debian.org>  Thu, 12 Nov 2020 21:01:28 -0500
