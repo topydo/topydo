@@ -3,7 +3,7 @@ set -e
 
 case "$1" in
   remove)
-    update-alternatives --remove todo.txt /usr/bin/todo.txt-base
+    update-alternatives --remove todo.txt /usr/bin/topydo
     ;;
 esac
 
