@@ -10,6 +10,9 @@ cfg_locations = [
     "/etc/topydo.conf",
     str(Path("~/.config/topydo/config").expanduser()),
     str(Path("~/.topydo").expanduser()),
+    ".topydo",
+    "topydo.conf",
+    "topydo.ini",
 ]
 
 
