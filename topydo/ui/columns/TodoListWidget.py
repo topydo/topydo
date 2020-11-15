@@ -114,8 +114,15 @@ class TodoListWidget(urwid.LineBox):
                 # -2 for the same reason as in self._scroll_to_bottom()
                 self.todolist.set_focus(len(self.todolist) - 2)
 
+    def _go_down(self, p_size):
+        self.listbox.keypress(p_size, 'down')
+        self.listbox.set_focus_valign('bottom')
+
     def _scroll_to_top(self, p_size):
-        self.listbox.set_focus(0)
+        if isinstance(self.todolist[0], urwid.Text):
+            self.listbox.set_focus(2)
+        else:
+            self.listbox.set_focus(0)
 
         # see comment at _scroll_to_bottom
         self.listbox.calculate_visible(p_size)
@@ -197,7 +204,7 @@ class TodoListWidget(urwid.LineBox):
                 self.listbox.keypress(p_size, 'up')
                 return
             elif p_button == 5:  # down:
-                self.listbox.keypress(p_size, 'down')
+                self._go_down(p_size)
                 return
 
         return super().mouse_event(p_size,  # pylint: disable=E1102
@@ -300,8 +307,10 @@ class TodoListWidget(urwid.LineBox):
 
         if p_action_str in column_actions:
             urwid.emit_signal(self, 'column_action', p_action_str)
-        elif p_action_str in ['up', 'down']:
+        elif p_action_str == 'up':
             self.listbox.keypress(p_size, p_action_str)
+        elif p_action_str == 'down':
+            self._go_down(p_size)
         elif p_action_str == 'home':
             self._scroll_to_top(p_size)
         elif p_action_str == 'end':
