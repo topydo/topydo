@@ -21,6 +21,7 @@ import sys
 import unittest
 from collections import namedtuple
 
+import arrow
 from freezegun import freeze_time
 
 from topydo.commands.ListCommand import ListCommand
@@ -607,7 +608,10 @@ class ListCommandDotTest(CommandTest):
     def setUp(self):
         self.maxDiff = None
 
-    def test_dot(self):
+    @mock.patch('arrow.now') # arrow.now() doesn't freeze at UTC
+    def test_dot(self, mock_arrow):
+        mock_arrow.return_value = arrow.utcnow() # force arrow to UTC
+
         todolist = load_file_to_todolist("test/data/ListCommandDotTest.txt")
 
         command = ListCommand(["-x", "-f", "dot"], todolist, self.out,
@@ -669,7 +673,10 @@ l: 1
 | 5| Different item l:1 test:test_group2
 """)
 
-    def test_group3(self):
+    @mock.patch('arrow.now')
+    def test_group3(self, mock_arrow):
+        mock_arrow.return_value = arrow.utcnow()
+
         todolist = load_file_to_todolist("test/data/ListCommandGroupTest.txt")
 
         command = ListCommand(["-g", "due", "test:test_group3"], todolist, self.out, self.error)
@@ -687,7 +694,10 @@ due: in a day
 | 8| Test 2 test:test_group3 due:2016-12-07
 """)
 
-    def test_group4(self):
+    @mock.patch('arrow.now')
+    def test_group4(self, mock_arrow):
+        mock_arrow.return_value = arrow.utcnow()
+
         todolist = load_file_to_todolist("test/data/ListCommandGroupTest.txt")
 
         command = ListCommand(["-g", "t", "test:test_group4"], todolist, self.out, self.error)
@@ -701,7 +711,10 @@ t: today
 | 9| Test 1 test:test_group4 test:test_group5 t:2016-12-06
 """)
 
-    def test_group5(self):
+    @mock.patch('arrow.now')
+    def test_group5(self, mock_arrow):
+        mock_arrow.return_value = arrow.utcnow()
+
         todolist = load_file_to_todolist("test/data/ListCommandGroupTest.txt")
 
         command = ListCommand(["-x", "-g", "t", "test:test_group5"], todolist, self.out, self.error)
