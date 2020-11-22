@@ -140,7 +140,8 @@ class UIApplication(CLIApplicationBase):
         self.marked_todos = set()
 
         self.columns = urwid.Columns([], dividechars=0,
-            min_width=config().column_width())
+                                     min_width=config().column_width())
+        self.columns.contents.set_focus_changed_callback(self._move_highlight)
         completer = ColumnCompleter(self.todolist)
         self.commandline = CommandLineWidget(completer, 'topydo> ')
         self.keystate_widget = KeystateWidget()
@@ -267,6 +268,15 @@ class UIApplication(CLIApplicationBase):
 
         self.column_mode = _APPEND_COLUMN
         self._set_alarm_for_next_midnight_update()
+
+    def _move_highlight(self, p_new_focus):
+        """
+        Removes highlight from currently focused column and applies it on
+        column with index equal to p_new_focus.
+        """
+        self.columns.focus.highlight(False)
+        self.columns.contents[p_new_focus][0].highlight(True)
+        self.columns._invalidate()
 
     def _set_alarm_for_next_midnight_update(self):
         def callback(p_loop, p_data):
