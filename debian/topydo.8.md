@@ -21,6 +21,10 @@ managing a common tasking file.
 
 ## OPTIONS
 
+_--info--_
+: Print out current configuration information for topydo, including the path
+the executable and the tasking file.
+
 _-a_
 : Do not archive todo items on completion.
 
@@ -185,8 +189,8 @@ detail on the configuration file format and variables.
 
 ## SEE ALSO
 
-todo.txt-helper(8), todo(8), todo.txt(8), vitodo(8), edittodo(8), listtodo(8),
-topydo.conf(5)
+todo(8), todo.txt(8), topydo.conf(5), vitodo(8), edittodo(8), listtodo(8),
+todo.txt-base(8)
 
 The file _/usr/share/doc/topydo/Documentation.html_ contains extensive
 information about _topydo_, including the configuration file format.

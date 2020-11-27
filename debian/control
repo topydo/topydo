@@ -19,7 +19,11 @@ Vcs-Git: https://github.com/davesteele/topydo.git -b debian
 
 Package: topydo
 Architecture: all
-Depends: ${python3:Depends}, ${misc:Depends}, python3, todo.txt-base
+Depends:
+    ${python3:Depends},
+    ${misc:Depends},
+    python3,
+Recommends: todo.txt-base (>= 2.0), todo.txt-base (<< 3.0),
 Provides: todo, todo.txt
 Conflicts: devtodo
 Description: advanced todo.txt terminal utility for managing tasks

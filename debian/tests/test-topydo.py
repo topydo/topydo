@@ -41,5 +41,7 @@ cp = run("todo ls".split(), capture_output=True, encoding="utf-8")
 assert "Foo" in cp.stdout
 
 config_path.unlink()
+todo_path.unlink()
+(todo_path.parent / ".todo.bak").unlink()
 
 os.chdir(str(start_path))

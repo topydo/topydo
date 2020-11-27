@@ -1,1 +1,1 @@
-/usr/share/topydo/topydo.cmd /usr/bin/topydo
+/usr/share/topydo/topydo_wrapper.cmd /usr/bin/topydo

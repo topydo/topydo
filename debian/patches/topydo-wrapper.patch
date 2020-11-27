@@ -1,0 +1,76 @@
+--- a/setup.py
++++ b/setup.py
+@@ -44,7 +44,11 @@
+         'test:python_version=="3.2"': ['mock'],
+     },
+     entry_points={
+-        'console_scripts': ['topydo.cmd=topydo.ui.UILoader:main'],
++        'console_scripts':
++            [
++                'topydo.cmd=topydo.ui.UILoader:main',
++                'topydo_wrapper.cmd=topydo_wrapper:main',
++            ],
+     },
+     classifiers=[
+         "Development Status :: 5 - Production/Stable",
+--- /dev/null
++++ b/topydo_wrapper/__init__.py
+@@ -0,0 +1,2 @@
++
++from .topydo_wrapper import main
+--- /dev/null
++++ b/topydo_wrapper/topydo_wrapper.py
+@@ -0,0 +1,53 @@
++#!/usr/bin/python3
++
++import configparser
++import sys
++from pathlib import Path
++from subprocess import run
++
++def task_path():
++    cfg_locations = [
++        "/etc/topydo.conf",
++        str(Path("~/.config/topydo/config").expanduser()),
++        str(Path("~/.topydo").expanduser()),
++        ".topydo",
++        "topydo.conf",
++        "topydo.ini",
++    ]
++
++    config = configparser.ConfigParser()
++    config.read(cfg_locations)
++    task_path = config.get("topydo", "filename", fallback="todo.txt")
++    task_path = str(Path(task_path).expanduser().resolve())
++    return task_path
++
++
++def printinfo(task_path):
++
++    print("executable =", "/usr/bin/topydo")
++    print("task_path =", task_path)
++
++
++def run_hooks(hooktype, task_path):
++    try:
++        run(["todo.txt-base", hooktype, task_path])
++    except FileNotFoundError:
++        pass
++
++
++def main():
++    tsk_path = task_path()
++
++    if len(sys.argv) >= 2 and sys.argv[1] == "--info":
++        printinfo(tsk_path)
++        sys.exit(0)
++
++    import topydo.ui.UILoader as loader
++
++    run_hooks("pre", tsk_path)
++    loader.main()
++    run_hooks("post", tsk_path)
++
++
++if __name__ == "__main__":
++    main()

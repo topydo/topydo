@@ -19,7 +19,6 @@ override_dh_auto_build:
 override_dh_auto_install:
 	dh_auto_install
 	mkdir -p debian/topydo/usr/bin/
-	cp debian/topydo-helper debian/topydo/usr/bin/
 	mkdir -p debian/topydo/etc/
 	cp debian/topydo.conf debian/topydo/etc/
 	find debian/topydo -name \*.pyc -exec rm -f {} \;
