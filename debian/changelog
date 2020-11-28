@@ -2,7 +2,7 @@ topydo (0.13-3) UNRELEASED; urgency=medium
 
   * Rework interaction with todo.txt-base.
 
- -- David Steele <dsteele@gmail.com>  Mon, 23 Nov 2020 08:41:25 -0500
+ -- David Steele <steele@debian.org>  Mon, 23 Nov 2020 08:41:25 -0500
 
 topydo (0.13-2) unstable; urgency=medium
 
