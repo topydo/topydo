@@ -1,9 +1,9 @@
-topydo (0.13-4) UNRELEASED; urgency=medium
+topydo (0.13-4) unstable; urgency=medium
 
-  * Accomodate autopkgtests with the old todo.txt-base (Closes: #976111,
+  * Accommodate autopkgtests with the old todo.txt-base (Closes: #976111,
     #976072).
 
- -- David Steele <dsteele@gmail.com>  Wed, 02 Dec 2020 15:28:26 -0500
+ -- David Steele <steele@debian.org>  Wed, 02 Dec 2020 16:42:11 -0500
 
 topydo (0.13-3) unstable; urgency=medium
 
