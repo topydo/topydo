@@ -20,7 +20,7 @@
 +from .topydo_wrapper import main
 --- /dev/null
 +++ b/topydo_wrapper/topydo_wrapper.py
-@@ -0,0 +1,53 @@
+@@ -0,0 +1,58 @@
 +#!/usr/bin/python3
 +
 +import configparser
@@ -65,11 +65,16 @@
 +        printinfo(tsk_path)
 +        sys.exit(0)
 +
++
 +    import topydo.ui.UILoader as loader
 +
-+    run_hooks("pre", tsk_path)
++    # TODO - this is temporary
++    if sys.argv[1] not in ["pre", "post"]:
++        run_hooks("pre", tsk_path)
 +    loader.main()
-+    run_hooks("post", tsk_path)
++    # TODO - this is temporary
++    if sys.argv[1] not in ["pre", "post"]:
++        run_hooks("post", tsk_path)
 +
 +
 +if __name__ == "__main__":
