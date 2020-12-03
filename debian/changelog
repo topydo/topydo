@@ -1,3 +1,9 @@
+topydo (0.13-5) unstable; urgency=medium
+
+  * Smooth out alternatives upgrade from 0.13-2 (Closes: 976072).
+
+ -- David Steele <steele@debian.org>  Thu, 03 Dec 2020 17:34:11 -0500
+
 topydo (0.13-4) unstable; urgency=medium
 
   * Accommodate autopkgtests with the old todo.txt-base (Closes: #976111,

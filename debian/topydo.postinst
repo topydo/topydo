@@ -3,6 +3,10 @@ set -e
 
 case "$1" in
   configure)
+
+    # TODO - temp
+    update-alternatives --remove todo.txt /usr/bin/topydo 2> /dev/null || true
+
     update-alternatives \
       --install /usr/bin/todo.txt todo.txt /usr/bin/topydo 100 \
       --slave /usr/share/man/man8/todo.txt.8.gz todo.txt.8.gz /usr/share/man/man8/topydo.8.gz \
