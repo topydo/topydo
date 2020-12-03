@@ -3,21 +3,20 @@
 export PYBUILD_NAME=topydo
 export PYBUILD_INSTALL_ARGS=--install-lib=/usr/share/topydo\
     --install-scripts=/usr/share/topydo
+export PYBUILD_DISABLE_python2=1
 
 manpages = $(shell (ls debian/*.md | sed 's/.md//'))
 
 %:
 	dh $@ --with python3 --buildsystem=pybuild
 
-override_dh_auto_build:
-	dh_auto_build
+execute_after_dh_auto_build:
 	for mn in ${manpages}; do \
 	  pandoc $$mn.md -s -t man -o $$mn; \
 	  sed -i 's/\\\[en\]/\\\-/' $$mn; \
 	done
 
-override_dh_auto_install:
-	dh_auto_install
+execute_after_dh_auto_install:
 	mkdir -p debian/topydo/usr/bin/
 	mkdir -p debian/topydo/etc/
 	cp debian/topydo.conf debian/topydo/etc/
