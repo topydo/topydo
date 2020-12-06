@@ -21,7 +21,7 @@ execute_after_dh_auto_install:
 	mkdir -p debian/topydo/etc/
 	cp debian/topydo.conf debian/topydo/etc/
 	find debian/topydo -name \*.pyc -exec rm -f {} \;
-	find debian/topydo -name __pycache__ | xargs rm -rf 
+	find debian/topydo -name __pycache__ | xargs rm -rf
 
 override_dh_auto_test:
 	echo "Tests disabled"

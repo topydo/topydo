@@ -13,6 +13,7 @@ Build-Depends:
     python3-freezegun,
     pandoc,
 Standards-Version: 4.5.0
+Rules-Requires-Root: no
 Homepage: https://github.com/topydo/topydo
 Vcs-Browser: https://github.com/davesteele/topydo
 Vcs-Git: https://github.com/davesteele/topydo.git -b debian
@@ -32,4 +33,3 @@ Description: advanced todo.txt terminal utility for managing tasks
  .
  This package installs a more advanced version of the command-line tool for
  working with todo.txt tasking files.
-

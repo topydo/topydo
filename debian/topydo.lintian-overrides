@@ -1,5 +1,6 @@
-# this is complaining about documentation line lengths ... in an html file.
-source-is-missing doc/Documentation.html
 
-# this tag conflicts with update-alternatives
+# Seriously? This is Python code.
+repeated-path-segment
+
+# This tag appears to be incompatible with update-alternatives
 command-with-path-in-maintainer-script
