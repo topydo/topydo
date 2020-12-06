@@ -1,5 +1,5 @@
 Source: topydo
-Section: text
+Section: misc
 Priority: optional
 Maintainer: David Steele <steele@debian.org>
 Build-Depends:
