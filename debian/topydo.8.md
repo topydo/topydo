@@ -184,7 +184,7 @@ Configuration files may be stored in the following locations:
 The files are read in that order, with variables in later files overriding
 earlier ones.
 
-See the _Configuration_ topic in _/usr/share/doc/topydo/Documentation.html_ for
+See the _Configuration_ topic in _/usr/share/doc/topydo/docs/index.html_ for
 detail on the configuration file format and variables.
 
 ## SEE ALSO
@@ -192,5 +192,5 @@ detail on the configuration file format and variables.
 todo(8), todo.txt(8), topydo.conf(5), vitodo(8), edittodo(8), listtodo(8),
 todo.txt-base(8)
 
-The file _/usr/share/doc/topydo/Documentation.html_ contains extensive
+The file _/usr/share/doc/topydo/docs/index.html_ contains extensive
 information about _topydo_, including the configuration file format.
