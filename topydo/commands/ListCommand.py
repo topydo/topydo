@@ -215,7 +215,7 @@ class ListCommand(ExpressionCommand):
 [-i <NUMBER 1>[,<NUMBER 2> ...]] [-N | -n <INTEGER>] [EXPRESSION]"""
 
     def help(self):
-        return """\
+        return r"""\
 Lists all relevant todos. A todo is relevant when:
 
 * has not been completed yet,

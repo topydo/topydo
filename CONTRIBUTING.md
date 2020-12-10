@@ -70,4 +70,4 @@ smoothly into topydo.
   should be marked green (i.e. covered).
   
   When you create a Pull Request, code coverage will be automatically checked
-  and reported by [Codecov.io](https://codecov.io/github/bram85/topydo).
+  and reported by [Codecov.io](https://codecov.io/github/topydo/topydo).

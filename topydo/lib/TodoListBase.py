@@ -98,7 +98,7 @@ class TodoListBase(object):
 
             if config().identifiers() != 'text':
                 try:
-                    if re.match('[1-9]\d*', p_identifier):
+                    if re.match(r'[1-9]\d*', p_identifier):
                         # the expression is a string and no leading zeroes,
                         # treat it as an integer
                         raise TypeError
@@ -146,7 +146,9 @@ class TodoListBase(object):
         return todos[0] if len(todos) else None
 
     def add_list(self, p_srcs):
-        todos = [Todo(src) for src in p_srcs if re.search(r'\S', src)]
+        todos = [Todo(src) for src in p_srcs]
+        if config().auto_delete_whitespace():
+            todos = [todo for todo in todos if re.search(r'\S', todo.source())]
         self.add_todos(todos)
 
         return todos
@@ -172,6 +174,13 @@ class TodoListBase(object):
         except ValueError:
             # todo item couldn't be found, ignore
             pass
+
+    def modify_todo(self, p_todo, p_new_source):
+        """ Modify source of a Todo item from the list. """
+        assert p_todo in self._todos
+        p_todo.set_source_text(p_new_source)
+        self._update_todo_ids()
+        self.dirty = True
 
     def erase(self):
         """ Erases all todos from the list. """

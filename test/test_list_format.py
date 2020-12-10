@@ -17,6 +17,7 @@
 import unittest
 from collections import namedtuple
 
+import arrow
 from freezegun import freeze_time
 
 from topydo.commands.ListCommand import ListCommand
@@ -126,9 +127,11 @@ class ListFormatTest(CommandTest):
 
         self.assertEqual(self.output, result)
 
+    @mock.patch('arrow.now') # arrow.now() doesn't freeze at UTC
     @mock.patch('topydo.lib.ListFormat.get_terminal_size')
-    def test_list_format06(self, mock_terminal_size):
+    def test_list_format06(self, mock_terminal_size, mock_arrow):
         mock_terminal_size.return_value = self.terminal_size(100, 25)
+        mock_arrow.return_value = arrow.utcnow() # force arrow to UTC
 
         config(p_overrides={('ls', 'list_format'): '|%I| %x %p %S %k	%{(}H{)}'})
         command = ListCommand(["-x"], self.todolist, self.out, self.error)
@@ -143,9 +146,11 @@ class ListFormatTest(CommandTest):
 """
         self.assertEqual(self.output, result)
 
+    @mock.patch('arrow.now')
     @mock.patch('topydo.lib.ListFormat.get_terminal_size')
-    def test_list_format07(self, mock_terminal_size):
+    def test_list_format07(self, mock_terminal_size, mock_arrow):
         mock_terminal_size.return_value = self.terminal_size(100, 25)
+        mock_arrow.return_value = arrow.utcnow()
 
         config(p_overrides={('ls', 'list_format'): '|%I| %x %p %S %k	%{(}h{)}'})
         command = ListCommand(["-x"], self.todolist, self.out, self.error)
@@ -177,9 +182,11 @@ x 2014-12-12
 """
         self.assertEqual(self.output, result)
 
+    @mock.patch('arrow.now')
     @mock.patch('topydo.lib.ListFormat.get_terminal_size')
-    def test_list_format09(self, mock_terminal_size):
+    def test_list_format09(self, mock_terminal_size, mock_arrow):
         mock_terminal_size.return_value = self.terminal_size(100, 25)
+        mock_arrow.return_value = arrow.utcnow()
 
         config(p_overrides={('ls', 'list_format'): '%C | %D | %T | %X'})
         command = ListCommand(["-x"], self.todolist, self.out, self.error)
@@ -223,7 +230,7 @@ today | in 2 days | in a day |
         self.assertEqual(self.output, result)
 
     def test_list_format12(self):
-        config(p_overrides={('ls', 'list_format'): '|%I| \%'})
+        config(p_overrides={('ls', 'list_format'): r'|%I| \%'})
         command = ListCommand(["-x"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -276,7 +283,10 @@ today | in 2 days | in a day |
 """
         self.assertEqual(self.output, result)
 
-    def test_list_format16(self):
+    @mock.patch('arrow.now')
+    def test_list_format16(self, mock_arrow):
+        mock_arrow.return_value = arrow.utcnow()
+
         command = ListCommand(["-x", "-F", "%C"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -302,7 +312,10 @@ today
 """
         self.assertEqual(self.output, result)
 
-    def test_list_format18(self):
+    @mock.patch('arrow.now')
+    def test_list_format18(self, mock_arrow):
+        mock_arrow.return_value = arrow.utcnow()
+
         command = ListCommand(["-x", "-F", "%D"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -315,7 +328,10 @@ in 2 days
 """
         self.assertEqual(self.output, result)
 
-    def test_list_format19(self):
+    @mock.patch('arrow.now')
+    def test_list_format19(self, mock_arrow):
+        mock_arrow.return_value = arrow.utcnow()
+
         command = ListCommand(["-x", "-F", "%h"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -328,7 +344,10 @@ due in 2 days, starts in a day
 """
         self.assertEqual(self.output, result)
 
-    def test_list_format20(self):
+    @mock.patch('arrow.now')
+    def test_list_format20(self, mock_arrow):
+        mock_arrow.return_value = arrow.utcnow()
+
         command = ListCommand(["-x", "-F", "%H"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -448,7 +467,10 @@ Completed but with
 """
         self.assertEqual(self.output, result)
 
-    def test_list_format29(self):
+    @mock.patch('arrow.now')
+    def test_list_format29(self, mock_arrow):
+        mock_arrow.return_value = arrow.utcnow()
+
         command = ListCommand(["-x", "-F", "%T"], self.todolist, self.out, self.error)
         command.execute()
 
@@ -494,22 +516,22 @@ x 11 months ago
         result = """{C}
 {C}
 {D}
+
+
 {Z}
-
-
 """
         self.assertEqual(self.output, result)
 
     def test_list_format33(self):
-        command = ListCommand(["-x", "-s", "desc:priority", "-F", "%{\%p}p{\%p}"], self.todolist, self.out, self.error)
+        command = ListCommand(["-x", "-s", "desc:priority", "-F", r"%{\%p}p{\%p}"], self.todolist, self.out, self.error)
         command.execute()
 
         result = """%pC%p
 %pC%p
 %pD%p
+
+
 %pZ%p
-
-
 """
         self.assertEqual(self.output, result)
 
@@ -520,9 +542,9 @@ x 11 months ago
         result = """CC
 CC
 DD
+
+
 ZZ
-
-
 """
         self.assertEqual(self.output, result)
 
@@ -535,9 +557,9 @@ ZZ
         result = """C  C
 C  C
 D  D
+
+
 Z  Z
-
-
 """
         self.assertEqual(self.output, result)
 
@@ -551,9 +573,9 @@ Z  Z
         result = """C   C
 C   C
 D   D
+
+
 Z   Z
-
-
 """
         self.assertEqual(self.output, result)
 
@@ -566,9 +588,9 @@ Z   Z
         result = """   C
    C
    D
+
+
    Z
-
-
 """
         self.assertEqual(self.output, result)
 
@@ -681,10 +703,12 @@ C -
 """
         self.assertEqual(self.output, result)
 
+    @mock.patch('arrow.now')
     @mock.patch('topydo.lib.ListFormat.get_terminal_size')
-    def test_list_format45(self, mock_terminal_size):
+    def test_list_format45(self, mock_terminal_size, mock_arrow):
         """ Colorblocks should not affect truncating or right_alignment. """
         mock_terminal_size.return_value = self.terminal_size(100, 25)
+        mock_arrow.return_value = arrow.utcnow()
 
         config(p_overrides={('ls', 'list_format'): '%z|%I| %x %p %S %k\\t%{(}h{)}'})
         command = ListCommand(["-x"], self.todolist, self.out, self.error)

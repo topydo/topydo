@@ -73,6 +73,7 @@ class _Config:
                 'identifiers': 'linenumber',
                 'identifier_alphabet': '0123456789abcdefghijklmnopqrstuvwxyz',
                 'backup_count': '5',
+                'auto_delete_whitespace': '1',
             },
 
             'add': {
@@ -95,7 +96,7 @@ class _Config:
 
             'sort': {
                 'keep_sorted': '0',
-                'sort_string': 'desc:importance,due,desc:priority',
+                'sort_string': 'desc:completed,desc:importance,due,desc:priority',
                 'group_string': '',
                 'ignore_weekends': '1',
             },
@@ -161,6 +162,7 @@ class _Config:
                 'R': 'swap_right',
                 '<Left>': 'prev_column',
                 '<Right>': 'next_column',
+                '<Down>': 'down',
                 '<Esc>': 'reset',
             },
         }
@@ -259,6 +261,12 @@ class _Config:
             return value
         except ValueError:
             return int(self.defaults['topydo']['backup_count'])
+
+    def auto_delete_whitespace(self):
+        try:
+            return self.cp.getboolean('topydo', 'auto_delete_whitespace')
+        except ValueError:
+            return self.defaults['topydo']['auto_delete_whitespace'] == '1'
 
     def list_limit(self):
         try:

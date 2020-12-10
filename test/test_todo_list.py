@@ -509,5 +509,30 @@ class TodoListCleanDependencyTester(TopydoTest):
         self.assertFalse(self.todolist.todo_by_dep_id('1'))
 
 
+class TodoLoadTester(TopydoTest):
+    """Test the auto_delete_whitespace configuration parameter"""
+    def setUp(self):
+        super().setUp()
+        self.todoPath = 'test/data/TodoListTest.txt'
+        self.todofile = TodoFile(self.todoPath)
+
+    def test_load_default(self):
+        todolist = TodoListBase(self.todofile.read())
+
+        self.assertTrue(all([len(todo.source()) != 0 for todo in todolist]))
+
+    def test_load_preserve_ws(self):
+        config("test/data/listload.conf")
+        todolist = TodoListBase(self.todofile.read())
+
+        self.assertTrue(any([len(todo.source()) == 0 for todo in todolist]))
+
+    def test_load_use_default(self):
+        config("test/data/listload2.conf")
+        todolist = TodoListBase(self.todofile.read())
+
+        self.assertTrue(all([len(todo.source()) != 0 for todo in todolist]))
+
+
 if __name__ == '__main__':
     unittest.main()

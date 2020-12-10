@@ -19,6 +19,7 @@ import urwid
 from topydo.lib.HashListValues import max_id_length
 from topydo.lib.Utils import translate_key_to_config
 from topydo.ui.columns.TodoWidget import TodoWidget
+from topydo.ui.columns.Utils import PaletteItem
 
 
 def get_execute_signal(p_prefix):
@@ -40,7 +41,8 @@ class TodoListWidget(urwid.LineBox):
         # store offset length for postpone command (e.g. '3' for 'p3w')
         self._pp_offset = None
 
-        self._title_widget = urwid.Text(p_title, align='center')
+        self._title = urwid.Text(p_title, align='center')
+        self._title_widget = urwid.AttrMap(self._title, PaletteItem.DEFAULT)
 
         self.todolist = urwid.SimpleFocusListWalker([])
         self.listbox = urwid.ListBox(self.todolist)
@@ -78,11 +80,11 @@ class TodoListWidget(urwid.LineBox):
 
     @property
     def title(self):
-        return self._title_widget.text
+        return self._title.text
 
     @title.setter
     def title(self, p_title):
-        self._title_widget.set_text(p_title)
+        self._title.set_text(p_title)
 
     def update(self):
         """
@@ -114,8 +116,15 @@ class TodoListWidget(urwid.LineBox):
                 # -2 for the same reason as in self._scroll_to_bottom()
                 self.todolist.set_focus(len(self.todolist) - 2)
 
+    def _go_down(self, p_size):
+        self.listbox.keypress(p_size, 'down')
+        self.listbox.set_focus_valign('bottom')
+
     def _scroll_to_top(self, p_size):
-        self.listbox.set_focus(0)
+        if isinstance(self.todolist[0], urwid.Text):
+            self.listbox.set_focus(2)
+        else:
+            self.listbox.set_focus(0)
 
         # see comment at _scroll_to_bottom
         self.listbox.calculate_visible(p_size)
@@ -197,7 +206,7 @@ class TodoListWidget(urwid.LineBox):
                 self.listbox.keypress(p_size, 'up')
                 return
             elif p_button == 5:  # down:
-                self.listbox.keypress(p_size, 'down')
+                self._go_down(p_size)
                 return
 
         return super().mouse_event(p_size,  # pylint: disable=E1102
@@ -300,8 +309,10 @@ class TodoListWidget(urwid.LineBox):
 
         if p_action_str in column_actions:
             urwid.emit_signal(self, 'column_action', p_action_str)
-        elif p_action_str in ['up', 'down']:
+        elif p_action_str == 'up':
             self.listbox.keypress(p_size, p_action_str)
+        elif p_action_str == 'down':
+            self._go_down(p_size)
         elif p_action_str == 'home':
             self._scroll_to_top(p_size)
         elif p_action_str == 'end':
@@ -375,3 +386,9 @@ class TodoListWidget(urwid.LineBox):
             todo_id = None
 
         urwid.emit_signal(self, 'repeat_cmd', todo_id)
+
+    def highlight(self, p_highlight):
+        if p_highlight:
+            self._title_widget.set_attr_map({None: PaletteItem.DEFAULT_FOCUS})
+        else:
+            self._title_widget.set_attr_map({None: PaletteItem.DEFAULT})

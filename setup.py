@@ -30,9 +30,12 @@ setup(
     description="A powerful todo.txt application for the console",
     author="Bram Schoenmakers",
     author_email="bram@topydo.org",
-    url="https://www.topydo.org",
+    url="https://github.com/topydo/topydo",
     install_requires=[
         'arrow >= 0.7.0',
+    ],
+    tests_require=[
+        'freezegun',
     ],
     extras_require={
         ':sys_platform=="win32"': ['colorama>=0.2.5'],

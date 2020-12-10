@@ -377,5 +377,27 @@ class TodoBaseTester(TopydoTest):
         todo = TodoBase("x 2017-07-01 2017-06-31 Invalid")
         self.assertIsNone(todo.creation_date())
 
+    def test_timestamp_tag1(self):
+        todo = TodoBase("12:00")
+        self.assertFalse(todo.has_tag('12'))
+        self.assertEqual(todo.text(), '12:00')
+
+    def test_timestamp_tag2(self):
+        todo = TodoBase("12:00a")
+        self.assertTrue(todo.has_tag('12'))
+        self.assertEqual(todo.tag_value('12'), '00a')
+        self.assertEqual(todo.text(), '')
+
+    def test_timestamp_tag3(self):
+        todo = TodoBase("9:00")
+        self.assertFalse(todo.has_tag('9'))
+        self.assertEqual(todo.text(), '9:00')
+
+    def test_timestamp_tag4(self):
+        todo = TodoBase("009:00")
+        self.assertTrue(todo.has_tag('009'))
+        self.assertEqual(todo.tag_value('009'), '00')
+        self.assertEqual(todo.text(), '')
+
 if __name__ == '__main__':
     unittest.main()

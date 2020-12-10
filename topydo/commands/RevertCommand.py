@@ -98,7 +98,7 @@ class RevertCommand(Command):
         num = 1
         for timestamp, change in self._backup:
             label = change[2]
-            time = arrow.get(timestamp).format('YYYY-MM-DD HH:mm:ss')
+            time = arrow.get(float(timestamp)).format('YYYY-MM-DD HH:mm:ss')
 
             self.out('{0: >3}| {1} | {2}'.format(str(num), time, label))
             num += 1

@@ -1,3 +1,5 @@
+(N) A low priority task
+An unprioritized task
 (C) Useless
 (B) Minor
 (A) Important
