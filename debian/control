@@ -24,7 +24,7 @@ Depends:
     ${python3:Depends},
     ${misc:Depends},
 Recommends: todo.txt-base (>= 2.0), todo.txt-base (<< 3.0),
-Provides: todo, todo.txt
+Provides: todo.txt
 Conflicts: devtodo
 Description: advanced todo.txt terminal utility for managing tasks
  The Todo.txt project defines a format for supporting context-rich tasking in a
