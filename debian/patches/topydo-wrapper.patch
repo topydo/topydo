@@ -1,6 +1,6 @@
 --- a/setup.py
 +++ b/setup.py
-@@ -44,7 +44,11 @@
+@@ -47,7 +47,11 @@
          'test:python_version=="3.2"': ['mock'],
      },
      entry_points={
@@ -69,11 +69,11 @@
 +    import topydo.ui.UILoader as loader
 +
 +    # TODO - this is temporary
-+    if sys.argv[1] not in ["pre", "post"]:
++    if len(sys.argv) >= 2 and sys.argv[1] not in ["pre", "post"]:
 +        run_hooks("pre", tsk_path)
 +    loader.main()
 +    # TODO - this is temporary
-+    if sys.argv[1] not in ["pre", "post"]:
++    if len(sys.argv) >= 2 and sys.argv[1] not in ["pre", "post"]:
 +        run_hooks("post", tsk_path)
 +
 +
