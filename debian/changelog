@@ -1,10 +1,10 @@
-topydo (0.14-1) UNRELEASED; urgency=medium
+topydo (0.14-1) unstable; urgency=medium
 
   * New upstream version.
   * Remove support for the "todo" virtual package. "todo.txt" remains.
   * Lintian cleanup.
 
- -- David Steele <steele@debian.org>  Thu, 10 Dec 2020 16:48:20 -0500
+ -- David Steele <steele@debian.org>  Thu, 10 Dec 2020 21:29:12 -0500
 
 topydo (0.13-5) unstable; urgency=medium
 

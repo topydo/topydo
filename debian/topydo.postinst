@@ -12,7 +12,7 @@ case "$1" in
       --slave /usr/share/man/man8/todo.txt.8.gz todo.txt.8.gz /usr/share/man/man8/topydo.8.gz \
 
     # temporary - to purge todo
-    update-alternatives --remove todo /usr/bin/todo || true
+    update-alternatives --remove todo /usr/bin/topydo || true
     ;;
 esac
 
