@@ -1,6 +1,7 @@
 import codecs
 import os
 import re
+from pathlib import Path
 
 from setuptools import find_packages, setup
 
@@ -19,6 +20,10 @@ def find_version(*file_paths):
     if version_match:
         return version_match.group(1)
     raise RuntimeError("Unable to find version string.")
+
+def long_description():
+    path = Path(__file__).parent / "README.md"
+    return path.read_text()
 
 WATCHDOG = 'watchdog >= 0.8.3'
 ICALENDAR = 'icalendar'
@@ -63,19 +68,7 @@ setup(
         "Programming Language :: Python :: Implementation :: PyPy",
         "Topic :: Utilities",
     ],
-    long_description="""\
-topydo is a powerful and customizable todo.txt application for the console, inspired by the todo.txt CLI by Gina Trapani.
-
-Highlights of the additional features it provides:
-
-* Set due and start dates;
-* Multiple UIs (CLI, prompt and a column-based TUI);
-* Custom sorting;
-* Manage tags;
-* Maintain dependencies between todo items;
-* Allow todos to recur;
-* Some conveniences when adding new items (e.g. adding creation date and use relative dates)
-""",
-
+    long_description=long_description(),
+    long_description_content_type="text/markdown",
     test_suite="test",
 )
