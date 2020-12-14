@@ -36,8 +36,8 @@ with open(str(todo_path), "r") as fp:
     todo_txt = fp.read()
 assert "Foo" in todo_txt
 
-# Can I list that task using todo?
-cp = run("todo ls".split(), capture_output=True, encoding="utf-8")
+# Can I list that task using todo.txt?
+cp = run("todo.txt ls".split(), capture_output=True, encoding="utf-8")
 assert "Foo" in cp.stdout
 
 config_path.unlink()
