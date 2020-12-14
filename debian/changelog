@@ -1,3 +1,9 @@
+topydo (0.14-2) unstable; urgency=medium
+
+  * Fix autopkgtest.
+
+ -- David Steele <steele@debian.org>  Mon, 14 Dec 2020 09:16:27 -0500
+
 topydo (0.14-1) unstable; urgency=medium
 
   * New upstream version.
