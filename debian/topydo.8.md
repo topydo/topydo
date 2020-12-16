@@ -11,6 +11,8 @@ topydo -- An advanced todo.txt terminal utility for managing tasks
 `topydo [-ahv] [-c <config>] [-C <colormode>] [-d <archive>]`
 `       [-t <todo.txt>] subcommand [help|args]`
 
+`topydo [--info]`
+
 ## DESCRIPTION
 
 This is a command line tool for managing and displaying tasking information.
@@ -21,7 +23,7 @@ managing a common tasking file.
 
 ## OPTIONS
 
-_--info--_
+_--info_
 : Print out current configuration information for topydo, including the path
 the executable and the tasking file.
 
