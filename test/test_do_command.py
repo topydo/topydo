@@ -18,6 +18,7 @@ import unittest
 from datetime import date, timedelta
 
 from topydo.commands.DoCommand import DoCommand
+from topydo.lib.Config import config
 from topydo.lib.TodoList import TodoList
 
 from .command_testcase import CommandTest
@@ -167,6 +168,16 @@ The following todo item(s) became active:
         result = """Completed: x {today} Strict due:2014-01-01 rec:1d
 The following todo item(s) became active:
 | 12| {today} Strict due:2014-01-02 rec:1d\n""".format(today=self.today)
+        self.assertEqual(self.output, result)
+
+    def test_recurrence_no_creation_date(self):
+        config("test/data/docommand.conf")
+
+        self._recurrence_helper(["4"])
+
+        result = """Completed: x {today} Recurring! rec:1d
+The following todo item(s) became active:
+| 12| Recurring! rec:1d due:{tomorrow}\n""".format(today=self.today, tomorrow=self.tomorrow)
         self.assertEqual(self.output, result)
 
     def test_invalid1(self):
