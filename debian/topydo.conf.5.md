@@ -26,4 +26,4 @@ and _/usr/share/doc/topydo/Documentation.html_.
 
 ## SEE ALSO
 
-todo(8), todo.txt(8), vitodo(8), edittodo(8), listtodo(8), todo.txt-base(8)
+todo.txt(1), vitodo(1), edittodo(1), listtodo(1), todo.txt-base(8)

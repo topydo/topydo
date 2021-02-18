@@ -1,6 +1,6 @@
-% topydo(8)
+% topydo(1)
 %
-% November 2020
+% February 2021
 
 # NAME
 
@@ -191,7 +191,7 @@ detail on the configuration file format and variables.
 
 ## SEE ALSO
 
-todo(8), todo.txt(8), topydo.conf(5), vitodo(8), edittodo(8), listtodo(8),
+todo.txt(1), topydo.conf(5), vitodo(1), edittodo(1), listtodo(1),
 todo.txt-base(8)
 
 The file _/usr/share/doc/topydo/docs/index.html_ contains extensive
