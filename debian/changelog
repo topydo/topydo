@@ -1,9 +1,9 @@
-topydo (0.14-3) UNRELEASED; urgency=medium
+topydo (0.14-3) unstable; urgency=medium
 
   * Fix man page references.
   * Add optional packages as Recommended
 
- -- David Steele <steele@debian.org>  Wed, 17 Feb 2021 20:28:05 -0500
+ -- David Steele <steele@debian.org>  Thu, 18 Feb 2021 20:49:54 -0500
 
 topydo (0.14-2) unstable; urgency=medium
 
