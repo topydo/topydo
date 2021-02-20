@@ -1,3 +1,9 @@
+topydo (0.14-4) unstable; urgency=medium
+
+  * Speed-up application launch.
+
+ -- David Steele <steele@debian.org>  Fri, 19 Feb 2021 21:54:33 -0500
+
 topydo (0.14-3) unstable; urgency=medium
 
   * Fix man page references.
