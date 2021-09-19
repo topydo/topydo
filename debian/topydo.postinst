@@ -4,15 +4,9 @@ set -e
 case "$1" in
   configure)
 
-    # TODO - temp
-    update-alternatives --remove todo.txt /usr/bin/topydo 2> /dev/null || true
-
     update-alternatives \
       --install /usr/bin/todo.txt todo.txt /usr/bin/topydo 100 \
       --slave /usr/share/man/man1/todo.txt.1.gz todo.txt.1.gz /usr/share/man/man1/topydo.1.gz \
-
-    # temporary - to purge todo
-    update-alternatives --remove todo /usr/bin/topydo || true
     ;;
 esac
 

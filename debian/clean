@@ -1,5 +1,6 @@
 .pytest_cache/
 .eggs/
 debian/topydo.1
+debian/topydo.8
 debian/topydo.conf.5
 

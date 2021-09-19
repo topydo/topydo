@@ -1,3 +1,10 @@
+topydo (0.14-5) UNRELEASED; urgency=medium
+
+  * Fix watch file.
+  * Remove temporary transition processing
+
+ -- David Steele <steele@debian.org>  Sun, 19 Sep 2021 19:39:38 -0400
+
 topydo (0.14-4) unstable; urgency=medium
 
   * Speed-up application launch.

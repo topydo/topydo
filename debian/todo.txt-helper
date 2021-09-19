@@ -1,5 +1,0 @@
-#!/bin/bash
-
-# TODO - this is temporary
-
-echo "/tmp/todo.txt"
