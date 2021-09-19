@@ -1,3 +1,9 @@
+Description: Rename script to live in module dir
+Author: David Steele <steele@debian.org>
+
+The command needs to live in the same directory as the module, which has the
+same name.
+
 --- a/setup.py
 +++ b/setup.py
 @@ -44,7 +44,7 @@
