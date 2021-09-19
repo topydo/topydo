@@ -12,7 +12,7 @@ Build-Depends:
     python3-arrow,
     python3-freezegun,
     pandoc,
-Standards-Version: 4.5.0
+Standards-Version: 4.6.0.1
 Rules-Requires-Root: no
 Homepage: https://github.com/topydo/topydo
 Vcs-Browser: https://github.com/davesteele/topydo
