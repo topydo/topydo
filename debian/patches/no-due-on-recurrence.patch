@@ -1,0 +1,19 @@
+Description: Don't auto add due date to recurred tasks
+ The due date is set to the same as the threshold date (redundant),
+ and there was no option to modify or remove it.
+Author: David Steele <steele@debian.org>
+Forwarded: no
+Last-Update: 2021-10-06
+
+--- a/topydo/lib/Recurrence.py
++++ b/topydo/lib/Recurrence.py
+@@ -61,9 +61,6 @@
+     if not new_due:
+         raise NoRecurrenceException()
+ 
+-    # pylint: disable=E1103
+-    todo.set_tag(config().tag_due(), new_due.isoformat())
+-
+     if todo.start_date():
+         new_start = new_due - timedelta(length)
+         todo.set_tag(config().tag_start(), new_start.isoformat())
