@@ -3,6 +3,7 @@ Section: misc
 Priority: optional
 Maintainer: David Steele <steele@debian.org>
 Build-Depends:
+    debhelper-compat (= 13),
     dh-python,
     python-all,
     python-setuptools,
