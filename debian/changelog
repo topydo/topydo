@@ -1,3 +1,9 @@
+topydo (0.14-6) UNRELEASED; urgency=medium
+
+  * Remove python2 build dependencies (Closes: 1003149).
+
+ -- David Steele <steele@debian.org>  Mon, 22 Aug 2022 16:49:57 -0400
+
 topydo (0.14-5) unstable; urgency=medium
 
   * Fix watch file.

@@ -5,8 +5,6 @@ Maintainer: David Steele <steele@debian.org>
 Build-Depends:
     debhelper-compat (= 13),
     dh-python,
-    python-all,
-    python-setuptools,
     python3-all,
     python3-setuptools,
     python3-arrow,
