@@ -17,9 +17,11 @@
 """ Utilities for formatting output with "list_format" option."""
 
 import re
+from datetime import date, timedelta
 
 import arrow
 
+from topydo.lib.Color import Color
 from topydo.lib.Config import config
 from topydo.lib.ProgressColor import progress_color
 from topydo.lib.Utils import escape_ansi, get_terminal_size, humanize_date
@@ -278,12 +280,25 @@ class ListFormatParser(object):
         repl_trunc = None
 
         for substr, placeholder, getter in self.format_list:
+            color = Color()
             repl = getter(p_todo) if getter else ''
             pattern = MAIN_PATTERN.format(ph=placeholder)
 
-            if placeholder == 'S':
-                repl_trunc = repl
+            # Alternative output formats may have to remove color codes
+            match placeholder:
+                case 'S':
+                    repl_trunc = repl
+                case 'D' if p_todo.due_date():
+                    td = p_todo.due_date() - date.today()
+                    if td > timedelta(days=3):
+                        color.color = 'green'
+                    elif timedelta(days=1) < td <= timedelta(days=3):
+                        color.color = 'yellow'
+                    else:
+                        color.color = 'red'
+                    repl = color.as_ansi() + repl + '\033[0m'
 
+            # The rest of this code should break on color codes or destroy them
             try:
                 if repl == '':
                     substr = re.sub(pattern, '', substr)
