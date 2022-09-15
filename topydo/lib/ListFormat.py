@@ -286,8 +286,6 @@ class ListFormatParser(object):
 
             # Alternative output formats may have to remove color codes
             match placeholder:
-                case 'S':
-                    repl_trunc = repl
                 case 'D' if p_todo.due_date():
                     td = p_todo.due_date() - date.today()
                     if td > timedelta(days=3):
@@ -296,6 +294,11 @@ class ListFormatParser(object):
                         color.color = 'yellow'
                     else:
                         color.color = 'red'
+                    repl = color.as_ansi() + repl + '\033[0m'
+                case 'S':
+                    repl_trunc = repl
+                case 'T' if p_todo.start_date():
+                    color.color = 'green'
                     repl = color.as_ansi() + repl + '\033[0m'
 
             # The rest of this code should break on color codes or destroy them
