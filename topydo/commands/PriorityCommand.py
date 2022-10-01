@@ -30,13 +30,14 @@ class PriorityCommand(MultiCommand):
             p_args, p_todolist, p_out, p_err, p_prompt)
 
         self.last_argument = True
+        self.delete = False
 
     def _execute_multi_specific(self):
         def normalize_priority(p_priority):
             match = re.search(r'\b([A-Z])\b', p_priority.upper())
             return match.group(1) if match else p_priority
 
-        priority = normalize_priority(self.args[-1])
+        priority = None if self.delete else normalize_priority(self.args[-1])
         self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
 
         if is_valid_priority(priority):
@@ -51,20 +52,39 @@ class PriorityCommand(MultiCommand):
                     self.out("Priority set to {}.".format(priority))
 
                 self.out(self.printer.print_todo(todo))
+        elif priority is None:
+            for todo in self.todos:
+                old_priority = todo.priority()
+                self.todolist.set_priority(todo, None)
+
+                if old_priority:
+                    self.out("Priority removed.")
+
+                self.out(self.printer.print_todo(todo))
         else:
             self.error("Invalid priority given.")
 
+    def get_flags(self):
+        return ("d", [])
+
+    def process_flag(self, p_option, p_value):
+        if p_option == '-d':
+            self.delete = True
+            self.last_argument = False
+        else:
+            raise NotImplementedError
+
     def usage(self):
         return """\
-Synopsis: pri <NUMBER 1> [<NUMBER 2> ...] <PRIORITY>
-          pri [-x] -e <EXPRESSION>\
+Synopsis: pri [-d] <NUMBER 1> [<NUMBER 2> ...] <PRIORITY>
+          pri [-d] [-x] -e <EXPRESSION>\
 """
 
     def help(self):
         return """\
 Sets the priority of todo(s) the given NUMBER(s) to the given PRIORITY.
 
-It is also possible to prioritize items with an EXPRESSION using the -e flag.
-Use -x to also process todo items that are normally invisible (as with the 'ls'
-subcommand).\
+Use the -d flag to remove the priority. It is also possible to prioritize items
+with an EXPRESSION using the -e flag.  Use -x to also process todo items that
+are normally invisible (as with the 'ls' subcommand).\
 """
