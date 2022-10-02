@@ -9079,7 +9079,7 @@ Changelog0.14</pre>
 <div created="20180130120934155" modified="20180130120934155" title="$:/state/showeditpreview">
 <pre>yes</pre>
 </div>
-<div list="Welcome Features GettingStarted Demo AboutTopydo Links Changelog0.14" title="$:/StoryList">
+<div list="pri Welcome Features GettingStarted Demo AboutTopydo Links Changelog0.14" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -9095,7 +9095,7 @@ Changelog0.14</pre>
         },
         &quot;$:/info/url/full&quot;: {
             &quot;title&quot;: &quot;$:/info/url/full&quot;,
-            &quot;text&quot;: &quot;file:///home/pi/github/topydo/docs/index.html&quot;
+            &quot;text&quot;: &quot;file:///home/user/topydo/docs/index.html&quot;
         },
         &quot;$:/info/url/host&quot;: {
             &quot;title&quot;: &quot;$:/info/url/host&quot;,
@@ -9115,7 +9115,7 @@ Changelog0.14</pre>
         },
         &quot;$:/info/url/pathname&quot;: {
             &quot;title&quot;: &quot;$:/info/url/pathname&quot;,
-            &quot;text&quot;: &quot;/home/pi/github/topydo/docs/index.html&quot;
+            &quot;text&quot;: &quot;/home/user/topydo/docs/index.html&quot;
         },
         &quot;$:/info/url/search&quot;: {
             &quot;title&quot;: &quot;$:/info/url/search&quot;,
@@ -9128,8 +9128,8 @@ Changelog0.14</pre>
     }
 }</pre>
 </div>
-<div created="20180228114714013" modified="20180228114725923" title="$:/temp/search">
-<pre></pre>
+<div created="20180228114714013" modified="20221002020637138" title="$:/temp/search">
+<pre>pri</pre>
 </div>
 <div author="JeremyRuston" core-version="&gt;=5.0.0" dependents="$:/themes/tiddlywiki/vanilla" description="Emphasises individual tiddlers" name="Snow White" plugin-type="theme" title="$:/themes/tiddlywiki/snowwhite" type="application/json" version="5.1.15">
 <pre>{
@@ -11010,17 +11010,17 @@ The pattern is a [[relative date|RelativeDates]], but only written in the format
 topydo postpone 1 1w
 ```</pre>
 </div>
-<div bag="default" command-description="Sets the priority of todo(s) the given number(s) to the given priority." created="20160503072148788" modified="20160726202412515" revision="0" tags="Command FilterExpressions" title="pri" type="text/vnd.tiddlywiki">
+<div bag="default" command-description="Sets the priority of todo(s) the given number(s) to the given priority." created="20160503072148788" modified="20221002020806095" revision="0" tags="Command FilterExpressions" title="pri" type="text/vnd.tiddlywiki">
 <pre>Sets the priority of todo(s) the given number(s) to the given priority.
 
 ```
-pri &lt;NUMBER1&gt; [&lt;NUMBER2&gt; ...] &lt;PRIORITY&gt;
-pri [-x] -e &lt;EXPRESSION&gt;
+pri [-d] &lt;NUMBER1&gt; [&lt;NUMBER2&gt; ...] &lt;PRIORITY&gt;
+pri [-d] [-x] -e &lt;EXPRESSION&gt;
 ```
 
 A priority can be given as a single character (case insensitive), where //A// is the highest priority. Use the &lt;&lt;cmd depri&gt;&gt; subcommand to remove a priority from an item.
 
-It is also possible to prioritize items with an [[expression|FilterExpressions]] using the `-e` flag. Use `-x` to also process todo items that are normally invisible
+Use the -d flag to remove the priority. It is also possible to prioritize items with an [[expression|FilterExpressions]] using the `-e` flag. Use `-x` to also process todo items that are normally invisible
 (with the &lt;&lt;cmd ls&gt;&gt; subcommand).</pre>
 </div>
 <div bag="default" created="20160520104203726" modified="20170719122249225" revision="0" title="ProgressColors" type="text/vnd.tiddlywiki">
