@@ -10909,13 +10909,13 @@ for url in urls:
 * [[Original todo.txt CLI|https://github.com/todotxt/todo.txt-cli]] by Gina Trapani
 * [[todo.txt specification repository|https://github.com/todotxt/todotxt|]]</pre>
 </div>
-<div bag="default" command-description="Lists all ([[relevant|Relevancy]]) todo items." created="20160503072057494" modified="20171121091016106" revision="0" tags="Command FilterExpressions" title="ls" type="text/vnd.tiddlywiki">
+<div bag="default" command-description="Lists all ([[relevant|Relevancy]]) todo items." created="20160503072057494" modified="20230102011333486" revision="0" tags="Command FilterExpressions" title="ls" type="text/vnd.tiddlywiki">
 <pre>Lists all ([[relevant|Relevancy]]) todo items.
 
 ```
 ls [-x] [-s &lt;sort_expression&gt;] [-g &lt;group_expression&gt;]
 [-f &lt;output format&gt;] [-F &lt;format string&gt;]
-[-i &lt;item numbers&gt;] [-N | -n &lt;integer&gt;] [expression]
+[-i &lt;item numbers&gt;] [-N | -n &lt;integer&gt;] [-p &lt;p1&gt;,&lt;p2&gt;,...] [expression]
 ```
 
 When an [[expression|FilterExpressions]] is given, only the todos matching that expression are shown in the order given by the given [[sort expression|SortExpression]] using the `-s` flag. If no sort expression is given, the [[configured|ConfigSortExpression]] sort expression will be used.
@@ -10934,6 +10934,7 @@ There are several ways to filter the todo list such that only those items you're
 * `-n &lt;count&gt;` flag: limit the output to the given amount
 * `-N` flag: like `-n`, but the number is determined automatically based on your terminal size. For a correct display, please make sure that the `PS1` environment variable is exported.
 * `-i &lt;id&gt;` flag: limit the output to one particar item with the given [[identifier|ConfigIdentifiers]].
+* `-p &lt;p1&gt;,&lt;p2&gt;,...` flag: limit output to the given list of priority letters and/or expressions.
 
 !! Grouping output
 
