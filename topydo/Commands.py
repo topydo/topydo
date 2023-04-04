@@ -27,6 +27,7 @@ SUBCOMMAND_MAP = {
     'add': 'AddCommand',
     'app': 'AppendCommand',
     'append': 'AppendCommand',
+    'clr': 'ClearCommand',
     'del': 'DeleteCommand',
     'dep': 'DepCommand',
     'depri': 'DepriCommand',

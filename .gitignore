@@ -4,6 +4,9 @@
 install
 .coverage
 *,cover
+/.todo.bak
+/todo.txt
+/done.txt
 
 # Distribution / packaging
 .Python
@@ -23,6 +26,8 @@ var/
 .installed.cfg
 *.egg
 .eggs/
+.idea/
+__pycache__/
 
 # Sublime Text
 *.sublime-*
