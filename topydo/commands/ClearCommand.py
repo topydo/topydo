@@ -13,6 +13,7 @@ class ClearCommand(Command):
         if not super().execute():
             return False
 
+        os.environ['TERM'] = 'xterm'
         os.system('clear')
 
     def usage(self):
