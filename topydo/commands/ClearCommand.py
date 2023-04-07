@@ -14,7 +14,7 @@ class ClearCommand(Command):
             return False
 
         os.environ['TERM'] = 'xterm'
-        os.system('clear')
+        os.system('clear' if os.name == 'posix' else 'cls')
 
     def usage(self):
         return """Synopsis: clr"""
