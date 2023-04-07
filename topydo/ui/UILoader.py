@@ -32,10 +32,9 @@ if _WINDOWS:
 
 def main():
     """ Main entry point of the CLI. """
-    print('test statement 1')
     try:
         args = sys.argv[1:]
-        print('test statement 2')
+
         try:
             _, args = getopt.getopt(args, MAIN_OPTS, MAIN_LONG_OPTS)
         except getopt.GetoptError as e:
