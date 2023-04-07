@@ -13,8 +13,13 @@ class ClearCommand(Command):
         if not super().execute():
             return False
 
-        os.environ['TERM'] = 'xterm'
-        os.system('clear')
+        try:
+            os.environ['TERM'] = 'xterm'
+            os.system('clear')
+        except os.error:
+            print('debug line')
+        else:
+            os.system('cls')
 
     def usage(self):
         return """Synopsis: clr"""
