@@ -14,15 +14,16 @@ class ClearCommand(Command):
             return False
 
         os.environ['TERM'] = 'xterm'
-        print('before try statement')
-        try:
-            print('you have a mac!')
-            os.system('clear')
-        except os.error:
-            print('debug line')
-        else:
-            print('you have windows!')
-            os.system('cls')
+        os.system("cls" if os.name == "nt" else "clear")
+        # print('before try statement')
+        # try:
+        #     print('you have a mac!')
+        #     os.system('clear')
+        # except os.error:
+        #     print('debug line')
+        # else:
+        #     print('you have windows!')
+        #     os.system('cls')
 
     def usage(self):
         return """Synopsis: clr"""
