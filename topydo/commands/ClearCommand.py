@@ -13,12 +13,15 @@ class ClearCommand(Command):
         if not super().execute():
             return False
 
+        os.environ['TERM'] = 'xterm'
+        print('before try statement')
         try:
-            os.environ['TERM'] = 'xterm'
+            print('you have a mac!')
             os.system('clear')
         except os.error:
             print('debug line')
         else:
+            print('you have windows!')
             os.system('cls')
 
     def usage(self):
