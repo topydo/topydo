@@ -19,6 +19,17 @@ class ClearCommandTest(CommandTest):
 
         os.remove('clr_cmd_output.txt')
 
+    def test_clear_name(self):
+        name = ClearCommand.name()
+
+        self.assertEqual(name, 'clear')
+
+    def test_help(self):
+        command = ClearCommand(['help'], None, self.out, self.error)
+        command.execute()
+
+        self.assertEqual(self.output, '')
+        self.assertEqual(self.errors, command.usage() + '\n\n' + command.help() + '\n')
 
 if __name__ == '__main__':
     unittest.main()
