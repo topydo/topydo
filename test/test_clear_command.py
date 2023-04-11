@@ -31,5 +31,6 @@ class ClearCommandTest(CommandTest):
         self.assertEqual(self.output, '')
         self.assertEqual(self.errors, command.usage() + '\n\n' + command.help() + '\n')
 
+
 if __name__ == '__main__':
     unittest.main()
