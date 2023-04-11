@@ -13,7 +13,7 @@ class ClearCommand(Command):
         if not super().execute():
             return False
 
-        os.environ['TERM'] = 'xterm'
+        os.environ['TERM'] = 'xterm-256color'
         os.system('clear' if os.name == 'posix' else 'cls')
 
     def usage(self):
