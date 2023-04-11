@@ -33,6 +33,7 @@ GENERIC_HELP="""Available commands:
 
 * add
 * append (app)
+* clr
 * del (rm)
 * dep
 * depri
