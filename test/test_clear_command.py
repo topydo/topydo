@@ -20,11 +20,15 @@ class ClearCommandTest(CommandTest):
         os.remove('clr_cmd_output.txt')
 
     def test_clear_name(self):
+        """ This test function clears the command name """
+
         name = ClearCommand.name()
 
         self.assertEqual(name, 'clear')
 
     def test_help(self):
+        """ This function tests the help command """
+
         command = ClearCommand(['help'], None, self.out, self.error)
         command.execute()
 
