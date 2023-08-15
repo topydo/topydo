@@ -479,6 +479,20 @@ class ListCommandTest(CommandTest):
         self.assertEqual(self.output, 't5c\n')
         self.assertEqual(self.errors, '')
 
+    def test_list53(self):
+        command = ListCommand(["-p", "C,D", "beer"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEqual(self.output, "|4| (C) Drink beer @ home\n")
+        self.assertEqual(self.errors, '')
+
+    def test_list54(self):
+        command = ListCommand(["-p", "D"], self.todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEqual(self.output, "|2| (D) Bar @Context1 +Project2\n")
+        self.assertEqual(self.errors, '')
+
     def test_list_name(self):
         name = ListCommand.name()
 
