@@ -25,12 +25,39 @@ class ListContextCommand(Command):
         super().__init__(
             p_args, p_todolist, p_out, p_err, p_prompt)
 
+        self.counts = False
+        self.sort_by = 'name'
+
+    def _process_flags(self):
+        flags, args = self.getopt("csS")
+        for flag, _ in flags:
+            if flag == "-c":
+                self.counts = True
+            elif flag == "-s":
+                self.sort_by = 'counts'
+            elif flag == "-S":
+                self.sort_by = 'counts_inv'
+
     def execute(self):
         if not super().execute():
             return False
 
-        for context in sorted(self.todolist.contexts(), key=lambda s: s.lower()):
-            self.out(context)
+        self._process_flags()
+
+        if self.counts:
+            sorting_fns = {
+                'name': lambda s: s[0].lower(),
+                'counts': lambda s: s[1],
+                'counts_inv': lambda s: -s[1]
+            }
+
+            for context, c in sorted(self.todolist.contexts_counts().items(),
+                                     key=sorting_fns[self.sort_by]):
+                self.out("{}\t{}".format(c, context))
+        else:
+            for context in sorted(self.todolist.contexts(),
+                                  key=lambda s: s.lower()):
+                self.out(context)
 
     def usage(self):
         return """Synopsis: lscon"""

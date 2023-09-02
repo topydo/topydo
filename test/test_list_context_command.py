@@ -39,6 +39,30 @@ class ListContextCommandTest(CommandTest):
         self.assertEqual(self.output, "Context1\nContext2\n")
         self.assertFalse(self.errors)
 
+    def test_contexts_with_counts(self):
+        todolist = load_file_to_todolist("test/data/TodoListBiggerTest.txt")
+        command = ListContextCommand(["-c"], todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEqual(self.output, "2\tContext1\n1\tContext2\n4\tContext3\n")
+        self.assertFalse(self.errors)
+
+    def test_contexts_with_counts_sorted(self):
+        todolist = load_file_to_todolist("test/data/TodoListBiggerTest.txt")
+        command = ListContextCommand(["-c", "-s"], todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEqual(self.output, "1\tContext2\n2\tContext1\n4\tContext3\n")
+        self.assertFalse(self.errors)
+
+    def test_contexts_with_counts_sorted_inversely(self):
+        todolist = load_file_to_todolist("test/data/TodoListBiggerTest.txt")
+        command = ListContextCommand(["-c", "-S"], todolist, self.out, self.error)
+        command.execute()
+
+        self.assertEqual(self.output, "4\tContext3\n2\tContext1\n1\tContext2\n")
+        self.assertFalse(self.errors)
+
     def test_listcontext_name(self):
         name = ListContextCommand.name()
 
