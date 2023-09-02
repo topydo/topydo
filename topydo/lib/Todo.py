@@ -51,7 +51,7 @@ class Todo(TodoBase):
         """ Returns a date object of the todo's start date. """
         return self.get_date(config().tag_start())
 
-    def due_date(self):
+    def due_date(self) -> date:
         """ Returns a date object of the todo's due date. """
         return self.get_date(config().tag_due())
 
