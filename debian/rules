@@ -23,3 +23,6 @@ execute_after_dh_auto_install:
 	find debian/topydo -name \*.pyc -exec rm -f {} \;
 	find debian/topydo -name __pycache__ | xargs rm -rf
 	cp debian/topydo_wrapper.launch debian/topydo/usr/share/topydo/topydo_wrapper.cmd
+
+override_dh_auto_test:
+	python3 -m pytest

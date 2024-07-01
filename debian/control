@@ -9,6 +9,7 @@ Build-Depends:
     python3-setuptools,
     python3-arrow,
     python3-freezegun,
+    python3-pytest,
     pandoc,
 Standards-Version: 4.6.0.1
 Rules-Requires-Root: no
