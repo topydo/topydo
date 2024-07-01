@@ -1,3 +1,14 @@
+0.15
+----
+
+* Add PEP517/518 support.
+* Use the README for the python package description.
+* Make creation date optional for recurring tasks.
+* Add "-d" flag to remove priority.
+* Use the todo.txt spec for identifying completed tasks (no completion date
+  required).
+
+
 0.14
 ----
 
