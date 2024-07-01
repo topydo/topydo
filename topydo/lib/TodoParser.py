@@ -26,7 +26,7 @@ from topydo.lib.Utils import date_string_to_date
 _DATE_MATCH = r'\d{4}-\d{2}-\d{2}'
 
 _COMPLETED_HEAD_MATCH = re.compile(
-    r'x ((?P<completionDate>' + _DATE_MATCH + ') )' + '((?P<creationDate>' +
+    r'x ((?P<completionDate>' + _DATE_MATCH + ') )?' + '((?P<creationDate>' +
     _DATE_MATCH + ') )?(?P<rest>.*)')
 
 _NORMAL_HEAD_MATCH = re.compile(

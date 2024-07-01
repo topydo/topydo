@@ -229,12 +229,6 @@ class TodoBaseTester(TopydoTest):
 
         self.assertFalse(todo.is_completed())
 
-    def test_completion3(self):
-        """ A completed todo must start with an x followed by a date. """
-        todo = TodoBase("x Not complete")
-
-        self.assertFalse(todo.is_completed())
-
     def test_completion4(self):
         """ A completed todo must start with an x followed by a date. """
         todo = TodoBase("X 2014-06-14 Not complete")

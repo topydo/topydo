@@ -102,6 +102,16 @@ class PriorityCommandTest(CommandTest):
         self.assertEqual(self.output, "Priority changed from A to C\n|  1| (C) Foo\nPriority set to C.\n|  2| (C) Bar\n")
         self.assertEqual(self.errors, "")
 
+    def test_set_prio8(self):
+        """ Allow to unset a priority. """
+        command = PriorityCommand(["-d", "1"], self.todolist, self.out,
+                                  self.error)
+        command.execute()
+
+        self.assertTrue(self.todolist.dirty)
+        self.assertEqual(self.output, "Priority removed.\n|  1| Foo\n")
+        self.assertEqual(self.errors, "")
+
     def test_expr_prio1(self):
         command = PriorityCommand(["-e", "@test", "C"], self.todolist,
                                   self.out, self.error, None)
@@ -149,6 +159,18 @@ class PriorityCommandTest(CommandTest):
         self.assertTrue(self.todolist.dirty)
         self.assertEqual(self.output,
                          "Priority set to D.\n|  5| (D) Baz id:1\n")
+        self.assertEqual(self.errors, "")
+
+    def test_expr_prio6(self):
+        """ Remove multiple priorities. """
+        command = PriorityCommand(["-de", "@test"], self.todolist, self.out,
+                                  self.error)
+        command.execute()
+
+        result = "Priority removed.\n|  3| a @test with due:2015-06-03\n|  4| a @test with +project p:1\n"
+
+        self.assertTrue(self.todolist.dirty)
+        self.assertEqual(self.output, result)
         self.assertEqual(self.errors, "")
 
     def test_invalid1(self):

@@ -1,0 +1,9 @@
+[build-system]
+requires = ["setuptools", "wheel", "pytest-runner"]
+build-backend = "setuptools.build_meta"
+
+[tool.black]
+line-length = 79
+
+[tool.isort]
+profile = "black"
