@@ -1,4 +1,2 @@
 command-name.patch
 topydo-wrapper.patch
-shutil-get_terminal_size.patch
-completion_parsing.patch
