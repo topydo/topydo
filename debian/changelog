@@ -1,4 +1,4 @@
-topydo (0.15-1) UNRELEASED; urgency=medium
+topydo (0.15+dfsg1-1) UNRELEASED; urgency=medium
 
   * Remove python2 build dependencies (Closes: 1003149).
   * PEP517/518 build.
@@ -6,6 +6,7 @@ topydo (0.15-1) UNRELEASED; urgency=medium
   * Make the creation date for recurring tasks.
   * Use the todo.txt spec for identifying completed tasks (no
     completion date required).
+  * Remove TiddlyWiki documentation for lack of source.
 
  -- David Steele <steele@debian.org>  Mon, 01 Jul 2024 00:03:42 -0400
 
