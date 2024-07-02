@@ -1,4 +1,4 @@
-topydo (0.15+dfsg1-1) UNRELEASED; urgency=medium
+topydo (0.15+dfsg1-1) unstable; urgency=medium
 
   * Remove python2 build dependencies (Closes: 1003149).
   * PEP517/518 build.
@@ -8,7 +8,7 @@ topydo (0.15+dfsg1-1) UNRELEASED; urgency=medium
     completion date required).
   * Remove TiddlyWiki documentation for lack of source.
 
- -- David Steele <steele@debian.org>  Mon, 01 Jul 2024 00:03:42 -0400
+ -- David Steele <steele@debian.org>  Mon, 01 Jul 2024 21:07:08 -0400
 
 topydo (0.14-5) unstable; urgency=medium
 
