@@ -6,8 +6,8 @@ This was originally for a transition bug. It may not be needed anymore.
 
 --- a/setup.py
 +++ b/setup.py
-@@ -47,7 +47,11 @@
-         'test:python_version=="3.2"': ['mock'],
+@@ -50,7 +50,11 @@
+         'test': ['coverage>=4.3', 'freezegun', 'green', ICALENDAR, 'pylint>=1.7.1'],
      },
      entry_points={
 -        'console_scripts': ['topydo.cmd=topydo.ui.UILoader:main'],

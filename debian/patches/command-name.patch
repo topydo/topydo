@@ -6,8 +6,8 @@ same name.
 
 --- a/setup.py
 +++ b/setup.py
-@@ -44,7 +44,7 @@
-         'test:python_version=="3.2"': ['mock'],
+@@ -50,7 +50,7 @@
+         'test': ['coverage>=4.3', 'freezegun', 'green', ICALENDAR, 'pylint>=1.7.1'],
      },
      entry_points={
 -        'console_scripts': ['topydo=topydo.ui.UILoader:main'],
