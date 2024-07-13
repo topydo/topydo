@@ -135,8 +135,22 @@ class RecurrenceTest(TopydoTest):
 
         new_start = date.today() + timedelta(7)
         new_todo = advance_recurring_todo(self.todo)
+        new_due = date.today() + timedelta(7)
 
         self.assertEqual(new_todo.start_date(), new_start)
+        self.assertEqual(new_todo.due_date(), new_due)
+
+    def test_startdate4(self):
+        """ Start date and no due date. """
+        self.todo.set_tag(config().tag_start(), date.today().isoformat())
+
+        new_start = date.today() + timedelta(7)
+        new_todo = advance_recurring_todo(self.todo)
+
+        self.assertEqual(new_todo.start_date(), new_start)
+        self.assertEqual(new_todo.due_date(), None)
+
+
 
     def test_strict_recurrence1(self):
         """
