@@ -87,9 +87,7 @@ Run "topydo help \<subcommand\> for additional help.
   * _ls_ [TERM...]
 
     Displays all tasks that contain TERM(s) sorted by priority with line
-    numbers.  Each task must match all TERM(s) (logical AND); to display
-    tasks that contain any TERM (logical OR), use
-    "TERM1\|TERM2\|..." (with quotes), or TERM1\\|TERM2 (unquoted).
+    numbers.  Each task must match all TERM(s) (logical AND).
     Hides all tasks that contain TERM(s) preceded by a
     minus sign (i.e. -TERM). If no TERM specified, lists entire todo.txt.
 
