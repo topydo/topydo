@@ -1,6 +1,7 @@
 topydo (0.15+dfsg1-2) UNRELEASED; urgency=medium
 
   * Update man page for available features (Closes: 1052497).
+  * Fix some recurrence issues.
 
  -- David Steele <steele@debian.org>  Wed, 14 Aug 2024 13:16:04 -0400
 
