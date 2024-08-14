@@ -135,8 +135,22 @@ class RecurrenceTest(TopydoTest):
 
         new_start = date.today() + timedelta(7)
         new_todo = advance_recurring_todo(self.todo)
+        new_due = date.today() + timedelta(7)
 
         self.assertEqual(new_todo.start_date(), new_start)
+        self.assertEqual(new_todo.due_date(), new_due)
+
+    def test_startdate4(self):
+        """ Start date and no due date. """
+        self.todo.set_tag(config().tag_start(), date.today().isoformat())
+
+        new_start = date.today() + timedelta(7)
+        new_todo = advance_recurring_todo(self.todo)
+
+        self.assertEqual(new_todo.start_date(), new_start)
+        self.assertEqual(new_todo.due_date(), None)
+
+
 
     def test_strict_recurrence1(self):
         """
@@ -163,6 +177,19 @@ class RecurrenceTest(TopydoTest):
         new_todo = advance_recurring_todo(self.stricttodo, p_strict=True)
 
         self.assertEqual(new_todo.due_date(), new_due)
+
+    def test_strict_recurrence3(self):
+        """
+        Strict recurrence where start date is in the past and there is no due
+        date, using + notation in expression.
+        """
+        past = date.today() - timedelta(8)
+        new_start = date.today() - timedelta(1)
+
+        self.stricttodo.set_tag(config().tag_start(), past.isoformat())
+        new_todo = advance_recurring_todo(self.stricttodo, p_strict=True)
+
+        self.assertEqual(new_todo.start_date(), new_start)
 
     def test_no_recurrence(self):
         self.todo.remove_tag('rec')

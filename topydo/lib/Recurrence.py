@@ -61,11 +61,18 @@ def advance_recurring_todo(p_todo, p_offset=None, p_strict=False):
     if not new_due:
         raise NoRecurrenceException()
 
+    if (not todo.start_date()) or todo.due_date():
     # pylint: disable=E1103
-    todo.set_tag(config().tag_due(), new_due.isoformat())
-
-    if todo.start_date():
-        new_start = new_due - timedelta(length)
+       todo.set_tag(config().tag_due(), new_due.isoformat())
+       if todo.start_date():
+           new_start = new_due - timedelta(length)
+           todo.set_tag(config().tag_start(), new_start.isoformat())
+    else: #only start date
+        if p_strict:
+            offset = todo.start_date()
+        else:
+            offset = p_offset or date.today()
+        new_start = relative_date_to_date(pattern, offset)
         todo.set_tag(config().tag_start(), new_start.isoformat())
 
     if config().auto_creation_date():
