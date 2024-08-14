@@ -115,6 +115,14 @@ Run "topydo help \<subcommand\> for additional help.
 
     Revert a previous task.
 
+  * _tag_ NUMBER# TAG# [#VALUE]
+
+    Adds the tag to the numbered task, with the value specified. If no value
+    is given, the tag is removed. Use _-a_ to supress changing the tag value
+    if it exists. The option _-f_ will remove user interaction from adding
+    or removing tags. Use _-r_ to indicate that the given value is a relative
+    date - it will be converted to absolute.
+
 
 ## TODO.TXT TASK FORMAT
 
