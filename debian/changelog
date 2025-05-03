@@ -1,9 +1,9 @@
-topydo (0.15+dfsg1-2) UNRELEASED; urgency=medium
+topydo (0.16+dfsg1-1) UNRELEASED; urgency=medium
 
   * Update man page for available features (Closes: 1052497).
   * Fix some recurrence issues.
 
- -- David Steele <steele@debian.org>  Wed, 14 Aug 2024 13:16:04 -0400
+ -- David Steele <steele@debian.org>  Thu, 01 May 2025 15:22:29 -0400
 
 topydo (0.15+dfsg1-1) unstable; urgency=medium
 
