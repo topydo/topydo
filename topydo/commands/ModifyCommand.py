@@ -34,13 +34,18 @@ class ModifyCommand(WriteCommand):
         if not super().execute():
             return False
 
+        text = self.argument(0)
+        numbers = self.args[1:]
+
+        if not isinstance(text, str):
+            self.error(self.usage())
+        if len(numbers) < 1:
+            self.error(self.usage())
+
+        new_text_parsed = parse_line(text)
+        new_tags = new_text_parsed['tags']
+
         try:
-            text = self.argument(0)
-            numbers = self.args[1:]
-
-            new_text_parsed = parse_line(text)
-            new_tags = new_text_parsed['tags']
-
             for num in numbers:
                 todo = self.todolist.todo(num)
                 for tag in new_tags:
