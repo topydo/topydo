@@ -46,6 +46,8 @@ class ModifyCommand(WriteCommand):
         new_text_parsed = parse_line(text)
         new_tags = new_text_parsed['tags']
 
+        self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
+
         try:
             for num in numbers:
                 todo = self.todolist.todo(num)
@@ -54,8 +56,6 @@ class ModifyCommand(WriteCommand):
                         todo.remove_tag(tag)
                 self.todolist.append(todo, text)
                 self.postprocess_input_todo(todo)
-
-                self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
                 self.out(self.printer.print_todo(todo))
         except InvalidCommandArgument:
             self.error(self.usage())
