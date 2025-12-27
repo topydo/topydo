@@ -45,7 +45,7 @@ class ModifyCommandTest(CommandTest):
         command.execute()
 
         self.assertEqual(self.output, "")
-        self.assertEqual(self.errors, "Invalid todo number given.\n")
+        self.assertEqual(self.errors, "Invalid todo number: 9\n")
 
     def test_modify3(self):
         command = ModifyCommand([1, 2], self.todolist, self.out, self.error)
