@@ -28,7 +28,7 @@ class ModifyCommandTest(CommandTest):
         super().setUp()
         self.todolist = TodoList([])
         self.todolist.add("Foo")
-        self.todolist.add("Asdf")
+        self.todolist.add("Asdf id:asdfid")
         self.today = date.today().isoformat()
 
     def test_modify1(self):
@@ -59,7 +59,7 @@ class ModifyCommandTest(CommandTest):
                                 self.error)
         command.execute()
 
-        self.assertEqual(self.output, "|  1| Foo Bar\n|  2| Asdf Bar\n")
+        self.assertEqual(self.output, "|  1| Foo Bar\n|  2| Asdf id:asdfid Bar\n")
         self.assertEqual(self.errors, "")
 
     def test_modify5(self):
@@ -82,7 +82,7 @@ class ModifyCommandTest(CommandTest):
         command.execute()
 
         self.assertEqual(self.output,
-                         "|  1| Foo due:%s\n|  2| Asdf due:%s\n" %
+                         "|  1| Foo due:%s\n|  2| Asdf id:asdfid due:%s\n" %
                          (self.today, self.today))
         self.assertEqual(self.errors, "")
 
