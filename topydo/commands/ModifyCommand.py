@@ -14,7 +14,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from topydo.lib.Command import InvalidCommandArgument
 from topydo.lib.Config import config
 from topydo.lib.prettyprinters.Numbers import PrettyPrinterNumbers
 from topydo.lib.TodoListBase import InvalidTodoException
@@ -37,7 +36,7 @@ class ModifyCommand(WriteCommand):
         if len(self.args) < 2:
             self.error(self.usage())
             return False
-        text = self.argument(0)
+        text = self.args[0]
         numbers = self.args[1:]
 
         if not isinstance(text, str):
@@ -48,19 +47,27 @@ class ModifyCommand(WriteCommand):
 
         self.printer.add_filter(PrettyPrinterNumbers(self.todolist))
 
-        try:
-            for num in numbers:
-                todo = self.todolist.todo(num)
-                for tag in new_tags:
-                    if tag in (config().tag_start(), config().tag_due()):
-                        todo.remove_tag(tag)
-                self.todolist.append(todo, text)
-                self.postprocess_input_todo(todo)
-                self.out(self.printer.print_todo(todo))
-        except InvalidCommandArgument:
-            self.error(self.usage())
-        except InvalidTodoException:
-            self.error("Invalid todo number given.")
+        # Parse numbers/ids first to ensure all valid before any writes
+        todos = []
+        for num in numbers:
+            try:
+                todos.append(self.todolist.todo(num))
+            except InvalidTodoException:
+                self.error(f"Invalid todo number: {num}")
+                return False
+
+        for todo in todos:
+            # Remove any existing start or due tags
+            for tag in new_tags:
+                if tag in (config().tag_start(), config().tag_due()):
+                    todo.remove_tag(tag)
+
+            self.todolist.append(todo, text)
+            self.postprocess_input_todo(todo)
+
+            self.out(self.printer.print_todo(todo))
+
+        return True
 
     def usage(self):
         return """Synopsis: modify <TEXT> <NUMBER> [<NUMBER 2> ...]"""
