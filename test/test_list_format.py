@@ -36,7 +36,7 @@ except ImportError:
     import mock
 
 
-@freeze_time("2015, 11, 06")
+@freeze_time("2015, 11, 06", tz_offset=0)
 class ListFormatTest(CommandTest):
     def setUp(self):
         super().setUp()
