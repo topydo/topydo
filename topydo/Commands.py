@@ -36,6 +36,8 @@ SUBCOMMAND_MAP = {
     'ls': 'ListCommand',
     'lscon': 'ListContextCommand',
     'lsprj': 'ListProjectCommand',
+    'mod': 'ModifyCommand',
+    'modify': 'ModifyCommand',
     'postpone': 'PostponeCommand',
     'pri': 'PriorityCommand',
     'quit': 'ExitCommand',

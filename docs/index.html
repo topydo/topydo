@@ -392,6 +392,8 @@ Error message and password prompt
 
 <li>lsprj</li>
 
+<li>modify</li>
+
 <li>OutputFormat</li>
 
 <li>Period</li>
@@ -10958,6 +10960,17 @@ Project: B
 </div>
 <div bag="default" command-description="Prints a sorted list of all projects in the &lt;&lt;path todo.txt&gt;&gt; file." created="20160503072118880" modified="20160726201708843" revision="0" tags="Command" title="lsprj" type="text/vnd.tiddlywiki">
 <pre>Prints a sorted list of all projects in the &lt;&lt;path todo.txt&gt;&gt; file.</pre>
+</div>
+<div command-description="Appends text or modifies tags of one or more todo items." created="20251130095428626" modified="20251130180254723" tags="Command" title="modify">
+<pre>
+```
+modify &lt;TEXT&gt; &lt;NUMBER&gt; [&lt;NUMBER 2&gt; ...]
+
+```
+
+Appends text to the todo item(s) indicated by number(s).
+
+If the text is a tag, any existing tag of the same name will be removed. For the [[due date|TagDue]] and [[start date|TagStart]] tags, a relative date is converted to an absolute date.</pre>
 </div>
 <div bag="default" created="20160622131004936" modified="20160622132201869" revision="0" title="OutputFormat" type="text/vnd.tiddlywiki">
 <pre>The `-f` flag of the &lt;&lt;cmd ls&gt;&gt; subcommand supports the following output formats:

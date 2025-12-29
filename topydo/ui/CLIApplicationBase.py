@@ -41,6 +41,7 @@ GENERIC_HELP="""Available commands:
 * ls
 * listcon (lscon)
 * listprojects (lsprj)
+* modify (mod)
 * postpone
 * pri
 * revert
