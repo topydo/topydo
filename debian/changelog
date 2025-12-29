@@ -1,9 +1,11 @@
-topydo (0.16+dfsg1-1) UNRELEASED; urgency=medium
+topydo (0.16+dfsg1-1) unstable; urgency=medium
 
+  * Add a 'modify' command.
+  * Fix recurrence of tasks with a start date and no due date.
+  * Fix strict recurrence when there is only a start date.
   * Update man page for available features (Closes: 1052497).
-  * Fix some recurrence issues.
 
- -- David Steele <steele@debian.org>  Thu, 01 May 2025 15:22:29 -0400
+ -- David Steele <steele@debian.org>  Mon, 29 Dec 2025 15:13:29 -0500
 
 topydo (0.15+dfsg1-1) unstable; urgency=medium
 
