@@ -1,3 +1,11 @@
+0.16
+----
+
+* Add a 'modify' command.
+* Fix recurrence of tasks with a start date and no due date.
+* Fix strict recurrence when there is only a start date.
+
+
 0.15
 ----
 
