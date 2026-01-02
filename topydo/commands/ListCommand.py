@@ -108,7 +108,7 @@ class ListCommand(ExpressionCommand):
         """
         Additional filters to:
             - select particular todo items given with the -i flag,
-            - hide appropriately tagged items in the absense of the -x flag.
+            - hide appropriately tagged items in the absence of the -x flag.
         """
         filters = super()._filters()
 

@@ -179,7 +179,7 @@ class HiddenTagFilter(Filter):
         """
         Constructor.
 
-        A filter which hides items marked with the approriate tag.
+        A filter which hides items marked with the appropriate tag.
         """
         super().__init__()
 

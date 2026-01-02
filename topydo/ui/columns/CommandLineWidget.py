@@ -160,7 +160,7 @@ class CommandLineWidget(urwid.Edit):
         forwards, negative numbers backwards) and inserts it into edit_text.
 
         If p_step results in value out of range of currently evaluated
-        completion candidates, list is rewinded to the start (if cycling
+        completion candidates, list is rewound to the start (if cycling
         forwards) or to the end (if cycling backwards).
         """
         current_position = self.completion_box.focus_position
