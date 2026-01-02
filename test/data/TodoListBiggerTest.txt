@@ -1,0 +1,11 @@
+(C) Foo @Context2 Not@Context +Project1 Not+Project
+(D) Bar @Context1 +Project2
+(C) Baz @Context1 +Project1 key:value
+(C) Drink beer @ home
+
+(C) 13 + 29 = 42
+Another Bar @Context3
+Different Foo +Project3
+Another Different Bar @Context3
+Different Another Bar Foo @Context3 +Project3
+Foo Bar @Context3 +Project3
