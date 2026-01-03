@@ -230,7 +230,7 @@ class AddCommandTest(CommandTest):
         """
         config("test/data/todolist-uid-projects.conf")
 
-        # pass identitiy function to for writing output, we're not interested
+        # pass identity function to for writing output, we're not interested
         # in this output
         command = AddCommand.AddCommand(["Foo +Project"], self.todolist,
                                         lambda t: t, self.error)
@@ -253,7 +253,7 @@ class AddCommandTest(CommandTest):
         """
         config("test/data/todolist-uid-contexts.conf")
 
-        # pass identitiy function to for writing output, we're not interested
+        # pass identity function to for writing output, we're not interested
         # in this output
         command = AddCommand.AddCommand(["Foo @Context"], self.todolist,
                                         lambda t: t, self.error)

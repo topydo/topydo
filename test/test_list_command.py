@@ -258,7 +258,7 @@ class ListCommandTest(CommandTest):
         self.assertEqual(self.errors, "")
 
     def test_list33(self):
-        """ Negative values result in showing all relevent todos. """
+        """ Negative values result in showing all relevant todos. """
         command = ListCommand(["-n", "-1"], self.todolist, self.out, self.error)
         command.execute()
 
