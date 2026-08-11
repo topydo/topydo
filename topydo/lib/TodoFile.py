@@ -35,9 +35,8 @@ class TodoFile(object):
         """ Reads the todo.txt file and returns a list of todo items. """
         todos = []
         try:
-            todofile = codecs.open(self.path, 'r', encoding="utf-8")
-            todos = todofile.readlines()
-            todofile.close()
+            with open(self.path, 'r', encoding="utf-8") as todofile:
+                todos = todofile.readlines()
         except IOError:
             pass
 
@@ -51,14 +50,11 @@ class TodoFile(object):
         to the file.
         """
 
-        todofile = codecs.open(self.path, 'w', encoding="utf-8")
+        with open(self.path, 'w', encoding="utf-8") as todofile:
+            if isinstance(p_todos, list):
+                for todo in p_todos:
+                    todofile.write(str(todo))
+            else:
+                todofile.write(p_todos)
 
-        if isinstance(p_todos, list):
-            for todo in p_todos:
-                todofile.write(str(todo))
-        else:
-            todofile.write(p_todos)
-
-        todofile.write("\n")
-
-        todofile.close()
+            todofile.write("\n")
