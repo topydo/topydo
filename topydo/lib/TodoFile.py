@@ -53,7 +53,7 @@ class TodoFile(object):
 
         todofile = codecs.open(self.path, 'w', encoding="utf-8")
 
-        if p_todos is list:
+        if isinstance(p_todos, list):
             for todo in p_todos:
                 todofile.write(str(todo))
         else:
