@@ -17,6 +17,7 @@
 """ Provides a pretty printer filter that colorizes todo items. """
 
 import re
+import datetime
 
 from topydo.lib.Color import AbstractColor
 from topydo.lib.Config import config

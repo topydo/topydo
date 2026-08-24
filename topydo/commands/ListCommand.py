@@ -69,7 +69,7 @@ class ListCommand(ExpressionCommand):
             elif opt == '-f':
                 if value == 'json':
                     from topydo.lib.printers.Json import JsonPrinter
-                    self.printer = JsonPrinter()
+                    self.printer = JsonPrinter(self.todolist)
                 elif value == 'ical':
                     if self._poke_icalendar():
                         from topydo.lib.printers.Ical import IcalPrinter
