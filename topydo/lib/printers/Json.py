@@ -24,7 +24,7 @@ import json
 from topydo.lib.printers.PrettyPrinter import Printer
 
 
-def _convert_todo(p_todo):
+def _convert_todo(p_todo, p_todolist):
     """ Converts a Todo instance to a dictionary. """
     creation_date = p_todo.creation_date()
     completion_date = p_todo.completion_date()
@@ -35,6 +35,7 @@ def _convert_todo(p_todo):
         'priority': p_todo.priority(),
         'completed': p_todo.is_completed(),
         'tags': p_todo.tags(),
+        'id': p_todolist.number(p_todo),
         'projects': list(p_todo.projects()),
         'contexts': list(p_todo.contexts()),
         'creation_date':
@@ -51,17 +52,18 @@ class JsonPrinter(Printer):
     A printer that converts a list of Todo items to a string in JSON format.
     """
 
-    def __init__(self):
+    def __init__(self, p_todolist):
         super().__init__()
+        self.todolist = p_todolist
 
     def print_todo(self, p_todo):
-        return json.dumps(_convert_todo(p_todo), ensure_ascii=False,
+        return json.dumps(_convert_todo(p_todo, self.todolist), ensure_ascii=False,
                           sort_keys=True)
 
     def print_list(self, p_todos):
         result = []
 
         for todo in p_todos:
-            result.append(_convert_todo(todo))
+            result.append(_convert_todo(todo, self.todolist))
 
         return json.dumps(result, ensure_ascii=False, sort_keys=True)

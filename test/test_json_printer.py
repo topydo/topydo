@@ -18,6 +18,7 @@ import unittest
 
 from topydo.lib.printers.Json import JsonPrinter
 from topydo.lib.Todo import Todo
+from topydo.lib.TodoList import TodoList
 
 from .topydo_testcase import TopydoTest
 
@@ -30,12 +31,13 @@ class JsonPrinterTest(TopydoTest):
 
     def test_json(self):
         """ Print a single todo item. """
-        printer = JsonPrinter()
-        todo = Todo('2015-06-06 Foo due:2015-05-32')
+        todolist = TodoList(['2015-06-06 Foo due:2015-05-32'])
+        printer = JsonPrinter(todolist)
 
+        todo = todolist.todos()[0]
         result = printer.print_todo(todo)
 
-        self.assertEqual(result, '{"completed": false, "completion_date": null, "contexts": [], "creation_date": "2015-06-06", "priority": null, "projects": [], "source": "2015-06-06 Foo due:2015-05-32", "tags": [["due", "2015-05-32"]], "text": "Foo"}')
+        self.assertEqual(result, '{"completed": false, "completion_date": null, "contexts": [], "creation_date": "2015-06-06", "id": 1, "priority": null, "projects": [], "source": "2015-06-06 Foo due:2015-05-32", "tags": [["due", "2015-05-32"]], "text": "Foo"}')
 
 if __name__ == '__main__':
     unittest.main()
