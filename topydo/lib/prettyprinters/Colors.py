@@ -48,6 +48,13 @@ class PrettyPrinterColorFilter(PrettyPrinterFilter):
             # color by priority
             p_todo_str.set_color(0, priority_color)
 
+            # Here the "default" color is really the priority color, so any
+            # special highlighting done by parsing is still kept, but will be
+            # set back to priority afterwards.
+            for i,match in enumerate(re.finditer('\033\\[0m', p_todo_str.data)):
+                p_todo_str.set_color(match.end()-(i+1)*4, priority_color)
+            re.sub('\033\\[0m', '', p_todo_str.data)
+
             for pattern, color in colors:
                 for match in re.finditer(pattern, p_todo_str.data):
                     p_todo_str.set_color(match.start(), color)
