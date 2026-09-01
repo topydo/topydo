@@ -20,6 +20,7 @@ A list of todo items.
 
 import math
 import re
+from collections import Counter
 from datetime import date
 
 from topydo.lib import Filter
@@ -218,6 +219,18 @@ class TodoListBase(object):
 
         return result
 
+    def projects_counts(self):
+        """ Returns a dict of all projects in this list with their respective
+        couts. """
+
+        result = Counter()
+        for todo in self._todos:
+            projects = todo.projects()
+            for project in projects:
+                result[project] += 1
+
+        return dict(result)
+
     def contexts(self):
         """ Returns a set of all contexts in this list. """
         result = set()
@@ -226,6 +239,18 @@ class TodoListBase(object):
             result = result.union(contexts)
 
         return result
+
+    def contexts_counts(self):
+        """ Returns a dict of all contexts in this list with their respective
+        counts. """
+        result = Counter()
+        for todo in self._todos:
+            contexts = todo.contexts()
+            for context in contexts:
+                result[context] += 1
+
+        return dict(result)
+
 
     def view(self, p_sorter, p_filters):
         """

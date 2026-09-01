@@ -41,6 +41,33 @@ class ListProjectCommandTest(CommandTest):
         self.assertEqual(self.output, "Project1\nProject2\n")
         self.assertFalse(self.errors)
 
+    def test_projects_with_counts(self):
+        todolist = load_file_to_todolist("test/data/TodoListBiggerTest.txt")
+        command = ListProjectCommand(["-c"], todolist, self.out, self.error)
+        command.execute()
+        command.execute_post_archive_actions()
+
+        self.assertEqual(self.output, "2\tProject1\n1\tProject2\n3\tProject3\n")
+        self.assertFalse(self.errors)
+
+    def test_projects_with_counts_sorted(self):
+        todolist = load_file_to_todolist("test/data/TodoListBiggerTest.txt")
+        command = ListProjectCommand(["-c", "-s"], todolist, self.out, self.error)
+        command.execute()
+        command.execute_post_archive_actions()
+
+        self.assertEqual(self.output, "1\tProject2\n2\tProject1\n3\tProject3\n")
+        self.assertFalse(self.errors)
+
+    def test_projects_with_counts_sorted_inversely(self):
+        todolist = load_file_to_todolist("test/data/TodoListBiggerTest.txt")
+        command = ListProjectCommand(["-c", "-S"], todolist, self.out, self.error)
+        command.execute()
+        command.execute_post_archive_actions()
+
+        self.assertEqual(self.output, "3\tProject3\n2\tProject1\n1\tProject2\n")
+        self.assertFalse(self.errors)
+
     def test_listproject_name(self):
         name = ListProjectCommand.name()
 
