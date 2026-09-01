@@ -16,11 +16,13 @@
 
 import os
 import re
+from functools import reduce
 import sys
 
 from topydo.lib.Config import config
 from topydo.lib.ExpressionCommand import ExpressionCommand
-from topydo.lib.Filter import HiddenTagFilter, InstanceFilter
+from topydo.lib.Filter import (HiddenTagFilter, InstanceFilter, OrFilter,
+                               PriorityFilter)
 from topydo.lib.ListFormat import ListFormatError
 from topydo.lib.prettyprinters.Format import PrettyPrinterFormatFilter
 from topydo.lib.printers.PrettyPrinter import pretty_printer_factory
@@ -44,6 +46,7 @@ class ListCommand(ExpressionCommand):
         self.show_all = False
         self.ids = None
         self.format = config().list_format()
+        self.priorities = None
 
     def _poke_icalendar(self):
         """
@@ -59,7 +62,7 @@ class ListCommand(ExpressionCommand):
         return True
 
     def _process_flags(self):
-        opts, args = self.getopt('f:F:g:i:n:Ns:x')
+        opts, args = self.getopt('f:F:g:i:n:Np:s:x')
 
         for opt, value in opts:
             if opt == '-x':
@@ -101,6 +104,9 @@ class ListCommand(ExpressionCommand):
 
                 # when a user requests a specific ID, it should always be shown
                 self.show_all = True
+            elif opt == '-p':
+                self.priorities = [f"(={p})" if len(p) == 1 else p for p
+                        in value.split(',')]
 
         self.args = args
 
@@ -128,6 +134,11 @@ class ListCommand(ExpressionCommand):
 
         if not self.show_all:
             filters.append(HiddenTagFilter())
+
+        if self.priorities:
+            filters.append(reduce(
+                lambda a,b: OrFilter(a, b),
+                (PriorityFilter(p) for p in self.priorities)))
 
         return filters
 
