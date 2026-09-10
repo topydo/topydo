@@ -800,5 +800,41 @@ x 2014-12-12 Completed but with date:2014-12-12
         todolist = TodoListBase([str(i) for i in range(0, 100 * 16 * 10)])
         self.assertEqual(4, todolist.max_id_length())
 
+    def test_list_format_backslash(self):
+        """
+        Tasks with backslashes (paths, escapes, backreferences) should not
+        raise ListFormatError or corrupt backreferences in text or tags.
+        """
+        from topydo.lib.TodoList import TodoList
+        todolist = TodoList([
+            r"Check path \Users\test\9",
+            r"Review regex \1 and \g<0>",
+            r"Trailing backslash \\",
+            r"Task with path tag path:C:\Users\test\9",
+        ])
+        command = ListCommand(["-F", "%s %k"], todolist, self.out, self.error)
+        command.execute()
+
+        self.assertIn(r"Check path \Users\test\9", self.output)
+        self.assertIn(r"Review regex \1 and \g<0>", self.output)
+        self.assertIn(r"Trailing backslash \\", self.output)
+        self.assertIn(r"path:C:\Users\test\9", self.output)
+        self.assertEqual(self.errors, "")
+
+    def test_list_format_backslash_truncate(self):
+        """
+        Truncating a task with backslashes should not raise ListFormatError.
+        """
+        from topydo.lib.TodoList import TodoList
+        todolist = TodoList([
+            r"Long path with lots of text \Users\test\folder\subfolder\nested\file.txt",
+        ])
+        with mock.patch('topydo.lib.ListFormat._columns', return_value=30):
+            command = ListCommand(["-F", "%S"], todolist, self.out, self.error)
+            command.execute()
+
+        self.assertIn("...", self.output)
+        self.assertEqual(self.errors, "")
+
 if __name__ == '__main__':
     unittest.main()

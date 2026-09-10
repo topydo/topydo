@@ -104,7 +104,7 @@ def _truncate(p_str, p_repl):
     """
     # 4 is for '...' and an extra space at the end
     text_lim = _columns() - len(escape_ansi(p_str)) - 4
-    truncated_str = re.sub(re.escape(p_repl), p_repl[:text_lim] + '...', p_str)
+    truncated_str = re.sub(re.escape(p_repl), lambda _: p_repl[:text_lim] + '...', p_str)
 
     return truncated_str
 
@@ -289,7 +289,7 @@ class ListFormatParser(object):
                     substr = re.sub(pattern, '', substr)
                 else:
                     substr = re.sub(pattern, _strip_placeholder_braces, substr)
-                    substr = re.sub(r'(?<!\\)%({ph}|\[{ph}\])'.format(ph=placeholder), repl, substr)
+                    substr = re.sub(r'(?<!\\)%({ph}|\[{ph}\])'.format(ph=placeholder), lambda _: repl, substr)
             except re.error:
                 raise ListFormatError
 
