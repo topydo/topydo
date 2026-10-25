@@ -404,10 +404,10 @@ class UIApplication(CLIApplicationBase):
 
     def _blur_commandline(self):
         self._console_visible = False
-        self.mainwindow.focus_item = 0
+        self.mainwindow.focus_position = 0
 
     def _focus_commandline(self):
-        self.mainwindow.focus_item = 1
+        self.mainwindow.focus_position = 1
 
     def _focus_first_column(self):
         self.columns.focus_position = 0
