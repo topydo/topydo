@@ -100,7 +100,7 @@ class TodoTest(TopydoTest):
         self.assertEqual(todo.length(), 0)
 
     def test_length6(self):
-        todo = Todo("(C) 2015-11-18 Foo due:2015-11-19)")
+        todo = Todo("(C) 2015-11-18 Foo due:2015-11-19")
         self.assertEqual(todo.length(), 1)
 
     def test_length7(self):
@@ -108,7 +108,7 @@ class TodoTest(TopydoTest):
         self.assertEqual(todo.length(), 0)
 
     def test_length8(self):
-        todo = Todo("(C) 2015-11-18 Foo t:2015-11-19 due:2015-11-20)")
+        todo = Todo("(C) 2015-11-18 Foo t:2015-11-19 due:2015-11-20")
         self.assertEqual(todo.length(), 1)
 
     def test_length9(self):

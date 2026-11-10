@@ -16,12 +16,26 @@
 
 import unittest
 
-from topydo.lib.Utils import translate_key_to_config
+from topydo.lib.Utils import date_string_to_date, translate_key_to_config
 
 from .topydo_testcase import TopydoTest
 
 
 class UtilsTest(TopydoTest):
+    def test_valid_date(self):
+        self.assertEqual(
+            date_string_to_date('2014-06-09').isoformat(), '2014-06-09')
+
+    def test_invalid_date(self):
+        # e.g. April 31st does not exist
+        with self.assertRaises(ValueError):
+            date_string_to_date('2014-04-31')
+
+    def test_date_with_trailing_garbage(self):
+        # trailing characters must not be silently accepted as a valid date
+        with self.assertRaises(ValueError):
+            date_string_to_date('2014-06-09xyz')
+
     def test_key_to_cfg(self):
         ctrl_s = translate_key_to_config('ctrl s')
         meta_d = translate_key_to_config('meta d')
