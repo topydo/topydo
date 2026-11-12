@@ -274,7 +274,10 @@ class UIApplication(CLIApplicationBase):
         Removes highlight from currently focused column and applies it on
         column with index equal to p_new_focus.
         """
-        self.columns.focus.highlight(False)
+        # Urwid notifies after changing contents but before updating focus.
+        focus = self.columns.contents.focus
+        if focus < len(self.columns.contents):
+            self.columns.contents[focus][0].highlight(False)
         self.columns.contents[p_new_focus][0].highlight(True)
         self.columns._invalidate()
 
@@ -446,7 +449,9 @@ class UIApplication(CLIApplicationBase):
             del self.columns.contents[focus]
 
             if self.columns.contents:
-                self.columns.focus_position = focus
+                self.columns.focus_position = min(
+                    focus, len(self.columns.contents) - 1)
+                self._move_highlight(self.columns.focus_position)
             else:
                 self._append_column()
         except IndexError:
@@ -556,6 +561,7 @@ class UIApplication(CLIApplicationBase):
         self.columns.contents.insert(p_pos, item)
 
         self.columns.focus_position = p_pos
+        self._move_highlight(p_pos)
         self._blur_commandline()
 
     def _print_keystate(self, p_keystate):

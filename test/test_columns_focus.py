@@ -19,6 +19,7 @@ import urwid
 from topydo.lib.Config import config
 from topydo.ui.columns.Main import UIApplication
 from topydo.ui.columns.TodoWidget import TodoWidget
+from topydo.ui.columns.Utils import PaletteItem
 
 from .topydo_testcase import TopydoTest
 
@@ -56,6 +57,61 @@ class ColumnsFocusTest(TopydoTest):
         self.assertIs(self.app.mainwindow.focus, self.app.columns)
         self.assertEqual(self.app.columns.focus_position, 0)
         self.assertEqual(self.app.columns.focus.todolist.focus, 0)
+
+    def test_delete_last_column_keeps_focus_usable(self):
+        remaining = self.app.columns.contents[0][0]
+        self.app.columns.focus_position = 1
+
+        self.app.mainloop.process_input(['D'])
+
+        self.assertEqual(len(self.app.columns.contents), 1)
+        self.assertEqual(self.app.columns.focus_position, 0)
+        self.assertIs(self.app.columns.focus, remaining)
+        self.assertEqual(remaining._title_widget.get_attr_map(),
+                         {None: PaletteItem.DEFAULT_FOCUS})
+        self.app.mainloop.process_input([':', 'esc'])
+        self.assertIs(self.app.mainwindow.focus, self.app.columns)
+
+    def test_delete_first_column_highlights_remaining_column(self):
+        remaining = self.app.columns.contents[1][0]
+
+        self.app.mainloop.process_input(['D'])
+
+        self.assertEqual(len(self.app.columns.contents), 1)
+        self.assertIs(self.app.columns.focus, remaining)
+        self.assertEqual(remaining._title_widget.get_attr_map(),
+                         {None: PaletteItem.DEFAULT_FOCUS})
+
+    def test_delete_middle_column_highlights_next_column(self):
+        view = self.app.columns.contents[0][0].view
+        self.app._add_column(view)
+        remaining = self.app.columns.contents[2][0]
+        self.app.columns.focus_position = 1
+
+        self.app.mainloop.process_input(['D'])
+
+        self.assertEqual(len(self.app.columns.contents), 2)
+        self.assertEqual(self.app.columns.focus_position, 1)
+        self.assertIs(self.app.columns.focus, remaining)
+        self.assertEqual(remaining._title_widget.get_attr_map(),
+                         {None: PaletteItem.DEFAULT_FOCUS})
+        self.app.mainloop.process_input(['h', 'l'])
+        self.assertIs(self.app.columns.focus, remaining)
+
+    def test_delete_only_column_allows_replacement(self):
+        self.app.mainloop.process_input(['D', 'D'])
+
+        self.assertEqual(len(self.app.columns.contents), 0)
+        self.assertTrue(self.app._viewwidget_visible)
+        self.app.viewwidget.titleedit.set_edit_text('Replacement')
+        urwid.emit_signal(self.app.viewwidget, 'save')
+
+        self.assertEqual(len(self.app.columns.contents), 1)
+        self.assertFalse(self.app._viewwidget_visible)
+        self.assertEqual(self.app.columns.focus_position, 0)
+        self.assertIs(self.app.mainwindow.focus, self.app.columns)
+        self.assertEqual(self.app.columns.focus._title_widget.get_attr_map(),
+                         {None: PaletteItem.DEFAULT_FOCUS})
 
     def test_colon_focuses_commandline(self):
         self.app.mainwindow.focus_position = 0
